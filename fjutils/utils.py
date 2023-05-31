@@ -5,7 +5,7 @@ import re
 from jax.experimental.pjit import PartitionSpec as PS
 import flax
 from jax.interpreters import pxla
-from fxutils.easylm import with_sharding_constraint
+from fjutils.easylm import with_sharding_constraint
 
 
 def match_partition_rules(rules, params):

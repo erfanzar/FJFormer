@@ -1,0 +1,8 @@
+flax~=0.6.4
+jax~=0.4.10
+mlxu~=0.1.11
+msgpack~=1.0.5
+numpy~=1.24.3
+setuptools~=59.6.0
+transformers~=4.29.2
+typing~=3.7.4.3

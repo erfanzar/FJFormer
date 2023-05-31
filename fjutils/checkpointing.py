@@ -8,7 +8,7 @@ from flax.serialization import (
 )
 from flax.traverse_util import flatten_dict, unflatten_dict, empty_node
 import msgpack
-from fxutils.easylm import float_tensor_to_dtype, tree_apply
+from fjutils.easylm import float_tensor_to_dtype, tree_apply
 
 
 class StreamingCheckpointer(object):

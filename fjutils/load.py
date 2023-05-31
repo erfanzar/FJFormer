@@ -3,7 +3,7 @@ from transformers import AutoConfig, FlaxAutoModelForCausalLM, FlaxAutoModelForM
 from typing import Union
 import os
 from huggingface_hub import snapshot_download
-from fxutils.checkpointing import StreamingCheckpointer
+from fjutils.checkpointing import StreamingCheckpointer
 
 TRANSFORMERS_CLS: Union = [
     FlaxAutoModel,
