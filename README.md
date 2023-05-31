@@ -2,7 +2,7 @@
 
 a package for custom Jax Flax Functions and Utils
 Welcome to FJUtils - A collection of useful functions and utilities for Flax and JAX!
-
+Some Parts of code if from EasyLM <3
 ## Overview
 
 FJUtils is a collection of functions and utilities that can help with various tasks when using Flax and JAX. It includes
