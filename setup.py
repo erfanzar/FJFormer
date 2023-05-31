@@ -24,7 +24,7 @@ setuptools.setup(
         'setuptools~=59.6.0',
         'mlxu~=0.1.11'
     ],
-    python_requires=">=3.6, <3.11",
+    python_requires=">=3.7, <3.11",
     license='Apache License 2.0',
     classifiers=[
         "Programming Language :: Python :: 3",
