@@ -3,6 +3,7 @@
 a package for custom Jax Flax Functions and Utils
 Welcome to FJUtils - A collection of useful functions and utilities for Flax and JAX!
 Some Parts of code if from EasyLM <3
+
 ## Overview
 
 FJUtils is a collection of functions and utilities that can help with various tasks when using Flax and JAX. It includes
@@ -38,6 +39,50 @@ use the checkpoint saver for loading models like :
 from fjutils import StreamingCheckpointer
 
 ckpt = StreamingCheckpointer.load_trainstate_checkpoint('params::<path to model>')
+
+```
+
+or simply getting an optimizer for example adafactor with cosine scheduler :
+
+```python
+from jax import numpy as jnp
+from fjutils.optimizers import get_adafactor_with_cosine_scheduler
+
+optimizer, scheduler = get_adafactor_with_cosine_scheduler(
+    steps=5000,
+    learning_rate=5e-5,
+    weight_decay=1e-1,
+    min_dim_size_to_factor=128,
+    decay_rate=0.8,
+    decay_offset=0,
+    multiply_by_parameter_scale=True,
+    clipping_threshold=1.0,
+    momentum=None,
+    dtype_momentum=jnp.float32,
+    weight_decay_rate=None,
+    eps=1e-30,
+    factored=True,
+    weight_decay_mask=None,
+)
+
+```
+
+or getting adamw with linear scheduler:
+
+```python
+from fjutils.optimizers import get_adamw_with_linear_scheduler
+
+optimizer, scheduler = get_adamw_with_linear_scheduler(
+    steps=5000,
+    learning_rate_start=5e-5,
+    learning_rate_end=1e-5,
+    b1=0.9,
+    b2=0.999,
+    eps=1e-8,
+    eps_root=0.0,
+    weight_decay=1e-1,
+    mu_dtype=None,
+)
 
 ```
 

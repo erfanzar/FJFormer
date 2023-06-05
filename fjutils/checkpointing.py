@@ -1,4 +1,6 @@
 import os
+
+import optax
 from ml_collections import ConfigDict
 import mlxu
 import jax

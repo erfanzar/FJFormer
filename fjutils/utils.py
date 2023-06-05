@@ -1,4 +1,7 @@
+import os
+
 import jax
+import msgpack
 from jax import numpy as jnp
 import numpy as np
 import re
@@ -6,6 +9,9 @@ from jax.experimental.pjit import PartitionSpec as PS
 import flax
 from jax.interpreters import pxla
 from fjutils.easylm import with_sharding_constraint
+from flax.serialization import from_bytes, to_bytes, to_state_dict, from_state_dict
+from flax.traverse_util import flatten_dict, unflatten_dict
+from fjutils.easylm import float_tensor_to_dtype
 
 
 def match_partition_rules(rules, params):
@@ -34,6 +40,10 @@ def match_partition_rules(rules, params):
         lambda path, p: get_partition_spec(tree_path_to_string(path), p),
         params
     )
+
+
+def count_num_params(_p):
+    return sum(i.size for i in jax.tree_util.tree_flatten(flax.core.unfreeze(_p))[0])
 
 
 def count_params(_p):
@@ -80,3 +90,33 @@ def change_to_fp32(tensor):
 
 def change(tensor, device):
     return jax.device_put(tensor, device)
+
+
+def read_ckpt(path: [str, os.PathLike], shard_fns=None, add_extra_past_fix: list = None):
+    tensors = {}
+    with open(path, 'rb') as stream:
+        unpacker = msgpack.Unpacker(stream, read_size=83886080, max_buffer_size=0)
+        for key, value in unpacker:
+            if add_extra_past_fix is not None:
+                key = add_extra_past_fix + key
+            key = tuple(key)
+            tensor = from_bytes(None, value)
+            if shard_fns is not None:
+                tensor = shard_fns[key](tensor)
+            tensors[key] = tensor
+    return tensors
+
+
+def save_ckpt(train_state, path, gather_fns=None, float_dtype=None):
+    train_state = to_state_dict(train_state)
+    packer = msgpack.Packer()
+    flattend_train_state = flatten_dict(train_state)
+    if gather_fns is not None:
+        gather_fns = flatten_dict(to_state_dict(gather_fns))
+
+    with open(path, "wb") as stream:
+        for key, value in flattend_train_state.items():
+            if gather_fns is not None:
+                value = gather_fns[key](value)
+            value = float_tensor_to_dtype(value, float_dtype)
+            stream.write(packer.pack((key, to_bytes(value))))

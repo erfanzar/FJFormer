@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: FJUtils
-Version: 0.0.1
+Version: 0.0.3
 Summary: UNKNOWN
 Home-page: https://github.com/erfanzar/
 Author: Erfan Zare Chavoshi
@@ -16,7 +16,7 @@ Classifier: Programming Language :: Python :: 3.8
 Classifier: Programming Language :: Python :: 3.9
 Classifier: Programming Language :: Python :: 3.10
 Classifier: Programming Language :: Python :: 3.11
-Requires-Python: >=3.6, <3.11
+Requires-Python: >=3.7, <3.11
 Description-Content-Type: text/markdown
 License-File: LICENSE
 
@@ -24,6 +24,7 @@ License-File: LICENSE
 
 a package for custom Jax Flax Functions and Utils
 Welcome to FJUtils - A collection of useful functions and utilities for Flax and JAX!
+Some Parts of code if from EasyLM <3
 
 ## Overview
 
@@ -63,6 +64,50 @@ ckpt = StreamingCheckpointer.load_trainstate_checkpoint('params::<path to model>
 
 ```
 
+or simply getting an optimizer for example adafactor with cosine scheduler :
+
+```python
+from jax import numpy as jnp
+from fjutils.optimizers import get_adafactor_with_cosine_scheduler
+
+optimizer, scheduler = get_adafactor_with_cosine_scheduler(
+    steps=5000,
+    learning_rate=5e-5,
+    weight_decay=1e-1,
+    min_dim_size_to_factor=128,
+    decay_rate=0.8,
+    decay_offset=0,
+    multiply_by_parameter_scale=True,
+    clipping_threshold=1.0,
+    momentum=None,
+    dtype_momentum=jnp.float32,
+    weight_decay_rate=None,
+    eps=1e-30,
+    factored=True,
+    weight_decay_mask=None,
+)
+
+```
+
+or getting adamw with linear scheduler:
+
+```python
+from fjutils.optimizers import get_adamw_with_linear_scheduler
+
+optimizer, scheduler = get_adamw_with_linear_scheduler(
+    steps=5000,
+    learning_rate_start=5e-5,
+    learning_rate_end=1e-5,
+    b1=0.9,
+    b2=0.999,
+    eps=1e-8,
+    eps_root=0.0,
+    weight_decay=1e-1,
+    mu_dtype=None,
+)
+
+```
+
 ## Documentation
 
 - TODO
@@ -74,4 +119,5 @@ just want to help out with development, please check out our GitHub repository a
 open an issue.
 
 Thank you for using FJUtils, and happy training!
+
 

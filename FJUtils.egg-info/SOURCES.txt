@@ -11,4 +11,5 @@ fjutils/__init__.py
 fjutils/checkpointing.py
 fjutils/easylm.py
 fjutils/load.py
+fjutils/optimizers.py
 fjutils/utils.py
