@@ -1,9 +1,15 @@
+import importlib.util
 import os
 
 import jax
 import msgpack
+from typing import List
+
+from fjutils.checkpointing import StreamingCheckpointer
 from jax import numpy as jnp
 import numpy as np
+
+import json
 import re
 from jax.experimental.pjit import PartitionSpec as PS
 import flax
@@ -12,6 +18,10 @@ from fjutils.easylm import with_sharding_constraint
 from flax.serialization import from_bytes, to_bytes, to_state_dict, from_state_dict
 from flax.traverse_util import flatten_dict, unflatten_dict
 from fjutils.easylm import float_tensor_to_dtype
+
+
+def is_torch_available():
+    return True if importlib.util.find_spec('torch') is not None else False
 
 
 def match_partition_rules(rules, params):
@@ -120,3 +130,38 @@ def save_ckpt(train_state, path, gather_fns=None, float_dtype=None):
                 value = gather_fns[key](value)
             value = float_tensor_to_dtype(value, float_dtype)
             stream.write(packer.pack((key, to_bytes(value))))
+
+
+def match_keywords(string, ts, ns):
+    for t in ts:
+        if t not in string:
+            return False
+    for n in ns:
+        if n in string:
+            return False
+    return True
+
+
+def load_and_convert_checkpoint(path, dtype=jnp.float16, transpose_needed: List[str] = ["kernel"],
+                                transpose_not_needed: List[str] = ['none'], select_params_field: bool = True):
+    import torch
+    _, flax_params = StreamingCheckpointer.load_trainstate_checkpoint('params::' + path)
+    flax_params = flatten_dict(flax_params['params'], sep='.') if select_params_field else flatten_dict(flax_params,
+                                                                                                        sep='.')
+    torch_params = {}
+    for key, tensor in flax_params.items():
+        if match_keywords(key, transpose_needed, transpose_not_needed):
+            tensor = tensor.T
+        tensor = float_tensor_to_dtype(tensor, dtype)
+        torch_params[key] = torch.from_numpy(tensor)
+    return torch_params
+
+
+def read_json(path):
+    with open(path, "r") as stream:
+        return json.load(stream)
+
+
+def write_json(text, path):
+    with open(path, "w") as stream:
+        json.dump(text, stream)
