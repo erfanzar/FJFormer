@@ -1,8 +1,6 @@
 import os
 
-import optax
 from ml_collections import ConfigDict
-import mlxu
 import jax
 import flax
 from flax.serialization import (
@@ -52,7 +50,7 @@ class StreamingCheckpointer(object):
         if gather_fns is not None:
             gather_fns = flatten_dict(to_state_dict(gather_fns))
 
-        with mlxu.open_file(path, "wb") as fout:
+        with open(path, "wb") as fout:
             for key, value in flattend_train_state.items():
                 if gather_fns is not None:
                     value = gather_fns[key](value)
@@ -60,11 +58,16 @@ class StreamingCheckpointer(object):
                 fout.write(packer.pack((key, to_bytes(value))))
 
     def save_pickle(self, obj, filename):
+        import pickle
+        def save_pickle(obj, path):
+            with open(path, 'wb') as fout:
+                pickle.dump(obj, fout)
+
         if self.enable:
             path = os.path.join(self.checkpoint_dir, filename)
         else:
             path = '/dev/null'
-        mlxu.save_pickle(obj, path)
+        save_pickle(obj, path)
 
     def save_all(self, train_state, gather_fns, metadata=None, dataset=None, milestone=False):
         step = int(jax.device_get(train_state.step))
@@ -101,7 +104,7 @@ class StreamingCheckpointer(object):
         if remove_dict_prefix is not None:
             remove_dict_prefix = tuple(remove_dict_prefix)
         flattend_train_state = {}
-        with mlxu.open_file(path) as fin:
+        with open(path, 'rb') as fin:
             # 83886080 bytes = 80 MB, which is 16 blocks on GCS
             unpacker = msgpack.Unpacker(fin, read_size=83886080, max_buffer_size=0)
             for key, value in unpacker:
@@ -136,7 +139,7 @@ class StreamingCheckpointer(object):
         """ Load a standard flax checkpoint that's not saved with the
             msgpack streaming format.
         """
-        with mlxu.open_file(path, "rb") as fin:
+        with open(path, "rb") as fin:
             encoded_bytes = fin.read()
 
         state_dict = flax.serialization.msgpack_restore(encoded_bytes)

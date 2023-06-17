@@ -22,6 +22,7 @@ setuptools.setup(
         'flax~=0.6.4',
         'msgpack~=1.0.5',
         'setuptools~=59.6.0',
+        'ml_collections'
     ],
     python_requires=">=3.7, <3.11",
     license='Apache License 2.0',
