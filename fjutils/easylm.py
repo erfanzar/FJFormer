@@ -19,11 +19,11 @@ def make_shard_and_gather_fns(partition_specs, dtype_specs=None):
     def make_to_dtype_fn(dtype_spec):
         def to_dtype(tensor):
             if dtype_specs in float_dtypes and getattr(tensor, 'dtype', None) in float_dtypes:
-                # Convert all float tensors to the same dtype
-                return tensor.astype(dtype_specs)
+                # force np array to jax numpy array
+                return jnp.asarray(tensor).astype(dtype_specs)
             elif hasattr(dtype_spec, 'dtype') and hasattr(tensor, 'dtype'):
-                return tensor.astype(dtype_spec.dtype)
-            return tensor
+                return jnp.asarray(tensor).astype(dtype_spec.dtype)
+            return jnp.asarray(tensor)
 
         return to_dtype
 

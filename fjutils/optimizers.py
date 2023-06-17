@@ -253,3 +253,84 @@ def get_adafactor_with_cosine_scheduler(
         )
     )
     return tx, scheduler
+
+
+def get_lion_with_cosine_scheduler(
+        steps: int,
+        learning_rate=5e-5,
+        alpha: float = 0.0,
+        exponent: float = 1.0,
+        b1: float = 0.9,
+        b2: float = 0.99,
+        mu_dtype: Optional[chex.ArrayDType] = None,
+):
+    """
+
+   Args:
+        learning_rate: An initial value `init_v`.
+        steps: Positive integer - the number of steps for which to apply
+          the decay for.
+        alpha: Float. The minimum value of the multiplier used to adjust the
+          learning rate.
+        exponent: Float. The default decay is 0.5 * (1 + cos(pi * t/T)), where t is
+          the current timestep and T is the `decay_steps`. The exponent modifies
+          this to be (0.5 * (1 + cos(pi * t/T))) ** exponent. Defaults to 1.0.
+        b1: Rate for combining the momentum and the current grad.
+        b2: Decay rate for the exponentially weighted average of grads.
+        mu_dtype: Optional `dtype` to be used for the momentum; if
+          `None` then the `dtype is inferred from `params` and `updates`.
+    Return:
+        Optimizer , Scheduler
+    """
+    scheduler = optax.cosine_decay_schedule(
+        init_value=learning_rate,
+        decay_steps=steps,
+        alpha=alpha,
+        exponent=exponent
+    )
+    tx = optax.chain(
+        optax.scale_by_lion(
+            b1=b1,
+            b2=b2,
+            mu_dtype=mu_dtype
+        ),
+        optax.scale_by_schedule(scheduler),
+        optax.scale(-1)
+    )
+    return tx, scheduler
+
+
+def get_lion_with_linear_scheduler(
+        steps: int,
+        learning_rate_start: float = 5e-5,
+        learning_rate_end: float = 1e-5,
+        b1: float = 0.9,
+        b2: float = 0.99,
+        mu_dtype: Optional[chex.ArrayDType] = None,
+):
+    """
+    Args:
+        steps: total train steps (max_steps)
+        learning_rate_start: start learning rate for sure
+        learning_rate_end: end learning rate for sure :\
+        b1: Rate for combining the momentum and the current grad.
+        b2: Decay rate for the exponentially weighted average of grads.
+        mu_dtype: Optional `dtype` to be used for the momentum; if
+          `None` then the `dtype is inferred from `params` and `updates`.
+    Return:
+        Optimizer , Scheduler"""
+    scheduler = optax.linear_schedule(
+        init_value=learning_rate_start,
+        end_value=learning_rate_end,
+        transition_steps=steps
+    )
+    tx = optax.chain(
+        optax.scale_by_lion(
+            b1=b1,
+            b2=b2,
+            mu_dtype=mu_dtype
+        ),
+        optax.scale_by_schedule(scheduler),
+        optax.scale(-1)
+    )
+    return tx, scheduler

@@ -1,17 +1,26 @@
+import importlib.util
 import os
 
 import jax
 import msgpack
+from typing import List, Optional, Callable, Any
+
+from fjutils.checkpointing import StreamingCheckpointer
 from jax import numpy as jnp
 import numpy as np
+import json
 import re
 from jax.experimental.pjit import PartitionSpec as PS
 import flax
 from jax.interpreters import pxla
 from fjutils.easylm import with_sharding_constraint
-from flax.serialization import from_bytes, to_bytes, to_state_dict, from_state_dict
-from flax.traverse_util import flatten_dict, unflatten_dict
+from flax.serialization import from_bytes, to_bytes, to_state_dict
+from flax.traverse_util import flatten_dict
 from fjutils.easylm import float_tensor_to_dtype
+
+
+def is_torch_available():
+    return True if importlib.util.find_spec('torch') is not None else False
 
 
 def match_partition_rules(rules, params):
@@ -120,3 +129,85 @@ def save_ckpt(train_state, path, gather_fns=None, float_dtype=None):
                 value = gather_fns[key](value)
             value = float_tensor_to_dtype(value, float_dtype)
             stream.write(packer.pack((key, to_bytes(value))))
+
+
+def match_keywords(string, ts, ns):
+    for t in ts:
+        if t not in string:
+            return False
+    for n in ns:
+        if n in string:
+            return False
+    return True
+
+
+def load_and_convert_checkpoint(path, dtype=jnp.float16, transpose_needed: List[str] = ["kernel"],
+                                transpose_not_needed: List[str] = ['none'], select_params_field: bool = True):
+    import torch
+    _, flax_params = StreamingCheckpointer.load_trainstate_checkpoint('params::' + path)
+    flax_params = flatten_dict(flax_params['params'], sep='.') if select_params_field else flatten_dict(flax_params,
+                                                                                                        sep='.')
+    torch_params = {}
+    for key, tensor in flax_params.items():
+        if match_keywords(key, transpose_needed, transpose_not_needed):
+            tensor = tensor.T
+        tensor = float_tensor_to_dtype(tensor, dtype)
+        torch_params[key] = torch.from_numpy(tensor)
+    return torch_params
+
+
+def read_json(path):
+    with open(path, "r") as stream:
+        return json.load(stream)
+
+
+def write_json(text, path):
+    with open(path, "w") as stream:
+        json.dump(text, stream)
+
+
+def get_dataloader(dataset_or_huggingface_dataset_hub_id: Any, batch_size: int, num_epochs: int,
+                   select_hf_dataset_field='train',
+                   max_steps: int = None, max_length: int = 4096, dataset_hf_kwargs: dict = {},
+                   collate_fn: Callable = None, shuffle: Optional[bool] = None,
+                   sampler=None,
+                   batch_sampler=None,
+                   num_workers: int = 0,
+                   pin_memory: bool = False, drop_last: bool = False,
+                   timeout: float = 0, worker_init_fn=None,
+                   multiprocessing_context=None, generator=None,
+                   *, prefetch_factor: Optional[int] = None,
+                   persistent_workers: bool = False,
+                   pin_memory_device: str = ""):
+    if collate_fn is None:
+        def collate_fn(batch):
+            rs = {}
+            for key in batch[0].keys():
+                ssp = [jnp.array(f[key])[..., -max_length:] for f in batch]
+                rs[key] = jnp.stack(ssp).reshape(-1, ssp[0].shape[-1])
+            return rs
+    from torch.utils.data import DataLoader
+    if isinstance(dataset_or_huggingface_dataset_hub_id, str):
+        from datasets import load_dataset
+        dataset = load_dataset(dataset_or_huggingface_dataset_hub_id, **dataset_hf_kwargs)[select_hf_dataset_field]
+    else:
+        dataset = dataset_or_huggingface_dataset_hub_id
+
+    dataloader = DataLoader(
+        dataset=dataset,
+        collate_fn=collate_fn,
+        batch_size=batch_size,
+        pin_memory=pin_memory,
+        prefetch_factor=prefetch_factor,
+        num_workers=num_workers,
+        shuffle=shuffle,
+        timeout=timeout,
+        sampler=sampler, batch_sampler=batch_sampler,
+        drop_last=drop_last,
+        generator=generator, persistent_workers=persistent_workers,
+        pin_memory_device=pin_memory_device,
+        multiprocessing_context=multiprocessing_context, worker_init_fn=worker_init_fn
+
+    )
+    max_steps = num_epochs * len(dataloader) if max_steps is None else max_steps
+    return dataloader, max_steps
