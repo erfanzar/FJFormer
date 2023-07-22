@@ -1,7 +1,8 @@
 import jax
 import jax.numpy as jnp
 import re
-from jax.experimental.pjit import pjit, PartitionSpec as PS, with_sharding_constraint as _with_sharding_constraint
+from jax.experimental.pjit import pjit, with_sharding_constraint as _with_sharding_constraint
+from jax.sharding import PartitionSpec as PS
 import numpy as np
 from jax.experimental import mesh_utils
 from jax.interpreters import pxla

@@ -10,7 +10,7 @@ from jax import numpy as jnp
 import numpy as np
 import json
 import re
-from jax.experimental.pjit import PartitionSpec as PS
+from jax.sharding import PartitionSpec as PS
 import flax
 from jax.interpreters import pxla
 from fjutils.easylm import with_sharding_constraint
