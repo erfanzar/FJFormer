@@ -282,12 +282,20 @@ def get_lion_with_cosine_scheduler(
     Return:
         Optimizer , Scheduler
     """
-    scheduler = optax.cosine_decay_schedule(
-        init_value=learning_rate,
-        decay_steps=steps,
-        alpha=alpha,
-        exponent=exponent
-    )
+    try:
+        scheduler = optax.cosine_decay_schedule(
+            init_value=learning_rate,
+            decay_steps=steps,
+            alpha=alpha,
+            exponent=exponent
+        )
+    except:
+        scheduler = optax.cosine_decay_schedule(
+            init_value=learning_rate,
+            decay_steps=steps,
+            alpha=alpha,
+            # exponent=exponent
+        )
     tx = optax.chain(
         optax.scale_by_lion(
             b1=b1,
