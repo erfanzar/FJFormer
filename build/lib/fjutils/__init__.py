@@ -6,3 +6,5 @@ from fjutils.easylm import with_sharding_constraint, match_partition_rules, wrap
     named_tree_map, make_shard_and_gather_fns
 from fjutils.load import load_pretrained_model
 from fjutils.utils import change_to_fp16, change_to_fp32, change_to_bf16, change, count_params, get_names, get_devices
+from fjutils.flash_attention import dot_product_attention_queries_per_head, dot_product_attention_multihead, \
+    dot_product_attention_multiquery, _memory_efficient_attention
