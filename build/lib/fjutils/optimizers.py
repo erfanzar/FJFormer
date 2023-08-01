@@ -46,11 +46,13 @@ def get_adamw_with_cosine_scheduler(
         eps: float = 1e-8,
         eps_root: float = 0.0,
         weight_decay: float = 1e-1,
+        gradient_accumulation_steps: int = 1,
         mu_dtype: Optional[chex.ArrayDType] = None,
 
 ):
     """
 
+    :param gradient_accumulation_steps:
     :param steps:
     :param learning_rate:
     :param b1:
@@ -79,6 +81,9 @@ def get_adamw_with_cosine_scheduler(
         optax.scale_by_schedule(scheduler),
         optax.scale(-1)
     )
+    tx = optax.MultiSteps(
+        tx, gradient_accumulation_steps
+    )
     return tx, scheduler
 
 
@@ -91,11 +96,13 @@ def get_adamw_with_linear_scheduler(
         eps: float = 1e-8,
         eps_root: float = 0.0,
         weight_decay: float = 1e-1,
+        gradient_accumulation_steps: int = 1,
         mu_dtype: Optional[chex.ArrayDType] = None,
 
 ):
     """
 
+    :param gradient_accumulation_steps:
     :param steps:
     :param learning_rate_start:
     :param learning_rate_end:
@@ -125,6 +132,9 @@ def get_adamw_with_linear_scheduler(
         ),
         optax.scale_by_schedule(scheduler),
         optax.scale(-1)
+    )
+    tx = optax.MultiSteps(
+        tx, gradient_accumulation_steps
     )
     return tx, scheduler
 
@@ -144,11 +154,13 @@ def get_adafactor_with_linear_scheduler(
         weight_decay_rate: Optional[float] = None,
         eps: float = 1e-30,
         factored: bool = True,
+        gradient_accumulation_steps: int = 1,
         weight_decay_mask=None,
 
 ):
     """
 
+    :param gradient_accumulation_steps:
     :param steps:
     :param learning_rate_start:
     :param learning_rate_end:
@@ -191,6 +203,9 @@ def get_adafactor_with_linear_scheduler(
             weight_decay_mask
         )
     )
+    tx = optax.MultiSteps(
+        tx, gradient_accumulation_steps
+    )
     return tx, scheduler
 
 
@@ -209,10 +224,11 @@ def get_adafactor_with_cosine_scheduler(
         eps: float = 1e-30,
         factored: bool = True,
         weight_decay_mask=None,
-
+        gradient_accumulation_steps: int = 1
 ):
     """
 
+    :param gradient_accumulation_steps:
     :param steps:
     :param learning_rate:
     :param weight_decay:
@@ -227,6 +243,7 @@ def get_adafactor_with_cosine_scheduler(
     :param eps:
     :param factored:
     :param weight_decay_mask:
+    :param gradient_accumulation_steps
     :return: Optimizer and Scheduler
     """
     scheduler = optax.cosine_decay_schedule(
@@ -252,6 +269,9 @@ def get_adafactor_with_cosine_scheduler(
             weight_decay_mask
         )
     )
+    tx = optax.MultiSteps(
+        tx, gradient_accumulation_steps
+    )
     return tx, scheduler
 
 
@@ -262,6 +282,7 @@ def get_lion_with_cosine_scheduler(
         exponent: float = 1.0,
         b1: float = 0.9,
         b2: float = 0.99,
+        gradient_accumulation_steps: int = 1,
         mu_dtype: Optional[chex.ArrayDType] = None,
 ):
     """
@@ -279,8 +300,10 @@ def get_lion_with_cosine_scheduler(
         b2: Decay rate for the exponentially weighted average of grads.
         mu_dtype: Optional `dtype` to be used for the momentum; if
           `None` then the `dtype is inferred from `params` and `updates`.
+        gradient_accumulation_steps:gradient_accumulation_steps
     Return:
         Optimizer , Scheduler
+
     """
     try:
         scheduler = optax.cosine_decay_schedule(
@@ -305,6 +328,9 @@ def get_lion_with_cosine_scheduler(
         optax.scale_by_schedule(scheduler),
         optax.scale(-1)
     )
+    tx = optax.MultiSteps(
+        tx, gradient_accumulation_steps
+    )
     return tx, scheduler
 
 
@@ -314,6 +340,7 @@ def get_lion_with_linear_scheduler(
         learning_rate_end: float = 1e-5,
         b1: float = 0.9,
         b2: float = 0.99,
+        gradient_accumulation_steps: int = 1,
         mu_dtype: Optional[chex.ArrayDType] = None,
 ):
     """
@@ -325,8 +352,10 @@ def get_lion_with_linear_scheduler(
         b2: Decay rate for the exponentially weighted average of grads.
         mu_dtype: Optional `dtype` to be used for the momentum; if
           `None` then the `dtype is inferred from `params` and `updates`.
+        gradient_accumulation_steps:gradient_accumulation_steps
     Return:
-        Optimizer , Scheduler"""
+        Optimizer , Scheduler
+         """
     scheduler = optax.linear_schedule(
         init_value=learning_rate_start,
         end_value=learning_rate_end,
@@ -340,5 +369,176 @@ def get_lion_with_linear_scheduler(
         ),
         optax.scale_by_schedule(scheduler),
         optax.scale(-1)
+    )
+    tx = optax.MultiSteps(
+        tx, gradient_accumulation_steps
+    )
+    return tx, scheduler
+
+
+def get_adamw_with_warm_up_cosine_scheduler(
+        steps: int,
+        learning_rate: float = 5e-5,
+        b1: float = 0.9,
+        b2: float = 0.999,
+        eps: float = 1e-8,
+        eps_root: float = 0.0,
+        weight_decay: float = 1e-1,
+        exponent: float = 1.0,
+        gradient_accumulation_steps: int = 1,
+        mu_dtype: Optional[chex.ArrayDType] = None
+):
+    """
+
+    :param steps:
+    :param learning_rate:
+    :param b1:
+    :param b2:
+    :param eps:
+    :param eps_root:
+    :param weight_decay:
+    :param exponent:
+    :param gradient_accumulation_steps:
+    :param mu_dtype:
+    :return:
+    """
+    scheduler = optax.warmup_cosine_decay_schedule(
+        init_value=0.5e-7,
+        peak_value=learning_rate,
+        warmup_steps=steps,
+        decay_steps=steps + 1,
+        end_value=learning_rate,
+        exponent=exponent
+    )
+    tx = optax.chain(
+        optax.scale_by_adam(
+            b1=b1,
+            b2=b2,
+            eps=eps,
+            eps_root=eps_root,
+            mu_dtype=mu_dtype
+        ),
+        optax.add_decayed_weights(
+            weight_decay=weight_decay
+        ),
+        optax.scale_by_schedule(scheduler),
+        optax.scale(-1)
+    )
+    tx = optax.MultiSteps(
+        tx, gradient_accumulation_steps
+    )
+    return tx, scheduler
+
+
+def get_adafactor_with_warm_up_cosine_scheduler(
+        steps: int,
+        learning_rate=5e-5,
+        weight_decay=1e-1,
+        min_dim_size_to_factor: int = 128,
+        decay_rate: float = 0.8,
+        decay_offset: int = 0,
+        multiply_by_parameter_scale: float = True,
+        clipping_threshold: Optional[float] = 1.0,
+        momentum: Optional[float] = None,
+        dtype_momentum: Any = jnp.float32,
+        weight_decay_rate: Optional[float] = None,
+        eps: float = 1e-30,
+        factored: bool = True,
+        exponent: float = 1.0,
+        weight_decay_mask=None,
+        gradient_accumulation_steps: int = 1
+):
+    """
+
+    :param steps:
+    :param learning_rate:
+    :param weight_decay:
+    :param min_dim_size_to_factor:
+    :param decay_rate:
+    :param decay_offset:
+    :param multiply_by_parameter_scale:
+    :param clipping_threshold:
+    :param momentum:
+    :param dtype_momentum:
+    :param weight_decay_rate:
+    :param eps:
+    :param factored:
+    :param exponent:
+    :param weight_decay_mask:
+    :param gradient_accumulation_steps:
+    :return:
+    """
+    scheduler = optax.warmup_cosine_decay_schedule(
+        init_value=0.5e-7,
+        peak_value=learning_rate,
+        warmup_steps=steps,
+        decay_steps=steps + 1,
+        end_value=learning_rate,
+        exponent=exponent
+    )
+    tx = optax.chain(
+        optax.adafactor(
+            learning_rate=scheduler,
+            min_dim_size_to_factor=min_dim_size_to_factor,
+            decay_rate=decay_rate,
+            decay_offset=decay_offset,
+            multiply_by_parameter_scale=multiply_by_parameter_scale,
+            clipping_threshold=clipping_threshold,
+            eps=eps,
+            momentum=momentum,
+            weight_decay_rate=weight_decay_rate,
+            dtype_momentum=dtype_momentum,
+            factored=factored
+        ),
+        optax_add_scheduled_weight_decay(
+            lambda step: -scheduler(step) * weight_decay,
+            weight_decay_mask
+        )
+    )
+    tx = optax.MultiSteps(
+        tx, gradient_accumulation_steps
+    )
+    return tx, scheduler
+
+
+def get_lion_with_warm_up_cosine_scheduler(
+        steps: int,
+        learning_rate=5e-5,
+        exponent: float = 1.0,
+        b1: float = 0.9,
+        b2: float = 0.99,
+        gradient_accumulation_steps: int = 1,
+        mu_dtype: Optional[chex.ArrayDType] = None,
+):
+    """
+
+    :param steps:
+    :param learning_rate:
+    :param exponent:
+    :param b1:
+    :param b2:
+    :param gradient_accumulation_steps:
+    :param mu_dtype:
+    :return:
+    """
+    scheduler = optax.warmup_cosine_decay_schedule(
+        init_value=0.5e-7,
+        peak_value=learning_rate,
+        warmup_steps=steps,
+        decay_steps=steps + 1,
+        end_value=learning_rate,
+        exponent=exponent,
+    )
+    tx = optax.chain(
+        optax.scale_by_lion(
+            b1=b1,
+            b2=b2,
+            mu_dtype=mu_dtype
+        ),
+        optax.scale_by_schedule(scheduler),
+        optax.scale(-1)
+    )
+    tx = optax.MultiSteps(
+        tx, gradient_accumulation_steps
     )
     return tx, scheduler

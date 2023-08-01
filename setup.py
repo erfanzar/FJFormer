@@ -16,7 +16,7 @@ setuptools.setup(
     packages=setuptools.find_packages(),
     install_requires=[
         'jax',
-        'transformers~=4.30.2',
+        'transformers~=4.31.0',
         'typing~=3.7.4.3',
         'numpy~=1.24.3',
         'flax~=0.6.4',
