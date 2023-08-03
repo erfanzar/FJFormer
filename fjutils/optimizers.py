@@ -6,7 +6,7 @@ import jax
 
 
 class OptaxScheduledWeightDecayState(NamedTuple):
-    count: jnp.DeviceArray
+    count: jax.Array
 
 
 def optax_add_scheduled_weight_decay(schedule_fn, mask=None):
@@ -81,9 +81,10 @@ def get_adamw_with_cosine_scheduler(
         optax.scale_by_schedule(scheduler),
         optax.scale(-1)
     )
-    tx = optax.MultiSteps(
-        tx, gradient_accumulation_steps
-    )
+    if gradient_accumulation_steps > 1:
+        tx = optax.MultiSteps(
+            tx, gradient_accumulation_steps
+        )
     return tx, scheduler
 
 
@@ -133,9 +134,10 @@ def get_adamw_with_linear_scheduler(
         optax.scale_by_schedule(scheduler),
         optax.scale(-1)
     )
-    tx = optax.MultiSteps(
-        tx, gradient_accumulation_steps
-    )
+    if gradient_accumulation_steps > 1:
+        tx = optax.MultiSteps(
+            tx, gradient_accumulation_steps
+        )
     return tx, scheduler
 
 
@@ -203,9 +205,10 @@ def get_adafactor_with_linear_scheduler(
             weight_decay_mask
         )
     )
-    tx = optax.MultiSteps(
-        tx, gradient_accumulation_steps
-    )
+    if gradient_accumulation_steps > 1:
+        tx = optax.MultiSteps(
+            tx, gradient_accumulation_steps
+        )
     return tx, scheduler
 
 
@@ -269,9 +272,10 @@ def get_adafactor_with_cosine_scheduler(
             weight_decay_mask
         )
     )
-    tx = optax.MultiSteps(
-        tx, gradient_accumulation_steps
-    )
+    if gradient_accumulation_steps > 1:
+        tx = optax.MultiSteps(
+            tx, gradient_accumulation_steps
+        )
     return tx, scheduler
 
 
@@ -328,9 +332,10 @@ def get_lion_with_cosine_scheduler(
         optax.scale_by_schedule(scheduler),
         optax.scale(-1)
     )
-    tx = optax.MultiSteps(
-        tx, gradient_accumulation_steps
-    )
+    if gradient_accumulation_steps > 1:
+        tx = optax.MultiSteps(
+            tx, gradient_accumulation_steps
+        )
     return tx, scheduler
 
 
@@ -370,9 +375,10 @@ def get_lion_with_linear_scheduler(
         optax.scale_by_schedule(scheduler),
         optax.scale(-1)
     )
-    tx = optax.MultiSteps(
-        tx, gradient_accumulation_steps
-    )
+    if gradient_accumulation_steps > 1:
+        tx = optax.MultiSteps(
+            tx, gradient_accumulation_steps
+        )
     return tx, scheduler
 
 
@@ -424,9 +430,10 @@ def get_adamw_with_warm_up_cosine_scheduler(
         optax.scale_by_schedule(scheduler),
         optax.scale(-1)
     )
-    tx = optax.MultiSteps(
-        tx, gradient_accumulation_steps
-    )
+    if gradient_accumulation_steps > 1:
+        tx = optax.MultiSteps(
+            tx, gradient_accumulation_steps
+        )
     return tx, scheduler
 
 
@@ -495,9 +502,10 @@ def get_adafactor_with_warm_up_cosine_scheduler(
             weight_decay_mask
         )
     )
-    tx = optax.MultiSteps(
-        tx, gradient_accumulation_steps
-    )
+    if gradient_accumulation_steps > 1:
+        tx = optax.MultiSteps(
+            tx, gradient_accumulation_steps
+        )
     return tx, scheduler
 
 
@@ -538,7 +546,8 @@ def get_lion_with_warm_up_cosine_scheduler(
         optax.scale_by_schedule(scheduler),
         optax.scale(-1)
     )
-    tx = optax.MultiSteps(
-        tx, gradient_accumulation_steps
-    )
+    if gradient_accumulation_steps > 1:
+        tx = optax.MultiSteps(
+            tx, gradient_accumulation_steps
+        )
     return tx, scheduler
