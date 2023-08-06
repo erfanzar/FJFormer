@@ -6,7 +6,7 @@ import jax
 
 
 class OptaxScheduledWeightDecayState(NamedTuple):
-    count: jnp.DeviceArray
+    count: jax.Array
 
 
 def optax_add_scheduled_weight_decay(schedule_fn, mask=None):
