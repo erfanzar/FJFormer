@@ -7,7 +7,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name="FJUtils",
-    version='0.0.9',
+    version='0.0.11',
     author="Erfan Zare Chavoshi",
     author_email="erfanzare82@yahoo.com",
     long_description=long_description,
@@ -15,13 +15,16 @@ setuptools.setup(
     url="https://github.com/erfanzar/",
     packages=setuptools.find_packages(),
     install_requires=[
-        'jax',
-        'transformers~=4.31.0',
-        'typing~=3.7.4.3',
-        'numpy~=1.24.3',
-        'flax',
-        'msgpack~=1.0.5',
-        'setuptools~=59.6.0',
+        "jax~=0.4.13",
+        "flax~=0.7.1",
+        "numpy==1.25.2",
+        "typing~=3.7.4.3",
+        "transformers~=4.31.0",
+        "einops~=0.6.1",
+        "optax~=0.1.7",
+        "msgpack~=1.0.5",
+        "tqdm==4.65.0",
+        "setuptools~=60.0.0",
         'ml_collections'
     ],
     python_requires=">=3.7, <3.11",

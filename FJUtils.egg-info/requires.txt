@@ -1,4 +1,4 @@
-flax~=0.6.4
+flax
 jax
 ml_collections
 msgpack~=1.0.5
