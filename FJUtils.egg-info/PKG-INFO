@@ -1,10 +1,12 @@
 Metadata-Version: 2.1
 Name: FJUtils
-Version: 0.0.11
+Version: 0.0.12
+Summary: UNKNOWN
 Home-page: https://github.com/erfanzar/
 Author: Erfan Zare Chavoshi
 Author-email: erfanzare82@yahoo.com
 License: Apache License 2.0
+Platform: UNKNOWN
 Classifier: Programming Language :: Python :: 3
 Classifier: License :: OSI Approved :: MIT License
 Classifier: Operating System :: OS Independent
@@ -117,3 +119,9 @@ just want to help out with development, please check out our GitHub repository a
 open an issue.
 
 Thank you for using FJUtils, and happy training!
+
+## Credits
+
+- some of the jax utilities are from EasyLM by [Young-Geng](https://github.com/young-geng)
+
+
