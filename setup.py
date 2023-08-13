@@ -17,7 +17,7 @@ setuptools.setup(
     install_requires=[
         "jax~=0.4.10",
         "flax~=0.7.1",
-        "numpy==1.25.2",
+        "numpy",
         "typing~=3.7.4.3",
         "transformers~=4.31.0",
         "einops~=0.6.1",

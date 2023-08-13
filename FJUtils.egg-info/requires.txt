@@ -1,4 +1,4 @@
-jax~=0.4.13
+jax~=0.4.10
 flax~=0.7.1
 numpy==1.25.2
 typing~=3.7.4.3
@@ -7,5 +7,4 @@ einops~=0.6.1
 optax~=0.1.7
 msgpack~=1.0.5
 tqdm==4.65.0
-setuptools~=60.0.0
 ml_collections
