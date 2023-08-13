@@ -97,3 +97,7 @@ just want to help out with development, please check out our GitHub repository a
 open an issue.
 
 Thank you for using FJUtils, and happy training!
+
+## Credits
+
+- some of the jax utilities are from EasyLM by [Young-Geng](https://github.com/young-geng)
