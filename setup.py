@@ -7,7 +7,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name="FJUtils",
-    version='0.0.15',
+    version='0.0.16',
     author="Erfan Zare Chavoshi",
     author_email="erfanzare82@yahoo.com",
     long_description=long_description,
@@ -26,7 +26,7 @@ setuptools.setup(
         "tqdm==4.65.0",
         'ml_collections'
     ],
-    python_requires=">=3.7, <3.11",
+    python_requires=">=3.7",
     license='Apache License 2.0',
     classifiers=[
         "Programming Language :: Python :: 3",
