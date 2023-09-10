@@ -88,7 +88,7 @@ optimizer, scheduler = get_adamw_with_linear_scheduler(
 
 ## Documentation
 
-Documentations are available [here](https://erfanzar.github.io/FJUtils)
+Documentations are available [here](https://erfanzar.github.io/FJUtils/docs)
 
 ## Contributing
 
