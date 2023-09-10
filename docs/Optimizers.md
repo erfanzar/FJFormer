@@ -6,6 +6,11 @@
       An Optax GradientTransformation object that adds the scheduled weight decay to the updates.
 
 * **get_adamw_with_cosine_scheduler** function:
+
+```python
+tx, scheduler = get_adamw_with_cosine_scheduler(*args, **kwargs)
+```
+
     * **Arguments:**
         * **steps:** The total number of training steps.
         * **learning_rate:** The initial learning rate.
@@ -20,6 +25,11 @@
       A tuple of the Adam optimizer and the cosine learning rate scheduler.
 
 * **get_adamw_with_linear_scheduler** function:
+
+```python
+tx, scheduler = get_adamw_with_linear_scheduler(*args, **kwargs)
+```
+
     * **Arguments:**
         * **steps:** The total number of training steps.
         * **learning_rate_start:** The initial learning rate.
@@ -34,8 +44,12 @@
     * **Returns:**
       A tuple of the Adam optimizer and the linear learning rate scheduler.
 
-
 * **get_adafactor_with_linear_scheduler** function:
+
+```python
+tx, scheduler = get_adafactor_with_linear_scheduler(*args, **kwargs)
+```
+
     * **Arguments:**
         * **steps:** The total number of training steps.
         * **learning_rate_start:** The initial learning rate.
@@ -57,6 +71,11 @@
       A tuple of the Adafactor optimizer and the linear learning rate scheduler.
 
 * **get_adafactor_with_cosine_scheduler** function:
+
+```python
+tx, scheduler = get_adafactor_with_cosine_scheduler(*args, **kwargs)
+```
+
     * **Arguments:**
         * **steps:** The total number of training steps.
         * **learning_rate:** The initial learning rate.
@@ -77,6 +96,11 @@
       A tuple of the Adafactor optimizer and the cosine learning rate scheduler.
 
 * **get_lion_with_cosine_scheduler** function:
+
+```python
+tx, scheduler = get_lion_with_cosine_scheduler(*args, **kwargs)
+```
+
     * **Arguments:**
         * **steps:** The total number of training steps.
         * **learning_rate:** The initial learning rate.
@@ -89,9 +113,12 @@
     * **Returns:**
       A tuple of the Lion optimizer and the cosine learning rate scheduler.
 
-
-
 * **get_lion_with_linear_scheduler** function:
+
+```python
+tx, scheduler = get_lion_with_linear_scheduler(*args, **kwargs)
+```
+
     * **Arguments:**
         * **steps:** The total number of training steps.
         * **learning_rate_start:** The initial learning rate.
@@ -103,7 +130,14 @@
     * **Returns:**
       A tuple of the Lion optimizer and the linear learning rate scheduler.
 
-* **get_adamw_with_warm_up_cosine_scheduler** function:
+[//]: # (* **get_adamw_with_warm_up_cosine_scheduler** function:)
+
+* **get_lion_with_linear_scheduler** function:
+
+```python
+tx, scheduler = get_lion_with_linear_scheduler(*args, **kwargs)
+```
+
     * **Arguments:**
         * **steps:** The total number of training steps.
         * **learning_rate:** The initial learning rate.
@@ -119,6 +153,11 @@
       A tuple of the Adam optimizer and the cosine learning rate scheduler.
 
 * **get_adafactor_with_warm_up_cosine_scheduler** function:
+
+```python
+tx, scheduler = get_adafactor_with_warm_up_cosine_scheduler(*args, **kwargs)
+```
+
     * **Arguments:**
         * **steps:** The total number of training steps.
         * **learning_rate:** The initial learning rate.
@@ -140,6 +179,11 @@
       A tuple of the Adafactor optimizer and the cosine learning rate scheduler.
 
 * **get_lion_with_warm_up_cosine_scheduler** function:
+
+```python
+tx, scheduler = get_lion_with_warm_up_cosine_scheduler(*args, **kwargs)
+```
+
     * **Arguments:**
         * **steps:** The total number of training steps.
         * **learning_rate:** The initial learning rate.
