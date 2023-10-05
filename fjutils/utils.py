@@ -5,7 +5,7 @@ import jax
 import msgpack
 from typing import List, Optional, Callable, Any
 
-from fjutils.checkpointing import StreamingCheckpointer
+from .checkpointing import StreamingCheckpointer
 from jax import numpy as jnp
 import numpy as np
 import json
@@ -13,10 +13,10 @@ import re
 from jax.sharding import PartitionSpec as PS
 import flax
 from jax.interpreters import pxla
-from fjutils.easylm import with_sharding_constraint
+from .easylm import with_sharding_constraint
 from flax.serialization import from_bytes, to_bytes, to_state_dict
 from flax.traverse_util import flatten_dict
-from fjutils.easylm import float_tensor_to_dtype
+from .easylm import float_tensor_to_dtype
 
 
 def is_torch_available():
@@ -211,3 +211,12 @@ def get_dataloader(dataset_or_huggingface_dataset_hub_id: Any, batch_size: int, 
     )
     max_steps = num_epochs * len(dataloader) if max_steps is None else max_steps
     return dataloader, max_steps
+
+
+def inverse_permute(tensor, head, dim_in, dim_out):
+    return tensor.reshape(head, 2, dim_in // head // 2, dim_out).transpose(0, 2, 1, 3).reshape(
+        dim_in, dim_out)
+
+
+def permute(tensor, head, dim_in, dim_out):
+    return tensor.view(head, dim_in // head // 2, 2, dim_out).transpose(1, 2).reshape(dim_in, dim_out)
