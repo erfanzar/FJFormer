@@ -15,6 +15,7 @@ setuptools.setup(
     url="https://github.com/erfanzar/",
     packages=setuptools.find_packages(),
     install_requires=[
+        "numpy==1.25.2",
         "jax>=0.4.17",
         "transformers>=4.34.0",
         "typing~=3.7.4.3",
@@ -23,7 +24,7 @@ setuptools.setup(
         "optax>=0.1.7",
         "einops>=0.6.1",
         "msgpack>=1.0.5",
-        "ml_collections"
+        "ml_collections",
     ],
     python_requires=">=3.7",
     license='Apache License 2.0',
