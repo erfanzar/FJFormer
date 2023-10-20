@@ -11,6 +11,7 @@ from functools import partial
 from jax.sharding import Mesh
 from typing import NamedTuple
 from einops import rearrange
+import chex
 from jax import lax
 
 
@@ -409,9 +410,9 @@ def blockwise_dot_product_attention(query, key, value, bias, deterministic,
 
 
 class Carry(NamedTuple):
-    numerator: jax.Array
-    denominator: jax.Array
-    max_so_far: jax.Array
+    numerator: chex.Array
+    denominator: chex.Array
+    max_so_far: chex.Array
 
 
 def _chunk_attention_bias(query_chunk_size, key_chunk_size,

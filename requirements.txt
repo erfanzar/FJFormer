@@ -1,4 +1,4 @@
-numpy
+numpy~=1.25.2
 jax>=0.4.10
 transformers>=4.34.0
 typing~=3.7.4.3
@@ -8,3 +8,7 @@ optax>=0.1.7
 einops>=0.6.1
 msgpack>=1.0.5
 ml_collections
+
+ipython~=8.14.0
+chex~=0.1.82
+setuptools~=68.0.0

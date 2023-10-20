@@ -1,12 +1,12 @@
 import optax
 from typing import Optional, NamedTuple, Any
-import chex
 from jax import numpy as jnp
 import jax
+import chex
 
 
 class OptaxScheduledWeightDecayState(NamedTuple):
-    count: jax.Array
+    count: chex.Array
 
 
 def optax_add_scheduled_weight_decay(schedule_fn, mask=None):

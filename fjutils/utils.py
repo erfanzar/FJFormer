@@ -17,6 +17,7 @@ from .easylm import with_sharding_constraint
 from flax.serialization import from_bytes, to_bytes, to_state_dict
 from flax.traverse_util import flatten_dict
 from .easylm import float_tensor_to_dtype
+import chex
 
 
 def is_torch_available():
@@ -220,3 +221,11 @@ def inverse_permute(tensor, head, dim_in, dim_out):
 
 def permute(tensor, head, dim_in, dim_out):
     return tensor.view(head, dim_in // head // 2, 2, dim_out).transpose(1, 2).reshape(dim_in, dim_out)
+
+
+def transpose(array: chex.Array, dim0: int, dim1: int):
+    dim0 = dim0 if dim0 > 0 else array.ndim - dim0
+    dim1 = dim1 if dim1 > 0 else array.ndim - dim1
+    perm = list(range(array.ndim))
+    perm[dim0], perm[dim1] = perm[dim1], perm[dim0]
+    return jnp.transpose(array, perm)
