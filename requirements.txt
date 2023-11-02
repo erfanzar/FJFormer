@@ -11,5 +11,7 @@ ml_collections
 ipython~=8.14.0
 chex~=0.1.82
 setuptools~=68.0.0
+torch>=2.0.0
+einops
 datasets
-torch
+IPython>=8.17.2

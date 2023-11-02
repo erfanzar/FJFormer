@@ -13,7 +13,7 @@ setuptools.setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/erfanzar/",
-    packages=setuptools.find_packages(),
+    packages=setuptools.find_packages('fjformer'),
     install_requires=[
         "numpy",
         "jax>=0.4.10",
@@ -25,9 +25,10 @@ setuptools.setup(
         "einops>=0.6.1",
         "msgpack>=1.0.5",
         "ml_collections",
-        "torch",
+        "torch>=2.0.0",
         "einops",
-        "datasets"
+        "datasets",
+        "IPython>=8.17.2"
     ],
     python_requires=">=3.7",
     license='Apache License 2.0',

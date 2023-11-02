@@ -1,3 +1,3 @@
 from .blockwise_attention import blockwise_dot_product_attention
-from flash_attention_0 import dot_product_attention_multihead, dot_product_attention_multiquery, \
+from .flash_attention_0 import dot_product_attention_multihead, dot_product_attention_multiquery, \
     dot_product_attention_queries_per_head

@@ -8,7 +8,27 @@ from flax.serialization import (
 )
 from flax.traverse_util import flatten_dict, unflatten_dict, empty_node
 import msgpack
-from .easylm import float_tensor_to_dtype, tree_apply
+from jax import numpy as jnp
+
+
+def get_dtype(tensor, dtype):
+    if dtype is None or dtype == '':
+        return tensor
+    if isinstance(dtype, str):
+        dtype = {
+            'bf16': jnp.bfloat16,
+            'bfloat16': jnp.bfloat16,
+            'fp16': jnp.float16,
+            'float16': jnp.float16,
+            'fp32': jnp.float32,
+            'float32': jnp.float32,
+            'fp64': jnp.float64,
+            'float64': jnp.float64,
+        }[dtype]
+    float_dtypes = (jnp.bfloat16, jnp.float16, jnp.float32, jnp.float64)
+    if getattr(tensor, 'dtype', None) in float_dtypes:
+        tensor = tensor.astype(dtype)
+    return tensor
 
 
 class StreamingCheckpointer(object):
@@ -53,7 +73,7 @@ class StreamingCheckpointer(object):
             for key, value in flattend_train_state.items():
                 if gather_fns is not None:
                     value = gather_fns[key](value)
-                value = float_tensor_to_dtype(value, float_dtype)
+                value = get_dtype(value, float_dtype)
                 fout.write(packer.pack((key, to_bytes(value))))
 
     def save_pickle(self, obj, filename):
@@ -144,7 +164,7 @@ class StreamingCheckpointer(object):
         state_dict = flax.serialization.msgpack_restore(encoded_bytes)
         if shard_fns is not None:
             shard_fns = to_state_dict(shard_fns)
-            state_dict = tree_apply(shard_fns, state_dict)
+            state_dict = jax.tree_util.tree_map(lambda fn, x: fn(x), shard_fns, state_dict)
 
         if target is None:
             return state_dict
