@@ -6,8 +6,8 @@ with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name="FJUtils",
-    version='0.0.21',
+    name="fjformer",
+    version='0.0.0',
     author="Erfan Zare Chavoshi",
     author_email="erfanzare82@yahoo.com",
     long_description=long_description,
@@ -25,6 +25,9 @@ setuptools.setup(
         "einops>=0.6.1",
         "msgpack>=1.0.5",
         "ml_collections",
+        "torch",
+        "einops",
+        "datasets"
     ],
     python_requires=">=3.7",
     license='Apache License 2.0',

@@ -15,7 +15,6 @@ class StreamingCheckpointer(object):
     """ Custom msgpack checkpointer that saves large train states by serializing
         and saving tensors one by one in a streaming fashion. Avoids running
         out of memory or local TPU disk with default flax checkpointer.
-        EASYLM
     """
 
     @staticmethod
