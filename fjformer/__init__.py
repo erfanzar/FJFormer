@@ -1,5 +1,5 @@
 from .attention import (dot_product_attention_multiquery, dot_product_attention_multihead,
-                        dot_product_attention_queries_per_head, blockwise_dot_product_attention)
+                        dot_product_attention_queries_per_head, efficient_attention)
 from .load import (
     load_and_convert_checkpoint_to_torch, float_tensor_to_dtype, read_ckpt, save_ckpt, StreamingCheckpointer
 )

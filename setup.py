@@ -7,13 +7,13 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name="fjformer",
-    version='0.0.0',
+    version='0.0.1',
     author="Erfan Zare Chavoshi",
     author_email="erfanzare82@yahoo.com",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/erfanzar/",
-    packages=setuptools.find_packages('fjformer'),
+    packages=setuptools.find_packages(),
     install_requires=[
         "numpy",
         "jax>=0.4.10",
