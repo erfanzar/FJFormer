@@ -7,7 +7,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name="fjformer",
-    version='0.0.6',
+    version='0.0.7',
     author="Erfan Zare Chavoshi",
     author_email="erfanzare82@yahoo.com",
     long_description=long_description,
@@ -15,7 +15,7 @@ setuptools.setup(
     url="https://github.com/erfanzar/",
     packages=setuptools.find_packages(),
     install_requires=[
-        "chex~=0.1.7",
+        "chex",
         "typing",
         "jax>=0.4.10",
         "transformers>=4.34.0",
