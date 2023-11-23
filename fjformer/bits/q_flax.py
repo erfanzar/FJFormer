@@ -55,7 +55,7 @@ class QDotGeneral(nn.Module):
     """A layer that can be injected into flax.nn.Dense, etc."""
 
     cfg: Optional[Union[config.DotGeneral, None]] = None
-    prng_name: Optional[Union[str, None]] = None
+    prng_name: Optional[Union[str, None]] = 'params'
 
     @nn.compact
     def __call__(
@@ -83,7 +83,7 @@ class QEinsum(nn.Module):
     """Quantized Einsum class for model injection."""
 
     cfg: Optional[Union[config.DotGeneral, None]] = None
-    prng_name: Optional[Union[str, None]] = None
+    prng_name: Optional[Union[str, None]] = 'params'
 
     @nn.compact
     def __call__(self, eqn, lhs, rhs):
