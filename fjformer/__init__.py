@@ -25,3 +25,5 @@ from .func import (
 from .utils import (
     JaxRNG, GenerateRNG, init_rng, next_rng, count_num_params
 )
+
+__version__ = '0.0.8'

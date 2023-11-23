@@ -25,7 +25,7 @@ def matmul(
       b: Right-hand side of the matmul.
       precision: Indicates precision of a and b.
       dot_general: lax.dot_general by default. To use quantized matmul, the
-        wrapper of aqt_dot_general in which TQs and `train` flag are provided
+        wrapper of q_dot_general in which TQs and `train` flag are provided
         should be passed into this function.
 
     Returns:
@@ -106,17 +106,15 @@ def matmul_true_int8(lhs, rhs):
     return result
 
 
-def aqt_matmul_int8(a, w):
-    max_int8 = 127
+def quant_int8(x):
+    return jnp.clip(jnp.round(x), -127, 127).astype(jnp.int8)
 
-    # This function is customizable and injectable, i.e:
-    # users can inject custom quant code into an AQT config.
-    def quant_int8(x):
-        return jnp.clip(jnp.round(x), -max_int8, max_int8).astype(jnp.int8)
+
+def q_matmul_int8(a, w):
 
     # Calibration. Calibration function is also customizable and injectable.
-    a_s = max_int8 / jnp.max(jnp.abs(a), axis=1, keepdims=True)
-    w_s = max_int8 / jnp.max(jnp.abs(w), axis=0, keepdims=True)
+    a_s = 127 / jnp.max(jnp.abs(a), axis=1, keepdims=True)
+    w_s = 127 / jnp.max(jnp.abs(w), axis=0, keepdims=True)
 
     # int8 matmul with int32 accumulator
     result = matmul_true_int8(quant_int8(a * a_s), quant_int8(w * w_s)) / (a_s * w_s)
