@@ -14,6 +14,8 @@
 """Quantization calibration methods."""
 
 import abc
+from typing import Union
+
 import flax.struct
 import jax.numpy as jnp
 
@@ -27,7 +29,7 @@ class Calibration(abc.ABC):
 
 @flax.struct.dataclass
 class ConstantCalibration(Calibration):
-    bound: jnp.ndarray | float
+    bound: Union[jnp.ndarray, float]
 
     def get_bound(self, x, shared_axes) -> jnp.ndarray:
         """Calibration."""

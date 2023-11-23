@@ -21,6 +21,7 @@ from . import config
 from . import int_numerics
 import flax.linen as nn
 import jax.numpy as jnp
+from typing import Optional, Union
 
 
 class Freezer(nn.Module, config.Preprocess):
@@ -53,8 +54,8 @@ class Freezer(nn.Module, config.Preprocess):
 class QDotGeneral(nn.Module):
     """A layer that can be injected into flax.nn.Dense, etc."""
 
-    cfg: config.DotGeneral | None = None
-    prng_name: str | None = 'params'
+    cfg: Optional[Union[config.DotGeneral, None]] = None
+    prng_name: Optional[Union[str, None]] = None
 
     @nn.compact
     def __call__(
@@ -81,8 +82,8 @@ class QDotGeneral(nn.Module):
 class QEinsum(nn.Module):
     """Quantized Einsum class for model injection."""
 
-    cfg: config.DotGeneral | None = None
-    prng_name: str | None = 'params'
+    cfg: Optional[Union[config.DotGeneral, None]] = None
+    prng_name: Optional[Union[str, None]] = None
 
     @nn.compact
     def __call__(self, eqn, lhs, rhs):
@@ -128,14 +129,14 @@ def set_lhs_quant_mode(
 
 def config_v4(
         *,
-        fwd_bits: int | None,
-        dlhs_bits: int | None,
-        drhs_bits: int | None,
+        fwd_bits: Union[int, None],
+        dlhs_bits: Union[int, None],
+        drhs_bits: Union[int, None],
         # The dummy static bound flag is for performance benchmarking.
         use_dummy_static_bound: bool = False,
         rng_type: str = 'jax.uniform',  # 'custom-1'
-        dlhs_local_q: config.LocalQ | None = None,
-        drhs_local_q: config.LocalQ | None = None,
+        dlhs_local_q: Union[config.LocalQ, None] = None,
+        drhs_local_q: Union[config.LocalQ, None] = None,
         fwd_accumulator_dtype: ... = jnp.int32,
         dlhs_accumulator_dtype: ... = jnp.int32,
         drhs_accumulator_dtype: ... = jnp.int32,
@@ -145,7 +146,7 @@ def config_v4(
 ) -> config.DotGeneral:
     """Version 4 of user-visible AQT config."""
 
-    def tensor_config(bits: int | None) -> config.Tensor:
+    def tensor_config(bits: Union[int, None]) -> config.Tensor:
         assert bits is None or bits >= 2, 'Need at least 2 bits.'
         if bits is None:
             numerics = config.NoNumerics()

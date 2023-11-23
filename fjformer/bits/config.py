@@ -271,8 +271,8 @@ def dot_general_make(
 
 def fully_quantized(
         *,
-        fwd_bits: int | None = 8,
-        bwd_bits: int | None = 8,
+        fwd_bits: Union[int, None] = 8,
+        bwd_bits: Union[int, None] = 8,
         use_fwd_quant: bool = True,
         use_stochastic_rounding: Optional[bool] = True,
         # Typically we have (but it's a caller's responsibility to check):
@@ -332,9 +332,9 @@ def fully_quantized(
 
 def config_v3(
         *,
-        fwd_bits: int | None,
-        dlhs_bits: int | None,
-        drhs_bits: int | None,
+        fwd_bits: Union[int, None],
+        dlhs_bits: Union[int, None],
+        drhs_bits: Union[int, None],
         use_dummy_static_bound: bool = False,
         rng_type: str = 'jax.uniform',  # 'custom-1'
         dlhs_local_q: Optional[LocalQ] = None,
