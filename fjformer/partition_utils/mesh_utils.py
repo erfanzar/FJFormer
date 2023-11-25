@@ -1,6 +1,8 @@
 import jax
 import jax.numpy as jnp
 import re
+
+from jax.experimental.mesh_utils import create_device_mesh
 from jax.experimental.pjit import pjit, with_sharding_constraint as _with_sharding_constraint
 import numpy as np
 from jax.sharding import PartitionSpec as PS
@@ -8,6 +10,7 @@ from jax.experimental import mesh_utils
 from jax.interpreters import pxla
 import flax
 from jax.sharding import Mesh
+from typing import Sequence
 
 
 def make_shard_and_gather_fns(partition_specs, dtype_specs=None):
@@ -220,3 +223,14 @@ def get_weight_decay_mask(exclusions):
 def tree_apply(fns, tree):
     """ Apply a pytree of functions to the pytree. """
     return jax.tree_util.tree_map(lambda fn, x: fn(x), fns, tree)
+
+
+def create_mesh(
+        axis_dims: Sequence[int] = (1, -1, 1, 1), axis_names: Sequence[str] = ("dp", "fsdp", "tp", "mp"), backend=''
+):
+    array_devices = jax.numpy.ones((len(jax.devices() if backend == '' else jax.devices(backend)), 1))
+    resh = array_devices.reshape(axis_dims).shape
+
+    return jax.sharding.Mesh(
+        create_device_mesh(resh), axis_names
+    )
