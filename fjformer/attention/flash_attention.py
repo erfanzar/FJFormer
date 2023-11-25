@@ -1,4 +1,3 @@
-import numpy as np
 import flax.linen as nn
 import jax
 import jax.lax as lax
@@ -231,10 +230,8 @@ def _blockwise_attention_fwd(q, k, v, carry, q_chunk_idx_start, k_chunk_idx_star
         def scan_kv_block(carry, scan):
             k_chunk, value_chunk, k_chunk_idx = scan
             numerator_chunk, denominator_chunk, prev_max_score_chunk = carry
-            # attn_weights = jnp.einsum('bqhd,bkhd->bqhk', q_chunk, k_chunk, precision=precision) / scale
             attn_weights = jnp.einsum('bqhd,bkhd->bhqk', q_chunk, k_chunk, precision=precision) / scale
             bias_chunk = _chunk_bias_fn(q_chunk_idx_start + q_chunk_idx, k_chunk_idx_start + k_chunk_idx)
-            # bias_chunk = jnp.moveaxis(bias_chunk, 1, 2)
             attn_weights = attn_weights + bias_chunk
 
             max_score_chunk = jnp.maximum(prev_max_score_chunk, jnp.max(attn_weights, axis=-1))
@@ -242,13 +239,7 @@ def _blockwise_attention_fwd(q, k, v, carry, q_chunk_idx_start, k_chunk_idx_star
             exp_weights = jnp.exp(attn_weights - max_score_chunk[..., None])
             exp_values = jnp.einsum('bhqk,bkhd->bqhd', exp_weights, value_chunk, precision=precision)
             correction = rearrange(jnp.exp(prev_max_score_chunk - max_score_chunk), 'b h q -> b q h')[..., None]
-            # max_score_chunk = jnp.max(attn_weights, axis=-1, keepdims=True)
-            # max_score_chunk = jnp.maximum(prev_max_score_chunk, max_score_chunk)
-            # exp_weights = jnp.exp(attn_weights - max_score_chunk)
-            # exp_values = jnp.einsum('bqhv,bvhd->bqhd', exp_weights, value_chunk, precision=precision)
-            # correction = jnp.exp(prev_max_score_chunk - max_score_chunk)
             numerator_chunk = numerator_chunk * correction + exp_values
-            # denominator_chunk = denominator_chunk * correction + exp_weights.sum(axis=-1, keepdims=True)
             denominator_chunk = denominator_chunk * jnp.exp(prev_max_score_chunk - max_score_chunk) + exp_weights.sum(
                 axis=-1)
             return (numerator_chunk, denominator_chunk, max_score_chunk), None
@@ -276,7 +267,6 @@ def _blockwise_attention_fwd(q, k, v, carry, q_chunk_idx_start, k_chunk_idx_star
 
     _, (_, numerator, denominator, max_score) = lax.scan(scan_attention, init=(), xs=(
         q, numerator, denominator, max_score, jnp.arange(0, num_q)))
-    # numerator, denominator, max_score = map(lambda x: rearrange(x, 'n b c h d -> b (n c) h d'), (numerator, denominator, max_score))
 
     numerator = jnp.moveaxis(numerator, 1, 0)
     numerator = numerator.reshape((batch, q_len, num_heads, dim_per_head))
@@ -338,7 +328,6 @@ def _blockwise_attention_bwd(q, k, v, g, carry, q_chunk_idx_start, k_chunk_idx_s
             dq_chunk = carry
             attn_weights = jnp.einsum('bqhd,bkhd->bhqk', q_chunk, k_chunk, precision=precision) / scale
             bias_chunk = _chunk_bias_fn(q_chunk_idx_start + q_chunk_idx, k_chunk_idx_start + k_chunk_idx)
-            # bias_chunk = jnp.moveaxis(bias_chunk, 1, 2)
             attn_weights = attn_weights + bias_chunk
             exp_weights = jnp.exp(attn_weights - max_score_chunk[..., None]) / denominator_chunk[..., None]
 
@@ -390,9 +379,6 @@ Blockwise parallel transformer https://arxiv.org/abs/2305.19370 Liu et al. 2023
 
 
 def blockwise_ffn(remat_ffn, inputs, chunk_size, deterministic):
-    # remat_ffn: a rematerialized ffn with policy jax.checkpoint_policies.nothing_saveable()
-    # inputs: (batch, seq_len, dim)
-    # chunk_size: the chunk size to split the sequence
     inputs = rearrange(inputs, 'b (c n) d -> b c n d', c=chunk_size)
 
     def scan_ffn(remat_ffn, carry, hidden_states):
@@ -415,10 +401,6 @@ def blockwise_attn(query, key, value, bias, deterministic,
                    dropout_rng, attn_pdrop, causal, query_chunk_size,
                    key_chunk_size, dtype, policy, precision, float32_logits,
                    prevent_cse):
-    # query, key, value: (batch, seq_len, num_heads, dim_per_head)
-    # bias: (batch, seq_len) can be used to mask out attention (e.g. padding)
-    # causal: whether to use causal mask
-    # policy: one of jax.checkpoint_policies
     query = query / jnp.sqrt(query.shape[-1]).astype(dtype)
     if float32_logits:
         query = query.astype(jnp.float32)
@@ -627,10 +609,7 @@ def _ring_flash_attention_fwd_tpu(q, k, v, attn_bias, axis_name, float32_logits,
 
     def scan_kv_block(carry, idx):
         o, l, m, k, v = carry
-        # attn_bias_slice = lax.dynamic_slice_in_dim(attn_bias,
-        #     (lax.axis_index(axis_name) - idx) % axis_size * kv_len, kv_len, axis=-1
-        # )
-        attn_bias_slice = None  # TODO
+        attn_bias_slice = None
         q_block_idx = lax.axis_index(axis_name)
         k_block_idx = (lax.axis_index(axis_name) - idx) % axis_size
         q_chunk_idx_start = q_block_idx * (block_size // query_chunk_size)

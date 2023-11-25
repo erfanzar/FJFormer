@@ -22,9 +22,9 @@ import jax
 from jax import lax
 from jax.experimental import pallas as pl
 import jax.numpy as jnp
-import numpy as np
 
-DEFAULT_MASK_VALUE = -0.7 * float(np.finfo(np.dtype("float32")).max)
+
+DEFAULT_MASK_VALUE = -0.7 * float(jnp.finfo(jnp.dtype("float32")).max)
 
 
 def mha_forward_kernel(
