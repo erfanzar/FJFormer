@@ -1,0 +1,1166 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.10.0" />
+<title>fjformer.bits.config API documentation</title>
+<meta name="description" content="Configuration dataclasses." />
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
+<link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js" integrity="sha256-Uv3H6lx7dJmRfRvH8TH6kJD1TSK1aFcwgx+mdg3epi8=" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>fjformer.bits.config</code></h1>
+</header>
+<section id="section-intro">
+<p>Configuration dataclasses.</p>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python"># Copyright 2022 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the &#34;License&#34;);
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an &#34;AS IS&#34; BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+&#34;&#34;&#34;Configuration dataclasses.&#34;&#34;&#34;
+
+import abc
+import dataclasses
+from typing import Any, Callable, Optional, Union
+from . import calibration
+from . import int_numerics
+from . import stochastic_rounding
+import flax.struct
+import jax
+import jax.numpy as jnp
+
+DType = Any
+Context = Any  # TODO(lew): We could put Context in a separate file.
+
+ClipAndRoundFn = Callable[[jnp.ndarray, Context], jnp.ndarray]
+
+
+class Preprocess(abc.ABC):
+
+    @abc.abstractmethod
+    def __call__(self, inputs):
+        pass
+
+
+class NoNumerics(flax.struct.PyTreeNode):
+    # TODO(lew): This is a workaround. We should separate Stochastic Rounding.
+    # noise_fn has no effect in NoNumerics.
+    noise_fn: Optional[stochastic_rounding.NoiseFn] = None
+
+    &#34;&#34;&#34;No quantization, use a native type such as bf16.&#34;&#34;&#34;
+    pass
+
+
+Numerics = Union[NoNumerics, int_numerics.IntNumerics]
+
+
+@dataclasses.dataclass
+class Tensor:
+    &#34;&#34;&#34;Configuration of quantization of one tensor or one side of tensor op.&#34;&#34;&#34;
+
+    numerics: Numerics
+    calib_shared_axes: Optional[list[int]]
+    scale_stop_grad: bool
+    # noise+clip+round
+    # We apply gradient of clip_and_round in bwd pass.
+    calibration: calibration.Calibration
+    # Round up the calibration to power of 2 (po2).
+    po2_scale: bool
+    use_fake_quant: bool
+    # Controls at what value of input tensor should be used.
+    # Setting it to True, but not quantizing fwd pass will assert-fail.
+    use_fwd_quant: Optional[bool]
+    # Operation applied to the quantized inputs to the dot general
+    preprocess_quant_cls: Optional[Callable[[], Preprocess]]
+    # lax.dot_general output is multiplied by (int transposed) scales.
+    # preprocess_scale will be applied to these scales before the multiplication.
+    preprocess_scale_cls: Optional[Callable[[], Preprocess]]
+
+    @classmethod
+    def make(cls, *args, **kwargs) -&gt; &#39;Tensor&#39;:
+        return tensor_make(*args, **kwargs)
+
+
+@dataclasses.dataclass
+class LocalQ:
+    contraction_axis_shard_count: int
+
+
+@dataclasses.dataclass
+class DotGeneralRaw:
+    &#34;&#34;&#34;Configuration of quantization of one dot_general without gradient.&#34;&#34;&#34;
+
+    lhs: Tensor
+    rhs: Tensor
+    dg_in_dtype: Optional[DType]
+    dg_accumulator_dtype: Optional[DType]
+    local_q: Optional[LocalQ]
+
+    @classmethod
+    def make(cls, *args, **kwargs) -&gt; &#39;DotGeneralRaw&#39;:
+        return dot_general_raw_make(*args, **kwargs)
+
+    @classmethod
+    def make_conv_general_dilated(cls, *args, **kwargs) -&gt; &#39;DotGeneralRaw&#39;:
+        return conv_general_dilated_make(*args, **kwargs)
+
+
+@dataclasses.dataclass
+class DotGeneral:
+    &#34;&#34;&#34;Configuration of quantization of dot_general and its gradients.&#34;&#34;&#34;
+
+    fwd: DotGeneralRaw
+    dlhs: DotGeneralRaw
+    drhs: DotGeneralRaw
+
+    @classmethod
+    def make(cls, *args, **kwargs) -&gt; &#39;DotGeneral&#39;:
+        return dot_general_make(*args, **kwargs)
+
+
+################################################################################
+# Functions below are auxiliary helpers.
+
+
+def set_accumulator_dtype(
+        cfg: DotGeneral,
+        fwd_dtype: Optional[DType],
+        dlhs_dtype: Optional[DType],
+        drhs_dtype: Optional[DType],
+):
+    cfg.fwd.dg_accumulator_dtype = fwd_dtype
+    cfg.dlhs.dg_accumulator_dtype = dlhs_dtype
+    cfg.drhs.dg_accumulator_dtype = drhs_dtype
+
+
+def set_stochastic_rounding(
+        cfg: DotGeneral,
+        # Typically we have (but it&#39;s a caller&#39;s responsibility to check):
+        # - vjp_lhs_stochastic_rounding is referring to the gradient and
+        # - vjp_rhs_stochastic_rounding is referring to the activations/weights.
+        vjp_lhs_stochastic_rounding: bool,
+        vjp_rhs_stochastic_rounding: bool,
+        implementation: str,
+):
+    &#34;&#34;&#34;Configure stochastic rounding implementation.&#34;&#34;&#34;
+    noise_implementations = {
+        &#39;jax.uniform&#39;: lambda shape, key: jax.random.uniform(key, shape) - 0.5,
+        &#39;custom-1&#39;: stochastic_rounding.random_centered_uniform,
+    }
+    msg = f&#39;{implementation} not supported.&#39;
+    assert implementation in noise_implementations.keys(), msg
+    noise_fn = noise_implementations[implementation]
+
+    if vjp_lhs_stochastic_rounding:
+        cfg.dlhs.lhs.numerics = cfg.dlhs.lhs.numerics.replace(noise_fn=noise_fn)
+        cfg.drhs.lhs.numerics = cfg.drhs.lhs.numerics.replace(noise_fn=noise_fn)
+    else:
+        cfg.dlhs.lhs.numerics = cfg.dlhs.lhs.numerics.replace(noise_fn=None)
+        cfg.drhs.lhs.numerics = cfg.drhs.lhs.numerics.replace(noise_fn=None)
+
+    if vjp_rhs_stochastic_rounding:
+        cfg.dlhs.rhs.numerics = cfg.dlhs.rhs.numerics.replace(noise_fn=noise_fn)
+        cfg.drhs.rhs.numerics = cfg.drhs.rhs.numerics.replace(noise_fn=noise_fn)
+    else:
+        cfg.dlhs.rhs.numerics = cfg.dlhs.rhs.numerics.replace(noise_fn=None)
+        cfg.drhs.rhs.numerics = cfg.drhs.rhs.numerics.replace(noise_fn=None)
+
+
+def set_static_bound(cfg: DotGeneral, bound: float = 1.0):
+    cfg.fwd.lhs.calibration = calibration.ConstantCalibration(bound)
+    cfg.fwd.rhs.calibration = calibration.ConstantCalibration(bound)
+    cfg.drhs.lhs.calibration = calibration.ConstantCalibration(bound)
+    cfg.drhs.rhs.calibration = calibration.ConstantCalibration(bound)
+    cfg.dlhs.lhs.calibration = calibration.ConstantCalibration(bound)
+    cfg.dlhs.rhs.calibration = calibration.ConstantCalibration(bound)
+
+
+def tensor_make(bits: Optional[int]) -&gt; &#39;Tensor&#39;:
+    &#34;&#34;&#34;Makes config.Tensor.&#34;&#34;&#34;
+    if bits is None:
+        numerics = NoNumerics()
+    else:
+        pz = False if bits == 1 else True
+        numerics = int_numerics.IntNumerics(
+            bits=bits,
+            preserve_zero=pz,
+            preserve_max_val=False,
+            clip=True,
+            round=True,
+            noise_fn=None,
+            clip_gradient=False,  # This can be disabled when using abs-max scaling.
+        )
+
+    return Tensor(
+        numerics=numerics,
+        calib_shared_axes=None,
+        scale_stop_grad=True,
+        calibration=calibration.AbsMaxCalibration(),
+        po2_scale=False,
+        use_fake_quant=False,
+        # dtype_x=dtype,
+        use_fwd_quant=None,
+        preprocess_quant_cls=None,
+        preprocess_scale_cls=None,
+    )
+
+
+def dot_general_raw_make(
+        lhs_bits=None,
+        rhs_bits=None,
+        local_q=None,
+) -&gt; &#39;DotGeneralRaw&#39;:
+    &#34;&#34;&#34;Create quantization configs for input matrices to a matmul.&#34;&#34;&#34;
+    lhs_cfg = tensor_make(lhs_bits)
+    rhs_cfg = tensor_make(rhs_bits)
+
+    # Binary uses 0.5 right now.
+    if (
+            lhs_bits is not None
+            and rhs_bits is not None
+            and 2 &lt;= lhs_bits &lt;= 8
+            and 2 &lt;= rhs_bits &lt;= 8
+    ):
+        dg_in_dtype = jnp.int8
+        dg_accumulator_dtype = jnp.int32
+    else:
+        # Use None to determine the dtype on the fly in q_dot_general
+        dg_in_dtype = None
+        dg_accumulator_dtype = None
+
+    return DotGeneralRaw(
+        lhs=lhs_cfg,
+        rhs=rhs_cfg,
+        dg_in_dtype=dg_in_dtype,
+        dg_accumulator_dtype=dg_accumulator_dtype,
+        local_q=local_q,
+    )
+
+
+def conv_general_dilated_make(
+        spatial_dimensions=2,
+        lhs_bits: Optional[int] = None,
+        rhs_bits: Optional[int] = None,
+) -&gt; &#39;DotGeneralRaw&#39;:
+    &#34;&#34;&#34;Create quantization config conv_general_dilated.&#34;&#34;&#34;
+    config = dot_general_raw_make(lhs_bits, rhs_bits)
+    # Hardcoding flax assumptions.
+    if config.lhs:
+        config.lhs.calib_shared_axes = list(range(1, spatial_dimensions + 2))
+    if config.rhs:
+        config.rhs.calib_shared_axes = list(range(0, spatial_dimensions + 2 - 1))
+    return config
+
+
+def dot_general_make(
+        lhs_bits: Optional[int] = None,
+        rhs_bits: Optional[int] = None,
+        bwd_bits: Optional[int] = None,
+        use_fwd_quant: bool = True,
+        dlhs_local_q=None,
+        drhs_local_q=None,
+) -&gt; &#39;DotGeneral&#39;:
+    &#34;&#34;&#34;Create quantization configs for input matrices to a matmul.&#34;&#34;&#34;
+    fwd = dot_general_raw_make(lhs_bits, rhs_bits)
+    dlhs = dot_general_raw_make(bwd_bits, bwd_bits, local_q=dlhs_local_q)
+    drhs = dot_general_raw_make(bwd_bits, bwd_bits, local_q=drhs_local_q)
+    cfg = DotGeneral(fwd=fwd, dlhs=dlhs, drhs=drhs)
+
+    # Surprising: lhs quantization determines what drhs can do.
+    if lhs_bits is not None:
+        # Only rhs is accepting MultiTensor.
+        cfg.drhs.rhs.use_fwd_quant = use_fwd_quant
+    if rhs_bits is not None:
+        cfg.dlhs.rhs.use_fwd_quant = use_fwd_quant
+    return cfg
+
+
+def fully_quantized(
+        *,
+        fwd_bits: Union[int, None] = 8,
+        bwd_bits: Union[int, None] = 8,
+        use_fwd_quant: bool = True,
+        use_stochastic_rounding: Optional[bool] = True,
+        # Typically we have (but it&#39;s a caller&#39;s responsibility to check):
+        # - vjp_lhs_stochastic_rounding is referring to the gradient and
+        # - vjp_rhs_stochastic_rounding is referring to the activations/weights.
+        vjp_lhs_stochastic_rounding: Optional[bool] = None,
+        vjp_rhs_stochastic_rounding: Optional[bool] = None,
+        # The dummy static bound flag is temporary, for performance benchmarking.
+        use_dummy_static_bound: bool = False,
+        dlhs_local_q: Optional[LocalQ] = None,
+        drhs_local_q: Optional[LocalQ] = None,
+) -&gt; DotGeneral:
+    &#34;&#34;&#34;Fully Quantized Training.&#34;&#34;&#34;
+    cfg = dot_general_make(
+        lhs_bits=fwd_bits,
+        rhs_bits=fwd_bits,
+        bwd_bits=bwd_bits,
+        use_fwd_quant=use_fwd_quant,
+        dlhs_local_q=dlhs_local_q,
+        drhs_local_q=drhs_local_q,
+    )
+
+    # Stochastic Rounding
+    # These 3 variables are used to ensure we don&#39;t mix
+    # old and new style of SR configuration.
+    old_style_sr_config = use_stochastic_rounding is not None
+    new_style_sr_config_lhs = vjp_lhs_stochastic_rounding is not None
+    new_style_sr_config_rhs = vjp_rhs_stochastic_rounding is not None
+    assert new_style_sr_config_lhs == new_style_sr_config_rhs, (
+        &#39;if you use new style SR config (vjp_xhs_stochastic_rounding), do pass&#39;
+        &#39; both lhs and rhs explicitely.&#39;
+    )
+    assert new_style_sr_config_lhs != old_style_sr_config
+
+    true = True  # A crude way to get around g-explicit-bool-comparison warning
+
+    assert not (vjp_lhs_stochastic_rounding and vjp_rhs_stochastic_rounding), (
+        &#39;This config is buggy when you set both to True. Contact lew@ or use&#39;
+        &#39; config_v3&#39;
+    )
+
+    # By default use jax.uniform for stochastic rounding
+    if use_stochastic_rounding == true:
+        set_stochastic_rounding(cfg, True, True, &#39;jax.uniform&#39;)
+
+    if vjp_lhs_stochastic_rounding == true:
+        set_stochastic_rounding(cfg, True, False, &#39;jax.uniform&#39;)
+
+    if vjp_rhs_stochastic_rounding == true:
+        set_stochastic_rounding(cfg, False, True, &#39;jax.uniform&#39;)
+
+    if use_dummy_static_bound:
+        set_static_bound(cfg, 1.0)
+
+    return cfg
+
+
+def config_v3(
+        *,
+        fwd_bits: Union[int, None],
+        dlhs_bits: Union[int, None],
+        drhs_bits: Union[int, None],
+        use_dummy_static_bound: bool = False,
+        rng_type: str = &#39;jax.uniform&#39;,  # &#39;custom-1&#39;
+        dlhs_local_q: Optional[LocalQ] = None,
+        drhs_local_q: Optional[LocalQ] = None,
+        fwd_accumulator_dtype: ... = jnp.int32,
+        dlhs_accumulator_dtype: ... = jnp.int32,
+        drhs_accumulator_dtype: ... = jnp.int32,
+) -&gt; DotGeneral:
+    &#34;&#34;&#34;Fully Quantized Training.&#34;&#34;&#34;
+    fwd = dot_general_raw_make(fwd_bits, fwd_bits)
+    dlhs = dot_general_raw_make(dlhs_bits, dlhs_bits, local_q=dlhs_local_q)
+    drhs = dot_general_raw_make(drhs_bits, drhs_bits, local_q=drhs_local_q)
+    cfg = DotGeneral(fwd=fwd, dlhs=dlhs, drhs=drhs)
+
+    cfg.dlhs.rhs.use_fwd_quant = False
+    cfg.drhs.rhs.use_fwd_quant = False
+
+    set_stochastic_rounding(
+        cfg,
+        vjp_lhs_stochastic_rounding=True,
+        vjp_rhs_stochastic_rounding=False,
+        implementation=rng_type,
+    )
+
+    if use_dummy_static_bound:
+        set_static_bound(cfg, 1.0)
+
+    set_accumulator_dtype(
+        cfg,
+        fwd_dtype=fwd_accumulator_dtype,
+        dlhs_dtype=dlhs_accumulator_dtype,
+        drhs_dtype=drhs_accumulator_dtype,
+    )
+    return cfg</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="fjformer.bits.config.config_v3"><code class="name flex">
+<span>def <span class="ident">config_v3</span></span>(<span>*, fwd_bits: int | None, dlhs_bits: int | None, drhs_bits: int | None, use_dummy_static_bound: bool = False, rng_type: str = 'jax.uniform', dlhs_local_q: Optional[<a title="fjformer.bits.config.LocalQ" href="#fjformer.bits.config.LocalQ">LocalQ</a>] = None, drhs_local_q: Optional[<a title="fjformer.bits.config.LocalQ" href="#fjformer.bits.config.LocalQ">LocalQ</a>] = None, fwd_accumulator_dtype: Ellipsis = jax.numpy.int32, dlhs_accumulator_dtype: Ellipsis = jax.numpy.int32, drhs_accumulator_dtype: Ellipsis = jax.numpy.int32) ‑> <a title="fjformer.bits.config.DotGeneral" href="#fjformer.bits.config.DotGeneral">DotGeneral</a></span>
+</code></dt>
+<dd>
+<div class="desc"><p>Fully Quantized Training.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def config_v3(
+        *,
+        fwd_bits: Union[int, None],
+        dlhs_bits: Union[int, None],
+        drhs_bits: Union[int, None],
+        use_dummy_static_bound: bool = False,
+        rng_type: str = &#39;jax.uniform&#39;,  # &#39;custom-1&#39;
+        dlhs_local_q: Optional[LocalQ] = None,
+        drhs_local_q: Optional[LocalQ] = None,
+        fwd_accumulator_dtype: ... = jnp.int32,
+        dlhs_accumulator_dtype: ... = jnp.int32,
+        drhs_accumulator_dtype: ... = jnp.int32,
+) -&gt; DotGeneral:
+    &#34;&#34;&#34;Fully Quantized Training.&#34;&#34;&#34;
+    fwd = dot_general_raw_make(fwd_bits, fwd_bits)
+    dlhs = dot_general_raw_make(dlhs_bits, dlhs_bits, local_q=dlhs_local_q)
+    drhs = dot_general_raw_make(drhs_bits, drhs_bits, local_q=drhs_local_q)
+    cfg = DotGeneral(fwd=fwd, dlhs=dlhs, drhs=drhs)
+
+    cfg.dlhs.rhs.use_fwd_quant = False
+    cfg.drhs.rhs.use_fwd_quant = False
+
+    set_stochastic_rounding(
+        cfg,
+        vjp_lhs_stochastic_rounding=True,
+        vjp_rhs_stochastic_rounding=False,
+        implementation=rng_type,
+    )
+
+    if use_dummy_static_bound:
+        set_static_bound(cfg, 1.0)
+
+    set_accumulator_dtype(
+        cfg,
+        fwd_dtype=fwd_accumulator_dtype,
+        dlhs_dtype=dlhs_accumulator_dtype,
+        drhs_dtype=drhs_accumulator_dtype,
+    )
+    return cfg</code></pre>
+</details>
+</dd>
+<dt id="fjformer.bits.config.conv_general_dilated_make"><code class="name flex">
+<span>def <span class="ident">conv_general_dilated_make</span></span>(<span>spatial_dimensions=2, lhs_bits: int | None = None, rhs_bits: int | None = None) ‑> <a title="fjformer.bits.config.DotGeneralRaw" href="#fjformer.bits.config.DotGeneralRaw">DotGeneralRaw</a></span>
+</code></dt>
+<dd>
+<div class="desc"><p>Create quantization config conv_general_dilated.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def conv_general_dilated_make(
+        spatial_dimensions=2,
+        lhs_bits: Optional[int] = None,
+        rhs_bits: Optional[int] = None,
+) -&gt; &#39;DotGeneralRaw&#39;:
+    &#34;&#34;&#34;Create quantization config conv_general_dilated.&#34;&#34;&#34;
+    config = dot_general_raw_make(lhs_bits, rhs_bits)
+    # Hardcoding flax assumptions.
+    if config.lhs:
+        config.lhs.calib_shared_axes = list(range(1, spatial_dimensions + 2))
+    if config.rhs:
+        config.rhs.calib_shared_axes = list(range(0, spatial_dimensions + 2 - 1))
+    return config</code></pre>
+</details>
+</dd>
+<dt id="fjformer.bits.config.dot_general_make"><code class="name flex">
+<span>def <span class="ident">dot_general_make</span></span>(<span>lhs_bits: int | None = None, rhs_bits: int | None = None, bwd_bits: int | None = None, use_fwd_quant: bool = True, dlhs_local_q=None, drhs_local_q=None) ‑> <a title="fjformer.bits.config.DotGeneral" href="#fjformer.bits.config.DotGeneral">DotGeneral</a></span>
+</code></dt>
+<dd>
+<div class="desc"><p>Create quantization configs for input matrices to a matmul.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def dot_general_make(
+        lhs_bits: Optional[int] = None,
+        rhs_bits: Optional[int] = None,
+        bwd_bits: Optional[int] = None,
+        use_fwd_quant: bool = True,
+        dlhs_local_q=None,
+        drhs_local_q=None,
+) -&gt; &#39;DotGeneral&#39;:
+    &#34;&#34;&#34;Create quantization configs for input matrices to a matmul.&#34;&#34;&#34;
+    fwd = dot_general_raw_make(lhs_bits, rhs_bits)
+    dlhs = dot_general_raw_make(bwd_bits, bwd_bits, local_q=dlhs_local_q)
+    drhs = dot_general_raw_make(bwd_bits, bwd_bits, local_q=drhs_local_q)
+    cfg = DotGeneral(fwd=fwd, dlhs=dlhs, drhs=drhs)
+
+    # Surprising: lhs quantization determines what drhs can do.
+    if lhs_bits is not None:
+        # Only rhs is accepting MultiTensor.
+        cfg.drhs.rhs.use_fwd_quant = use_fwd_quant
+    if rhs_bits is not None:
+        cfg.dlhs.rhs.use_fwd_quant = use_fwd_quant
+    return cfg</code></pre>
+</details>
+</dd>
+<dt id="fjformer.bits.config.dot_general_raw_make"><code class="name flex">
+<span>def <span class="ident">dot_general_raw_make</span></span>(<span>lhs_bits=None, rhs_bits=None, local_q=None) ‑> <a title="fjformer.bits.config.DotGeneralRaw" href="#fjformer.bits.config.DotGeneralRaw">DotGeneralRaw</a></span>
+</code></dt>
+<dd>
+<div class="desc"><p>Create quantization configs for input matrices to a matmul.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def dot_general_raw_make(
+        lhs_bits=None,
+        rhs_bits=None,
+        local_q=None,
+) -&gt; &#39;DotGeneralRaw&#39;:
+    &#34;&#34;&#34;Create quantization configs for input matrices to a matmul.&#34;&#34;&#34;
+    lhs_cfg = tensor_make(lhs_bits)
+    rhs_cfg = tensor_make(rhs_bits)
+
+    # Binary uses 0.5 right now.
+    if (
+            lhs_bits is not None
+            and rhs_bits is not None
+            and 2 &lt;= lhs_bits &lt;= 8
+            and 2 &lt;= rhs_bits &lt;= 8
+    ):
+        dg_in_dtype = jnp.int8
+        dg_accumulator_dtype = jnp.int32
+    else:
+        # Use None to determine the dtype on the fly in q_dot_general
+        dg_in_dtype = None
+        dg_accumulator_dtype = None
+
+    return DotGeneralRaw(
+        lhs=lhs_cfg,
+        rhs=rhs_cfg,
+        dg_in_dtype=dg_in_dtype,
+        dg_accumulator_dtype=dg_accumulator_dtype,
+        local_q=local_q,
+    )</code></pre>
+</details>
+</dd>
+<dt id="fjformer.bits.config.fully_quantized"><code class="name flex">
+<span>def <span class="ident">fully_quantized</span></span>(<span>*, fwd_bits: int | None = 8, bwd_bits: int | None = 8, use_fwd_quant: bool = True, use_stochastic_rounding: Optional[bool] = True, vjp_lhs_stochastic_rounding: Optional[bool] = None, vjp_rhs_stochastic_rounding: Optional[bool] = None, use_dummy_static_bound: bool = False, dlhs_local_q: Optional[<a title="fjformer.bits.config.LocalQ" href="#fjformer.bits.config.LocalQ">LocalQ</a>] = None, drhs_local_q: Optional[<a title="fjformer.bits.config.LocalQ" href="#fjformer.bits.config.LocalQ">LocalQ</a>] = None) ‑> <a title="fjformer.bits.config.DotGeneral" href="#fjformer.bits.config.DotGeneral">DotGeneral</a></span>
+</code></dt>
+<dd>
+<div class="desc"><p>Fully Quantized Training.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def fully_quantized(
+        *,
+        fwd_bits: Union[int, None] = 8,
+        bwd_bits: Union[int, None] = 8,
+        use_fwd_quant: bool = True,
+        use_stochastic_rounding: Optional[bool] = True,
+        # Typically we have (but it&#39;s a caller&#39;s responsibility to check):
+        # - vjp_lhs_stochastic_rounding is referring to the gradient and
+        # - vjp_rhs_stochastic_rounding is referring to the activations/weights.
+        vjp_lhs_stochastic_rounding: Optional[bool] = None,
+        vjp_rhs_stochastic_rounding: Optional[bool] = None,
+        # The dummy static bound flag is temporary, for performance benchmarking.
+        use_dummy_static_bound: bool = False,
+        dlhs_local_q: Optional[LocalQ] = None,
+        drhs_local_q: Optional[LocalQ] = None,
+) -&gt; DotGeneral:
+    &#34;&#34;&#34;Fully Quantized Training.&#34;&#34;&#34;
+    cfg = dot_general_make(
+        lhs_bits=fwd_bits,
+        rhs_bits=fwd_bits,
+        bwd_bits=bwd_bits,
+        use_fwd_quant=use_fwd_quant,
+        dlhs_local_q=dlhs_local_q,
+        drhs_local_q=drhs_local_q,
+    )
+
+    # Stochastic Rounding
+    # These 3 variables are used to ensure we don&#39;t mix
+    # old and new style of SR configuration.
+    old_style_sr_config = use_stochastic_rounding is not None
+    new_style_sr_config_lhs = vjp_lhs_stochastic_rounding is not None
+    new_style_sr_config_rhs = vjp_rhs_stochastic_rounding is not None
+    assert new_style_sr_config_lhs == new_style_sr_config_rhs, (
+        &#39;if you use new style SR config (vjp_xhs_stochastic_rounding), do pass&#39;
+        &#39; both lhs and rhs explicitely.&#39;
+    )
+    assert new_style_sr_config_lhs != old_style_sr_config
+
+    true = True  # A crude way to get around g-explicit-bool-comparison warning
+
+    assert not (vjp_lhs_stochastic_rounding and vjp_rhs_stochastic_rounding), (
+        &#39;This config is buggy when you set both to True. Contact lew@ or use&#39;
+        &#39; config_v3&#39;
+    )
+
+    # By default use jax.uniform for stochastic rounding
+    if use_stochastic_rounding == true:
+        set_stochastic_rounding(cfg, True, True, &#39;jax.uniform&#39;)
+
+    if vjp_lhs_stochastic_rounding == true:
+        set_stochastic_rounding(cfg, True, False, &#39;jax.uniform&#39;)
+
+    if vjp_rhs_stochastic_rounding == true:
+        set_stochastic_rounding(cfg, False, True, &#39;jax.uniform&#39;)
+
+    if use_dummy_static_bound:
+        set_static_bound(cfg, 1.0)
+
+    return cfg</code></pre>
+</details>
+</dd>
+<dt id="fjformer.bits.config.set_accumulator_dtype"><code class="name flex">
+<span>def <span class="ident">set_accumulator_dtype</span></span>(<span>cfg: <a title="fjformer.bits.config.DotGeneral" href="#fjformer.bits.config.DotGeneral">DotGeneral</a>, fwd_dtype: Optional[Any], dlhs_dtype: Optional[Any], drhs_dtype: Optional[Any])</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def set_accumulator_dtype(
+        cfg: DotGeneral,
+        fwd_dtype: Optional[DType],
+        dlhs_dtype: Optional[DType],
+        drhs_dtype: Optional[DType],
+):
+    cfg.fwd.dg_accumulator_dtype = fwd_dtype
+    cfg.dlhs.dg_accumulator_dtype = dlhs_dtype
+    cfg.drhs.dg_accumulator_dtype = drhs_dtype</code></pre>
+</details>
+</dd>
+<dt id="fjformer.bits.config.set_static_bound"><code class="name flex">
+<span>def <span class="ident">set_static_bound</span></span>(<span>cfg: <a title="fjformer.bits.config.DotGeneral" href="#fjformer.bits.config.DotGeneral">DotGeneral</a>, bound: float = 1.0)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def set_static_bound(cfg: DotGeneral, bound: float = 1.0):
+    cfg.fwd.lhs.calibration = calibration.ConstantCalibration(bound)
+    cfg.fwd.rhs.calibration = calibration.ConstantCalibration(bound)
+    cfg.drhs.lhs.calibration = calibration.ConstantCalibration(bound)
+    cfg.drhs.rhs.calibration = calibration.ConstantCalibration(bound)
+    cfg.dlhs.lhs.calibration = calibration.ConstantCalibration(bound)
+    cfg.dlhs.rhs.calibration = calibration.ConstantCalibration(bound)</code></pre>
+</details>
+</dd>
+<dt id="fjformer.bits.config.set_stochastic_rounding"><code class="name flex">
+<span>def <span class="ident">set_stochastic_rounding</span></span>(<span>cfg: <a title="fjformer.bits.config.DotGeneral" href="#fjformer.bits.config.DotGeneral">DotGeneral</a>, vjp_lhs_stochastic_rounding: bool, vjp_rhs_stochastic_rounding: bool, implementation: str)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Configure stochastic rounding implementation.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def set_stochastic_rounding(
+        cfg: DotGeneral,
+        # Typically we have (but it&#39;s a caller&#39;s responsibility to check):
+        # - vjp_lhs_stochastic_rounding is referring to the gradient and
+        # - vjp_rhs_stochastic_rounding is referring to the activations/weights.
+        vjp_lhs_stochastic_rounding: bool,
+        vjp_rhs_stochastic_rounding: bool,
+        implementation: str,
+):
+    &#34;&#34;&#34;Configure stochastic rounding implementation.&#34;&#34;&#34;
+    noise_implementations = {
+        &#39;jax.uniform&#39;: lambda shape, key: jax.random.uniform(key, shape) - 0.5,
+        &#39;custom-1&#39;: stochastic_rounding.random_centered_uniform,
+    }
+    msg = f&#39;{implementation} not supported.&#39;
+    assert implementation in noise_implementations.keys(), msg
+    noise_fn = noise_implementations[implementation]
+
+    if vjp_lhs_stochastic_rounding:
+        cfg.dlhs.lhs.numerics = cfg.dlhs.lhs.numerics.replace(noise_fn=noise_fn)
+        cfg.drhs.lhs.numerics = cfg.drhs.lhs.numerics.replace(noise_fn=noise_fn)
+    else:
+        cfg.dlhs.lhs.numerics = cfg.dlhs.lhs.numerics.replace(noise_fn=None)
+        cfg.drhs.lhs.numerics = cfg.drhs.lhs.numerics.replace(noise_fn=None)
+
+    if vjp_rhs_stochastic_rounding:
+        cfg.dlhs.rhs.numerics = cfg.dlhs.rhs.numerics.replace(noise_fn=noise_fn)
+        cfg.drhs.rhs.numerics = cfg.drhs.rhs.numerics.replace(noise_fn=noise_fn)
+    else:
+        cfg.dlhs.rhs.numerics = cfg.dlhs.rhs.numerics.replace(noise_fn=None)
+        cfg.drhs.rhs.numerics = cfg.drhs.rhs.numerics.replace(noise_fn=None)</code></pre>
+</details>
+</dd>
+<dt id="fjformer.bits.config.tensor_make"><code class="name flex">
+<span>def <span class="ident">tensor_make</span></span>(<span>bits: int | None) ‑> <a title="fjformer.bits.config.Tensor" href="#fjformer.bits.config.Tensor">Tensor</a></span>
+</code></dt>
+<dd>
+<div class="desc"><p>Makes config.Tensor.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def tensor_make(bits: Optional[int]) -&gt; &#39;Tensor&#39;:
+    &#34;&#34;&#34;Makes config.Tensor.&#34;&#34;&#34;
+    if bits is None:
+        numerics = NoNumerics()
+    else:
+        pz = False if bits == 1 else True
+        numerics = int_numerics.IntNumerics(
+            bits=bits,
+            preserve_zero=pz,
+            preserve_max_val=False,
+            clip=True,
+            round=True,
+            noise_fn=None,
+            clip_gradient=False,  # This can be disabled when using abs-max scaling.
+        )
+
+    return Tensor(
+        numerics=numerics,
+        calib_shared_axes=None,
+        scale_stop_grad=True,
+        calibration=calibration.AbsMaxCalibration(),
+        po2_scale=False,
+        use_fake_quant=False,
+        # dtype_x=dtype,
+        use_fwd_quant=None,
+        preprocess_quant_cls=None,
+        preprocess_scale_cls=None,
+    )</code></pre>
+</details>
+</dd>
+</dl>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="fjformer.bits.config.DotGeneral"><code class="flex name class">
+<span>class <span class="ident">DotGeneral</span></span>
+<span>(</span><span>fwd: <a title="fjformer.bits.config.DotGeneralRaw" href="#fjformer.bits.config.DotGeneralRaw">DotGeneralRaw</a>, dlhs: <a title="fjformer.bits.config.DotGeneralRaw" href="#fjformer.bits.config.DotGeneralRaw">DotGeneralRaw</a>, drhs: <a title="fjformer.bits.config.DotGeneralRaw" href="#fjformer.bits.config.DotGeneralRaw">DotGeneralRaw</a>)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Configuration of quantization of dot_general and its gradients.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@dataclasses.dataclass
+class DotGeneral:
+    &#34;&#34;&#34;Configuration of quantization of dot_general and its gradients.&#34;&#34;&#34;
+
+    fwd: DotGeneralRaw
+    dlhs: DotGeneralRaw
+    drhs: DotGeneralRaw
+
+    @classmethod
+    def make(cls, *args, **kwargs) -&gt; &#39;DotGeneral&#39;:
+        return dot_general_make(*args, **kwargs)</code></pre>
+</details>
+<h3>Class variables</h3>
+<dl>
+<dt id="fjformer.bits.config.DotGeneral.dlhs"><code class="name">var <span class="ident">dlhs</span> : <a title="fjformer.bits.config.DotGeneralRaw" href="#fjformer.bits.config.DotGeneralRaw">DotGeneralRaw</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="fjformer.bits.config.DotGeneral.drhs"><code class="name">var <span class="ident">drhs</span> : <a title="fjformer.bits.config.DotGeneralRaw" href="#fjformer.bits.config.DotGeneralRaw">DotGeneralRaw</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="fjformer.bits.config.DotGeneral.fwd"><code class="name">var <span class="ident">fwd</span> : <a title="fjformer.bits.config.DotGeneralRaw" href="#fjformer.bits.config.DotGeneralRaw">DotGeneralRaw</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Static methods</h3>
+<dl>
+<dt id="fjformer.bits.config.DotGeneral.make"><code class="name flex">
+<span>def <span class="ident">make</span></span>(<span>*args, **kwargs) ‑> <a title="fjformer.bits.config.DotGeneral" href="#fjformer.bits.config.DotGeneral">DotGeneral</a></span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@classmethod
+def make(cls, *args, **kwargs) -&gt; &#39;DotGeneral&#39;:
+    return dot_general_make(*args, **kwargs)</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="fjformer.bits.config.DotGeneralRaw"><code class="flex name class">
+<span>class <span class="ident">DotGeneralRaw</span></span>
+<span>(</span><span>lhs: <a title="fjformer.bits.config.Tensor" href="#fjformer.bits.config.Tensor">Tensor</a>, rhs: <a title="fjformer.bits.config.Tensor" href="#fjformer.bits.config.Tensor">Tensor</a>, dg_in_dtype: Optional[Any], dg_accumulator_dtype: Optional[Any], local_q: Optional[<a title="fjformer.bits.config.LocalQ" href="#fjformer.bits.config.LocalQ">LocalQ</a>])</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Configuration of quantization of one dot_general without gradient.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@dataclasses.dataclass
+class DotGeneralRaw:
+    &#34;&#34;&#34;Configuration of quantization of one dot_general without gradient.&#34;&#34;&#34;
+
+    lhs: Tensor
+    rhs: Tensor
+    dg_in_dtype: Optional[DType]
+    dg_accumulator_dtype: Optional[DType]
+    local_q: Optional[LocalQ]
+
+    @classmethod
+    def make(cls, *args, **kwargs) -&gt; &#39;DotGeneralRaw&#39;:
+        return dot_general_raw_make(*args, **kwargs)
+
+    @classmethod
+    def make_conv_general_dilated(cls, *args, **kwargs) -&gt; &#39;DotGeneralRaw&#39;:
+        return conv_general_dilated_make(*args, **kwargs)</code></pre>
+</details>
+<h3>Class variables</h3>
+<dl>
+<dt id="fjformer.bits.config.DotGeneralRaw.dg_accumulator_dtype"><code class="name">var <span class="ident">dg_accumulator_dtype</span> : Optional[Any]</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="fjformer.bits.config.DotGeneralRaw.dg_in_dtype"><code class="name">var <span class="ident">dg_in_dtype</span> : Optional[Any]</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="fjformer.bits.config.DotGeneralRaw.lhs"><code class="name">var <span class="ident">lhs</span> : <a title="fjformer.bits.config.Tensor" href="#fjformer.bits.config.Tensor">Tensor</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="fjformer.bits.config.DotGeneralRaw.local_q"><code class="name">var <span class="ident">local_q</span> : Optional[<a title="fjformer.bits.config.LocalQ" href="#fjformer.bits.config.LocalQ">LocalQ</a>]</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="fjformer.bits.config.DotGeneralRaw.rhs"><code class="name">var <span class="ident">rhs</span> : <a title="fjformer.bits.config.Tensor" href="#fjformer.bits.config.Tensor">Tensor</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Static methods</h3>
+<dl>
+<dt id="fjformer.bits.config.DotGeneralRaw.make"><code class="name flex">
+<span>def <span class="ident">make</span></span>(<span>*args, **kwargs) ‑> <a title="fjformer.bits.config.DotGeneralRaw" href="#fjformer.bits.config.DotGeneralRaw">DotGeneralRaw</a></span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@classmethod
+def make(cls, *args, **kwargs) -&gt; &#39;DotGeneralRaw&#39;:
+    return dot_general_raw_make(*args, **kwargs)</code></pre>
+</details>
+</dd>
+<dt id="fjformer.bits.config.DotGeneralRaw.make_conv_general_dilated"><code class="name flex">
+<span>def <span class="ident">make_conv_general_dilated</span></span>(<span>*args, **kwargs) ‑> <a title="fjformer.bits.config.DotGeneralRaw" href="#fjformer.bits.config.DotGeneralRaw">DotGeneralRaw</a></span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@classmethod
+def make_conv_general_dilated(cls, *args, **kwargs) -&gt; &#39;DotGeneralRaw&#39;:
+    return conv_general_dilated_make(*args, **kwargs)</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="fjformer.bits.config.LocalQ"><code class="flex name class">
+<span>class <span class="ident">LocalQ</span></span>
+<span>(</span><span>contraction_axis_shard_count: int)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>LocalQ(contraction_axis_shard_count: int)</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@dataclasses.dataclass
+class LocalQ:
+    contraction_axis_shard_count: int</code></pre>
+</details>
+<h3>Class variables</h3>
+<dl>
+<dt id="fjformer.bits.config.LocalQ.contraction_axis_shard_count"><code class="name">var <span class="ident">contraction_axis_shard_count</span> : int</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+</dd>
+<dt id="fjformer.bits.config.NoNumerics"><code class="flex name class">
+<span>class <span class="ident">NoNumerics</span></span>
+<span>(</span><span>noise_fn: Optional[Callable[[tuple[int, ...], jax.Array], jax.Array]] = None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>NoNumerics(noise_fn: Optional[Callable[[tuple[int, &hellip;], jax.Array], jax.Array]] = None)</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class NoNumerics(flax.struct.PyTreeNode):
+    # TODO(lew): This is a workaround. We should separate Stochastic Rounding.
+    # noise_fn has no effect in NoNumerics.
+    noise_fn: Optional[stochastic_rounding.NoiseFn] = None
+
+    &#34;&#34;&#34;No quantization, use a native type such as bf16.&#34;&#34;&#34;
+    pass</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>flax.struct.PyTreeNode</li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="fjformer.bits.config.NoNumerics.noise_fn"><code class="name">var <span class="ident">noise_fn</span> : Optional[Callable[[tuple[int, ...], jax.Array], jax.Array]]</code></dt>
+<dd>
+<div class="desc"><p>No quantization, use a native type such as bf16.</p></div>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="fjformer.bits.config.NoNumerics.replace"><code class="name flex">
+<span>def <span class="ident">replace</span></span>(<span>self, **updates)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>"Returns a new object replacing the specified fields with new values.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def replace(self, **updates):
+  &#34;&#34;&#34; &#34;Returns a new object replacing the specified fields with new values.&#34;&#34;&#34;
+  return dataclasses.replace(self, **updates)</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="fjformer.bits.config.Preprocess"><code class="flex name class">
+<span>class <span class="ident">Preprocess</span></span>
+</code></dt>
+<dd>
+<div class="desc"><p>Helper class that provides a standard way to create an ABC using
+inheritance.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Preprocess(abc.ABC):
+
+    @abc.abstractmethod
+    def __call__(self, inputs):
+        pass</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>abc.ABC</li>
+</ul>
+<h3>Subclasses</h3>
+<ul class="hlist">
+<li><a title="fjformer.bits.q_flax.Freezer" href="q_flax.html#fjformer.bits.q_flax.Freezer">Freezer</a></li>
+</ul>
+</dd>
+<dt id="fjformer.bits.config.Tensor"><code class="flex name class">
+<span>class <span class="ident">Tensor</span></span>
+<span>(</span><span>numerics: Union[<a title="fjformer.bits.config.NoNumerics" href="#fjformer.bits.config.NoNumerics">NoNumerics</a>, <a title="fjformer.bits.int_numerics.IntNumerics" href="int_numerics.html#fjformer.bits.int_numerics.IntNumerics">IntNumerics</a>], calib_shared_axes: Optional[list[int]], scale_stop_grad: bool, calibration: <a title="fjformer.bits.calibration.Calibration" href="calibration.html#fjformer.bits.calibration.Calibration">Calibration</a>, po2_scale: bool, use_fake_quant: bool, use_fwd_quant: Optional[bool], preprocess_quant_cls: Optional[Callable[[], <a title="fjformer.bits.config.Preprocess" href="#fjformer.bits.config.Preprocess">Preprocess</a>]], preprocess_scale_cls: Optional[Callable[[], <a title="fjformer.bits.config.Preprocess" href="#fjformer.bits.config.Preprocess">Preprocess</a>]])</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Configuration of quantization of one tensor or one side of tensor op.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@dataclasses.dataclass
+class Tensor:
+    &#34;&#34;&#34;Configuration of quantization of one tensor or one side of tensor op.&#34;&#34;&#34;
+
+    numerics: Numerics
+    calib_shared_axes: Optional[list[int]]
+    scale_stop_grad: bool
+    # noise+clip+round
+    # We apply gradient of clip_and_round in bwd pass.
+    calibration: calibration.Calibration
+    # Round up the calibration to power of 2 (po2).
+    po2_scale: bool
+    use_fake_quant: bool
+    # Controls at what value of input tensor should be used.
+    # Setting it to True, but not quantizing fwd pass will assert-fail.
+    use_fwd_quant: Optional[bool]
+    # Operation applied to the quantized inputs to the dot general
+    preprocess_quant_cls: Optional[Callable[[], Preprocess]]
+    # lax.dot_general output is multiplied by (int transposed) scales.
+    # preprocess_scale will be applied to these scales before the multiplication.
+    preprocess_scale_cls: Optional[Callable[[], Preprocess]]
+
+    @classmethod
+    def make(cls, *args, **kwargs) -&gt; &#39;Tensor&#39;:
+        return tensor_make(*args, **kwargs)</code></pre>
+</details>
+<h3>Class variables</h3>
+<dl>
+<dt id="fjformer.bits.config.Tensor.calib_shared_axes"><code class="name">var <span class="ident">calib_shared_axes</span> : Optional[list[int]]</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="fjformer.bits.config.Tensor.calibration"><code class="name">var <span class="ident">calibration</span> : <a title="fjformer.bits.calibration.Calibration" href="calibration.html#fjformer.bits.calibration.Calibration">Calibration</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="fjformer.bits.config.Tensor.numerics"><code class="name">var <span class="ident">numerics</span> : Union[<a title="fjformer.bits.config.NoNumerics" href="#fjformer.bits.config.NoNumerics">NoNumerics</a>, <a title="fjformer.bits.int_numerics.IntNumerics" href="int_numerics.html#fjformer.bits.int_numerics.IntNumerics">IntNumerics</a>]</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="fjformer.bits.config.Tensor.po2_scale"><code class="name">var <span class="ident">po2_scale</span> : bool</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="fjformer.bits.config.Tensor.preprocess_quant_cls"><code class="name">var <span class="ident">preprocess_quant_cls</span> : Optional[Callable[[], <a title="fjformer.bits.config.Preprocess" href="#fjformer.bits.config.Preprocess">Preprocess</a>]]</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="fjformer.bits.config.Tensor.preprocess_scale_cls"><code class="name">var <span class="ident">preprocess_scale_cls</span> : Optional[Callable[[], <a title="fjformer.bits.config.Preprocess" href="#fjformer.bits.config.Preprocess">Preprocess</a>]]</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="fjformer.bits.config.Tensor.scale_stop_grad"><code class="name">var <span class="ident">scale_stop_grad</span> : bool</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="fjformer.bits.config.Tensor.use_fake_quant"><code class="name">var <span class="ident">use_fake_quant</span> : bool</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="fjformer.bits.config.Tensor.use_fwd_quant"><code class="name">var <span class="ident">use_fwd_quant</span> : Optional[bool]</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Static methods</h3>
+<dl>
+<dt id="fjformer.bits.config.Tensor.make"><code class="name flex">
+<span>def <span class="ident">make</span></span>(<span>*args, **kwargs) ‑> <a title="fjformer.bits.config.Tensor" href="#fjformer.bits.config.Tensor">Tensor</a></span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@classmethod
+def make(cls, *args, **kwargs) -&gt; &#39;Tensor&#39;:
+    return tensor_make(*args, **kwargs)</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="fjformer.bits" href="index.html">fjformer.bits</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="fjformer.bits.config.config_v3" href="#fjformer.bits.config.config_v3">config_v3</a></code></li>
+<li><code><a title="fjformer.bits.config.conv_general_dilated_make" href="#fjformer.bits.config.conv_general_dilated_make">conv_general_dilated_make</a></code></li>
+<li><code><a title="fjformer.bits.config.dot_general_make" href="#fjformer.bits.config.dot_general_make">dot_general_make</a></code></li>
+<li><code><a title="fjformer.bits.config.dot_general_raw_make" href="#fjformer.bits.config.dot_general_raw_make">dot_general_raw_make</a></code></li>
+<li><code><a title="fjformer.bits.config.fully_quantized" href="#fjformer.bits.config.fully_quantized">fully_quantized</a></code></li>
+<li><code><a title="fjformer.bits.config.set_accumulator_dtype" href="#fjformer.bits.config.set_accumulator_dtype">set_accumulator_dtype</a></code></li>
+<li><code><a title="fjformer.bits.config.set_static_bound" href="#fjformer.bits.config.set_static_bound">set_static_bound</a></code></li>
+<li><code><a title="fjformer.bits.config.set_stochastic_rounding" href="#fjformer.bits.config.set_stochastic_rounding">set_stochastic_rounding</a></code></li>
+<li><code><a title="fjformer.bits.config.tensor_make" href="#fjformer.bits.config.tensor_make">tensor_make</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="fjformer.bits.config.DotGeneral" href="#fjformer.bits.config.DotGeneral">DotGeneral</a></code></h4>
+<ul class="">
+<li><code><a title="fjformer.bits.config.DotGeneral.dlhs" href="#fjformer.bits.config.DotGeneral.dlhs">dlhs</a></code></li>
+<li><code><a title="fjformer.bits.config.DotGeneral.drhs" href="#fjformer.bits.config.DotGeneral.drhs">drhs</a></code></li>
+<li><code><a title="fjformer.bits.config.DotGeneral.fwd" href="#fjformer.bits.config.DotGeneral.fwd">fwd</a></code></li>
+<li><code><a title="fjformer.bits.config.DotGeneral.make" href="#fjformer.bits.config.DotGeneral.make">make</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="fjformer.bits.config.DotGeneralRaw" href="#fjformer.bits.config.DotGeneralRaw">DotGeneralRaw</a></code></h4>
+<ul class="">
+<li><code><a title="fjformer.bits.config.DotGeneralRaw.dg_accumulator_dtype" href="#fjformer.bits.config.DotGeneralRaw.dg_accumulator_dtype">dg_accumulator_dtype</a></code></li>
+<li><code><a title="fjformer.bits.config.DotGeneralRaw.dg_in_dtype" href="#fjformer.bits.config.DotGeneralRaw.dg_in_dtype">dg_in_dtype</a></code></li>
+<li><code><a title="fjformer.bits.config.DotGeneralRaw.lhs" href="#fjformer.bits.config.DotGeneralRaw.lhs">lhs</a></code></li>
+<li><code><a title="fjformer.bits.config.DotGeneralRaw.local_q" href="#fjformer.bits.config.DotGeneralRaw.local_q">local_q</a></code></li>
+<li><code><a title="fjformer.bits.config.DotGeneralRaw.make" href="#fjformer.bits.config.DotGeneralRaw.make">make</a></code></li>
+<li><code><a title="fjformer.bits.config.DotGeneralRaw.make_conv_general_dilated" href="#fjformer.bits.config.DotGeneralRaw.make_conv_general_dilated">make_conv_general_dilated</a></code></li>
+<li><code><a title="fjformer.bits.config.DotGeneralRaw.rhs" href="#fjformer.bits.config.DotGeneralRaw.rhs">rhs</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="fjformer.bits.config.LocalQ" href="#fjformer.bits.config.LocalQ">LocalQ</a></code></h4>
+<ul class="">
+<li><code><a title="fjformer.bits.config.LocalQ.contraction_axis_shard_count" href="#fjformer.bits.config.LocalQ.contraction_axis_shard_count">contraction_axis_shard_count</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="fjformer.bits.config.NoNumerics" href="#fjformer.bits.config.NoNumerics">NoNumerics</a></code></h4>
+<ul class="">
+<li><code><a title="fjformer.bits.config.NoNumerics.noise_fn" href="#fjformer.bits.config.NoNumerics.noise_fn">noise_fn</a></code></li>
+<li><code><a title="fjformer.bits.config.NoNumerics.replace" href="#fjformer.bits.config.NoNumerics.replace">replace</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="fjformer.bits.config.Preprocess" href="#fjformer.bits.config.Preprocess">Preprocess</a></code></h4>
+</li>
+<li>
+<h4><code><a title="fjformer.bits.config.Tensor" href="#fjformer.bits.config.Tensor">Tensor</a></code></h4>
+<ul class="">
+<li><code><a title="fjformer.bits.config.Tensor.calib_shared_axes" href="#fjformer.bits.config.Tensor.calib_shared_axes">calib_shared_axes</a></code></li>
+<li><code><a title="fjformer.bits.config.Tensor.calibration" href="#fjformer.bits.config.Tensor.calibration">calibration</a></code></li>
+<li><code><a title="fjformer.bits.config.Tensor.make" href="#fjformer.bits.config.Tensor.make">make</a></code></li>
+<li><code><a title="fjformer.bits.config.Tensor.numerics" href="#fjformer.bits.config.Tensor.numerics">numerics</a></code></li>
+<li><code><a title="fjformer.bits.config.Tensor.po2_scale" href="#fjformer.bits.config.Tensor.po2_scale">po2_scale</a></code></li>
+<li><code><a title="fjformer.bits.config.Tensor.preprocess_quant_cls" href="#fjformer.bits.config.Tensor.preprocess_quant_cls">preprocess_quant_cls</a></code></li>
+<li><code><a title="fjformer.bits.config.Tensor.preprocess_scale_cls" href="#fjformer.bits.config.Tensor.preprocess_scale_cls">preprocess_scale_cls</a></code></li>
+<li><code><a title="fjformer.bits.config.Tensor.scale_stop_grad" href="#fjformer.bits.config.Tensor.scale_stop_grad">scale_stop_grad</a></code></li>
+<li><code><a title="fjformer.bits.config.Tensor.use_fake_quant" href="#fjformer.bits.config.Tensor.use_fake_quant">use_fake_quant</a></code></li>
+<li><code><a title="fjformer.bits.config.Tensor.use_fwd_quant" href="#fjformer.bits.config.Tensor.use_fwd_quant">use_fwd_quant</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.10.0</a>.</p>
+</footer>
+</body>
+</html>

@@ -1,0 +1,1038 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.10.0" />
+<title>fjformer.bits.q_dot_general API documentation</title>
+<meta name="description" content="Quantized dot_general." />
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
+<link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js" integrity="sha256-Uv3H6lx7dJmRfRvH8TH6kJD1TSK1aFcwgx+mdg3epi8=" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>fjformer.bits.q_dot_general</code></h1>
+</header>
+<section id="section-intro">
+<p>Quantized dot_general.</p>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python"># Copyright 2022 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the &#34;License&#34;);
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an &#34;AS IS&#34; BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+&#34;&#34;&#34;Quantized dot_general.&#34;&#34;&#34;
+
+# Lingo in this file:
+#
+# - lhs(rhs) - left(right) hand side of a binary operation
+# - ca - contraction axes
+# - ba - batch axes
+# - ra - remaining axes
+
+# pylint: disable=g-explicit-bool-comparison
+# pylint: disable=g-explicit-length-test
+
+import copy
+import functools
+from typing import Callable, Optional, Union
+from . import config
+import flax.struct
+import jax
+from jax import lax
+import jax.numpy as jnp
+import numpy as onp
+
+
+@flax.struct.dataclass
+class Context:
+    key: Optional[jax.Array]
+    train_step: Optional[int]
+
+
+def _context_split(context: Context) -&gt; tuple[Context, Context]:
+    def mk_ctx(key):
+        return Context(key=key, train_step=context.train_step)
+
+    if context.key is not None:
+        key1, key2 = jax.random.split(context.key)
+        return mk_ctx(key1), mk_ctx(key2)
+    return mk_ctx(None), mk_ctx(None)
+
+
+def _scale_quant(x, *, cfg, ca, context):
+    &#34;&#34;&#34;The core quantifying function.&#34;&#34;&#34;
+    msg = (
+        &#39;use_fake_quant mode is used in tests and it is exactly equal when&#39;
+        &#39; po2_scale == True; Did you forget to set it?&#39;
+    )
+    assert (not cfg.use_fake_quant) or cfg.po2_scale, msg
+
+    if isinstance(cfg.numerics, config.NoNumerics):
+        return x, None, None
+    shared_axes = cfg.calib_shared_axes or ca
+    bound = cfg.calibration.get_bound(x, shared_axes)
+    abs_max_mapped_to = cfg.numerics.abs_val_mapped_to()
+    scale = abs_max_mapped_to / bound
+
+    if cfg.po2_scale:
+        scale = 2 ** jnp.floor(jnp.log2(scale))
+    if cfg.scale_stop_grad:
+        scale = lax.stop_gradient(scale)
+
+    x_s = _maybe_mul(x, scale)
+
+    quant = jax.custom_vjp(cfg.numerics.fwd)
+    quant.defvjp(cfg.numerics.vjp_fwd, cfg.numerics.vjp_bwd)
+    quant = functools.partial(quant, context=context)
+
+    x_q, quant_grad = jax.vjp(quant, x_s)
+    inv_scale = _maybe_inv(scale)
+
+    return x_q, inv_scale, quant_grad
+
+
+def make_fake_quant(cfg: config.Tensor, ca=None):
+    def fake_quant(x, context):
+        x_q, inv_scale, _ = _scale_quant(x, cfg=cfg, ca=ca, context=context)
+        return _maybe_mul(x_q, inv_scale)
+
+    return fake_quant
+
+
+@flax.struct.dataclass
+# It is used only when use_fwd_quant = True
+class QTensor:
+    qvalue: jnp.ndarray
+    qvalue_scale_t: jnp.ndarray
+
+
+@flax.struct.dataclass
+class MultiTensor:
+    x: jnp.ndarray
+    qx: Optional[QTensor]
+
+
+@flax.struct.dataclass
+class TensorRes:
+    &#34;&#34;&#34;All the things we pass from the forward pass to the backward pass.&#34;&#34;&#34;
+    mt: MultiTensor
+    quant_grad: Union[Callable[[jnp.ndarray], tuple[jnp.ndarray]], None]
+
+
+@flax.struct.dataclass
+class DotGeneralRes:
+    context_bwd: Context
+    lhs: TensorRes
+    rhs: TensorRes
+
+
+def _scale_trans(x, ca, ba):
+    &#34;&#34;&#34;Transposes x to output dimension order.&#34;&#34;&#34;
+    ca = list(ca)
+    ba = list(ba)
+    for i in ca:
+        assert x.shape[i] == 1
+    ra = list(i for i in range(len(x.shape)) if i not in ba + ca)
+    x = jnp.transpose(x, ba + ra + ca)
+    # x = jnp.squeeze(x, axis=range(len(ba+ra): len(x.shape))
+    shape_ba = x.shape[: len(ba)]
+    shape_ra = x.shape[len(ba): len(x.shape) - len(ca)]
+    # Will need to add additional axes (size 1) for the other shape_ra
+    x = x.reshape(shape_ba + shape_ra)
+    return x
+
+
+def _lhs_scale_transpose(lhs_scale, dimension_numbers, lhs_shape, rhs_shape):
+    &#34;&#34;&#34;Transposes lhs_scale to output dimension order.&#34;&#34;&#34;
+    if lhs_scale is None:
+        return None
+
+    (lhs_ca, rhs_ca), (lhs_ba, rhs_ba) = dimension_numbers
+    qlhs_scale_t = _scale_trans(lhs_scale, lhs_ca, lhs_ba)
+    # inserting dummy axes for rhs_ra
+    assert len(qlhs_scale_t.shape) == len(lhs_shape) - len(lhs_ca)
+    start = len(qlhs_scale_t.shape)
+    end = len(rhs_shape) - len(rhs_ca) - len(rhs_ba) + start
+    lhs_dummy_axes = range(start, end)
+    qlhs_scale_t = jnp.expand_dims(qlhs_scale_t, axis=lhs_dummy_axes)
+    return qlhs_scale_t
+
+
+def _rhs_scale_transpose(rhs_scale, dimension_numbers, lhs_shape, rhs_shape):
+    if rhs_scale is None:
+        return None
+    del rhs_shape
+    (lhs_ca, rhs_ca), (lhs_ba, rhs_ba) = dimension_numbers
+    qrhs_scale_t = _scale_trans(rhs_scale, rhs_ca, rhs_ba)
+    start = len(rhs_ba)
+    end = len(lhs_shape) - len(lhs_ca) - len(lhs_ba) + start
+    rhs_dummy_axes = range(start, end)
+    qrhs_scale_t = jnp.expand_dims(qrhs_scale_t, axis=rhs_dummy_axes)
+    return qrhs_scale_t
+
+
+def _maybe_mul(x, scale):
+    if scale is None:
+        return x
+    return x * scale
+
+
+def _maybe_inv(x):
+    if x is None:
+        return None
+    return 1.0 / x
+
+
+def _make_dot_general_raw(gcfg: config.DotGeneralRaw):
+    &#34;&#34;&#34;Makes quantized lax.dot_general replacement.&#34;&#34;&#34;
+
+    msg = &#39;Custom calib_shared_axes not implemented for local AQT.&#39;
+    assert gcfg.lhs.calib_shared_axes is None, msg
+    assert gcfg.rhs.calib_shared_axes is None, msg
+
+    def dot_general_raw(
+            lhs: jnp.ndarray,
+            rhs: Union[jnp.ndarray, MultiTensor],
+            dimension_numbers,
+            context,
+    ):
+        &#34;&#34;&#34;Creates a dot_general function without custom gradient.&#34;&#34;&#34;
+        (lhs_ca, rhs_ca), (lhs_ba, rhs_ba) = dimension_numbers
+        # We need to copy because we modify cfg to populate some defaults.
+        cfg = copy.deepcopy(gcfg)
+
+        if isinstance(rhs, MultiTensor):
+            # We are in gradient code.
+            fwd_quantized = rhs.qx is not None
+            expect_fwd_quantized = cfg.rhs.use_fwd_quant is not None
+            msg = (
+                &#39;Misconfiguration: use_fwd_quant=True, but there is no fwd&#39;
+                &#39; quantization (but rhs.qx is None).&#39;
+            )
+            assert fwd_quantized == expect_fwd_quantized, msg
+            if cfg.rhs.use_fwd_quant:
+                assert rhs.qx is not None, msg
+                lhs = _maybe_mul(lhs, rhs.qx.qvalue_scale_t)
+                rhs = rhs.qx.qvalue
+            else:
+                rhs = rhs.x
+        else:
+            assert cfg.rhs.use_fwd_quant is None, &#39;cannot set use_fwd_quant in fwd&#39;
+
+        if cfg.local_q is not None:
+
+            def factor_reshape(x, ca, ba):
+                factor = cfg.local_q.contraction_axis_shard_count
+                assert factor is not None
+                if len(ca) == 0:
+                    return x, ca, ba
+                shape = list(x.shape)
+                ax = ca[0]
+                orig_size = shape[ax]
+                assert orig_size % factor == 0
+                shape[ax] = factor
+                shape.insert(ax + 1, orig_size // factor)
+                new_ca = [(b + int(b &gt;= ax)) for b in ca]
+                assert new_ca[0] == ax + 1
+                new_ba = [ax] + [(b + int(b &gt; ax)) for b in ba]
+                return x.reshape(shape), new_ca, new_ba
+
+            lhs, lhs_ca, lhs_ba = factor_reshape(lhs, lhs_ca, lhs_ba)
+            rhs, rhs_ca, rhs_ba = factor_reshape(rhs, rhs_ca, rhs_ba)
+
+            dimension_numbers = (lhs_ca, rhs_ca), (lhs_ba, rhs_ba)
+
+        assert isinstance(rhs, jnp.ndarray)
+
+        context, context_bwd = _context_split(context)
+        context_lhs, context_rhs = _context_split(context)
+        del context
+
+        lhs_q, lhs_inv_scale, lhs_quant_grad = _scale_quant(
+            lhs, cfg=cfg.lhs, ca=lhs_ca, context=context_lhs
+        )
+        lhs_inv_scale_t = _lhs_scale_transpose(
+            lhs_inv_scale, dimension_numbers, lhs.shape, rhs.shape
+        )
+        lhs_qx = (
+            None
+            if lhs_inv_scale_t is None
+            else QTensor(qvalue=lhs_q, qvalue_scale_t=lhs_inv_scale_t)
+        )
+        lhs_mt = MultiTensor(x=lhs, qx=lhs_qx)
+        lhs_res = TensorRes(mt=lhs_mt, quant_grad=lhs_quant_grad)
+
+        rhs_q, rhs_inv_scale, rhs_quant_grad = _scale_quant(
+            rhs, cfg=cfg.rhs, ca=rhs_ca, context=context_rhs
+        )
+        rhs_inv_scale_t = _rhs_scale_transpose(
+            rhs_inv_scale, dimension_numbers, lhs.shape, rhs.shape
+        )
+        rhs_qx = (
+            None
+            if rhs_inv_scale_t is None
+            else QTensor(qvalue=rhs_q, qvalue_scale_t=rhs_inv_scale_t)
+        )
+        rhs_mt = MultiTensor(x=rhs, qx=rhs_qx)
+        rhs_res = TensorRes(mt=rhs_mt, quant_grad=rhs_quant_grad)
+
+        assert lhs.dtype == rhs.dtype
+
+        if cfg.lhs.use_fake_quant:
+            msg = &#34;Can&#39;t set dg_in_dtype in fake_quant mode.&#34;
+            assert cfg.dg_in_dtype is None, msg
+            lhs_q = _maybe_mul(lhs_q, lhs_inv_scale)
+            rhs_q = _maybe_mul(rhs_q, rhs_inv_scale)
+        else:
+            if cfg.dg_in_dtype is not None:
+                lhs_q = lhs_q.astype(cfg.dg_in_dtype)
+                rhs_q = rhs_q.astype(cfg.dg_in_dtype)
+
+        if cfg.lhs.preprocess_quant_cls is not None:
+            preprocess_quant_lhs = cfg.lhs.preprocess_quant_cls()
+            lhs_q = preprocess_quant_lhs(lhs_q)
+        if cfg.lhs.preprocess_scale_cls is not None:
+            preprocess_scale_lhs = cfg.lhs.preprocess_scale_cls()
+            lhs_inv_scale_t = preprocess_scale_lhs(lhs_inv_scale_t)
+        if cfg.rhs.preprocess_quant_cls is not None:
+            preprocess_quant_rhs = cfg.rhs.preprocess_quant_cls()
+            rhs_q = preprocess_quant_rhs(rhs_q)
+        if cfg.rhs.preprocess_scale_cls is not None:
+            preprocess_scale_rhs = cfg.rhs.preprocess_scale_cls()
+            rhs_inv_scale_t = preprocess_scale_rhs(rhs_inv_scale_t)
+        out = lax.dot_general(
+            lhs_q,
+            rhs_q,
+            dimension_numbers=dimension_numbers,
+            preferred_element_type=cfg.dg_accumulator_dtype,
+            precision=lax.Precision.DEFAULT,
+        ).astype(lhs.dtype)
+
+        if not cfg.lhs.use_fake_quant:
+            out = _maybe_mul(out, lhs_inv_scale_t)
+            out = _maybe_mul(out, rhs_inv_scale_t)
+
+        res = DotGeneralRes(
+            context_bwd=context_bwd,
+            lhs=lhs_res,
+            rhs=rhs_res,
+        )
+        if cfg.local_q is not None:
+            assert len(lhs_ca) == len(rhs_ca)
+            if len(lhs_ca) &gt; 0:
+                out = jnp.sum(out, axis=0)
+            # We are not supporting local AQT in fwd pass, so no res needed.
+            res = None
+        return out, res
+
+    return dot_general_raw
+
+
+def _dot_general_raw_attach_gradient(
+        fwd_dot_general_raw,
+        dlhs_dot_general_raw,
+        drhs_dot_general_raw,
+):
+    &#34;&#34;&#34;Makes quantized lax.dot_general replacement with attached gradients.&#34;&#34;&#34;
+
+    def make_fwd(return_residual):
+        def fwd(
+                lhs,
+                rhs,
+                dimension_numbers,
+                context,
+        ):
+            assert lhs.dtype == rhs.dtype
+            ret, res = fwd_dot_general_raw(
+                lhs,
+                rhs,
+                dimension_numbers,
+                context,
+            )
+            ret = ret.astype(lhs.dtype)
+            return (ret, res) if return_residual else ret
+
+        return fwd
+
+    def vjp_bwd(
+            fwd_dimension_numbers,
+            res: DotGeneralRes,
+            g,
+    ):
+        def ranges_like(*xs):
+            start = 0
+            for x in xs:
+                yield tuple(range(start, start + len(x)))
+                start += len(x)
+
+        def grad_dot_general(
+                y_res: TensorRes,
+                quant_grad,
+                dot_general,
+                y_is_lhs,
+                context,
+        ):
+            y_ndim = y_res.mt.x.ndim
+
+            (x_ca, y_ca), (x_ba, y_ba) = fwd_dimension_numbers
+            if y_is_lhs:
+                (y_ca, x_ca) = (x_ca, y_ca)
+                (y_ba, x_ba) = (x_ba, y_ba)
+            g_ndim = g.ndim - y_ndim + len(x_ba) + 2 * len(x_ca)
+            x_ra = tuple(i for i in range(g_ndim) if i not in x_ca and i not in x_ba)
+            y_ra = tuple(i for i in range(y_ndim) if i not in y_ca and i not in y_ba)
+            if y_is_lhs:
+                g_ba, g_ca, _ = ranges_like(x_ba, y_ra, x_ra)
+            else:
+                g_ba, _, g_ca = ranges_like(x_ba, x_ra, y_ra)
+            dims = ((g_ca, y_ra), (g_ba, y_ba))
+
+            out, _ = dot_general(g, y_res.mt, dims, context)
+
+            x_ca_sorted_by_y = tuple(onp.take(x_ca, onp.argsort(y_ca)))
+            out_axes = tuple(onp.argsort(tuple(x_ba) + x_ra + x_ca_sorted_by_y))
+            transposed_out = jax.lax.transpose(out, out_axes)
+            if quant_grad is not None:
+                transposed_out = quant_grad(transposed_out)[0]
+            return transposed_out
+
+        context1, context2 = _context_split(res.context_bwd)
+        dlhs = grad_dot_general(
+            res.rhs,
+            res.lhs.quant_grad,
+            dlhs_dot_general_raw,
+            False,
+            context1,
+        )
+        drhs = grad_dot_general(
+            res.lhs,
+            res.rhs.quant_grad,
+            drhs_dot_general_raw,
+            True,
+            context2,
+        )
+        return (dlhs, drhs, None)
+
+    vjp = jax.custom_vjp(make_fwd(False), nondiff_argnums=(2,))
+    vjp.defvjp(make_fwd(True), vjp_bwd)
+    return vjp
+
+
+def make_dot_general(cfg: Optional[config.DotGeneral]):
+    &#34;&#34;&#34;Makes quantized lax.dot_general replacement with attached gradients.&#34;&#34;&#34;
+    if cfg is None:
+        def ret_lax_dg(
+                lhs,
+                rhs,
+                dimension_numbers,
+                precision=None,
+                preferred_element_type=None,
+                *,
+                context=Context(key=None, train_step=None),
+        ):
+            del context
+            return jax.lax.dot_general(
+                lhs, rhs, dimension_numbers, precision, preferred_element_type
+            )
+
+        return ret_lax_dg
+
+    dg = _dot_general_raw_attach_gradient(
+        fwd_dot_general_raw=_make_dot_general_raw(cfg.fwd),
+        dlhs_dot_general_raw=_make_dot_general_raw(cfg.dlhs),
+        drhs_dot_general_raw=_make_dot_general_raw(cfg.drhs),
+    )
+
+    def ret_dg(
+            lhs,
+            rhs,
+            dimension_numbers,
+            precision=None,
+            preferred_element_type=None,
+            *,
+            context=Context(key=None, train_step=None),
+    ):
+        del preferred_element_type
+        assert (
+                precision is None
+        ), f&#39;Precision {precision} requested together with quantization.&#39;
+        assert lhs.dtype == rhs.dtype, (
+            &#39;The only reason we need that, is because we need to determine return&#39;
+            &#39; type.&#39;
+        )
+        out = dg(
+            lhs=lhs,
+            rhs=rhs,
+            dimension_numbers=dimension_numbers,
+            context=context,
+        )
+        return out
+
+    return ret_dg
+
+
+def make_conv_general_dilated(cfg: config.DotGeneralRaw):
+    &#34;&#34;&#34;Makes quantized lax.make_conv_general_dilated replacement.&#34;&#34;&#34;
+
+    cfg = copy.deepcopy(cfg)
+    if cfg is None:
+        cfg = config.DotGeneralRaw.make()
+
+    def my_conv_general_dilated(
+            lhs,
+            rhs,
+            window_strides,
+            padding,
+            lhs_dilation=None,
+            rhs_dilation=None,
+            dimension_numbers=None,
+            feature_group_count=1,
+            batch_group_count=1,
+            precision=None,
+            preferred_element_type=None,
+    ) -&gt; jax.Array:
+        msg1 = &#34;&#34;&#34;
+To simplify the code, we currently assume a Flax-particular layout of the data.
+This makes sense, because this is the main use-case of this function.
+However if there is any other use, we will drop that assumption.
+&#34;&#34;&#34;
+        rank = len(lhs.shape)
+        assert len(rhs.shape) == rank
+        assert dimension_numbers is not None, msg1
+        assert dimension_numbers.lhs_spec[0:2] == (0, rank - 1), msg1
+        assert dimension_numbers.rhs_spec[0:2] == (rank - 1, rank - 2), msg1
+        assert dimension_numbers.out_spec[0:2] == (0, rank - 1), msg1
+        # In Flax, lhs is the inputs, rhs is the kernel.
+        # lhs layout is B, spatials..., Ci
+        # rhs layout is: spatials..., Ci, Co
+        # out layous it: B, spatials..., Co
+        #
+        # we need to share these axes: lhs[1:] , rhs[:-1]
+        # we have a scale/invscale per: lhs[0] / out[0] and rhs[-1] / out[-1]
+
+        # Flax assumptions.
+        assert cfg.lhs.calib_shared_axes == list(range(1, rank))
+        assert cfg.rhs.calib_shared_axes == list(range(0, rank - 1))
+
+        lhs_q, lhs_inv_scale, _ = _scale_quant(
+            lhs, cfg=cfg.lhs, ca=None, context=None
+        )
+        rhs_q, rhs_inv_scale, _ = _scale_quant(
+            rhs, cfg=cfg.rhs, ca=None, context=None
+        )
+
+        out = lax.conv_general_dilated(
+            lhs=lhs_q,
+            rhs=rhs_q,
+            window_strides=window_strides,
+            padding=padding,
+            lhs_dilation=lhs_dilation,
+            rhs_dilation=rhs_dilation,
+            dimension_numbers=dimension_numbers,
+            feature_group_count=feature_group_count,
+            batch_group_count=batch_group_count,
+            precision=precision,
+            preferred_element_type=preferred_element_type,
+        )
+
+        out = _maybe_mul(out, lhs_inv_scale)
+        out = _maybe_mul(out, rhs_inv_scale)
+
+        return out
+
+    return my_conv_general_dilated</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="fjformer.bits.q_dot_general.make_conv_general_dilated"><code class="name flex">
+<span>def <span class="ident">make_conv_general_dilated</span></span>(<span>cfg: <a title="fjformer.bits.config.DotGeneralRaw" href="config.html#fjformer.bits.config.DotGeneralRaw">DotGeneralRaw</a>)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Makes quantized lax.make_conv_general_dilated replacement.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def make_conv_general_dilated(cfg: config.DotGeneralRaw):
+    &#34;&#34;&#34;Makes quantized lax.make_conv_general_dilated replacement.&#34;&#34;&#34;
+
+    cfg = copy.deepcopy(cfg)
+    if cfg is None:
+        cfg = config.DotGeneralRaw.make()
+
+    def my_conv_general_dilated(
+            lhs,
+            rhs,
+            window_strides,
+            padding,
+            lhs_dilation=None,
+            rhs_dilation=None,
+            dimension_numbers=None,
+            feature_group_count=1,
+            batch_group_count=1,
+            precision=None,
+            preferred_element_type=None,
+    ) -&gt; jax.Array:
+        msg1 = &#34;&#34;&#34;
+To simplify the code, we currently assume a Flax-particular layout of the data.
+This makes sense, because this is the main use-case of this function.
+However if there is any other use, we will drop that assumption.
+&#34;&#34;&#34;
+        rank = len(lhs.shape)
+        assert len(rhs.shape) == rank
+        assert dimension_numbers is not None, msg1
+        assert dimension_numbers.lhs_spec[0:2] == (0, rank - 1), msg1
+        assert dimension_numbers.rhs_spec[0:2] == (rank - 1, rank - 2), msg1
+        assert dimension_numbers.out_spec[0:2] == (0, rank - 1), msg1
+        # In Flax, lhs is the inputs, rhs is the kernel.
+        # lhs layout is B, spatials..., Ci
+        # rhs layout is: spatials..., Ci, Co
+        # out layous it: B, spatials..., Co
+        #
+        # we need to share these axes: lhs[1:] , rhs[:-1]
+        # we have a scale/invscale per: lhs[0] / out[0] and rhs[-1] / out[-1]
+
+        # Flax assumptions.
+        assert cfg.lhs.calib_shared_axes == list(range(1, rank))
+        assert cfg.rhs.calib_shared_axes == list(range(0, rank - 1))
+
+        lhs_q, lhs_inv_scale, _ = _scale_quant(
+            lhs, cfg=cfg.lhs, ca=None, context=None
+        )
+        rhs_q, rhs_inv_scale, _ = _scale_quant(
+            rhs, cfg=cfg.rhs, ca=None, context=None
+        )
+
+        out = lax.conv_general_dilated(
+            lhs=lhs_q,
+            rhs=rhs_q,
+            window_strides=window_strides,
+            padding=padding,
+            lhs_dilation=lhs_dilation,
+            rhs_dilation=rhs_dilation,
+            dimension_numbers=dimension_numbers,
+            feature_group_count=feature_group_count,
+            batch_group_count=batch_group_count,
+            precision=precision,
+            preferred_element_type=preferred_element_type,
+        )
+
+        out = _maybe_mul(out, lhs_inv_scale)
+        out = _maybe_mul(out, rhs_inv_scale)
+
+        return out
+
+    return my_conv_general_dilated</code></pre>
+</details>
+</dd>
+<dt id="fjformer.bits.q_dot_general.make_dot_general"><code class="name flex">
+<span>def <span class="ident">make_dot_general</span></span>(<span>cfg: Optional[<a title="fjformer.bits.config.DotGeneral" href="config.html#fjformer.bits.config.DotGeneral">DotGeneral</a>])</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Makes quantized lax.dot_general replacement with attached gradients.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def make_dot_general(cfg: Optional[config.DotGeneral]):
+    &#34;&#34;&#34;Makes quantized lax.dot_general replacement with attached gradients.&#34;&#34;&#34;
+    if cfg is None:
+        def ret_lax_dg(
+                lhs,
+                rhs,
+                dimension_numbers,
+                precision=None,
+                preferred_element_type=None,
+                *,
+                context=Context(key=None, train_step=None),
+        ):
+            del context
+            return jax.lax.dot_general(
+                lhs, rhs, dimension_numbers, precision, preferred_element_type
+            )
+
+        return ret_lax_dg
+
+    dg = _dot_general_raw_attach_gradient(
+        fwd_dot_general_raw=_make_dot_general_raw(cfg.fwd),
+        dlhs_dot_general_raw=_make_dot_general_raw(cfg.dlhs),
+        drhs_dot_general_raw=_make_dot_general_raw(cfg.drhs),
+    )
+
+    def ret_dg(
+            lhs,
+            rhs,
+            dimension_numbers,
+            precision=None,
+            preferred_element_type=None,
+            *,
+            context=Context(key=None, train_step=None),
+    ):
+        del preferred_element_type
+        assert (
+                precision is None
+        ), f&#39;Precision {precision} requested together with quantization.&#39;
+        assert lhs.dtype == rhs.dtype, (
+            &#39;The only reason we need that, is because we need to determine return&#39;
+            &#39; type.&#39;
+        )
+        out = dg(
+            lhs=lhs,
+            rhs=rhs,
+            dimension_numbers=dimension_numbers,
+            context=context,
+        )
+        return out
+
+    return ret_dg</code></pre>
+</details>
+</dd>
+<dt id="fjformer.bits.q_dot_general.make_fake_quant"><code class="name flex">
+<span>def <span class="ident">make_fake_quant</span></span>(<span>cfg: <a title="fjformer.bits.config.Tensor" href="config.html#fjformer.bits.config.Tensor">Tensor</a>, ca=None)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def make_fake_quant(cfg: config.Tensor, ca=None):
+    def fake_quant(x, context):
+        x_q, inv_scale, _ = _scale_quant(x, cfg=cfg, ca=ca, context=context)
+        return _maybe_mul(x_q, inv_scale)
+
+    return fake_quant</code></pre>
+</details>
+</dd>
+</dl>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="fjformer.bits.q_dot_general.Context"><code class="flex name class">
+<span>class <span class="ident">Context</span></span>
+<span>(</span><span>key: Optional[jax.Array], train_step: int | None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Context(key: Optional[jax.Array], train_step: Optional[int])</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@flax.struct.dataclass
+class Context:
+    key: Optional[jax.Array]
+    train_step: Optional[int]</code></pre>
+</details>
+<h3>Class variables</h3>
+<dl>
+<dt id="fjformer.bits.q_dot_general.Context.key"><code class="name">var <span class="ident">key</span> : Optional[jax.Array]</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="fjformer.bits.q_dot_general.Context.train_step"><code class="name">var <span class="ident">train_step</span> : int | None</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="fjformer.bits.q_dot_general.Context.replace"><code class="name flex">
+<span>def <span class="ident">replace</span></span>(<span>self, **updates)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>"Returns a new object replacing the specified fields with new values.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def replace(self, **updates):
+  &#34;&#34;&#34; &#34;Returns a new object replacing the specified fields with new values.&#34;&#34;&#34;
+  return dataclasses.replace(self, **updates)</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="fjformer.bits.q_dot_general.DotGeneralRes"><code class="flex name class">
+<span>class <span class="ident">DotGeneralRes</span></span>
+<span>(</span><span>context_bwd: <a title="fjformer.bits.q_dot_general.Context" href="#fjformer.bits.q_dot_general.Context">Context</a>, lhs: <a title="fjformer.bits.q_dot_general.TensorRes" href="#fjformer.bits.q_dot_general.TensorRes">TensorRes</a>, rhs: <a title="fjformer.bits.q_dot_general.TensorRes" href="#fjformer.bits.q_dot_general.TensorRes">TensorRes</a>)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>DotGeneralRes(context_bwd: fjformer.bits.q_dot_general.Context, lhs: fjformer.bits.q_dot_general.TensorRes, rhs: fjformer.bits.q_dot_general.TensorRes)</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@flax.struct.dataclass
+class DotGeneralRes:
+    context_bwd: Context
+    lhs: TensorRes
+    rhs: TensorRes</code></pre>
+</details>
+<h3>Class variables</h3>
+<dl>
+<dt id="fjformer.bits.q_dot_general.DotGeneralRes.context_bwd"><code class="name">var <span class="ident">context_bwd</span> : <a title="fjformer.bits.q_dot_general.Context" href="#fjformer.bits.q_dot_general.Context">Context</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="fjformer.bits.q_dot_general.DotGeneralRes.lhs"><code class="name">var <span class="ident">lhs</span> : <a title="fjformer.bits.q_dot_general.TensorRes" href="#fjformer.bits.q_dot_general.TensorRes">TensorRes</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="fjformer.bits.q_dot_general.DotGeneralRes.rhs"><code class="name">var <span class="ident">rhs</span> : <a title="fjformer.bits.q_dot_general.TensorRes" href="#fjformer.bits.q_dot_general.TensorRes">TensorRes</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="fjformer.bits.q_dot_general.DotGeneralRes.replace"><code class="name flex">
+<span>def <span class="ident">replace</span></span>(<span>self, **updates)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>"Returns a new object replacing the specified fields with new values.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def replace(self, **updates):
+  &#34;&#34;&#34; &#34;Returns a new object replacing the specified fields with new values.&#34;&#34;&#34;
+  return dataclasses.replace(self, **updates)</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="fjformer.bits.q_dot_general.MultiTensor"><code class="flex name class">
+<span>class <span class="ident">MultiTensor</span></span>
+<span>(</span><span>x: jax.Array, qx: Optional[<a title="fjformer.bits.q_dot_general.QTensor" href="#fjformer.bits.q_dot_general.QTensor">QTensor</a>])</span>
+</code></dt>
+<dd>
+<div class="desc"><p>MultiTensor(x: jax.Array, qx: Optional[fjformer.bits.q_dot_general.QTensor])</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@flax.struct.dataclass
+class MultiTensor:
+    x: jnp.ndarray
+    qx: Optional[QTensor]</code></pre>
+</details>
+<h3>Class variables</h3>
+<dl>
+<dt id="fjformer.bits.q_dot_general.MultiTensor.qx"><code class="name">var <span class="ident">qx</span> : Optional[<a title="fjformer.bits.q_dot_general.QTensor" href="#fjformer.bits.q_dot_general.QTensor">QTensor</a>]</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="fjformer.bits.q_dot_general.MultiTensor.x"><code class="name">var <span class="ident">x</span> : jax.Array</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="fjformer.bits.q_dot_general.MultiTensor.replace"><code class="name flex">
+<span>def <span class="ident">replace</span></span>(<span>self, **updates)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>"Returns a new object replacing the specified fields with new values.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def replace(self, **updates):
+  &#34;&#34;&#34; &#34;Returns a new object replacing the specified fields with new values.&#34;&#34;&#34;
+  return dataclasses.replace(self, **updates)</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="fjformer.bits.q_dot_general.QTensor"><code class="flex name class">
+<span>class <span class="ident">QTensor</span></span>
+<span>(</span><span>qvalue: jax.Array, qvalue_scale_t: jax.Array)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>QTensor(qvalue: jax.Array, qvalue_scale_t: jax.Array)</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@flax.struct.dataclass
+# It is used only when use_fwd_quant = True
+class QTensor:
+    qvalue: jnp.ndarray
+    qvalue_scale_t: jnp.ndarray</code></pre>
+</details>
+<h3>Class variables</h3>
+<dl>
+<dt id="fjformer.bits.q_dot_general.QTensor.qvalue"><code class="name">var <span class="ident">qvalue</span> : jax.Array</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="fjformer.bits.q_dot_general.QTensor.qvalue_scale_t"><code class="name">var <span class="ident">qvalue_scale_t</span> : jax.Array</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="fjformer.bits.q_dot_general.QTensor.replace"><code class="name flex">
+<span>def <span class="ident">replace</span></span>(<span>self, **updates)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>"Returns a new object replacing the specified fields with new values.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def replace(self, **updates):
+  &#34;&#34;&#34; &#34;Returns a new object replacing the specified fields with new values.&#34;&#34;&#34;
+  return dataclasses.replace(self, **updates)</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="fjformer.bits.q_dot_general.TensorRes"><code class="flex name class">
+<span>class <span class="ident">TensorRes</span></span>
+<span>(</span><span>mt: <a title="fjformer.bits.q_dot_general.MultiTensor" href="#fjformer.bits.q_dot_general.MultiTensor">MultiTensor</a>, quant_grad: Optional[Callable[[jax.Array], tuple[jax.Array]]])</span>
+</code></dt>
+<dd>
+<div class="desc"><p>All the things we pass from the forward pass to the backward pass.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@flax.struct.dataclass
+class TensorRes:
+    &#34;&#34;&#34;All the things we pass from the forward pass to the backward pass.&#34;&#34;&#34;
+    mt: MultiTensor
+    quant_grad: Union[Callable[[jnp.ndarray], tuple[jnp.ndarray]], None]</code></pre>
+</details>
+<h3>Class variables</h3>
+<dl>
+<dt id="fjformer.bits.q_dot_general.TensorRes.mt"><code class="name">var <span class="ident">mt</span> : <a title="fjformer.bits.q_dot_general.MultiTensor" href="#fjformer.bits.q_dot_general.MultiTensor">MultiTensor</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="fjformer.bits.q_dot_general.TensorRes.quant_grad"><code class="name">var <span class="ident">quant_grad</span> : Optional[Callable[[jax.Array], tuple[jax.Array]]]</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="fjformer.bits.q_dot_general.TensorRes.replace"><code class="name flex">
+<span>def <span class="ident">replace</span></span>(<span>self, **updates)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>"Returns a new object replacing the specified fields with new values.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def replace(self, **updates):
+  &#34;&#34;&#34; &#34;Returns a new object replacing the specified fields with new values.&#34;&#34;&#34;
+  return dataclasses.replace(self, **updates)</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="fjformer.bits" href="index.html">fjformer.bits</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="fjformer.bits.q_dot_general.make_conv_general_dilated" href="#fjformer.bits.q_dot_general.make_conv_general_dilated">make_conv_general_dilated</a></code></li>
+<li><code><a title="fjformer.bits.q_dot_general.make_dot_general" href="#fjformer.bits.q_dot_general.make_dot_general">make_dot_general</a></code></li>
+<li><code><a title="fjformer.bits.q_dot_general.make_fake_quant" href="#fjformer.bits.q_dot_general.make_fake_quant">make_fake_quant</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="fjformer.bits.q_dot_general.Context" href="#fjformer.bits.q_dot_general.Context">Context</a></code></h4>
+<ul class="">
+<li><code><a title="fjformer.bits.q_dot_general.Context.key" href="#fjformer.bits.q_dot_general.Context.key">key</a></code></li>
+<li><code><a title="fjformer.bits.q_dot_general.Context.replace" href="#fjformer.bits.q_dot_general.Context.replace">replace</a></code></li>
+<li><code><a title="fjformer.bits.q_dot_general.Context.train_step" href="#fjformer.bits.q_dot_general.Context.train_step">train_step</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="fjformer.bits.q_dot_general.DotGeneralRes" href="#fjformer.bits.q_dot_general.DotGeneralRes">DotGeneralRes</a></code></h4>
+<ul class="">
+<li><code><a title="fjformer.bits.q_dot_general.DotGeneralRes.context_bwd" href="#fjformer.bits.q_dot_general.DotGeneralRes.context_bwd">context_bwd</a></code></li>
+<li><code><a title="fjformer.bits.q_dot_general.DotGeneralRes.lhs" href="#fjformer.bits.q_dot_general.DotGeneralRes.lhs">lhs</a></code></li>
+<li><code><a title="fjformer.bits.q_dot_general.DotGeneralRes.replace" href="#fjformer.bits.q_dot_general.DotGeneralRes.replace">replace</a></code></li>
+<li><code><a title="fjformer.bits.q_dot_general.DotGeneralRes.rhs" href="#fjformer.bits.q_dot_general.DotGeneralRes.rhs">rhs</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="fjformer.bits.q_dot_general.MultiTensor" href="#fjformer.bits.q_dot_general.MultiTensor">MultiTensor</a></code></h4>
+<ul class="">
+<li><code><a title="fjformer.bits.q_dot_general.MultiTensor.qx" href="#fjformer.bits.q_dot_general.MultiTensor.qx">qx</a></code></li>
+<li><code><a title="fjformer.bits.q_dot_general.MultiTensor.replace" href="#fjformer.bits.q_dot_general.MultiTensor.replace">replace</a></code></li>
+<li><code><a title="fjformer.bits.q_dot_general.MultiTensor.x" href="#fjformer.bits.q_dot_general.MultiTensor.x">x</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="fjformer.bits.q_dot_general.QTensor" href="#fjformer.bits.q_dot_general.QTensor">QTensor</a></code></h4>
+<ul class="">
+<li><code><a title="fjformer.bits.q_dot_general.QTensor.qvalue" href="#fjformer.bits.q_dot_general.QTensor.qvalue">qvalue</a></code></li>
+<li><code><a title="fjformer.bits.q_dot_general.QTensor.qvalue_scale_t" href="#fjformer.bits.q_dot_general.QTensor.qvalue_scale_t">qvalue_scale_t</a></code></li>
+<li><code><a title="fjformer.bits.q_dot_general.QTensor.replace" href="#fjformer.bits.q_dot_general.QTensor.replace">replace</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="fjformer.bits.q_dot_general.TensorRes" href="#fjformer.bits.q_dot_general.TensorRes">TensorRes</a></code></h4>
+<ul class="">
+<li><code><a title="fjformer.bits.q_dot_general.TensorRes.mt" href="#fjformer.bits.q_dot_general.TensorRes.mt">mt</a></code></li>
+<li><code><a title="fjformer.bits.q_dot_general.TensorRes.quant_grad" href="#fjformer.bits.q_dot_general.TensorRes.quant_grad">quant_grad</a></code></li>
+<li><code><a title="fjformer.bits.q_dot_general.TensorRes.replace" href="#fjformer.bits.q_dot_general.TensorRes.replace">replace</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.10.0</a>.</p>
+</footer>
+</body>
+</html>

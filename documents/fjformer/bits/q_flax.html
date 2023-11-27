@@ -1,0 +1,792 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.10.0" />
+<title>fjformer.bits.q_flax API documentation</title>
+<meta name="description" content="Flax layer for AQT injection." />
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
+<link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js" integrity="sha256-Uv3H6lx7dJmRfRvH8TH6kJD1TSK1aFcwgx+mdg3epi8=" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>fjformer.bits.q_flax</code></h1>
+</header>
+<section id="section-intro">
+<p>Flax layer for AQT injection.</p>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python"># Copyright 2022 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the &#34;License&#34;);
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an &#34;AS IS&#34; BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+&#34;&#34;&#34;Flax layer for AQT injection.&#34;&#34;&#34;
+
+import enum
+import functools
+from . import q_dot_general
+from . import calibration
+from . import config
+from . import int_numerics
+import flax.linen as nn
+import jax.numpy as jnp
+from typing import Optional, Union
+
+
+class Freezer(nn.Module, config.Preprocess):
+    &#34;&#34;&#34;Identity function that can freeze its input.
+
+    On default it is an identity function that saves the input in a variable.
+    In &#39;use_frozen=True&#39; mode, ignores the input and returns the frozen value. It
+    is usefult to implement &#39;constant folding&#39; and put quantized weights and
+    scales in the checkpoint for serving.
+    &#34;&#34;&#34;
+
+    # If you want use &#39;params&#39; make sure that there is another mechanism to hide
+    # these variables from the optimizer.
+    var_collection: str = &#39;q&#39;
+
+    # If you set it to True, instead of returning the current input
+    # will return last input it got.
+    use_frozen: bool = False
+
+    @nn.compact
+    def __call__(self, inputs):
+        # return inputs or the frozen value
+        collection = self.var_collection
+        frozen = self.variable(collection, &#39;frozen&#39;, jnp.zeros, inputs.shape)
+        if not self.use_frozen:
+            frozen.value = inputs
+        return frozen.value
+
+
+class QDotGeneral(nn.Module):
+    &#34;&#34;&#34;A layer that can be injected into flax.nn.Dense, etc.&#34;&#34;&#34;
+
+    cfg: Optional[Union[config.DotGeneral, None]] = None
+    prng_name: Optional[Union[str, None]] = &#39;params&#39;
+
+    @nn.compact
+    def __call__(
+            self,
+            lhs,
+            rhs,
+            dimension_numbers,
+            precision,
+            preferred_element_type=None,
+    ):
+        key = self.make_rng(self.prng_name) if self.prng_name is not None else None
+        context = q_dot_general.Context(key=key, train_step=None)
+        q_dg = q_dot_general.make_dot_general(self.cfg)
+        q_dg = functools.partial(q_dg, context=context)
+        return q_dg(
+            lhs,
+            rhs,
+            dimension_numbers,
+            precision,
+            preferred_element_type=preferred_element_type,
+        )
+
+
+class QEinsum(nn.Module):
+    &#34;&#34;&#34;Quantized Einsum class for model injection.&#34;&#34;&#34;
+
+    cfg: Optional[Union[config.DotGeneral, None]] = None
+    prng_name: Optional[Union[str, None]] = &#39;params&#39;
+
+    @nn.compact
+    def __call__(self, eqn, lhs, rhs):
+        key = self.make_rng(self.prng_name) if self.prng_name is not None else None
+        context = q_dot_general.Context(key=key, train_step=None)
+        q_dg = q_dot_general.make_dot_general(self.cfg)
+        q_dg = functools.partial(q_dg, context=context)
+        return jnp.einsum(eqn, lhs, rhs, _dot_general=q_dg)
+
+
+class QuantMode(enum.Enum):
+    DYNAMIC = 1
+    FREEZE = 2
+    SERVE_FROZEN = 3
+
+
+def mk_freezer(name: str, freeze_collection: str, mode: QuantMode):
+    assert mode in QuantMode
+    if mode == QuantMode.DYNAMIC:
+        return None
+    use_frozen = mode == QuantMode.SERVE_FROZEN
+    return functools.partial(
+        Freezer,
+        name=name,
+        use_frozen=use_frozen,
+        var_collection=freeze_collection,
+    )
+
+
+def set_rhs_quant_mode(
+        cfg: config.DotGeneral, mode: QuantMode, collection=&#39;q&#39;
+):
+    cfg.fwd.rhs.preprocess_quant_cls = mk_freezer(&#39;rhs&#39;, collection, mode)
+    cfg.fwd.rhs.preprocess_scale_cls = mk_freezer(&#39;rhs_scale&#39;, collection, mode)
+
+
+def set_lhs_quant_mode(
+        cfg: config.DotGeneral, mode: QuantMode, collection=&#39;q&#39;
+):
+    cfg.fwd.lhs.preprocess_quant_cls = mk_freezer(&#39;lhs&#39;, collection, mode)
+    cfg.fwd.lhs.preprocess_scale_cls = mk_freezer(&#39;lhs_scale&#39;, collection, mode)
+
+
+def config_v4(
+        *,
+        fwd_bits: Union[int, None],
+        dlhs_bits: Union[int, None],
+        drhs_bits: Union[int, None],
+        # The dummy static bound flag is for performance benchmarking.
+        use_dummy_static_bound: bool = False,
+        rng_type: str = &#39;jax.uniform&#39;,  # &#39;custom-1&#39;
+        dlhs_local_q: Union[config.LocalQ, None] = None,
+        drhs_local_q: Union[config.LocalQ, None] = None,
+        fwd_accumulator_dtype: ... = jnp.int32,
+        dlhs_accumulator_dtype: ... = jnp.int32,
+        drhs_accumulator_dtype: ... = jnp.int32,
+        lhs_quant_mode: QuantMode = QuantMode.DYNAMIC,
+        rhs_quant_mode: QuantMode = QuantMode.DYNAMIC,
+        freeze_collection: str = &#39;q&#39;,
+) -&gt; config.DotGeneral:
+    &#34;&#34;&#34;Version 4 of user-visible AQT config.&#34;&#34;&#34;
+
+    def tensor_config(bits: Union[int, None]) -&gt; config.Tensor:
+        assert bits is None or bits &gt;= 2, &#39;Need at least 2 bits.&#39;
+        if bits is None:
+            numerics = config.NoNumerics()
+        else:
+            numerics = int_numerics.IntNumerics(
+                bits=bits,
+                preserve_zero=True,
+                preserve_max_val=False,
+                clip=True,
+                round=True,
+                noise_fn=None,
+                clip_gradient=False,  # Can be False when using abs-max scaling.
+            )
+
+        return config.Tensor(
+            numerics=numerics,
+            calib_shared_axes=None,
+            scale_stop_grad=True,
+            calibration=calibration.AbsMaxCalibration(),
+            po2_scale=False,
+            use_fake_quant=False,
+            # dtype_x=dtype,
+            use_fwd_quant=None,
+            preprocess_quant_cls=None,
+            preprocess_scale_cls=None,
+        )
+
+    def dg_raw_config(lhs_bits, rhs_bits, local_q=None) -&gt; config.DotGeneralRaw:
+        lhs_cfg = tensor_config(lhs_bits)
+        rhs_cfg = tensor_config(rhs_bits)
+        if (
+                True  # Just to format lines below
+                and lhs_bits is not None
+                and rhs_bits is not None
+                and lhs_bits &lt;= 8
+                and rhs_bits &lt;= 8
+        ):
+            dg_in_dtype = jnp.int8
+            dg_accumulator_dtype = jnp.int32
+        else:
+            # None determines the dtype on the fly in q_dot_general
+            dg_in_dtype = None
+            dg_accumulator_dtype = None
+
+        return config.DotGeneralRaw(
+            lhs=lhs_cfg,
+            rhs=rhs_cfg,
+            dg_in_dtype=dg_in_dtype,
+            dg_accumulator_dtype=dg_accumulator_dtype,
+            local_q=local_q,
+        )
+
+    cfg = config.DotGeneral(
+        fwd=dg_raw_config(fwd_bits, fwd_bits),
+        dlhs=dg_raw_config(dlhs_bits, dlhs_bits, local_q=dlhs_local_q),
+        drhs=dg_raw_config(drhs_bits, drhs_bits, local_q=drhs_local_q),
+    )
+
+    cfg.dlhs.rhs.use_fwd_quant = False
+    cfg.drhs.rhs.use_fwd_quant = False
+
+    # Typically we have (but I don&#39;t know if it is guraranteed):
+    # - vjp_lhs_stochastic_rounding is referring to the gradient and
+    # - vjp_rhs_stochastic_rounding is referring to the activations/weights.
+    config.set_stochastic_rounding(
+        cfg,
+        vjp_lhs_stochastic_rounding=True,
+        vjp_rhs_stochastic_rounding=False,
+        implementation=rng_type,
+    )
+
+    if use_dummy_static_bound:
+        config.set_static_bound(cfg, 1.0)
+
+    config.set_accumulator_dtype(
+        cfg,
+        fwd_dtype=fwd_accumulator_dtype,
+        dlhs_dtype=dlhs_accumulator_dtype,
+        drhs_dtype=drhs_accumulator_dtype,
+    )
+
+    assert (
+            lhs_quant_mode == QuantMode.DYNAMIC or rhs_quant_mode == QuantMode.DYNAMIC
+    ), (
+        &#39;It seems unlikely that both sides of the matmul should be frozen.&#39;
+        &#39; E.g. both sides of the matmul be weights. &#39;
+    )
+
+    set_rhs_quant_mode(cfg, rhs_quant_mode, freeze_collection)
+    set_lhs_quant_mode(cfg, lhs_quant_mode, freeze_collection)
+
+    return cfg</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="fjformer.bits.q_flax.config_v4"><code class="name flex">
+<span>def <span class="ident">config_v4</span></span>(<span>*, fwd_bits: int | None, dlhs_bits: int | None, drhs_bits: int | None, use_dummy_static_bound: bool = False, rng_type: str = 'jax.uniform', dlhs_local_q: Optional[<a title="fjformer.bits.config.LocalQ" href="config.html#fjformer.bits.config.LocalQ">LocalQ</a>] = None, drhs_local_q: Optional[<a title="fjformer.bits.config.LocalQ" href="config.html#fjformer.bits.config.LocalQ">LocalQ</a>] = None, fwd_accumulator_dtype: Ellipsis = jax.numpy.int32, dlhs_accumulator_dtype: Ellipsis = jax.numpy.int32, drhs_accumulator_dtype: Ellipsis = jax.numpy.int32, lhs_quant_mode: <a title="fjformer.bits.q_flax.QuantMode" href="#fjformer.bits.q_flax.QuantMode">QuantMode</a> = QuantMode.DYNAMIC, rhs_quant_mode: <a title="fjformer.bits.q_flax.QuantMode" href="#fjformer.bits.q_flax.QuantMode">QuantMode</a> = QuantMode.DYNAMIC, freeze_collection: str = 'q') ‑> <a title="fjformer.bits.config.DotGeneral" href="config.html#fjformer.bits.config.DotGeneral">DotGeneral</a></span>
+</code></dt>
+<dd>
+<div class="desc"><p>Version 4 of user-visible AQT config.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def config_v4(
+        *,
+        fwd_bits: Union[int, None],
+        dlhs_bits: Union[int, None],
+        drhs_bits: Union[int, None],
+        # The dummy static bound flag is for performance benchmarking.
+        use_dummy_static_bound: bool = False,
+        rng_type: str = &#39;jax.uniform&#39;,  # &#39;custom-1&#39;
+        dlhs_local_q: Union[config.LocalQ, None] = None,
+        drhs_local_q: Union[config.LocalQ, None] = None,
+        fwd_accumulator_dtype: ... = jnp.int32,
+        dlhs_accumulator_dtype: ... = jnp.int32,
+        drhs_accumulator_dtype: ... = jnp.int32,
+        lhs_quant_mode: QuantMode = QuantMode.DYNAMIC,
+        rhs_quant_mode: QuantMode = QuantMode.DYNAMIC,
+        freeze_collection: str = &#39;q&#39;,
+) -&gt; config.DotGeneral:
+    &#34;&#34;&#34;Version 4 of user-visible AQT config.&#34;&#34;&#34;
+
+    def tensor_config(bits: Union[int, None]) -&gt; config.Tensor:
+        assert bits is None or bits &gt;= 2, &#39;Need at least 2 bits.&#39;
+        if bits is None:
+            numerics = config.NoNumerics()
+        else:
+            numerics = int_numerics.IntNumerics(
+                bits=bits,
+                preserve_zero=True,
+                preserve_max_val=False,
+                clip=True,
+                round=True,
+                noise_fn=None,
+                clip_gradient=False,  # Can be False when using abs-max scaling.
+            )
+
+        return config.Tensor(
+            numerics=numerics,
+            calib_shared_axes=None,
+            scale_stop_grad=True,
+            calibration=calibration.AbsMaxCalibration(),
+            po2_scale=False,
+            use_fake_quant=False,
+            # dtype_x=dtype,
+            use_fwd_quant=None,
+            preprocess_quant_cls=None,
+            preprocess_scale_cls=None,
+        )
+
+    def dg_raw_config(lhs_bits, rhs_bits, local_q=None) -&gt; config.DotGeneralRaw:
+        lhs_cfg = tensor_config(lhs_bits)
+        rhs_cfg = tensor_config(rhs_bits)
+        if (
+                True  # Just to format lines below
+                and lhs_bits is not None
+                and rhs_bits is not None
+                and lhs_bits &lt;= 8
+                and rhs_bits &lt;= 8
+        ):
+            dg_in_dtype = jnp.int8
+            dg_accumulator_dtype = jnp.int32
+        else:
+            # None determines the dtype on the fly in q_dot_general
+            dg_in_dtype = None
+            dg_accumulator_dtype = None
+
+        return config.DotGeneralRaw(
+            lhs=lhs_cfg,
+            rhs=rhs_cfg,
+            dg_in_dtype=dg_in_dtype,
+            dg_accumulator_dtype=dg_accumulator_dtype,
+            local_q=local_q,
+        )
+
+    cfg = config.DotGeneral(
+        fwd=dg_raw_config(fwd_bits, fwd_bits),
+        dlhs=dg_raw_config(dlhs_bits, dlhs_bits, local_q=dlhs_local_q),
+        drhs=dg_raw_config(drhs_bits, drhs_bits, local_q=drhs_local_q),
+    )
+
+    cfg.dlhs.rhs.use_fwd_quant = False
+    cfg.drhs.rhs.use_fwd_quant = False
+
+    # Typically we have (but I don&#39;t know if it is guraranteed):
+    # - vjp_lhs_stochastic_rounding is referring to the gradient and
+    # - vjp_rhs_stochastic_rounding is referring to the activations/weights.
+    config.set_stochastic_rounding(
+        cfg,
+        vjp_lhs_stochastic_rounding=True,
+        vjp_rhs_stochastic_rounding=False,
+        implementation=rng_type,
+    )
+
+    if use_dummy_static_bound:
+        config.set_static_bound(cfg, 1.0)
+
+    config.set_accumulator_dtype(
+        cfg,
+        fwd_dtype=fwd_accumulator_dtype,
+        dlhs_dtype=dlhs_accumulator_dtype,
+        drhs_dtype=drhs_accumulator_dtype,
+    )
+
+    assert (
+            lhs_quant_mode == QuantMode.DYNAMIC or rhs_quant_mode == QuantMode.DYNAMIC
+    ), (
+        &#39;It seems unlikely that both sides of the matmul should be frozen.&#39;
+        &#39; E.g. both sides of the matmul be weights. &#39;
+    )
+
+    set_rhs_quant_mode(cfg, rhs_quant_mode, freeze_collection)
+    set_lhs_quant_mode(cfg, lhs_quant_mode, freeze_collection)
+
+    return cfg</code></pre>
+</details>
+</dd>
+<dt id="fjformer.bits.q_flax.mk_freezer"><code class="name flex">
+<span>def <span class="ident">mk_freezer</span></span>(<span>name: str, freeze_collection: str, mode: <a title="fjformer.bits.q_flax.QuantMode" href="#fjformer.bits.q_flax.QuantMode">QuantMode</a>)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def mk_freezer(name: str, freeze_collection: str, mode: QuantMode):
+    assert mode in QuantMode
+    if mode == QuantMode.DYNAMIC:
+        return None
+    use_frozen = mode == QuantMode.SERVE_FROZEN
+    return functools.partial(
+        Freezer,
+        name=name,
+        use_frozen=use_frozen,
+        var_collection=freeze_collection,
+    )</code></pre>
+</details>
+</dd>
+<dt id="fjformer.bits.q_flax.set_lhs_quant_mode"><code class="name flex">
+<span>def <span class="ident">set_lhs_quant_mode</span></span>(<span>cfg: <a title="fjformer.bits.config.DotGeneral" href="config.html#fjformer.bits.config.DotGeneral">DotGeneral</a>, mode: <a title="fjformer.bits.q_flax.QuantMode" href="#fjformer.bits.q_flax.QuantMode">QuantMode</a>, collection='q')</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def set_lhs_quant_mode(
+        cfg: config.DotGeneral, mode: QuantMode, collection=&#39;q&#39;
+):
+    cfg.fwd.lhs.preprocess_quant_cls = mk_freezer(&#39;lhs&#39;, collection, mode)
+    cfg.fwd.lhs.preprocess_scale_cls = mk_freezer(&#39;lhs_scale&#39;, collection, mode)</code></pre>
+</details>
+</dd>
+<dt id="fjformer.bits.q_flax.set_rhs_quant_mode"><code class="name flex">
+<span>def <span class="ident">set_rhs_quant_mode</span></span>(<span>cfg: <a title="fjformer.bits.config.DotGeneral" href="config.html#fjformer.bits.config.DotGeneral">DotGeneral</a>, mode: <a title="fjformer.bits.q_flax.QuantMode" href="#fjformer.bits.q_flax.QuantMode">QuantMode</a>, collection='q')</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def set_rhs_quant_mode(
+        cfg: config.DotGeneral, mode: QuantMode, collection=&#39;q&#39;
+):
+    cfg.fwd.rhs.preprocess_quant_cls = mk_freezer(&#39;rhs&#39;, collection, mode)
+    cfg.fwd.rhs.preprocess_scale_cls = mk_freezer(&#39;rhs_scale&#39;, collection, mode)</code></pre>
+</details>
+</dd>
+</dl>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="fjformer.bits.q_flax.Freezer"><code class="flex name class">
+<span>class <span class="ident">Freezer</span></span>
+<span>(</span><span>var_collection: str = 'q', use_frozen: bool = False, parent: Union[Type[flax.linen.module.Module], flax.core.scope.Scope, Type[flax.linen.module._Sentinel], ForwardRef(None)] = &lt;flax.linen.module._Sentinel object&gt;, name: Optional[str] = None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Identity function that can freeze its input.</p>
+<p>On default it is an identity function that saves the input in a variable.
+In 'use_frozen=True' mode, ignores the input and returns the frozen value. It
+is usefult to implement 'constant folding' and put quantized weights and
+scales in the checkpoint for serving.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Freezer(nn.Module, config.Preprocess):
+    &#34;&#34;&#34;Identity function that can freeze its input.
+
+    On default it is an identity function that saves the input in a variable.
+    In &#39;use_frozen=True&#39; mode, ignores the input and returns the frozen value. It
+    is usefult to implement &#39;constant folding&#39; and put quantized weights and
+    scales in the checkpoint for serving.
+    &#34;&#34;&#34;
+
+    # If you want use &#39;params&#39; make sure that there is another mechanism to hide
+    # these variables from the optimizer.
+    var_collection: str = &#39;q&#39;
+
+    # If you set it to True, instead of returning the current input
+    # will return last input it got.
+    use_frozen: bool = False
+
+    @nn.compact
+    def __call__(self, inputs):
+        # return inputs or the frozen value
+        collection = self.var_collection
+        frozen = self.variable(collection, &#39;frozen&#39;, jnp.zeros, inputs.shape)
+        if not self.use_frozen:
+            frozen.value = inputs
+        return frozen.value</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>flax.linen.module.Module</li>
+<li>flax.linen.module.ModuleBase</li>
+<li><a title="fjformer.bits.config.Preprocess" href="config.html#fjformer.bits.config.Preprocess">Preprocess</a></li>
+<li>abc.ABC</li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="fjformer.bits.q_flax.Freezer.name"><code class="name">var <span class="ident">name</span> : Optional[str]</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="fjformer.bits.q_flax.Freezer.parent"><code class="name">var <span class="ident">parent</span> : Union[Type[flax.linen.module.Module], flax.core.scope.Scope, Type[flax.linen.module._Sentinel], ForwardRef(None)]</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="fjformer.bits.q_flax.Freezer.scope"><code class="name">var <span class="ident">scope</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="fjformer.bits.q_flax.Freezer.use_frozen"><code class="name">var <span class="ident">use_frozen</span> : bool</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="fjformer.bits.q_flax.Freezer.var_collection"><code class="name">var <span class="ident">var_collection</span> : str</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+</dd>
+<dt id="fjformer.bits.q_flax.QDotGeneral"><code class="flex name class">
+<span>class <span class="ident">QDotGeneral</span></span>
+<span>(</span><span>cfg: Optional[<a title="fjformer.bits.config.DotGeneral" href="config.html#fjformer.bits.config.DotGeneral">DotGeneral</a>] = None, prng_name: Optional[str] = 'params', parent: Union[Type[flax.linen.module.Module], flax.core.scope.Scope, Type[flax.linen.module._Sentinel], ForwardRef(None)] = &lt;flax.linen.module._Sentinel object&gt;, name: Optional[str] = None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>A layer that can be injected into flax.nn.Dense, etc.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class QDotGeneral(nn.Module):
+    &#34;&#34;&#34;A layer that can be injected into flax.nn.Dense, etc.&#34;&#34;&#34;
+
+    cfg: Optional[Union[config.DotGeneral, None]] = None
+    prng_name: Optional[Union[str, None]] = &#39;params&#39;
+
+    @nn.compact
+    def __call__(
+            self,
+            lhs,
+            rhs,
+            dimension_numbers,
+            precision,
+            preferred_element_type=None,
+    ):
+        key = self.make_rng(self.prng_name) if self.prng_name is not None else None
+        context = q_dot_general.Context(key=key, train_step=None)
+        q_dg = q_dot_general.make_dot_general(self.cfg)
+        q_dg = functools.partial(q_dg, context=context)
+        return q_dg(
+            lhs,
+            rhs,
+            dimension_numbers,
+            precision,
+            preferred_element_type=preferred_element_type,
+        )</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>flax.linen.module.Module</li>
+<li>flax.linen.module.ModuleBase</li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="fjformer.bits.q_flax.QDotGeneral.cfg"><code class="name">var <span class="ident">cfg</span> : Optional[<a title="fjformer.bits.config.DotGeneral" href="config.html#fjformer.bits.config.DotGeneral">DotGeneral</a>]</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="fjformer.bits.q_flax.QDotGeneral.name"><code class="name">var <span class="ident">name</span> : Optional[str]</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="fjformer.bits.q_flax.QDotGeneral.parent"><code class="name">var <span class="ident">parent</span> : Union[Type[flax.linen.module.Module], flax.core.scope.Scope, Type[flax.linen.module._Sentinel], ForwardRef(None)]</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="fjformer.bits.q_flax.QDotGeneral.prng_name"><code class="name">var <span class="ident">prng_name</span> : Optional[str]</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="fjformer.bits.q_flax.QDotGeneral.scope"><code class="name">var <span class="ident">scope</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+</dd>
+<dt id="fjformer.bits.q_flax.QEinsum"><code class="flex name class">
+<span>class <span class="ident">QEinsum</span></span>
+<span>(</span><span>cfg: Optional[<a title="fjformer.bits.config.DotGeneral" href="config.html#fjformer.bits.config.DotGeneral">DotGeneral</a>] = None, prng_name: Optional[str] = 'params', parent: Union[Type[flax.linen.module.Module], flax.core.scope.Scope, Type[flax.linen.module._Sentinel], ForwardRef(None)] = &lt;flax.linen.module._Sentinel object&gt;, name: Optional[str] = None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Quantized Einsum class for model injection.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class QEinsum(nn.Module):
+    &#34;&#34;&#34;Quantized Einsum class for model injection.&#34;&#34;&#34;
+
+    cfg: Optional[Union[config.DotGeneral, None]] = None
+    prng_name: Optional[Union[str, None]] = &#39;params&#39;
+
+    @nn.compact
+    def __call__(self, eqn, lhs, rhs):
+        key = self.make_rng(self.prng_name) if self.prng_name is not None else None
+        context = q_dot_general.Context(key=key, train_step=None)
+        q_dg = q_dot_general.make_dot_general(self.cfg)
+        q_dg = functools.partial(q_dg, context=context)
+        return jnp.einsum(eqn, lhs, rhs, _dot_general=q_dg)</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>flax.linen.module.Module</li>
+<li>flax.linen.module.ModuleBase</li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="fjformer.bits.q_flax.QEinsum.cfg"><code class="name">var <span class="ident">cfg</span> : Optional[<a title="fjformer.bits.config.DotGeneral" href="config.html#fjformer.bits.config.DotGeneral">DotGeneral</a>]</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="fjformer.bits.q_flax.QEinsum.name"><code class="name">var <span class="ident">name</span> : Optional[str]</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="fjformer.bits.q_flax.QEinsum.parent"><code class="name">var <span class="ident">parent</span> : Union[Type[flax.linen.module.Module], flax.core.scope.Scope, Type[flax.linen.module._Sentinel], ForwardRef(None)]</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="fjformer.bits.q_flax.QEinsum.prng_name"><code class="name">var <span class="ident">prng_name</span> : Optional[str]</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="fjformer.bits.q_flax.QEinsum.scope"><code class="name">var <span class="ident">scope</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+</dd>
+<dt id="fjformer.bits.q_flax.QuantMode"><code class="flex name class">
+<span>class <span class="ident">QuantMode</span></span>
+<span>(</span><span>*args, **kwds)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Create a collection of name/value pairs.</p>
+<p>Example enumeration:</p>
+<pre><code class="language-python-repl">&gt;&gt;&gt; class Color(Enum):
+...     RED = 1
+...     BLUE = 2
+...     GREEN = 3
+</code></pre>
+<p>Access them by:</p>
+<ul>
+<li>attribute access::</li>
+</ul>
+<pre><code class="language-python-repl">&gt;&gt;&gt; Color.RED
+&lt;Color.RED: 1&gt;
+</code></pre>
+<ul>
+<li>value lookup:</li>
+</ul>
+<pre><code class="language-python-repl">&gt;&gt;&gt; Color(1)
+&lt;Color.RED: 1&gt;
+</code></pre>
+<ul>
+<li>name lookup:</li>
+</ul>
+<pre><code class="language-python-repl">&gt;&gt;&gt; Color['RED']
+&lt;Color.RED: 1&gt;
+</code></pre>
+<p>Enumerations can be iterated over, and know how many members they have:</p>
+<pre><code class="language-python-repl">&gt;&gt;&gt; len(Color)
+3
+</code></pre>
+<pre><code class="language-python-repl">&gt;&gt;&gt; list(Color)
+[&lt;Color.RED: 1&gt;, &lt;Color.BLUE: 2&gt;, &lt;Color.GREEN: 3&gt;]
+</code></pre>
+<p>Methods can be added to enumerations, and members can have their own
+attributes &ndash; see the documentation for details.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class QuantMode(enum.Enum):
+    DYNAMIC = 1
+    FREEZE = 2
+    SERVE_FROZEN = 3</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>enum.Enum</li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="fjformer.bits.q_flax.QuantMode.DYNAMIC"><code class="name">var <span class="ident">DYNAMIC</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="fjformer.bits.q_flax.QuantMode.FREEZE"><code class="name">var <span class="ident">FREEZE</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="fjformer.bits.q_flax.QuantMode.SERVE_FROZEN"><code class="name">var <span class="ident">SERVE_FROZEN</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="fjformer.bits" href="index.html">fjformer.bits</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="fjformer.bits.q_flax.config_v4" href="#fjformer.bits.q_flax.config_v4">config_v4</a></code></li>
+<li><code><a title="fjformer.bits.q_flax.mk_freezer" href="#fjformer.bits.q_flax.mk_freezer">mk_freezer</a></code></li>
+<li><code><a title="fjformer.bits.q_flax.set_lhs_quant_mode" href="#fjformer.bits.q_flax.set_lhs_quant_mode">set_lhs_quant_mode</a></code></li>
+<li><code><a title="fjformer.bits.q_flax.set_rhs_quant_mode" href="#fjformer.bits.q_flax.set_rhs_quant_mode">set_rhs_quant_mode</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="fjformer.bits.q_flax.Freezer" href="#fjformer.bits.q_flax.Freezer">Freezer</a></code></h4>
+<ul class="">
+<li><code><a title="fjformer.bits.q_flax.Freezer.name" href="#fjformer.bits.q_flax.Freezer.name">name</a></code></li>
+<li><code><a title="fjformer.bits.q_flax.Freezer.parent" href="#fjformer.bits.q_flax.Freezer.parent">parent</a></code></li>
+<li><code><a title="fjformer.bits.q_flax.Freezer.scope" href="#fjformer.bits.q_flax.Freezer.scope">scope</a></code></li>
+<li><code><a title="fjformer.bits.q_flax.Freezer.use_frozen" href="#fjformer.bits.q_flax.Freezer.use_frozen">use_frozen</a></code></li>
+<li><code><a title="fjformer.bits.q_flax.Freezer.var_collection" href="#fjformer.bits.q_flax.Freezer.var_collection">var_collection</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="fjformer.bits.q_flax.QDotGeneral" href="#fjformer.bits.q_flax.QDotGeneral">QDotGeneral</a></code></h4>
+<ul class="">
+<li><code><a title="fjformer.bits.q_flax.QDotGeneral.cfg" href="#fjformer.bits.q_flax.QDotGeneral.cfg">cfg</a></code></li>
+<li><code><a title="fjformer.bits.q_flax.QDotGeneral.name" href="#fjformer.bits.q_flax.QDotGeneral.name">name</a></code></li>
+<li><code><a title="fjformer.bits.q_flax.QDotGeneral.parent" href="#fjformer.bits.q_flax.QDotGeneral.parent">parent</a></code></li>
+<li><code><a title="fjformer.bits.q_flax.QDotGeneral.prng_name" href="#fjformer.bits.q_flax.QDotGeneral.prng_name">prng_name</a></code></li>
+<li><code><a title="fjformer.bits.q_flax.QDotGeneral.scope" href="#fjformer.bits.q_flax.QDotGeneral.scope">scope</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="fjformer.bits.q_flax.QEinsum" href="#fjformer.bits.q_flax.QEinsum">QEinsum</a></code></h4>
+<ul class="">
+<li><code><a title="fjformer.bits.q_flax.QEinsum.cfg" href="#fjformer.bits.q_flax.QEinsum.cfg">cfg</a></code></li>
+<li><code><a title="fjformer.bits.q_flax.QEinsum.name" href="#fjformer.bits.q_flax.QEinsum.name">name</a></code></li>
+<li><code><a title="fjformer.bits.q_flax.QEinsum.parent" href="#fjformer.bits.q_flax.QEinsum.parent">parent</a></code></li>
+<li><code><a title="fjformer.bits.q_flax.QEinsum.prng_name" href="#fjformer.bits.q_flax.QEinsum.prng_name">prng_name</a></code></li>
+<li><code><a title="fjformer.bits.q_flax.QEinsum.scope" href="#fjformer.bits.q_flax.QEinsum.scope">scope</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="fjformer.bits.q_flax.QuantMode" href="#fjformer.bits.q_flax.QuantMode">QuantMode</a></code></h4>
+<ul class="">
+<li><code><a title="fjformer.bits.q_flax.QuantMode.DYNAMIC" href="#fjformer.bits.q_flax.QuantMode.DYNAMIC">DYNAMIC</a></code></li>
+<li><code><a title="fjformer.bits.q_flax.QuantMode.FREEZE" href="#fjformer.bits.q_flax.QuantMode.FREEZE">FREEZE</a></code></li>
+<li><code><a title="fjformer.bits.q_flax.QuantMode.SERVE_FROZEN" href="#fjformer.bits.q_flax.QuantMode.SERVE_FROZEN">SERVE_FROZEN</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.10.0</a>.</p>
+</footer>
+</body>
+</html>

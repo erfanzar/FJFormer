@@ -1,0 +1,1132 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.10.0" />
+<title>fjformer.func.loss_func API documentation</title>
+<meta name="description" content="" />
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
+<link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js" integrity="sha256-Uv3H6lx7dJmRfRvH8TH6kJD1TSK1aFcwgx+mdg3epi8=" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>fjformer.func.loss_func</code></h1>
+</header>
+<section id="section-intro">
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">import enum
+
+import chex
+import jax.numpy as np
+from flax.training import common_utils
+from jax.scipy.special import logsumexp
+import jax
+from jax import numpy as jnp, Array
+from typing import Mapping, Optional, Tuple, Union
+
+
+# Mean Squared Error
+def mse(labels, predictions):
+    return np.mean((labels - predictions) ** 2)
+
+
+# Mean Absolute Error
+def mae(labels, predictions):
+    return np.mean(np.abs(labels - predictions))
+
+
+# Cross Entropy
+def cross_entropy(labels, predictions, ignore_index=None):
+    labels = jax.nn.one_hot(labels, predictions.shape[-1])
+    if ignore_index is not None:
+        mask = np.ones_like(labels)
+        mask = np.where(labels == ignore_index, 0, mask)
+        labels = labels * mask
+        predictions = predictions * mask
+    log_softmax = predictions - logsumexp(predictions, axis=-1, keepdims=True)
+    return -np.sum(labels * log_softmax) / labels.shape[0]
+
+
+# Binary Cross Entropy
+def binary_cross_entropy(labels, predictions):
+    labels = jax.nn.one_hot(labels, predictions.shape[-1])
+    return -np.mean(labels * np.log(predictions + 1e-8) + (1 - labels) * np.log(1 - predictions + 1e-8))
+
+
+# Negative Log Likelihood
+def nll(labels, predictions):
+    return -np.sum(labels * np.log(predictions + 1e-8))
+
+
+# L2 Loss
+def l2(labels, predictions):
+    return np.sum((labels - predictions) ** 2)
+
+
+# Hinge Loss
+def hinge(labels, predictions):
+    return np.mean(np.maximum(0, 1 - labels * predictions))
+
+
+# Log-Cosh Loss
+def log_cosh(labels, predictions):
+    def cosh(x):
+        return (np.exp(x) + np.exp(-x)) / 2
+
+    return np.mean(np.log(cosh(predictions - labels)))
+
+
+def binary_cross_entropy_onehot(labels, predictions):
+    labels = jax.nn.one_hot(labels, predictions.shape[-1])
+    return -np.mean(labels * np.log(predictions + 1e-8) + (1 - labels) * np.log(1 - predictions + 1e-8))
+
+
+def cross_entropy_onehot(labels, predictions):
+    labels = jax.nn.one_hot(labels, predictions.shape[-1])
+    log_softmax = predictions - logsumexp(predictions, axis=-1, keepdims=True)
+    return -np.sum(labels * log_softmax) / labels.shape[0]
+
+
+def mse_loss(val, target, valid=None):
+    if valid is None:
+        valid = jnp.ones((*target.shape[:2], 1))
+    valid = valid.astype(jnp.float32)
+    loss = jnp.mean(
+        jnp.where(
+            valid &gt; 0.0,
+            jnp.square(val - target),
+            0.0
+        )
+    )
+    return loss
+
+
+def cross_entropy_loss_and_accuracy(logits: chex.Array, tokens: chex.Array, valid: chex.Array = None):
+    &#34;&#34;&#34;
+
+    :param logits: Logits
+    :param tokens: labels
+    :param valid: attention_mask
+    :return: loss and accuracy
+    &#34;&#34;&#34;
+    if valid is None:
+        valid = jnp.ones(tokens.shape[:2])
+    valid = valid.astype(jnp.float32)
+    valid_text_length = jnp.maximum(jnp.sum(valid, axis=-1), 1e-10)
+    logits = logits.astype(jnp.float32)  # for numerical stability
+    token_log_prob = jnp.squeeze(
+        jnp.take_along_axis(
+            jax.nn.log_softmax(logits, axis=-1),
+            jnp.expand_dims(tokens, -1),
+            axis=-1,
+        ),
+        -1,
+    )
+    token_log_prob = jnp.where(valid &gt; 0.0, token_log_prob, jnp.array(0.0))
+    loss = -jnp.mean(jnp.sum(token_log_prob, axis=-1) / valid_text_length)
+    correct = jnp.where(
+        valid &gt; 0.0,
+        jnp.argmax(logits, axis=-1) == tokens,
+        jnp.array(False)
+    )
+    accuracy = jnp.mean(jnp.sum(correct, axis=-1) / valid_text_length)
+    return loss, accuracy
+
+
+def fused_cross_entropy_loss_and_accuracy(logits: chex.Array, tokens: chex.Array, valid: chex.Array = None):
+    &#34;&#34;&#34;
+
+    :param logits: Logits
+    :param tokens: labels
+    :param valid: attention_mask
+    :return: loss and accuracy
+    &#34;&#34;&#34;
+    if valid is None:
+        valid = jnp.ones(tokens.shape[:2])
+    valid = valid.astype(jnp.float32)
+    valid_text_length = jnp.maximum(jnp.sum(valid, axis=-1), 1e-10)
+    logits = logits.astype(jnp.float32)
+    log_probs = jax.nn.log_softmax(logits, axis=-1)
+    token_log_prob = jnp.squeeze(
+        jnp.take_along_axis(
+            log_probs,
+            jnp.expand_dims(tokens, -1),
+            axis=-1,
+        ),
+        -1,
+    )
+    token_log_prob = jnp.where(valid &gt; 0.0, token_log_prob, jnp.array(0.0))
+    loss = -jnp.mean(jnp.sum(token_log_prob, axis=-1) / valid_text_length)
+    correct = jnp.where(
+        valid &gt; 0.0,
+        jnp.argmax(logits, axis=-1) == tokens,
+        jnp.array(False)
+    )
+    accuracy = jnp.mean(jnp.sum(correct, axis=-1) / valid_text_length)
+    return loss, accuracy
+
+
+@jax.custom_vjp
+def cross_entropy_with_logits(logits: jnp.ndarray, targets: jnp.ndarray,
+                              z_loss: float) -&gt; Tuple[jnp.ndarray, jnp.ndarray]:
+    &#34;&#34;&#34;Computes cross entropy loss with stable custom gradient.
+
+    Computes a stabilized-gradient version of:
+      -jnp.sum(targets * nn.log_softmax(logits), axis=-1)
+
+    If z_loss &gt; 0, then an auxiliary loss equal to z_loss*log(z)^2
+    will be added to the cross entropy loss (z = softmax normalization constant).
+    The two uses of z_loss are:
+    1. To keep the logits from drifting too far from zero, which can cause
+       unacceptable roundoff errors in bfloat16.
+    2. To encourage the logits to be normalized log-probabilities.
+
+    Args:
+      logits: [batch, length, num_classes] float array.
+      targets: categorical one-hot targets [batch, length, num_classes] float
+        array.
+      z_loss: coefficient for auxilliary z-loss loss term.
+
+    Returns:
+      tuple with the total loss and the z_loss, both
+      float arrays with shape [batch, length].
+    &#34;&#34;&#34;
+    logits_sum = jax.scipy.special.logsumexp(logits, axis=-1, keepdims=True)
+    log_softmax = logits - logits_sum
+    loss = -jnp.sum(targets * log_softmax, axis=-1)
+    # Add auxilliary z-loss term.
+    log_z = jnp.squeeze(logits_sum, axis=-1)
+    total_z_loss = z_loss * jax.lax.square(log_z)
+    loss += total_z_loss
+    return loss, total_z_loss
+
+
+def _cross_entropy_with_logits_fwd(
+        logits: jnp.ndarray,
+        targets: jnp.ndarray,
+        z_loss: float = 0.0
+) -&gt; Tuple[Tuple[Array, Array], Tuple[Array, Array, float, Array, Array, Array, Array]]:
+    &#34;&#34;&#34;Forward-mode of `cross_entropy_with_logits`.&#34;&#34;&#34;
+    max_logit = logits.max(axis=-1, keepdims=True)
+    shifted = logits - max_logit
+    exp_shifted = jnp.exp(shifted)
+    sum_exp = jnp.sum(exp_shifted, axis=-1, keepdims=True)
+    log_softmax = shifted - jnp.log(sum_exp)
+    loss = -jnp.sum(targets * log_softmax, axis=-1)
+    # Add auxilliary z-loss term.
+    log_z = jnp.squeeze(jnp.log(sum_exp) + max_logit, axis=-1)
+    total_z_loss = z_loss * jax.lax.square(log_z)
+    loss += total_z_loss
+    return (loss, total_z_loss), (logits, targets, z_loss, exp_shifted, sum_exp, log_softmax, log_z)
+
+
+def _cross_entropy_with_logits_bwd(
+        res: Tuple[jnp.ndarray, jnp.ndarray, jnp.ndarray, jnp.ndarray, jnp.ndarray,
+        jnp.ndarray, jnp.ndarray], g: Tuple[jnp.ndarray, jnp.ndarray]
+) -&gt; Tuple[jnp.ndarray, jnp.ndarray, jnp.ndarray]:
+    &#34;&#34;&#34;Backward-mode of `cross_entropy_with_logits`.&#34;&#34;&#34;
+    g = g[0]  # Ignore z_loss component as that is only used for logging.
+    logits, targets, z_loss, exp_shifted, sum_exp, log_softmax, log_z = res
+    # z-loss term adds the (2 * z_loss * log_z) factor.
+    deriv = (
+            jnp.expand_dims(1 + 2 * z_loss * log_z, -1) * exp_shifted / sum_exp -
+            targets)
+    g_logits = jnp.expand_dims(g, axis=-1) * deriv
+    g_targets = -jnp.expand_dims(g, axis=-1) * log_softmax
+    return (jnp.asarray(g_logits,
+                        logits.dtype), jnp.asarray(g_targets, targets.dtype),
+            jnp.array(0.0))  # sets z-loss coeff gradient to 0
+
+
+cross_entropy_with_logits.defvjp(_cross_entropy_with_logits_fwd,
+                                 _cross_entropy_with_logits_bwd)
+
+
+def compute_weighted_cross_entropy(
+        logits: jnp.ndarray,
+        targets: jnp.ndarray,
+        weights: Optional[jnp.ndarray] = None,
+        label_smoothing: float = 0.0,
+        z_loss: float = 0.0,
+        loss_normalizing_factor: Optional[float] = None
+) -&gt; Tuple[jnp.ndarray, jnp.ndarray, jnp.ndarray]:
+    &#34;&#34;&#34;Compute weighted cross entropy and entropy for log probs and targets.
+
+    Args:
+     logits: [batch, length, num_classes] float array.
+     targets: categorical targets [batch, length] int array.
+     weights: None or array of shape [batch, length].
+     label_smoothing: label smoothing constant, used to determine the on and off
+       values.
+     z_loss: coefficient for auxiliary z-loss loss term.
+     loss_normalizing_factor: Constant to divide loss by. If not specified, loss
+       will not be normalized. Intended for backward compatibility with T5-MTF
+       training. Should not normally be used.
+
+    Returns:
+      Tuple of scalar loss, z_loss, and weight sum.
+    &#34;&#34;&#34;
+    if logits.ndim != targets.ndim + 1:
+        raise ValueError(&#39;Incorrect shapes. Got shape %s logits and %s targets&#39; %
+                         (str(logits.shape), str(targets.shape)))
+    vocab_size = logits.shape[-1]
+    confidence = 1.0 - label_smoothing
+    low_confidence = (1.0 - confidence) / (vocab_size - 1)
+    normalizing_constant = -(
+            confidence * jnp.log(confidence) +
+            (vocab_size - 1) * low_confidence * jnp.log(low_confidence + 1e-20))
+    soft_targets = common_utils.onehot(
+        targets, vocab_size, on_value=confidence, off_value=low_confidence)
+    total_loss, total_z_loss = cross_entropy_with_logits(
+        logits, soft_targets, z_loss=z_loss)
+    total_loss = total_loss - normalizing_constant
+
+    weight_sum = np.prod(targets.shape)
+    if weights is not None:
+        total_loss = total_loss * weights
+        total_z_loss = total_z_loss * weights
+        weight_sum = jnp.sum(weights)
+
+    # By default, we do not normalize loss based on anything.
+    # We don&#39;t normalize based on batch size because the optimizers we use are
+    # pretty much scale invariant, so this simplifies things.
+    # We don&#39;t normalize based on number of non-padding tokens in order to treat
+    # each token as equally important regardless of sequence length.
+    if loss_normalizing_factor is not None:
+        total_loss /= loss_normalizing_factor
+        total_z_loss /= loss_normalizing_factor
+    return jnp.sum(total_loss), jnp.sum(total_z_loss), weight_sum
+
+
+@enum.unique
+class SpecialLossNormalizingFactor(enum.Enum):
+    &#34;&#34;&#34;Specially calculated loss_normalizing_factors, that are not a constant.
+
+    Attributes:
+      NUM_REAL_TARGET_TOKENS: Whether to divide the loss by the number of real
+        (non-padding) tokens in the current target batch. If
+        &#39;decoder_loss_weights&#39; are specified, it will be the sum of the weights.
+        Otherwise it will be the number of non-zero &#39;decoder_target_tokens&#39;.
+      NUM_TOTAL_TARGET_TOKENS: Whether to divide the loss by the total number of
+        target tokens, i.e., batch_size * target_seq_length (including padding).
+      AVERAGE_PER_SEQUENCE: This will first compute the per-sequence loss
+        (averaged over the number of real target tokens in the sequence), and then
+        compute the average of that over the sequences. This can be preferable to
+        NUM_REAL_TARGET_TOKENS for finetuning, because it will weigh all examples
+        equally, regardless of sequence length (which can be especially important
+        for multi-task finetuning).
+    &#34;&#34;&#34;
+    NUM_REAL_TARGET_TOKENS = 1
+    NUM_TOTAL_TARGET_TOKENS = 2
+    AVERAGE_PER_SEQUENCE = 3
+
+
+def convert_special_loss_normalizing_factor_to_enum(
+        x: str) -&gt; SpecialLossNormalizingFactor:
+    &#34;&#34;&#34;Converts stringified version of LNF to an enum.
+
+    This is useful because gin dynamic registration does not (currently)
+    have support for enum.
+
+    Args:
+      x: stringified version of SpecialLossNormalizingFactor enum.
+
+    Returns:
+      SpecialLossNormalizingFactor enum instance.
+    &#34;&#34;&#34;
+    x = x.upper()
+    if x == &#39;NUM_REAL_TARGET_TOKENS&#39;:
+        return SpecialLossNormalizingFactor.NUM_REAL_TARGET_TOKENS
+    if x == &#39;NUM_TOTAL_TARGET_TOKENS&#39;:
+        return SpecialLossNormalizingFactor.NUM_TOTAL_TARGET_TOKENS
+    if x == &#39;AVERAGE_PER_SEQUENCE&#39;:
+        return SpecialLossNormalizingFactor.AVERAGE_PER_SEQUENCE
+    raise ValueError(
+        &#39;Could not convert string \&#34;%s\&#34; to SpecialLossNormalizingFactor&#39; % x)
+
+
+@jax.vmap
+def _sum_weights_per_segment(positions: jnp.ndarray, segment_ids: jnp.ndarray,
+                             weights: jnp.ndarray) -&gt; jnp.ndarray:
+    &#34;&#34;&#34;Sums weights per packed segment to produce a normalizing vector.&#34;&#34;&#34;
+
+    # NB: Assumes padding only occurs at the end of a sequence.
+
+    def _repeat_last_nonnegative(xs, reverse=False):
+        def fn(prev, x):
+            y = jnp.where(x == 0, prev, x)
+            return y, y
+
+        return jax.lax.scan(fn, jnp.zeros_like(xs[0]), xs, reverse=reverse)[1]
+
+    # Compute final positions per sequence.
+    start_positions = positions == 0
+    final_positions = jnp.concatenate([start_positions[1:], jnp.ones(1)])
+    # Clear padded positions.
+    final_positions *= segment_ids != 0
+    # Compute cumulative weights, clearing all but final position per sequence.
+    final_cumulative_weights = final_positions * jnp.cumsum(weights)
+    # Subtract sequences&#39; final weights from cumulative weights of following ones.
+    final_total_weights = jnp.concatenate([
+        final_cumulative_weights[0:1],
+        jnp.diff(_repeat_last_nonnegative(final_cumulative_weights))
+    ])
+    # Copy final sequence weight to all positions in sequence.
+    normalizer = _repeat_last_nonnegative(final_total_weights, reverse=True)
+    return normalizer
+
+
+def get_loss_normalizing_factor_and_weights(
+        loss_normalizing_factor: Optional[Union[float, int, str,
+        SpecialLossNormalizingFactor]],
+        batch: Mapping[str, jnp.ndarray]):
+    &#34;&#34;&#34;Get the float loss_normalizing_factor and loss weights.
+
+    If loss_normalizing_factor is float or None, this will simply return the
+    input loss_normalizing_factor and batch.
+
+    If loss_normalizing_factor is a SpecialLossNormalizingFactor, it will
+    return a float loss_normalizing_factor and loss weights corresponding to
+    the special LNF. See SpecialLossNormalizingFactor for more details.
+
+    Args:
+      loss_normalizing_factor: The input LNF, which may be a float, None, or
+        SpecialLossNormalizingFactor (or a stringified SLNF).
+      batch: Input data batch.
+
+    Returns:
+      Tuple of (output_loss_normalizing_factor, loss_weights).
+        &#39;output_loss_normalizing_factor&#39; is a scalar float (Python float
+        or jnp float).
+        &#39;loss_weights&#39; is the per token loss weight JNP array.
+    &#34;&#34;&#34;
+
+    loss_weights = batch.get(&#39;decoder_loss_weights&#39;, None)
+    if (loss_normalizing_factor is None or
+            not isinstance(loss_normalizing_factor,
+                           (str, SpecialLossNormalizingFactor))):
+        return (loss_normalizing_factor, loss_weights)
+
+    if isinstance(loss_normalizing_factor, str):
+        loss_normalizing_factor = convert_special_loss_normalizing_factor_to_enum(
+            loss_normalizing_factor)
+
+    # If `loss_weights` are not provided, we assume that the padding id is 0 and
+    # that non-padding tokens in the decoder all correspond to the positions
+    # where loss should be taken. If more fine-grained behavior (e.g., taking
+    # loss on subset of &#39;decoder_target_tokens&#39;) is desired, provide
+    # `loss_weights` that account for this.
+    if loss_weights is None:
+        loss_weights = jnp.asarray(batch[&#39;decoder_target_tokens&#39;] &gt; 0, jnp.float32)
+
+    output_normalizing_factor = None
+    if (loss_normalizing_factor ==
+            SpecialLossNormalizingFactor.NUM_REAL_TARGET_TOKENS):
+        output_normalizing_factor = jnp.sum(loss_weights)
+    elif (loss_normalizing_factor ==
+          SpecialLossNormalizingFactor.NUM_TOTAL_TARGET_TOKENS):
+        output_normalizing_factor = np.prod(batch[&#39;decoder_target_tokens&#39;].shape)
+    elif (loss_normalizing_factor ==
+          SpecialLossNormalizingFactor.AVERAGE_PER_SEQUENCE):
+        if &#39;decoder_segment_ids&#39; in batch:  # is packed
+            norm_vec = _sum_weights_per_segment(batch[&#39;decoder_positions&#39;],
+                                                batch[&#39;decoder_segment_ids&#39;],
+                                                loss_weights)
+        else:
+            norm_vec = jnp.sum(loss_weights, axis=-1, keepdims=True)
+        # Handle divide-by-zero.
+        loss_weights = jnp.nan_to_num(
+            loss_weights / norm_vec, nan=0, posinf=0, neginf=0)
+        output_normalizing_factor = jnp.sum(loss_weights)
+    else:
+        raise ValueError(&#39;Unsupported value of loss_normalizing_factor: %s&#39; %
+                         str(loss_normalizing_factor))
+
+    return (output_normalizing_factor, loss_weights)</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="fjformer.func.loss_func.binary_cross_entropy"><code class="name flex">
+<span>def <span class="ident">binary_cross_entropy</span></span>(<span>labels, predictions)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def binary_cross_entropy(labels, predictions):
+    labels = jax.nn.one_hot(labels, predictions.shape[-1])
+    return -np.mean(labels * np.log(predictions + 1e-8) + (1 - labels) * np.log(1 - predictions + 1e-8))</code></pre>
+</details>
+</dd>
+<dt id="fjformer.func.loss_func.binary_cross_entropy_onehot"><code class="name flex">
+<span>def <span class="ident">binary_cross_entropy_onehot</span></span>(<span>labels, predictions)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def binary_cross_entropy_onehot(labels, predictions):
+    labels = jax.nn.one_hot(labels, predictions.shape[-1])
+    return -np.mean(labels * np.log(predictions + 1e-8) + (1 - labels) * np.log(1 - predictions + 1e-8))</code></pre>
+</details>
+</dd>
+<dt id="fjformer.func.loss_func.compute_weighted_cross_entropy"><code class="name flex">
+<span>def <span class="ident">compute_weighted_cross_entropy</span></span>(<span>logits: jax.Array, targets: jax.Array, weights: Optional[jax.Array] = None, label_smoothing: float = 0.0, z_loss: float = 0.0, loss_normalizing_factor: Optional[float] = None) ‑> Tuple[jax.Array, jax.Array, jax.Array]</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Compute weighted cross entropy and entropy for log probs and targets.</p>
+<p>Args:
+logits: [batch, length, num_classes] float array.
+targets: categorical targets [batch, length] int array.
+weights: None or array of shape [batch, length].
+label_smoothing: label smoothing constant, used to determine the on and off
+values.
+z_loss: coefficient for auxiliary z-loss loss term.
+loss_normalizing_factor: Constant to divide loss by. If not specified, loss
+will not be normalized. Intended for backward compatibility with T5-MTF
+training. Should not normally be used.</p>
+<h2 id="returns">Returns</h2>
+<p>Tuple of scalar loss, z_loss, and weight sum.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def compute_weighted_cross_entropy(
+        logits: jnp.ndarray,
+        targets: jnp.ndarray,
+        weights: Optional[jnp.ndarray] = None,
+        label_smoothing: float = 0.0,
+        z_loss: float = 0.0,
+        loss_normalizing_factor: Optional[float] = None
+) -&gt; Tuple[jnp.ndarray, jnp.ndarray, jnp.ndarray]:
+    &#34;&#34;&#34;Compute weighted cross entropy and entropy for log probs and targets.
+
+    Args:
+     logits: [batch, length, num_classes] float array.
+     targets: categorical targets [batch, length] int array.
+     weights: None or array of shape [batch, length].
+     label_smoothing: label smoothing constant, used to determine the on and off
+       values.
+     z_loss: coefficient for auxiliary z-loss loss term.
+     loss_normalizing_factor: Constant to divide loss by. If not specified, loss
+       will not be normalized. Intended for backward compatibility with T5-MTF
+       training. Should not normally be used.
+
+    Returns:
+      Tuple of scalar loss, z_loss, and weight sum.
+    &#34;&#34;&#34;
+    if logits.ndim != targets.ndim + 1:
+        raise ValueError(&#39;Incorrect shapes. Got shape %s logits and %s targets&#39; %
+                         (str(logits.shape), str(targets.shape)))
+    vocab_size = logits.shape[-1]
+    confidence = 1.0 - label_smoothing
+    low_confidence = (1.0 - confidence) / (vocab_size - 1)
+    normalizing_constant = -(
+            confidence * jnp.log(confidence) +
+            (vocab_size - 1) * low_confidence * jnp.log(low_confidence + 1e-20))
+    soft_targets = common_utils.onehot(
+        targets, vocab_size, on_value=confidence, off_value=low_confidence)
+    total_loss, total_z_loss = cross_entropy_with_logits(
+        logits, soft_targets, z_loss=z_loss)
+    total_loss = total_loss - normalizing_constant
+
+    weight_sum = np.prod(targets.shape)
+    if weights is not None:
+        total_loss = total_loss * weights
+        total_z_loss = total_z_loss * weights
+        weight_sum = jnp.sum(weights)
+
+    # By default, we do not normalize loss based on anything.
+    # We don&#39;t normalize based on batch size because the optimizers we use are
+    # pretty much scale invariant, so this simplifies things.
+    # We don&#39;t normalize based on number of non-padding tokens in order to treat
+    # each token as equally important regardless of sequence length.
+    if loss_normalizing_factor is not None:
+        total_loss /= loss_normalizing_factor
+        total_z_loss /= loss_normalizing_factor
+    return jnp.sum(total_loss), jnp.sum(total_z_loss), weight_sum</code></pre>
+</details>
+</dd>
+<dt id="fjformer.func.loss_func.convert_special_loss_normalizing_factor_to_enum"><code class="name flex">
+<span>def <span class="ident">convert_special_loss_normalizing_factor_to_enum</span></span>(<span>x: str) ‑> <a title="fjformer.func.loss_func.SpecialLossNormalizingFactor" href="#fjformer.func.loss_func.SpecialLossNormalizingFactor">SpecialLossNormalizingFactor</a></span>
+</code></dt>
+<dd>
+<div class="desc"><p>Converts stringified version of LNF to an enum.</p>
+<p>This is useful because gin dynamic registration does not (currently)
+have support for enum.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>x</code></strong></dt>
+<dd>stringified version of SpecialLossNormalizingFactor enum.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>SpecialLossNormalizingFactor enum instance.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def convert_special_loss_normalizing_factor_to_enum(
+        x: str) -&gt; SpecialLossNormalizingFactor:
+    &#34;&#34;&#34;Converts stringified version of LNF to an enum.
+
+    This is useful because gin dynamic registration does not (currently)
+    have support for enum.
+
+    Args:
+      x: stringified version of SpecialLossNormalizingFactor enum.
+
+    Returns:
+      SpecialLossNormalizingFactor enum instance.
+    &#34;&#34;&#34;
+    x = x.upper()
+    if x == &#39;NUM_REAL_TARGET_TOKENS&#39;:
+        return SpecialLossNormalizingFactor.NUM_REAL_TARGET_TOKENS
+    if x == &#39;NUM_TOTAL_TARGET_TOKENS&#39;:
+        return SpecialLossNormalizingFactor.NUM_TOTAL_TARGET_TOKENS
+    if x == &#39;AVERAGE_PER_SEQUENCE&#39;:
+        return SpecialLossNormalizingFactor.AVERAGE_PER_SEQUENCE
+    raise ValueError(
+        &#39;Could not convert string \&#34;%s\&#34; to SpecialLossNormalizingFactor&#39; % x)</code></pre>
+</details>
+</dd>
+<dt id="fjformer.func.loss_func.cross_entropy"><code class="name flex">
+<span>def <span class="ident">cross_entropy</span></span>(<span>labels, predictions, ignore_index=None)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def cross_entropy(labels, predictions, ignore_index=None):
+    labels = jax.nn.one_hot(labels, predictions.shape[-1])
+    if ignore_index is not None:
+        mask = np.ones_like(labels)
+        mask = np.where(labels == ignore_index, 0, mask)
+        labels = labels * mask
+        predictions = predictions * mask
+    log_softmax = predictions - logsumexp(predictions, axis=-1, keepdims=True)
+    return -np.sum(labels * log_softmax) / labels.shape[0]</code></pre>
+</details>
+</dd>
+<dt id="fjformer.func.loss_func.cross_entropy_loss_and_accuracy"><code class="name flex">
+<span>def <span class="ident">cross_entropy_loss_and_accuracy</span></span>(<span>logits: Union[jax.Array, numpy.ndarray, numpy.bool_, numpy.number], tokens: Union[jax.Array, numpy.ndarray, numpy.bool_, numpy.number], valid: Union[jax.Array, numpy.ndarray, numpy.bool_, numpy.number] = None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>:param logits: Logits
+:param tokens: labels
+:param valid: attention_mask
+:return: loss and accuracy</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def cross_entropy_loss_and_accuracy(logits: chex.Array, tokens: chex.Array, valid: chex.Array = None):
+    &#34;&#34;&#34;
+
+    :param logits: Logits
+    :param tokens: labels
+    :param valid: attention_mask
+    :return: loss and accuracy
+    &#34;&#34;&#34;
+    if valid is None:
+        valid = jnp.ones(tokens.shape[:2])
+    valid = valid.astype(jnp.float32)
+    valid_text_length = jnp.maximum(jnp.sum(valid, axis=-1), 1e-10)
+    logits = logits.astype(jnp.float32)  # for numerical stability
+    token_log_prob = jnp.squeeze(
+        jnp.take_along_axis(
+            jax.nn.log_softmax(logits, axis=-1),
+            jnp.expand_dims(tokens, -1),
+            axis=-1,
+        ),
+        -1,
+    )
+    token_log_prob = jnp.where(valid &gt; 0.0, token_log_prob, jnp.array(0.0))
+    loss = -jnp.mean(jnp.sum(token_log_prob, axis=-1) / valid_text_length)
+    correct = jnp.where(
+        valid &gt; 0.0,
+        jnp.argmax(logits, axis=-1) == tokens,
+        jnp.array(False)
+    )
+    accuracy = jnp.mean(jnp.sum(correct, axis=-1) / valid_text_length)
+    return loss, accuracy</code></pre>
+</details>
+</dd>
+<dt id="fjformer.func.loss_func.cross_entropy_onehot"><code class="name flex">
+<span>def <span class="ident">cross_entropy_onehot</span></span>(<span>labels, predictions)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def cross_entropy_onehot(labels, predictions):
+    labels = jax.nn.one_hot(labels, predictions.shape[-1])
+    log_softmax = predictions - logsumexp(predictions, axis=-1, keepdims=True)
+    return -np.sum(labels * log_softmax) / labels.shape[0]</code></pre>
+</details>
+</dd>
+<dt id="fjformer.func.loss_func.cross_entropy_with_logits"><code class="name flex">
+<span>def <span class="ident">cross_entropy_with_logits</span></span>(<span>logits: jax.Array, targets: jax.Array, z_loss: float) ‑> Tuple[jax.Array, jax.Array]</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Computes cross entropy loss with stable custom gradient.</p>
+<p>Computes a stabilized-gradient version of:
+-jnp.sum(targets * nn.log_softmax(logits), axis=-1)</p>
+<p>If z_loss &gt; 0, then an auxiliary loss equal to z_loss*log(z)^2
+will be added to the cross entropy loss (z = softmax normalization constant).
+The two uses of z_loss are:
+1. To keep the logits from drifting too far from zero, which can cause
+unacceptable roundoff errors in bfloat16.
+2. To encourage the logits to be normalized log-probabilities.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>logits</code></strong></dt>
+<dd>[batch, length, num_classes] float array.</dd>
+<dt><strong><code>targets</code></strong></dt>
+<dd>categorical one-hot targets [batch, length, num_classes] float
+array.</dd>
+<dt><strong><code>z_loss</code></strong></dt>
+<dd>coefficient for auxilliary z-loss loss term.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>tuple with the total loss and the z_loss, both
+float arrays with shape [batch, length].</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@jax.custom_vjp
+def cross_entropy_with_logits(logits: jnp.ndarray, targets: jnp.ndarray,
+                              z_loss: float) -&gt; Tuple[jnp.ndarray, jnp.ndarray]:
+    &#34;&#34;&#34;Computes cross entropy loss with stable custom gradient.
+
+    Computes a stabilized-gradient version of:
+      -jnp.sum(targets * nn.log_softmax(logits), axis=-1)
+
+    If z_loss &gt; 0, then an auxiliary loss equal to z_loss*log(z)^2
+    will be added to the cross entropy loss (z = softmax normalization constant).
+    The two uses of z_loss are:
+    1. To keep the logits from drifting too far from zero, which can cause
+       unacceptable roundoff errors in bfloat16.
+    2. To encourage the logits to be normalized log-probabilities.
+
+    Args:
+      logits: [batch, length, num_classes] float array.
+      targets: categorical one-hot targets [batch, length, num_classes] float
+        array.
+      z_loss: coefficient for auxilliary z-loss loss term.
+
+    Returns:
+      tuple with the total loss and the z_loss, both
+      float arrays with shape [batch, length].
+    &#34;&#34;&#34;
+    logits_sum = jax.scipy.special.logsumexp(logits, axis=-1, keepdims=True)
+    log_softmax = logits - logits_sum
+    loss = -jnp.sum(targets * log_softmax, axis=-1)
+    # Add auxilliary z-loss term.
+    log_z = jnp.squeeze(logits_sum, axis=-1)
+    total_z_loss = z_loss * jax.lax.square(log_z)
+    loss += total_z_loss
+    return loss, total_z_loss</code></pre>
+</details>
+</dd>
+<dt id="fjformer.func.loss_func.fused_cross_entropy_loss_and_accuracy"><code class="name flex">
+<span>def <span class="ident">fused_cross_entropy_loss_and_accuracy</span></span>(<span>logits: Union[jax.Array, numpy.ndarray, numpy.bool_, numpy.number], tokens: Union[jax.Array, numpy.ndarray, numpy.bool_, numpy.number], valid: Union[jax.Array, numpy.ndarray, numpy.bool_, numpy.number] = None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>:param logits: Logits
+:param tokens: labels
+:param valid: attention_mask
+:return: loss and accuracy</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def fused_cross_entropy_loss_and_accuracy(logits: chex.Array, tokens: chex.Array, valid: chex.Array = None):
+    &#34;&#34;&#34;
+
+    :param logits: Logits
+    :param tokens: labels
+    :param valid: attention_mask
+    :return: loss and accuracy
+    &#34;&#34;&#34;
+    if valid is None:
+        valid = jnp.ones(tokens.shape[:2])
+    valid = valid.astype(jnp.float32)
+    valid_text_length = jnp.maximum(jnp.sum(valid, axis=-1), 1e-10)
+    logits = logits.astype(jnp.float32)
+    log_probs = jax.nn.log_softmax(logits, axis=-1)
+    token_log_prob = jnp.squeeze(
+        jnp.take_along_axis(
+            log_probs,
+            jnp.expand_dims(tokens, -1),
+            axis=-1,
+        ),
+        -1,
+    )
+    token_log_prob = jnp.where(valid &gt; 0.0, token_log_prob, jnp.array(0.0))
+    loss = -jnp.mean(jnp.sum(token_log_prob, axis=-1) / valid_text_length)
+    correct = jnp.where(
+        valid &gt; 0.0,
+        jnp.argmax(logits, axis=-1) == tokens,
+        jnp.array(False)
+    )
+    accuracy = jnp.mean(jnp.sum(correct, axis=-1) / valid_text_length)
+    return loss, accuracy</code></pre>
+</details>
+</dd>
+<dt id="fjformer.func.loss_func.get_loss_normalizing_factor_and_weights"><code class="name flex">
+<span>def <span class="ident">get_loss_normalizing_factor_and_weights</span></span>(<span>loss_normalizing_factor: Union[float, int, str, <a title="fjformer.func.loss_func.SpecialLossNormalizingFactor" href="#fjformer.func.loss_func.SpecialLossNormalizingFactor">SpecialLossNormalizingFactor</a>, ForwardRef(None)], batch: Mapping[str, jax.Array])</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Get the float loss_normalizing_factor and loss weights.</p>
+<p>If loss_normalizing_factor is float or None, this will simply return the
+input loss_normalizing_factor and batch.</p>
+<p>If loss_normalizing_factor is a SpecialLossNormalizingFactor, it will
+return a float loss_normalizing_factor and loss weights corresponding to
+the special LNF. See SpecialLossNormalizingFactor for more details.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>loss_normalizing_factor</code></strong></dt>
+<dd>The input LNF, which may be a float, None, or
+SpecialLossNormalizingFactor (or a stringified SLNF).</dd>
+<dt><strong><code>batch</code></strong></dt>
+<dd>Input data batch.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>Tuple of (output_loss_normalizing_factor, loss_weights).
+'output_loss_normalizing_factor' is a scalar float (Python float
+or jnp float).
+'loss_weights' is the per token loss weight JNP array.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_loss_normalizing_factor_and_weights(
+        loss_normalizing_factor: Optional[Union[float, int, str,
+        SpecialLossNormalizingFactor]],
+        batch: Mapping[str, jnp.ndarray]):
+    &#34;&#34;&#34;Get the float loss_normalizing_factor and loss weights.
+
+    If loss_normalizing_factor is float or None, this will simply return the
+    input loss_normalizing_factor and batch.
+
+    If loss_normalizing_factor is a SpecialLossNormalizingFactor, it will
+    return a float loss_normalizing_factor and loss weights corresponding to
+    the special LNF. See SpecialLossNormalizingFactor for more details.
+
+    Args:
+      loss_normalizing_factor: The input LNF, which may be a float, None, or
+        SpecialLossNormalizingFactor (or a stringified SLNF).
+      batch: Input data batch.
+
+    Returns:
+      Tuple of (output_loss_normalizing_factor, loss_weights).
+        &#39;output_loss_normalizing_factor&#39; is a scalar float (Python float
+        or jnp float).
+        &#39;loss_weights&#39; is the per token loss weight JNP array.
+    &#34;&#34;&#34;
+
+    loss_weights = batch.get(&#39;decoder_loss_weights&#39;, None)
+    if (loss_normalizing_factor is None or
+            not isinstance(loss_normalizing_factor,
+                           (str, SpecialLossNormalizingFactor))):
+        return (loss_normalizing_factor, loss_weights)
+
+    if isinstance(loss_normalizing_factor, str):
+        loss_normalizing_factor = convert_special_loss_normalizing_factor_to_enum(
+            loss_normalizing_factor)
+
+    # If `loss_weights` are not provided, we assume that the padding id is 0 and
+    # that non-padding tokens in the decoder all correspond to the positions
+    # where loss should be taken. If more fine-grained behavior (e.g., taking
+    # loss on subset of &#39;decoder_target_tokens&#39;) is desired, provide
+    # `loss_weights` that account for this.
+    if loss_weights is None:
+        loss_weights = jnp.asarray(batch[&#39;decoder_target_tokens&#39;] &gt; 0, jnp.float32)
+
+    output_normalizing_factor = None
+    if (loss_normalizing_factor ==
+            SpecialLossNormalizingFactor.NUM_REAL_TARGET_TOKENS):
+        output_normalizing_factor = jnp.sum(loss_weights)
+    elif (loss_normalizing_factor ==
+          SpecialLossNormalizingFactor.NUM_TOTAL_TARGET_TOKENS):
+        output_normalizing_factor = np.prod(batch[&#39;decoder_target_tokens&#39;].shape)
+    elif (loss_normalizing_factor ==
+          SpecialLossNormalizingFactor.AVERAGE_PER_SEQUENCE):
+        if &#39;decoder_segment_ids&#39; in batch:  # is packed
+            norm_vec = _sum_weights_per_segment(batch[&#39;decoder_positions&#39;],
+                                                batch[&#39;decoder_segment_ids&#39;],
+                                                loss_weights)
+        else:
+            norm_vec = jnp.sum(loss_weights, axis=-1, keepdims=True)
+        # Handle divide-by-zero.
+        loss_weights = jnp.nan_to_num(
+            loss_weights / norm_vec, nan=0, posinf=0, neginf=0)
+        output_normalizing_factor = jnp.sum(loss_weights)
+    else:
+        raise ValueError(&#39;Unsupported value of loss_normalizing_factor: %s&#39; %
+                         str(loss_normalizing_factor))
+
+    return (output_normalizing_factor, loss_weights)</code></pre>
+</details>
+</dd>
+<dt id="fjformer.func.loss_func.hinge"><code class="name flex">
+<span>def <span class="ident">hinge</span></span>(<span>labels, predictions)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def hinge(labels, predictions):
+    return np.mean(np.maximum(0, 1 - labels * predictions))</code></pre>
+</details>
+</dd>
+<dt id="fjformer.func.loss_func.l2"><code class="name flex">
+<span>def <span class="ident">l2</span></span>(<span>labels, predictions)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def l2(labels, predictions):
+    return np.sum((labels - predictions) ** 2)</code></pre>
+</details>
+</dd>
+<dt id="fjformer.func.loss_func.log_cosh"><code class="name flex">
+<span>def <span class="ident">log_cosh</span></span>(<span>labels, predictions)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def log_cosh(labels, predictions):
+    def cosh(x):
+        return (np.exp(x) + np.exp(-x)) / 2
+
+    return np.mean(np.log(cosh(predictions - labels)))</code></pre>
+</details>
+</dd>
+<dt id="fjformer.func.loss_func.mae"><code class="name flex">
+<span>def <span class="ident">mae</span></span>(<span>labels, predictions)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def mae(labels, predictions):
+    return np.mean(np.abs(labels - predictions))</code></pre>
+</details>
+</dd>
+<dt id="fjformer.func.loss_func.mse"><code class="name flex">
+<span>def <span class="ident">mse</span></span>(<span>labels, predictions)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def mse(labels, predictions):
+    return np.mean((labels - predictions) ** 2)</code></pre>
+</details>
+</dd>
+<dt id="fjformer.func.loss_func.mse_loss"><code class="name flex">
+<span>def <span class="ident">mse_loss</span></span>(<span>val, target, valid=None)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def mse_loss(val, target, valid=None):
+    if valid is None:
+        valid = jnp.ones((*target.shape[:2], 1))
+    valid = valid.astype(jnp.float32)
+    loss = jnp.mean(
+        jnp.where(
+            valid &gt; 0.0,
+            jnp.square(val - target),
+            0.0
+        )
+    )
+    return loss</code></pre>
+</details>
+</dd>
+<dt id="fjformer.func.loss_func.nll"><code class="name flex">
+<span>def <span class="ident">nll</span></span>(<span>labels, predictions)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def nll(labels, predictions):
+    return -np.sum(labels * np.log(predictions + 1e-8))</code></pre>
+</details>
+</dd>
+</dl>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="fjformer.func.loss_func.SpecialLossNormalizingFactor"><code class="flex name class">
+<span>class <span class="ident">SpecialLossNormalizingFactor</span></span>
+<span>(</span><span>*args, **kwds)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Specially calculated loss_normalizing_factors, that are not a constant.</p>
+<h2 id="attributes">Attributes</h2>
+<dl>
+<dt><strong><code>NUM_REAL_TARGET_TOKENS</code></strong></dt>
+<dd>Whether to divide the loss by the number of real
+(non-padding) tokens in the current target batch. If
+'decoder_loss_weights' are specified, it will be the sum of the weights.
+Otherwise it will be the number of non-zero 'decoder_target_tokens'.</dd>
+<dt><strong><code>NUM_TOTAL_TARGET_TOKENS</code></strong></dt>
+<dd>Whether to divide the loss by the total number of
+target tokens, i.e., batch_size * target_seq_length (including padding).</dd>
+<dt><strong><code>AVERAGE_PER_SEQUENCE</code></strong></dt>
+<dd>This will first compute the per-sequence loss
+(averaged over the number of real target tokens in the sequence), and then
+compute the average of that over the sequences. This can be preferable to
+NUM_REAL_TARGET_TOKENS for finetuning, because it will weigh all examples
+equally, regardless of sequence length (which can be especially important
+for multi-task finetuning).</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@enum.unique
+class SpecialLossNormalizingFactor(enum.Enum):
+    &#34;&#34;&#34;Specially calculated loss_normalizing_factors, that are not a constant.
+
+    Attributes:
+      NUM_REAL_TARGET_TOKENS: Whether to divide the loss by the number of real
+        (non-padding) tokens in the current target batch. If
+        &#39;decoder_loss_weights&#39; are specified, it will be the sum of the weights.
+        Otherwise it will be the number of non-zero &#39;decoder_target_tokens&#39;.
+      NUM_TOTAL_TARGET_TOKENS: Whether to divide the loss by the total number of
+        target tokens, i.e., batch_size * target_seq_length (including padding).
+      AVERAGE_PER_SEQUENCE: This will first compute the per-sequence loss
+        (averaged over the number of real target tokens in the sequence), and then
+        compute the average of that over the sequences. This can be preferable to
+        NUM_REAL_TARGET_TOKENS for finetuning, because it will weigh all examples
+        equally, regardless of sequence length (which can be especially important
+        for multi-task finetuning).
+    &#34;&#34;&#34;
+    NUM_REAL_TARGET_TOKENS = 1
+    NUM_TOTAL_TARGET_TOKENS = 2
+    AVERAGE_PER_SEQUENCE = 3</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>enum.Enum</li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="fjformer.func.loss_func.SpecialLossNormalizingFactor.AVERAGE_PER_SEQUENCE"><code class="name">var <span class="ident">AVERAGE_PER_SEQUENCE</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="fjformer.func.loss_func.SpecialLossNormalizingFactor.NUM_REAL_TARGET_TOKENS"><code class="name">var <span class="ident">NUM_REAL_TARGET_TOKENS</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="fjformer.func.loss_func.SpecialLossNormalizingFactor.NUM_TOTAL_TARGET_TOKENS"><code class="name">var <span class="ident">NUM_TOTAL_TARGET_TOKENS</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="fjformer.func" href="index.html">fjformer.func</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="fjformer.func.loss_func.binary_cross_entropy" href="#fjformer.func.loss_func.binary_cross_entropy">binary_cross_entropy</a></code></li>
+<li><code><a title="fjformer.func.loss_func.binary_cross_entropy_onehot" href="#fjformer.func.loss_func.binary_cross_entropy_onehot">binary_cross_entropy_onehot</a></code></li>
+<li><code><a title="fjformer.func.loss_func.compute_weighted_cross_entropy" href="#fjformer.func.loss_func.compute_weighted_cross_entropy">compute_weighted_cross_entropy</a></code></li>
+<li><code><a title="fjformer.func.loss_func.convert_special_loss_normalizing_factor_to_enum" href="#fjformer.func.loss_func.convert_special_loss_normalizing_factor_to_enum">convert_special_loss_normalizing_factor_to_enum</a></code></li>
+<li><code><a title="fjformer.func.loss_func.cross_entropy" href="#fjformer.func.loss_func.cross_entropy">cross_entropy</a></code></li>
+<li><code><a title="fjformer.func.loss_func.cross_entropy_loss_and_accuracy" href="#fjformer.func.loss_func.cross_entropy_loss_and_accuracy">cross_entropy_loss_and_accuracy</a></code></li>
+<li><code><a title="fjformer.func.loss_func.cross_entropy_onehot" href="#fjformer.func.loss_func.cross_entropy_onehot">cross_entropy_onehot</a></code></li>
+<li><code><a title="fjformer.func.loss_func.cross_entropy_with_logits" href="#fjformer.func.loss_func.cross_entropy_with_logits">cross_entropy_with_logits</a></code></li>
+<li><code><a title="fjformer.func.loss_func.fused_cross_entropy_loss_and_accuracy" href="#fjformer.func.loss_func.fused_cross_entropy_loss_and_accuracy">fused_cross_entropy_loss_and_accuracy</a></code></li>
+<li><code><a title="fjformer.func.loss_func.get_loss_normalizing_factor_and_weights" href="#fjformer.func.loss_func.get_loss_normalizing_factor_and_weights">get_loss_normalizing_factor_and_weights</a></code></li>
+<li><code><a title="fjformer.func.loss_func.hinge" href="#fjformer.func.loss_func.hinge">hinge</a></code></li>
+<li><code><a title="fjformer.func.loss_func.l2" href="#fjformer.func.loss_func.l2">l2</a></code></li>
+<li><code><a title="fjformer.func.loss_func.log_cosh" href="#fjformer.func.loss_func.log_cosh">log_cosh</a></code></li>
+<li><code><a title="fjformer.func.loss_func.mae" href="#fjformer.func.loss_func.mae">mae</a></code></li>
+<li><code><a title="fjformer.func.loss_func.mse" href="#fjformer.func.loss_func.mse">mse</a></code></li>
+<li><code><a title="fjformer.func.loss_func.mse_loss" href="#fjformer.func.loss_func.mse_loss">mse_loss</a></code></li>
+<li><code><a title="fjformer.func.loss_func.nll" href="#fjformer.func.loss_func.nll">nll</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="fjformer.func.loss_func.SpecialLossNormalizingFactor" href="#fjformer.func.loss_func.SpecialLossNormalizingFactor">SpecialLossNormalizingFactor</a></code></h4>
+<ul class="">
+<li><code><a title="fjformer.func.loss_func.SpecialLossNormalizingFactor.AVERAGE_PER_SEQUENCE" href="#fjformer.func.loss_func.SpecialLossNormalizingFactor.AVERAGE_PER_SEQUENCE">AVERAGE_PER_SEQUENCE</a></code></li>
+<li><code><a title="fjformer.func.loss_func.SpecialLossNormalizingFactor.NUM_REAL_TARGET_TOKENS" href="#fjformer.func.loss_func.SpecialLossNormalizingFactor.NUM_REAL_TARGET_TOKENS">NUM_REAL_TARGET_TOKENS</a></code></li>
+<li><code><a title="fjformer.func.loss_func.SpecialLossNormalizingFactor.NUM_TOTAL_TARGET_TOKENS" href="#fjformer.func.loss_func.SpecialLossNormalizingFactor.NUM_TOTAL_TARGET_TOKENS">NUM_TOTAL_TARGET_TOKENS</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.10.0</a>.</p>
+</footer>
+</body>
+</html>
