@@ -1,3 +1,23 @@
+"""
+# File: __init__.py
+
+## Purpose:
+This file contains imports for various attention mechanisms used in our project.
+
+## Imports:
+1. `efficient_attention` from `efficient_attention` module: This import brings in the `efficient_attention` function,
+ which implements an efficient attention mechanism for our project.
+
+2. `dot_product_attention_multihead`, `dot_product_attention_multiquery`, `dot_product_attention_queries_per_head` from
+ `flash_attention_0` module: These imports bring in different variations of dot product attention mechanisms for
+ multi-head and multi-query scenarios.
+
+3. `ring_attention`, `ring_attention_standard`, `ring_flash_attention_gpu`, `ring_flash_attention_tpu`, `blockwise_ffn`,
+ `blockwise_attn` from `flash_attention` module: These imports bring in various attention mechanisms such as
+ ring attention, flash attention for GPU and TPU, and blockwise feed-forward network and attention mechanisms.
+
+"""
+
 from .efficient_attention import efficient_attention
 from .flash_attention_0 import dot_product_attention_multihead, dot_product_attention_multiquery, \
     dot_product_attention_queries_per_head
