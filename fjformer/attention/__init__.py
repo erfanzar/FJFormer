@@ -16,6 +16,8 @@ This file contains imports for various attention mechanisms used in our project.
  `blockwise_attn` from `flash_attention` module: These imports bring in various attention mechanisms such as
  ring attention, flash attention for GPU and TPU, and blockwise feed-forward network and attention mechanisms.
 
+4. `tpu_flash_attention` `gpu_flash_attention` are imported from jax_flash_attn_tpu/gpu
+
 """
 
 from .efficient_attention import efficient_attention
@@ -23,3 +25,5 @@ from .flash_attention_0 import dot_product_attention_multihead, dot_product_atte
     dot_product_attention_queries_per_head
 from .flash_attention import ring_attention, ring_attention_standard, ring_flash_attention_gpu, \
     ring_flash_attention_tpu, blockwise_ffn, blockwise_attn
+from .jax_flash_attn_tpu import flash_attention as tpu_flash_attention
+from .jax_flash_attn_gpu import mha as gpu_flash_attention

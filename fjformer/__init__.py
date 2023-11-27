@@ -151,4 +151,4 @@ from .utils import (
     count_num_params
 )
 
-__version__ = '0.0.14'
+__version__ = '0.0.15'
