@@ -10,3 +10,4 @@ ml_collections
 einops
 datasets
 IPython
+matplotlib
