@@ -24,7 +24,6 @@ from jax import lax
 from jax.experimental import pallas as pl
 from jax.experimental.pallas import tpu as pltpu
 import jax.numpy as jnp
-from jax.experimental.pallas.ops.tpu.flash_attention import _flash_attention_kernel_single_batch_single_step
 
 DEFAULT_MASK_VALUE = -0.7 * float(jnp.finfo(jnp.dtype("float32")).max)
 NUM_LANES = 128
@@ -272,6 +271,7 @@ def _flash_attention_kernel(q_idx_chunk_start, k_idx_chunk_start, q_tile_ref, *a
     block_b = q_tile_ref.shape[0]
     # If we're not going to tile the softmax, then we can avoid a bunch of VPU ops.
     if kwargs["block_k"] == kwargs["kv_seq_len"]:
+        assert False
         kernel = _flash_attention_kernel_single_batch_single_step
     else:
         kernel = _flash_attention_kernel_single_batch
@@ -527,6 +527,7 @@ def _flash_attention_impl(
             pl.BlockSpec(lambda *_: (0, 0, 0, 0), acc_scratch.shape),
         ]
     else:
+        assert False
         out_shape += [None, None, None]
         out_specs += [None, None, None]
 
@@ -551,9 +552,11 @@ def _flash_attention_impl(
     q_segment_ids_spec = kv_segment_ids_spec = None
     q_segment_ids = kv_segment_ids = None
     if segment_ids is not None:
+        assert False
+
         def q_segment_ids_index_map(batch_index, head_index, q_seq_index, _):
             del head_index
-            return batch_index, q_seq_index, 0
+            return (batch_index, q_seq_index, 0)
 
         def kv_segment_ids_index_map(
                 batch_index, head_index, q_seq_index, kv_seq_index
@@ -1239,10 +1242,11 @@ def _flash_attention_bwd_dq(
     q_segment_ids_spec = kv_segment_ids_spec = None
     q_segment_ids = kv_segment_ids = None
     if segment_ids is not None:
+        assert False
 
         def q_segment_ids_index_map(batch_index, head_index, q_seq_index, _):
             del head_index
-            return batch_index, q_seq_index, 0
+            return (batch_index, q_seq_index, 0)
 
         def kv_segment_ids_index_map(
                 batch_index, head_index, q_seq_index, kv_seq_index
@@ -1260,7 +1264,7 @@ def _flash_attention_bwd_dq(
                 )
             else:
                 next_kv_index = kv_seq_index
-            return batch_index, 0, next_kv_index
+            return (batch_index, 0, next_kv_index)
 
         q_segment_ids_spec = pl.BlockSpec(
             q_segment_ids_index_map, (1, block_q_major, NUM_LANES)

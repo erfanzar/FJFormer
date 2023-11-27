@@ -29,4 +29,5 @@ ml_collections
 einops
 datasets
 IPython
+jax_extensions
 matplotlib
