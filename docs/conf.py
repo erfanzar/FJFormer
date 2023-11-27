@@ -137,15 +137,11 @@ nb_merge_streams = True
 
 nb_execution_timeout = 100
 
-htmlhelp_basename = 'JAXdoc'
+htmlhelp_basename = 'FJFormerdoc'
 
 latex_elements = {
 }
 
-latex_documents = [
-    (main_doc, 'JAX.tex', 'JAX Documentation',
-     'The JAX authors', 'manual'),
-]
 
 man_pages = [
     (main_doc, 'FJFormer', 'FJFormer Documentation',
