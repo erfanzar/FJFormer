@@ -527,7 +527,6 @@ def _flash_attention_impl(
             pl.BlockSpec(lambda *_: (0, 0, 0, 0), acc_scratch.shape),
         ]
     else:
-        assert False
         out_shape += [None, None, None]
         out_specs += [None, None, None]
 
