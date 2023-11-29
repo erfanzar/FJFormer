@@ -148,6 +148,23 @@ def flash_attention(
         block_sizes: BlockSizes | None = None,
         debug: bool = False,
 ):
+    """
+    The flash_attention function computes the attention matrix for a given query, key and value tensor.
+
+    :param q: Represent the query matrix
+    :param k: Specify the key
+    :param v: Calculate the attention score
+    :param ab: Store the attention bias
+    :param segment_ids: Determine which tokens are in the same segment
+    :param *: Pass in the positional embeddings
+    :param causal: bool: Determine whether to use causal attention or not
+    :param sm_scale: float: Scale the softmax function
+    :param block_sizes: BlockSizes | None: Specify the block sizes for the
+    :param debug: bool: Print out the shapes of tensors in each layer
+    :param : Determine whether to use the attention bias or not
+    :return: A tuple of (output, attention_weights)
+    
+    """
     batch_size, num_heads, q_seq_len, d_model = q.shape
     batch_size_k, num_heads_k, kv_seq_len, d_model_k = k.shape
     batch_size_v, num_heads_v, kv_seq_len_v, d_model_v = v.shape
@@ -341,6 +358,35 @@ def _flash_attention_kernel_single_batch(
         kv_seq_len,
         mask_value,
 ):
+    """
+    The _flash_attention_kernel_single_batch function is a JAX-compiled function that performs the following steps:
+
+    :param batch_idx: tuple[int: Index into the arrays
+    :param ...]: Pass in the batch_idx tuple
+    :param q_tile_ref: Store the query vectors
+    :param k_tile_ref: Store the key values in a tile
+    :param v_tile_ref: Load the value tensor
+    :param ab_tile_ref: Add the attention bias to the score matrix
+    :param q_segment_ids_tile_ref: Mask out the attention weights
+    :param kv_segment_ids_tile_ref: Mask out the attention
+    :param # Input arrays
+            o_tile_ref: Store the output of the function
+    :param # Output arrays
+            m_scratch_ref: Store the max value of each row in the matrix
+    :param l_scratch_ref: Store the logits, which is used to calculate the attention weights
+    :param acc_scratch_ref: Store the output of the attention operation
+    :param l_ref: Any | None: Store the logits
+    :param m_ref: Any | None: Store the maximum values of each row
+    :param *: Pass in keyword arguments
+    :param causal: Determine whether the masking is causal or not
+    :param sm_scale: Scale the dot product of q and k before applying softmax
+    :param block_k: Specify the number of keys to process at a time
+    :param kv_seq_len: Determine the number of times to run the
+    :param mask_value: Mask out the attention weights of padded tokens
+    :param : Determine the number of batches to run
+    :return: The following:
+    
+    """
     block_k_major = k_tile_ref.shape[2]
     block_q = q_tile_ref.shape[2]
     head_dim = q_tile_ref.shape[-1]
@@ -491,6 +537,32 @@ def _flash_attention_kernel_single_batch_single_step(
         kv_seq_len,
         mask_value,
 ):
+    """
+    The _flash_attention_kernel_single_batch_single_step function is a JAX-compiled function that performs the following steps:
+
+    :param batch_idx: tuple[int, ...]: Index the batch dimension of the input arrays
+    :param q_tile_ref: Store the query tensor
+    :param k_tile_ref: Compute the dot product between q and k
+    :param v_tile_ref: Compute the output
+    :param ab_tile_ref: Add bias to the attention score
+    :param q_segment_ids_tile_ref: Mask out the attention weights
+    :param kv_segment_ids_tile_ref: Mask out the values that are not in the same segment as q
+    :param o_tile_ref: Store the output of the attention
+    :param m_scratch_ref: Store the max value of s
+    :param l_scratch_ref: Store the logits
+    :param acc_scratch_ref: Accumulate the attention weights
+    :param l_ref: Any | None: Store the logits of the attention weights
+    :param m_ref: Any | None: Store the maximum values of the softmax function
+    :param *: Indicate that the parameter is a keyword-only argument
+    :param causal: Mask the attention weights for future tokens
+    :param sm_scale: Scale the dot product of q and k
+    :param block_k: Determine the size of the kv_segment_ids array
+    :param kv_seq_len: Determine the size of the block_k parameter
+    :param mask_value: Mask out the values in the attention matrix
+    :param : Control the number of batches that are processed in parallel
+    :return: A tuple of
+    
+    """
     block_k_major = k_tile_ref.shape[2]
     block_q = q_tile_ref.shape[2]
 
@@ -1454,6 +1526,26 @@ def mha_reference_no_custom_vjp(
         sm_scale: float = 1.0,
         save_residuals: bool = False,
 ):
+    """
+    The mha_reference_no_custom_vjp function is a reference implementation of the Multi-Head Attention
+    module. It takes in three inputs: q, k and v. The q input is the query tensor, which has shape (batch_size,
+    num_heads, query_seq_len, head_dim). The k input is the key tensor and has shape (batch size, num heads
+    key/value seq len), while v represents value tensors with shape (batch size * num heads * key/value seq len)
+
+    :param q: Represent the query vectors
+    :param k: Calculate the logits
+    :param v: Calculate the output of the mha_reference_no_custom_vjp function
+    :param ab: jax.Array | None: Pass in the bias
+    :param segment_ids: SegmentIds | None: Determine the mask
+    :param *: Denote that the parameters after it are keyword only
+    :param causal: bool: Determine whether or not to use the causal mask
+    :param mask_value: float: Set the value of the mask
+    :param sm_scale: float: Scale the logits
+    :param save_residuals: bool: Save the residuals of the mha_reference_no_custom_vjp function
+    :param : Calculate the attention weights
+    :return: The same thing as the
+    :doc-author: Trelent
+    """
     logits = jnp.einsum("bhqc,bhkc->bhqk", q, k)
     if ab is not None:
         logits += ab
@@ -1500,6 +1592,25 @@ def mha_reference(
         mask_value: float = DEFAULT_MASK_VALUE,
         sm_scale=1.0,
 ):
+    """
+    The mha_reference function is a reference implementation of the Multi-Head Attention
+    mechanism. It takes in three inputs: query, key, and value tensors. The query tensor is
+    used to compute attention scores for each position in the key and value tensors. The output
+    of this function is a weighted sum of the values where weights are determined by softmaxing
+    the dot product between queries and keys at each position (with an optional mask).
+
+    :param q: Represent the queries
+    :param k: Calculate the attention weights
+    :param v: Calculate the attention weights
+    :param ab: Specify the number of attention heads
+    :param segment_ids: SegmentIds | None: Specify the segment ids
+    :param causal: bool: Determine whether to use the masking or not
+    :param mask_value: float: Set the value of the mask
+    :param sm_scale: Scale the softmax function
+    :param : Save the residuals
+    :return: A tuple of the following:
+    :doc-author: Trelent
+    """
     return _mha_reference(
         q,
         k,

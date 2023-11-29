@@ -112,16 +112,27 @@ class DotGeneral:
         return dot_general_make(*args, **kwargs)
 
 
-################################################################################
-# Functions below are auxiliary helpers.
-
-
 def set_accumulator_dtype(
         cfg: DotGeneral,
         fwd_dtype: Optional[DType],
         dlhs_dtype: Optional[DType],
         drhs_dtype: Optional[DType],
 ):
+    """
+    The set_accumulator_dtype function sets the accumulator dtype for each of the three
+    differentiable functions.  The accumulator dtype is used to store intermediate results
+    during forward and backward passes.  It is also used to store gradients during backward pass.
+    The default value for this parameter is None, which means that it will be set automatically by
+    the library based on other parameters such as input data types and output data type.
+
+    :param cfg: DotGeneral: Set the accumulator dtype for each of the three
+    :param fwd_dtype: Optional[DType]: Set the accumulator dtype for forward mode
+    :param dlhs_dtype: Optional[DType]: Set the dg_accumulator_dtype
+    :param drhs_dtype: Optional[DType]: Set the data type for the
+    :param : Set the accumulator dtype for the forward pass,
+    :return: A tuple of three elements,
+    :doc-author: Trelent
+    """
     cfg.fwd.dg_accumulator_dtype = fwd_dtype
     cfg.dlhs.dg_accumulator_dtype = dlhs_dtype
     cfg.drhs.dg_accumulator_dtype = drhs_dtype
@@ -161,6 +172,16 @@ def set_stochastic_rounding(
 
 
 def set_static_bound(cfg: DotGeneral, bound: float = 1.0):
+    """
+    The set_static_bound function sets the calibration of all the layers in a DotGeneral configuration to be constant.
+    This is useful for when we want to use a static bound, as opposed to an adaptive one.
+
+
+    :param cfg: DotGeneral: Set the static bound for all the dot-general's sub-functions
+    :param bound: float: Set the bound of the calibration
+    :return: The cfg which is the dot general object
+    :doc-author: Trelent
+    """
     cfg.fwd.lhs.calibration = calibration.ConstantCalibration(bound)
     cfg.fwd.rhs.calibration = calibration.ConstantCalibration(bound)
     cfg.drhs.lhs.calibration = calibration.ConstantCalibration(bound)
@@ -285,7 +306,24 @@ def fully_quantized(
         dlhs_local_q: Optional[LocalQ] = None,
         drhs_local_q: Optional[LocalQ] = None,
 ) -> DotGeneral:
-    """Fully Quantized Training."""
+    """
+    The fully_quantized function is a helper function that allows you to quickly
+    configure the DotGeneral operator with quantization and stochastic rounding.
+    It takes in the following arguments:
+
+    :param *: Indicate that the function takes a variable number of arguments
+    :param fwd_bits: Union[int, None]: Specify the number of bits used to represent the forward pass
+    :param bwd_bits: Union[int, None]: Specify the number of bits used for backpropagation
+    :param use_fwd_quant: bool: Control whether we quantize the forward pass
+    :param use_stochastic_rounding: Optional[bool]: Enable stochastic rounding
+    :param vjp_lhs_stochastic_rounding: Optional[bool]: Refer to the gradient
+    :param vjp_rhs_stochastic_rounding: Optional[bool]: Enable stochastic rounding for the activations/weights
+    :param dlhs_local_q: Optional[LocalQ]: Specify the quantization scheme for
+    :param drhs_local_q: Optional[LocalQ]: Specify the quantization parameters for the right hand side of the matrix multiplication
+    :param : Set the number of bits for forward and backward pass
+    :return: A dotgeneral object
+    :doc-author: Trelent
+    """
     cfg = dot_general_make(
         lhs_bits=fwd_bits,
         rhs_bits=fwd_bits,

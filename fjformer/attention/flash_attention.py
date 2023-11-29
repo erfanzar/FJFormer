@@ -703,6 +703,23 @@ def _ring_flash_attention_bwd_tpu(axis_name, float32_logits, blockwise_kwargs, r
 
 @partial(jax.custom_vjp, nondiff_argnums=[4, 5, 6])
 def ring_flash_attention_tpu(q, k, v, attn_bias, axis_name, float32_logits, blockwise_kwargs):
+    """
+    The ring_flash_attention_tpu function is a TPU-specific implementation of the ring_flash_attention function.
+    It takes in the same arguments as ring_flash_attention, but it also takes in blockwise_kwargs, which are used to
+    specify how to partition the input tensors into blocks for parallel processing on TPUs. The blockwise kwargs are:
+        - num_blocks: number of blocks to split each dimension into (default 1)
+        - dims: list of dimensions that will be split into blocks (default [0])
+
+    :param q: Compute the attention weights
+    :param k: Define the key, and the v parameter is used to define the value
+    :param v: Compute the attention weights and then used to multiply with the attention weights
+    :param attn_bias: Mask out the attention weights for certain positions
+    :param axis_name: Specify the axis along which the attention is applied
+    :param float32_logits: Determine whether to use float32 or int32 for the logits
+    :param blockwise_kwargs: Pass the blockwise_compute function to ring_flash_attention
+    :return: A tuple
+    
+    """
     y, _ = _ring_flash_attention_fwd_tpu(q, k, v, attn_bias, axis_name, float32_logits, blockwise_kwargs)
     return y
 
@@ -711,6 +728,21 @@ ring_flash_attention_tpu.defvjp(_ring_flash_attention_fwd_tpu, _ring_flash_atten
 
 
 def ring_flash_dummy_gpu(q, k, v, attn_bias, axis_name, float32_logits, blockwise_kwargs):
+    """
+    The ring_flash_dummy_gpu function is a dummy function that does not actually perform any computation.
+    It is used to determine the GPU memory usage of the ring_flash_gpu function, which performs multi-head attention.
+    The ring_flash_dummy_gpu function has exactly the same inputs and outputs as ring flash gpu, but it does not perform any computation.
+
+    :param q: Compute the query_chunk_size
+    :param k: Calculate the output of the ring_flash_dummy function
+    :param v: Compute the output
+    :param attn_bias: Mask the attention
+    :param axis_name: Specify which axis to split the tensor along
+    :param float32_logits: Determine whether to use float32 or float64 for the q and k matrices
+    :param blockwise_kwargs: Pass parameters to the ring_flash_dummy_gpu function
+    :return: A tuple of (output, none)
+    
+    """
     if float32_logits:
         q, k = q.astype(jnp.float32), k.astype(jnp.float32)
     attn_bias = attn_bias[:, 0, 0]  # (batch, q_len)
@@ -723,6 +755,23 @@ def ring_flash_dummy_gpu(q, k, v, attn_bias, axis_name, float32_logits, blockwis
 
 
 def _ring_flash_attention_fwd_gpu(q, k, v, attn_bias, axis_name, float32_logits, blockwise_kwargs):
+    """
+    The _ring_flash_attention_fwd_gpu function is a GPU-only implementation of the ring flash attention
+    forward pass. It takes in query, key, and value tensors (q, k, v), an attention bias tensor (attn_bias),
+    and axis name for the blockwise dimension. The function then performs a scan over all blocks in the blockwise
+    dimension to compute output values for each query position. This is done by first computing logits using q and k;
+    then applying softmax to get probabilities; then multiplying these probabilities with v to get output values.
+
+    :param q: Compute the logits
+    :param k: Compute the logits
+    :param v: Compute the output, but what is it?
+    :param attn_bias: Mask out certain positions in the attention matrix
+    :param axis_name: Specify the axis along which to perform ring flash attention
+    :param float32_logits: Determine whether to use float32 or bfloat16 for the logits
+    :param blockwise_kwargs: Pass in the parameters for the _mha_forward function
+    :return: The output of the attention
+    
+    """
     if float32_logits:
         q, k = q.astype(jnp.float32), k.astype(jnp.float32)
     batch, q_len, num_heads, dim_per_head = q.shape
@@ -781,6 +830,18 @@ from jax.experimental.pallas.ops.attention import _mha_forward as _mha_forward_d
 
 
 def _ring_flash_attention_bwd_gpu(axis_name, float32_logits, blockwise_kwargs, res, g):
+    """
+    The _ring_flash_attention_bwd_gpu function is a GPU-specific implementation of the backward pass for
+    the ring flash attention mechanism. It takes in the following arguments:
+
+    :param axis_name: Specify the axis that is being sharded
+    :param float32_logits: Determine whether to use the float32 or float16 version of the function
+    :param blockwise_kwargs: Pass the blockwise_kwargs dictionary to the _ring_flash_attention function
+    :param res: Pass in the result of the forward pass
+    :param g: Pass the gradient of the output to this function
+    :return: A tuple of 4 elements
+    
+    """
     del float32_logits
     o, q, k, v, attn_bias, l, m = res
     batch, kv_len, num_heads, dim_per_head = k.shape
@@ -834,6 +895,21 @@ def _ring_flash_attention_bwd_gpu(axis_name, float32_logits, blockwise_kwargs, r
 
 @partial(jax.custom_vjp, nondiff_argnums=[4, 5, 6])
 def ring_flash_attention_gpu(q, k, v, attn_bias, axis_name, float32_logits, blockwise_kwargs):
+    """
+    The ring_flash_attention_gpu function is a GPU-optimized version of the ring_flash_attention function.
+    It uses the same algorithm as ring_flash_attention, but it has been optimized for speed on GPUs.
+    The main difference between this function and its CPU counterpart is that this one uses blockwise matrix multiplication to compute attention scores in parallel across multiple blocks of data, rather than computing them sequentially across all data points. This allows us to take advantage of the massive parallelism available on modern GPUs.
+
+    :param q: Query the key-value pairs
+    :param k: Determine the number of heads
+    :param v: Pass the values to the attention function
+    :param attn_bias: Mask the attention weights
+    :param axis_name: Specify which axis to perform the attention on
+    :param float32_logits: Determine whether to use float32 or float16
+    :param blockwise_kwargs: Pass the blockwise_attention function parameters
+    :return: The output of the attention layer
+    
+    """
     y, _ = _ring_flash_attention_fwd_gpu(q, k, v, attn_bias, axis_name, float32_logits, blockwise_kwargs)
     return y
 

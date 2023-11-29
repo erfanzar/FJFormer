@@ -77,6 +77,15 @@ class StreamingCheckpointer(object):
                 fout.write(packer.pack((key, to_bytes(value))))
 
     def save_pickle(self, obj, filename):
+        """
+        The save_pickle function saves a Python object to disk using the pickle module.
+
+        :param self: Represent the instance of the class
+        :param obj: Pass the object that is to be pickled
+        :param filename: Specify the name of the file to be saved
+        :return: A pickle object
+        :doc-author: Trelent
+        """
         import pickle
         def save_pickle(obj, path):
             with open(path, 'wb') as fout:
@@ -89,6 +98,23 @@ class StreamingCheckpointer(object):
         save_pickle(obj, path)
 
     def save_all(self, train_state, gather_fns, metadata=None, dataset=None, milestone=False):
+        """
+        The save_all function saves the following:
+            - metadata.pkl (a pickle file containing a dictionary of metadata)
+            - dataset.pkl (a pickle file containing the training data)
+            - streaming_params_{step}.pkl or streaming_train_state_{step}.pkl
+                (depending on whether we want to save optimizer state or not,
+                this is a checkpoint that will not be overwritten by future checkpoints)
+
+        :param self: Access the attributes and methods of the class
+        :param train_state: Save the current state of the model
+        :param gather_fns: Gather the state of the optimizer
+        :param metadata: Save the metadata of the training
+        :param dataset: Save the dataset to disk
+        :param milestone: Determine whether the checkpoint is a milestone or not
+        :return: Nothing
+        :doc-author: Trelent
+        """
         step = int(jax.device_get(train_state.step))
         if self.config.save_optimizer_state:
             checkpoint_state = train_state
@@ -116,6 +142,16 @@ class StreamingCheckpointer(object):
 
     @staticmethod
     def load_checkpoint(path, target=None, shard_fns=None, remove_dict_prefix=None):
+        """
+        The load_checkpoint function is used to load a checkpoint from disk.
+
+        :param path: Specify the path to the checkpoint file
+        :param target: Specify the model to load the checkpoint into
+        :param shard_fns: Specify a function that will be applied to each tensor in the checkpoint
+        :param remove_dict_prefix: Remove the prefix of a dictionary
+        :return: A dictionary of the form {key: value}, where key is a tuple and value is a tensor
+        :doc-author: Trelent
+        """
         if shard_fns is not None:
             shard_fns = flatten_dict(
                 to_state_dict(shard_fns)
@@ -174,6 +210,17 @@ class StreamingCheckpointer(object):
     def load_trainstate_checkpoint(cls, load_from, trainstate_target=None,
                                    trainstate_shard_fns=None,
                                    disallow_trainstate=False):
+        """
+        The load_trainstate_checkpoint function is used to load a checkpoint from disk.
+
+        :param cls: Call the load_checkpoint function
+        :param load_from: Specify where to load the model from
+        :param trainstate_target: Specify the target for the train state
+        :param trainstate_shard_fns: Specify the sharding function
+        :param disallow_trainstate: Prevent loading the entire trainstate
+        :return: A tuple of two objects, the train_state and restored_params
+        :doc-author: Trelent
+        """
         if trainstate_target is not None:
             params_target = trainstate_target.params['params']
         else:

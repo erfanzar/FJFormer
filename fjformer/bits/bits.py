@@ -99,6 +99,14 @@ def matmul(
 
 
 def matmul_true_int8(lhs, rhs):
+    """
+    The matmul_true_int8 function is a helper function that takes in two int8 arrays and returns the result of their matrix multiplication.
+
+    :param lhs: Specify the left hand side of the matrix multiplication
+    :param rhs: Specify the right-hand side of the matrix multiplication
+    :return: A matrix with elements of type int32
+    :doc-author: Trelent
+    """
     assert lhs.dtype == jnp.int8
     assert rhs.dtype == jnp.int8
     result = jnp.matmul(lhs, rhs, preferred_element_type=jnp.int32)
@@ -107,10 +115,27 @@ def matmul_true_int8(lhs, rhs):
 
 
 def quant_int8(x):
+    """
+    The quant_int8 function takes a floating point number and rounds it to the nearest integer.
+    If the rounded value is outside the range [-127, 127], then it clips it to that range.
+    Finally, we cast this clipped integer into an int8 type.
+
+    :param x: Pass the input to the function
+    :return: The rounded and clipped values
+    :doc-author: Trelent
+    """
     return jnp.clip(jnp.round(x), -127, 127).astype(jnp.int8)
 
 
 def q_matmul_int8(a, w):
+    """
+    The q_matmul_int8 function performs a quantized matrix multiplication.
+
+    :param a: Calibrate the input data
+    :param w: Store the weights of the neural network
+    :return: A float32 array, which is the result of an int8 matrix multiplication
+    :doc-author: Trelent
+    """
 
     # Calibration. Calibration function is also customizable and injectable.
     a_s = 127 / jnp.max(jnp.abs(a), axis=1, keepdims=True)

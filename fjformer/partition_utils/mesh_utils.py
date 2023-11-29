@@ -14,8 +14,16 @@ from typing import Sequence
 
 
 def make_shard_and_gather_fns(partition_specs, dtype_specs=None):
-    """ Create pytree of sharding and gathering functions from pytree of
-        partition specs.
+    """
+    The make_shard_and_gather_fns function takes in a partition_specs and dtype_specs,
+    and returns two functions: shard_fns and gather_fns. The shard function is used to
+    shard the input tensor into the specified partitions. The gather function is used to
+    gather all the shards back together into one tensor.
+
+    :param partition_specs: Specify the sharding of the input tensor
+    :param dtype_specs: Specify the dtype of the tensor
+    :return: A tuple of functions
+    :doc-author: Trelent
     """
     float_dtypes = (jnp.bfloat16, jnp.float16, jnp.float32, jnp.float64)
 
@@ -68,6 +76,18 @@ def make_shard_and_gather_fns(partition_specs, dtype_specs=None):
 
 
 def get_jax_mesh(axis_dims, names):
+    """
+    The get_jax_mesh function takes a string of the form:
+        &lt;axis_dims&gt;
+    where axis_dims is a comma-separated list of dimensions, each dimension being either:
+        &lt;name&gt;:&lt;dim&gt;  or  &lt;dim&gt;
+    If there are no names, then the default names 'x', 'y', and 'z' will be used. If there are fewer than three dimensions, then the remaining dimensions will be set to 1. For example:
+
+    :param axis_dims: Specify the dimensions of the mesh
+    :param names: Specify the names of the dimensions in
+    :return: A mesh object
+    :doc-author: Trelent
+    """
     if axis_dims.startswith('!'):
         mesh_axis_splitting = True
         axis_dims = axis_dims[1:]
@@ -96,11 +116,29 @@ def get_jax_mesh(axis_dims, names):
 
 
 def names_in_current_mesh(*names):
+    """
+    The names_in_current_mesh function is used to check if a set of names are in the current mesh.
+
+    :param *names: Pass in a list of names to the function
+    :return: A boolean indicating whether
+    :doc-author: Trelent
+    """
     mesh_axis_names = pxla.thread_resources.env.physical_mesh.axis_names
     return set(names) <= set(mesh_axis_names)
 
 
 def get_names_from_partition_spec(partition_specs):
+    """
+    The get_names_from_partition_spec function takes a partition_specs argument, which is either a dictionary or list.
+    If it's a dictionary, the function converts it to a list of values. Then for each item in the partition_specs list:
+        If the item is None, continue (do nothing) and move on to next iteration of loop.
+        If the item is an instance of str (i.e., if it's just one string), add that string to names set and move on to next iteration of loop.
+        Otherwise (if not None or str), call get_names_from_partition_spec recurs
+
+    :param partition_specs: Specify the partitioning of the data
+    :return: A list of names
+    :doc-author: Trelent
+    """
     names = set()
     if isinstance(partition_specs, dict):
         partition_specs = partition_specs.values()
@@ -140,6 +178,17 @@ def wrap_function_with_rng(rng):
 
 
 def get_metrics(metrics, unreplicate=False, stack=False):
+    """
+    The get_metrics function is a helper function that takes the metrics dictionary
+    returned by the training loop and converts it to a format that can be used for
+    plotting. It does this in two ways:
+
+    :param metrics: Store the metrics that we want to track
+    :param unreplicate: Convert the metrics from a replicated
+    :param stack: Stack the metrics in a list
+    :return: A dictionary of metrics
+    :doc-author: Trelent
+    """
     if unreplicate:
         metrics = flax.jax_utils.unreplicate(metrics)
     metrics = jax.device_get(metrics)
@@ -150,6 +199,14 @@ def get_metrics(metrics, unreplicate=False, stack=False):
 
 
 def tree_path_to_string(path, sep=None):
+    """
+    The tree_path_to_string function takes a tree path and returns a string representation of it.
+
+    :param path: Specify the path of the tree
+    :param sep: Join the keys with a separator
+    :return: A tuple of strings
+    :doc-author: Trelent
+    """
     keys = []
     for key in path:
         if isinstance(key, jax.tree_util.SequenceKey):
@@ -168,6 +225,18 @@ def tree_path_to_string(path, sep=None):
 
 
 def flatten_tree(xs, is_leaf=None, sep=None):
+    """
+    The flatten_tree function takes a nested structure of arrays and returns a
+    dictionary mapping from string keys to the corresponding array values. The
+    string keys are derived from the tree path to each value, with `sep` used as
+    the separator between levels in the tree. For example:
+
+    :param xs: Store the tree structure
+    :param is_leaf: Determine if a node is a leaf
+    :param sep: Specify the separator between each key in the path
+    :return: A dict of flattened tree paths to values
+    :doc-author: Trelent
+    """
     flattened, _ = jax.tree_util.tree_flatten_with_path(xs, is_leaf=is_leaf)
     output = {}
     for key, val in flattened:
@@ -228,6 +297,14 @@ def tree_apply(fns, tree):
 def create_mesh(
         axis_dims: Sequence[int] = (1, -1, 1, 1), axis_names: Sequence[str] = ("dp", "fsdp", "tp", "mp"), backend=''
 ):
+    """
+    The create_mesh function creates a mesh object that is used to shard the data.
+
+    :param axis_dims: Sequence[int]: Specify the shape of the mesh
+    :param axis_names: Sequence[str]: Set the names of the axes
+    :param backend: Specify which device to run the function on
+    :return: A mesh object with the given shape and axis names
+    """
     array_devices = jax.numpy.ones((len(jax.devices() if backend == '' else jax.devices(backend)), 1))
     resh = array_devices.reshape(axis_dims).shape
 

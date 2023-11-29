@@ -150,6 +150,23 @@ def _chunk_attention_bias(
         query_chunk_idx: int,
         key_chunk_idx: int
 ):
+    """
+    The _chunk_attention_bias function is used to compute the attention bias for a single chunk of
+    the query and key tensors. The function takes in the following arguments:
+
+    :param query_chunk_size: int: Determine the size of the query chunk
+    :param key_chunk_size: int: Determine the size of the key_chunk
+    :param bias: chex.Array: Mask out the attention weights
+    :param deterministic: bool: Determine whether to use dropout or not
+    :param attn_dropout: chex.Array: Drop out attention weights
+    :param attention_drop_rate: float: Determine the dropout rate for attention
+    :param causal: bool: Determine if the attention is causal or not
+    :param dtype: chex.ArrayDType: Specify the data type of the array
+    :param query_chunk_idx: int: Select the query chunk
+    :param key_chunk_idx: int: Determine the key_offset
+    :return: A chunk of the attention bias
+    
+    """
     query_offset = query_chunk_idx * query_chunk_size
     key_offset = key_chunk_idx * key_chunk_size
     chunk_bias = jnp.zeros((1, 1, 1, 1), dtype=dtype)

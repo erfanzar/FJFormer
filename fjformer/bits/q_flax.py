@@ -27,7 +27,7 @@ from typing import Optional, Union
 class Freezer(nn.Module, config.Preprocess):
     """Identity function that can freeze its input.
 
-    On default it is an identity function that saves the input in a variable.
+    On default, it is an identity function that saves the input in a variable.
     In 'use_frozen=True' mode, ignores the input and returns the frozen value. It
     is usefult to implement 'constant folding' and put quantized weights and
     scales in the checkpoint for serving.
@@ -101,6 +101,15 @@ class QuantMode(enum.Enum):
 
 
 def mk_freezer(name: str, freeze_collection: str, mode: QuantMode):
+    """
+    The mk_freezer function is a helper function that returns a Freezer object.
+
+    :param name: str: Name the freezer object
+    :param freeze_collection: str: Specify the collection of variables to be frozen
+    :param mode: QuantMode: Determine whether to use the frozen graph or not
+    :return: A freezer object
+    :doc-author: Trelent
+    """
     assert mode in QuantMode
     if mode == QuantMode.DYNAMIC:
         return None
@@ -144,7 +153,34 @@ def config_v4(
         rhs_quant_mode: QuantMode = QuantMode.DYNAMIC,
         freeze_collection: str = 'q',
 ) -> config.DotGeneral:
-    """Version 4 of user-visible AQT config."""
+    """
+    The config_v4 function is a helper function that creates the configuration
+    for quantization. It takes in several arguments and returns a config object.
+    The config object contains three DotGeneralRaw objects, one for each of the forward pass, left hand side gradient,
+    and right hand side gradient. Each DotGeneralRaw object has two Tensor objects: one for the left hand side
+    tensor and another for the right hand side tensor. The Tensor class contains information about how to quantize
+     each of these tensors (e.g., number of bits). The following are some examples on how to use this function:
+
+    :param *: Pass in a dictionary of parameters
+    :param fwd_bits: Union[int,None]: Set the number of bits for the forward pass
+    :param dlhs_bits: Union[int,None]: Set the number of bits for the left hand side of a matrix multiplication
+    :param drhs_bits: Union[int,None]: Determine the number of bits for quantization
+    :param # The dummy static bound flag is for performance benchmarking.
+            use_dummy_static_bound: bool: Set the static bound to 1
+    :param rng_type: str: Set the random number generator type
+    :param # 'custom-1'
+            dlhs_local_q: Union[config.LocalQ,None]: Set the random number generator type
+    :param drhs_local_q: Union[config.LocalQ,None]: Set the quantization parameters for the right hand side of a matrix multiplication
+    :param fwd_accumulator_dtype: ...: Set the accumulator dtype for forward pass
+    :param dlhs_accumulator_dtype: ...: Set the accumulator dtype for the left hand side of a matrix multiplication
+    :param drhs_accumulator_dtype: ...: Set the accumulator dtype for the right hand side of a matrix multiplication
+    :param lhs_quant_mode: QuantMode: Determine whether the left hand side of the matrix multiplication is quantized or not
+    :param rhs_quant_mode: QuantMode: Determine whether the right hand side of the matrix multiplication is quantized or not
+    :param freeze_collection: str: Freeze the quantization parameters
+    :param : Determine which side of the matmul is frozen
+    :return: A config
+    :doc-author: Trelent
+    """
 
     def tensor_config(bits: Union[int, None]) -> config.Tensor:
         assert bits is None or bits >= 2, 'Need at least 2 bits.'

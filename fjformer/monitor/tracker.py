@@ -17,6 +17,19 @@ def is_notebook():
 
 # Edited version of Jax-SMI from https://github.com/ayaka14732/jax-smi/
 def run(note_book=None, interval: float = 1, dir_prefix: str = '/dev/shm', dpr=True):
+    """
+    The run function is a simple wrapper around the go tool pprof command.
+    It runs the command every interval seconds and prints out its output to stdout.
+    If you are running this in a Jupyter notebook, it will print to an IPython display object instead of stdout.
+
+
+    :param note_book: Determine whether the program is running in a notebook or not
+    :param interval: float: Specify the interval between each refresh
+    :param dir_prefix: str: Specify the directory where the memory
+    :param dpr: Determine whether to display the output in a notebook or not
+    :return: The output of the pprof command
+    :doc-author: Trelent
+    """
     if note_book is None:
         note_book = is_notebook()
     std = curses.initscr() if not note_book else None
@@ -46,6 +59,16 @@ def run(note_book=None, interval: float = 1, dir_prefix: str = '/dev/shm', dpr=T
 
 
 def get_mem(dir_prefix: str = '/dev/shm') -> str:
+    """
+    The get_mem function is a wrapper around the go tool pprof command.
+    It takes in an optional argument, dir_prefix, which defaults to /dev/shm.
+    The function then runs the go tool pprof command with arguments -tags and {dir_prefix}/memory.prof.
+    The output of this command is captured and returned as a string.
+
+    :param dir_prefix: str: Specify the directory prefix for
+    :return: A string that contains the memory profile
+    :doc-author: Trelent
+    """
     return subprocess.run(
         args=['go', 'tool', 'pprof', '-tags', f'{dir_prefix}/memory.prof'],
         stdout=subprocess.PIPE,
@@ -54,7 +77,29 @@ def get_mem(dir_prefix: str = '/dev/shm') -> str:
 
 
 def initialise_tracking(interval: float = 1., dir_prefix: str = '/dev/shm') -> None:
+    """
+    The initialise_tracking function starts a daemon thread that periodically saves the memory profile to disk.
+    The outer function starts the daemon thread and returns a context manager that stops it when
+    the context exits.  The inner function uses posix.rename() to atomically replace an existing file,
+    so we can be sure that any given memory profile was taken at some point during the lifetime of its
+    context.
+
+    :param interval: float: Set the time interval between each memory profile
+    :param dir_prefix: str: Specify the directory where the memory profile will be saved
+    :return: A thread object
+    :doc-author: Trelent
+    """
     def inner():
+        """
+        The inner function is a daemon thread that periodically saves the memory profile to disk.
+        The outer function starts the daemon thread and returns a context manager that stops it when
+        the context exits.  The inner function uses posix.rename() to atomically replace an existing file,
+        so we can be sure that any given memory profile was taken at some point during the lifetime of its
+        context.
+
+        :return: A thread object
+        :doc-author: Trelent
+        """
         while True:
             jax.profiler.save_device_memory_profile(f'{dir_prefix}/memory.prof.new')
             posix.rename(f'{dir_prefix}/memory.prof.new', f'{dir_prefix}/memory.prof')
@@ -65,6 +110,18 @@ def initialise_tracking(interval: float = 1., dir_prefix: str = '/dev/shm') -> N
 
 
 def threaded_log(interval: float = 1., dir_prefix: str = '/dev/shm', save_mem_json: bool = False) -> threading.Thread:
+    """
+    The threaded_log function is a wrapper around the get_mem function.
+    It allows you to monitor your memory usage in real time, and optionally save it to a JSON file.
+    The threaded_log function returns a threading.Thread object that can be started with .start() and stopped with .join().
+
+
+    :param interval: float: Set the time interval between each memory log
+    :param dir_prefix: str: Specify the directory to save the memory
+    :param save_mem_json: bool: Save the memory information to a json file
+    :return: A threading
+    :doc-author: Trelent
+    """
     note_book = is_notebook()
 
     def show_():

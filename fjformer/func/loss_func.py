@@ -11,16 +11,41 @@ from typing import Mapping, Optional, Tuple, Union
 
 # Mean Squared Error
 def mse(labels, predictions):
+    """
+    The mse function computes the mean squared error between two arrays.
+
+    :param labels: Pass in the actual values of the data, and predictions is used to pass in our predicted values
+    :param predictions: Store the predictions made by the model
+    :return: The mean squared error (mse) between the labels and predictions
+    :doc-author: Trelent
+    """
     return np.mean((labels - predictions) ** 2)
 
 
 # Mean Absolute Error
 def mae(labels, predictions):
+    """
+    The mae function calculates the mean absolute error between two lists of numbers.
+
+    :param labels: Store the actual values of the data
+    :param predictions: Store the predictions from the model
+    :return: The mean absolute error between the labels and predictions
+    :doc-author: Trelent
+    """
     return np.mean(np.abs(labels - predictions))
 
 
 # Cross Entropy
 def cross_entropy(labels, predictions, ignore_index=None):
+    """
+    The cross_entropy function computes the cross entropy loss between a set of labels and predictions.
+
+    :param labels: Calculate the cross entropy loss
+    :param predictions: Calculate the log_softmax
+    :param ignore_index: Mask out the loss from a specific class
+    :return: The average cross entropy over the batch
+    :doc-author: Trelent
+    """
     labels = jax.nn.one_hot(labels, predictions.shape[-1])
     if ignore_index is not None:
         mask = np.ones_like(labels)
@@ -33,27 +58,76 @@ def cross_entropy(labels, predictions, ignore_index=None):
 
 # Binary Cross Entropy
 def binary_cross_entropy(labels, predictions):
+    """
+    The binary_cross_entropy function computes the binary cross entropy loss between
+    the labels and predictions. The function takes two arguments:
+        1) labels: a tensor of shape (batch_size, num_classes) containing the ground truth class indices for each example in the batch.
+        2) predictions: a tensor of shape (batch_size, num_classes) containing model output probabilities for each example in the batch.
+
+    :param labels: Specify the true class of each example
+    :param predictions: Calculate the loss
+    :return: The cross-entropy loss for binary classification
+    :doc-author: Trelent
+    """
     labels = jax.nn.one_hot(labels, predictions.shape[-1])
     return -np.mean(labels * np.log(predictions + 1e-8) + (1 - labels) * np.log(1 - predictions + 1e-8))
 
 
 # Negative Log Likelihood
 def nll(labels, predictions):
+    """
+    The nll function computes the negative log likelihood of a set of predictions.
+
+    :param labels: Calculate the loss
+    :param predictions: Calculate the loss
+    :return: The negative log likelihood of the predictions
+    :doc-author: Trelent
+    """
     return -np.sum(labels * np.log(predictions + 1e-8))
 
 
 # L2 Loss
 def l2(labels, predictions):
+    """
+    The l2 function computes the sum of squared differences between labels and predictions.
+
+    :param labels: Calculate the difference between the labels and predictions
+    :param predictions: Calculate the difference between the labels and predictions
+    :return: The sum of the squared differences between labels and predictions
+    :doc-author: Trelent
+    """
     return np.sum((labels - predictions) ** 2)
 
 
 # Hinge Loss
 def hinge(labels, predictions):
+    """
+    The hinge function is a loss function used for training classifiers.
+    The hinge loss is used for &quot;maximum-margin&quot; classification, most notably
+    for support vector machines (SVMs).
+    For an intended output t = + 1 or - 1 and a classifier score y, the hinge loss of the prediction y is defined as:
+
+    :param labels: Calculate the hinge loss
+    :param predictions: Calculate the hinge loss
+    :return: The average loss over the training set
+    :doc-author: Trelent
+    """
     return np.mean(np.maximum(0, 1 - labels * predictions))
 
 
 # Log-Cosh Loss
 def log_cosh(labels, predictions):
+    """
+    The log_cosh function is a loss function that takes in two arguments: labels and predictions.
+    The log_cosh function returns the mean of the logarithm of the hyperbolic cosine of (predictions - labels).
+    This loss function is used to measure how well our model performs on data it has not seen before.
+
+    :param labels: Pass the actual values of the data
+    :param predictions: Pass the predictions of your model
+    :return: The logarithm of the hyperbolic cosine of the prediction error
+    :doc-author: Trelent
+    """
+
     def cosh(x):
         return (np.exp(x) + np.exp(-x)) / 2
 
@@ -61,17 +135,47 @@ def log_cosh(labels, predictions):
 
 
 def binary_cross_entropy_onehot(labels, predictions):
+    """
+    The binary_cross_entropy_onehot function takes in two arguments:
+        labels: a 1D array of integers, where each integer is the index of the correct class for that example.
+        predictions: a 2D array of floats, where each row represents an example and each column represents a class.
+
+    :param labels: Determine the correct class of each image
+    :param predictions: Calculate the loss
+    :return: The binary cross entropy loss between the labels and predictions
+    :doc-author: Trelent
+    """
     labels = jax.nn.one_hot(labels, predictions.shape[-1])
     return -np.mean(labels * np.log(predictions + 1e-8) + (1 - labels) * np.log(1 - predictions + 1e-8))
 
 
 def cross_entropy_onehot(labels, predictions):
+    """
+    The cross_entropy_onehot function takes two arguments:
+    labels - a 1D array of integers in the range [0, num_classes)
+    predictions - a 2D array of floats with shape (num_examples, num_classes)
+    The function returns the cross entropy loss between labels and predictions. The loss is averaged over all examples.
+
+    :param labels: Compute the one-hot encoding of the labels
+    :param predictions: Calculate the log_softmax
+    :return: The cross entropy loss
+    :doc-author: Trelent
+    """
     labels = jax.nn.one_hot(labels, predictions.shape[-1])
     log_softmax = predictions - logsumexp(predictions, axis=-1, keepdims=True)
     return -np.sum(labels * log_softmax) / labels.shape[0]
 
 
 def mse_loss(val, target, valid=None):
+    """
+    The mse_loss function computes the mean squared error between two arrays.
+
+    :param val: Store the output of the model
+    :param target: Calculate the loss
+    :param valid: Mask out the loss of certain pixels
+    :return: The mean square error of the input and target
+    :doc-author: Trelent
+    """
     if valid is None:
         valid = jnp.ones((*target.shape[:2], 1))
     valid = valid.astype(jnp.float32)
