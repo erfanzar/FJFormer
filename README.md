@@ -22,7 +22,9 @@ fine-tuning an existing one, or just exploring the capabilities of these powerfu
 - Partitioning Utils
 
 and A lot of these features are fully documented so i gusse FJFormer has something
-to offer and it's not just a Computation BackEnd for [EasyDel](https://github.com/erfanzar/EasyDel).
+to offer, and it's not just a Computation BackEnd for [EasyDel](https://github.com/erfanzar/EasyDel).
+
+checkout for documentations [here](https://erfanzar.github.io/FJFormer/).
 
 ## Contributing
 
@@ -31,3 +33,4 @@ just want to help out with development, please check out our GitHub repository a
 open an issue.
 
 Thank you for using FJFormer, and happy training!
+
