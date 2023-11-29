@@ -28,7 +28,7 @@ def run(note_book=None, interval: float = 1, dir_prefix: str = '/dev/shm', dpr=T
     :param dir_prefix: str: Specify the directory where the memory
     :param dpr: Determine whether to display the output in a notebook or not
     :return: The output of the pprof command
-    :doc-author: Trelent
+    
     """
     if note_book is None:
         note_book = is_notebook()
@@ -67,7 +67,7 @@ def get_mem(dir_prefix: str = '/dev/shm') -> str:
 
     :param dir_prefix: str: Specify the directory prefix for
     :return: A string that contains the memory profile
-    :doc-author: Trelent
+    
     """
     return subprocess.run(
         args=['go', 'tool', 'pprof', '-tags', f'{dir_prefix}/memory.prof'],
@@ -87,7 +87,7 @@ def initialise_tracking(interval: float = 1., dir_prefix: str = '/dev/shm') -> N
     :param interval: float: Set the time interval between each memory profile
     :param dir_prefix: str: Specify the directory where the memory profile will be saved
     :return: A thread object
-    :doc-author: Trelent
+    
     """
     def inner():
         """
@@ -98,7 +98,7 @@ def initialise_tracking(interval: float = 1., dir_prefix: str = '/dev/shm') -> N
         context.
 
         :return: A thread object
-        :doc-author: Trelent
+        
         """
         while True:
             jax.profiler.save_device_memory_profile(f'{dir_prefix}/memory.prof.new')
@@ -120,7 +120,7 @@ def threaded_log(interval: float = 1., dir_prefix: str = '/dev/shm', save_mem_js
     :param dir_prefix: str: Specify the directory to save the memory
     :param save_mem_json: bool: Save the memory information to a json file
     :return: A threading
-    :doc-author: Trelent
+    
     """
     note_book = is_notebook()
 

@@ -8,7 +8,7 @@ def is_torch_available():
     The is_torch_available function checks if PyTorch is installed.
 
     :return: True if the torch module is installed
-    :doc-author: Trelent
+    
     """
     return True if importlib.util.find_spec('torch') is not None else False
 
@@ -21,7 +21,7 @@ def count_num_params(_p):
 
     :param _p: Count the number of parameters in a model
     :return: The number of parameters in the model
-    :doc-author: Trelent
+    
     """
     return sum(i.size for i in jax.tree_util.tree_flatten(flax.core.unfreeze(_p))[0])
 
@@ -34,7 +34,7 @@ def count_params(_p):
 
     :param _p: Count the number of parameters in a model
     :return: The number of parameters in a model
-    :doc-author: Trelent
+    
     """
     print('\033[1;31mModel Contain : ', count_num_params(_p) / 1e9, ' Billion Parameters')
 
@@ -50,7 +50,7 @@ class JaxRNG(object):
             :param cls: Pass the class of the object that is being created
             :param seed: Initialize the random number generator
             :return: An instance of the class
-            :doc-author: Trelent
+            
             """
 
         return cls(jax.random.PRNGKey(seed))
@@ -64,7 +64,7 @@ class JaxRNG(object):
         :param self: Represent the instance of the class
         :param rng: Generate random numbers
         :return: The object itself
-        :doc-author: Trelent
+        
         """
         self.rng = rng
 
@@ -75,7 +75,7 @@ class JaxRNG(object):
         :param self: Refer to the object itself
         :param keys: Split the random number generator into multiple parts
         :return: A random number generator
-        :doc-author: Trelent
+        
         """
         if keys is None:
             self.rng, split_rng = jax.random.split(self.rng)
@@ -96,7 +96,7 @@ def init_rng(seed):
 
     :param seed: Initialize the random number generator
     :return: A random number generator
-    :doc-author: Trelent
+    
     """
     global jax_utils_rng
     jax_utils_rng = JaxRNG.from_seed(seed)
@@ -112,7 +112,7 @@ def next_rng(*args, **kwargs):
     :param *args: Pass a variable number of arguments to the function
     :param **kwargs: Pass in a dictionary of parameters
     :return: A random number generator
-    :doc-author: Trelent
+    
     """
     global jax_utils_rng
     return jax_utils_rng(*args, **kwargs)
@@ -128,7 +128,7 @@ class GenerateRNG:
         :param self: Represent the instance of the class
         :param seed: int: Set the seed for the random number generator
         :return: The object itself
-        :doc-author: Trelent
+        
         """
         self.seed = seed
         self.rng = jax.random.PRNGKey(seed)
@@ -143,7 +143,7 @@ class GenerateRNG:
 
         :param self: Represent the instance of the class
         :return: A random number
-        :doc-author: Trelent
+        
         """
         while True:
             self.rng, ke = jax.random.split(self.rng, 2)

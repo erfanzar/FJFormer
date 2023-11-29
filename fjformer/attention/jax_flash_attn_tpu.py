@@ -1544,7 +1544,7 @@ def mha_reference_no_custom_vjp(
     :param save_residuals: bool: Save the residuals of the mha_reference_no_custom_vjp function
     :param : Calculate the attention weights
     :return: The same thing as the
-    :doc-author: Trelent
+    
     """
     logits = jnp.einsum("bhqc,bhkc->bhqk", q, k)
     if ab is not None:
@@ -1609,7 +1609,7 @@ def mha_reference(
     :param sm_scale: Scale the softmax function
     :param : Save the residuals
     :return: A tuple of the following:
-    :doc-author: Trelent
+    
     """
     return _mha_reference(
         q,

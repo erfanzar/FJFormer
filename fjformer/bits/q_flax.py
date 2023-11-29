@@ -108,7 +108,7 @@ def mk_freezer(name: str, freeze_collection: str, mode: QuantMode):
     :param freeze_collection: str: Specify the collection of variables to be frozen
     :param mode: QuantMode: Determine whether to use the frozen graph or not
     :return: A freezer object
-    :doc-author: Trelent
+    
     """
     assert mode in QuantMode
     if mode == QuantMode.DYNAMIC:
@@ -179,7 +179,7 @@ def config_v4(
     :param freeze_collection: str: Freeze the quantization parameters
     :param : Determine which side of the matmul is frozen
     :return: A config
-    :doc-author: Trelent
+    
     """
 
     def tensor_config(bits: Union[int, None]) -> config.Tensor:

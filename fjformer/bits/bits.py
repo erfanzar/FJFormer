@@ -105,7 +105,7 @@ def matmul_true_int8(lhs, rhs):
     :param lhs: Specify the left hand side of the matrix multiplication
     :param rhs: Specify the right-hand side of the matrix multiplication
     :return: A matrix with elements of type int32
-    :doc-author: Trelent
+    
     """
     assert lhs.dtype == jnp.int8
     assert rhs.dtype == jnp.int8
@@ -122,7 +122,7 @@ def quant_int8(x):
 
     :param x: Pass the input to the function
     :return: The rounded and clipped values
-    :doc-author: Trelent
+    
     """
     return jnp.clip(jnp.round(x), -127, 127).astype(jnp.int8)
 
@@ -134,7 +134,7 @@ def q_matmul_int8(a, w):
     :param a: Calibrate the input data
     :param w: Store the weights of the neural network
     :return: A float32 array, which is the result of an int8 matrix multiplication
-    :doc-author: Trelent
+    
     """
 
     # Calibration. Calibration function is also customizable and injectable.

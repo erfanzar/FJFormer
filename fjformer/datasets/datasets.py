@@ -17,6 +17,7 @@ def get_dataloader(dataset_or_huggingface_dataset_hub_id: Any, batch_size: int, 
                    *, prefetch_factor: Optional[int] = None,
                    persistent_workers: bool = False,
                    pin_memory_device: str = ""):
+
     if collate_fn is None:
         def collate_fn(batch):
             rs = {}

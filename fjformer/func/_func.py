@@ -16,7 +16,7 @@ def average_metrics(metrics):
 
     :param metrics: Store the metrics for each batch
     :return: The mean of the metrics across all runs
-    :doc-author: Trelent
+    
     """
     return jax.tree_map(
         lambda *args: jnp.mean(jnp.stack(args)),
@@ -36,7 +36,7 @@ def transpose(array: chex.Array, dim0: int, dim1: int):
     :param dim0: int: Specify the first dimension to be transposed
     :param dim1: int: Specify the dimension of the array
     :return: A new array with the same data, but with axes permuted
-    :doc-author: Trelent
+    
     """
     dim0 = dim0 if dim0 > 0 else array.ndim - dim0
     dim1 = dim1 if dim1 > 0 else array.ndim - dim1
@@ -52,6 +52,6 @@ def fused_softmax(x: chex.Array, axis: int = -1):
     :param x: chex.Array: Specify the input to the function
     :param axis: int: Specify the axis along which to apply the softmax function
     :return: The same result as the softmax function
-    :doc-author: Trelent
+    
     """
     return jnp.exp(jax.nn.log_softmax(x, axis=axis))

@@ -84,7 +84,7 @@ class StreamingCheckpointer(object):
         :param obj: Pass the object that is to be pickled
         :param filename: Specify the name of the file to be saved
         :return: A pickle object
-        :doc-author: Trelent
+        
         """
         import pickle
         def save_pickle(obj, path):
@@ -113,7 +113,7 @@ class StreamingCheckpointer(object):
         :param dataset: Save the dataset to disk
         :param milestone: Determine whether the checkpoint is a milestone or not
         :return: Nothing
-        :doc-author: Trelent
+        
         """
         step = int(jax.device_get(train_state.step))
         if self.config.save_optimizer_state:
@@ -150,7 +150,7 @@ class StreamingCheckpointer(object):
         :param shard_fns: Specify a function that will be applied to each tensor in the checkpoint
         :param remove_dict_prefix: Remove the prefix of a dictionary
         :return: A dictionary of the form {key: value}, where key is a tuple and value is a tensor
-        :doc-author: Trelent
+        
         """
         if shard_fns is not None:
             shard_fns = flatten_dict(
@@ -219,7 +219,7 @@ class StreamingCheckpointer(object):
         :param trainstate_shard_fns: Specify the sharding function
         :param disallow_trainstate: Prevent loading the entire trainstate
         :return: A tuple of two objects, the train_state and restored_params
-        :doc-author: Trelent
+        
         """
         if trainstate_target is not None:
             params_target = trainstate_target.params['params']

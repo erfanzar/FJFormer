@@ -131,7 +131,7 @@ def set_accumulator_dtype(
     :param drhs_dtype: Optional[DType]: Set the data type for the
     :param : Set the accumulator dtype for the forward pass,
     :return: A tuple of three elements,
-    :doc-author: Trelent
+    
     """
     cfg.fwd.dg_accumulator_dtype = fwd_dtype
     cfg.dlhs.dg_accumulator_dtype = dlhs_dtype
@@ -180,7 +180,7 @@ def set_static_bound(cfg: DotGeneral, bound: float = 1.0):
     :param cfg: DotGeneral: Set the static bound for all the dot-general's sub-functions
     :param bound: float: Set the bound of the calibration
     :return: The cfg which is the dot general object
-    :doc-author: Trelent
+    
     """
     cfg.fwd.lhs.calibration = calibration.ConstantCalibration(bound)
     cfg.fwd.rhs.calibration = calibration.ConstantCalibration(bound)
@@ -322,7 +322,7 @@ def fully_quantized(
     :param drhs_local_q: Optional[LocalQ]: Specify the quantization parameters for the right hand side of the matrix multiplication
     :param : Set the number of bits for forward and backward pass
     :return: A dotgeneral object
-    :doc-author: Trelent
+    
     """
     cfg = dot_general_make(
         lhs_bits=fwd_bits,

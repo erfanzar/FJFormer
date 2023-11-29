@@ -17,7 +17,7 @@ def mse(labels, predictions):
     :param labels: Pass in the actual values of the data, and predictions is used to pass in our predicted values
     :param predictions: Store the predictions made by the model
     :return: The mean squared error (mse) between the labels and predictions
-    :doc-author: Trelent
+    
     """
     return np.mean((labels - predictions) ** 2)
 
@@ -30,7 +30,7 @@ def mae(labels, predictions):
     :param labels: Store the actual values of the data
     :param predictions: Store the predictions from the model
     :return: The mean absolute error between the labels and predictions
-    :doc-author: Trelent
+    
     """
     return np.mean(np.abs(labels - predictions))
 
@@ -44,7 +44,7 @@ def cross_entropy(labels, predictions, ignore_index=None):
     :param predictions: Calculate the log_softmax
     :param ignore_index: Mask out the loss from a specific class
     :return: The average cross entropy over the batch
-    :doc-author: Trelent
+    
     """
     labels = jax.nn.one_hot(labels, predictions.shape[-1])
     if ignore_index is not None:
@@ -67,7 +67,7 @@ def binary_cross_entropy(labels, predictions):
     :param labels: Specify the true class of each example
     :param predictions: Calculate the loss
     :return: The cross-entropy loss for binary classification
-    :doc-author: Trelent
+    
     """
     labels = jax.nn.one_hot(labels, predictions.shape[-1])
     return -np.mean(labels * np.log(predictions + 1e-8) + (1 - labels) * np.log(1 - predictions + 1e-8))
@@ -81,7 +81,7 @@ def nll(labels, predictions):
     :param labels: Calculate the loss
     :param predictions: Calculate the loss
     :return: The negative log likelihood of the predictions
-    :doc-author: Trelent
+    
     """
     return -np.sum(labels * np.log(predictions + 1e-8))
 
@@ -94,7 +94,7 @@ def l2(labels, predictions):
     :param labels: Calculate the difference between the labels and predictions
     :param predictions: Calculate the difference between the labels and predictions
     :return: The sum of the squared differences between labels and predictions
-    :doc-author: Trelent
+    
     """
     return np.sum((labels - predictions) ** 2)
 
@@ -110,7 +110,7 @@ def hinge(labels, predictions):
     :param labels: Calculate the hinge loss
     :param predictions: Calculate the hinge loss
     :return: The average loss over the training set
-    :doc-author: Trelent
+    
     """
     return np.mean(np.maximum(0, 1 - labels * predictions))
 
@@ -125,7 +125,7 @@ def log_cosh(labels, predictions):
     :param labels: Pass the actual values of the data
     :param predictions: Pass the predictions of your model
     :return: The logarithm of the hyperbolic cosine of the prediction error
-    :doc-author: Trelent
+    
     """
 
     def cosh(x):
@@ -143,7 +143,7 @@ def binary_cross_entropy_onehot(labels, predictions):
     :param labels: Determine the correct class of each image
     :param predictions: Calculate the loss
     :return: The binary cross entropy loss between the labels and predictions
-    :doc-author: Trelent
+    
     """
     labels = jax.nn.one_hot(labels, predictions.shape[-1])
     return -np.mean(labels * np.log(predictions + 1e-8) + (1 - labels) * np.log(1 - predictions + 1e-8))
@@ -159,7 +159,7 @@ def cross_entropy_onehot(labels, predictions):
     :param labels: Compute the one-hot encoding of the labels
     :param predictions: Calculate the log_softmax
     :return: The cross entropy loss
-    :doc-author: Trelent
+    
     """
     labels = jax.nn.one_hot(labels, predictions.shape[-1])
     log_softmax = predictions - logsumexp(predictions, axis=-1, keepdims=True)
@@ -174,7 +174,7 @@ def mse_loss(val, target, valid=None):
     :param target: Calculate the loss
     :param valid: Mask out the loss of certain pixels
     :return: The mean square error of the input and target
-    :doc-author: Trelent
+    
     """
     if valid is None:
         valid = jnp.ones((*target.shape[:2], 1))
