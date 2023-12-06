@@ -295,19 +295,21 @@ def tree_apply(fns, tree):
 
 
 def create_mesh(
-        axis_dims: Sequence[int] = (1, -1, 1), axis_names: Sequence[str] = ("dp", "fsdp", "mp"), backend=''
+        axis_dims: Sequence[int] = (1, -1, 1, 1), axis_names: Sequence[str] = ("dp", "fsdp", "mp", "sp"), backend=""
 ):
     """
-    The create_mesh function creates a mesh object that is used to shard the data.
+    The create_mesh function creates a mesh object that can be used to shard arrays.
 
-    :param axis_dims: Sequence[int]: Specify the shape of the mesh
-    :param axis_names: Sequence[str]: Set the names of the axes
-    :param backend: Specify which device to run the function on
-    :return: A mesh object with the given shape and axis names
+    :param axis_dims: Sequence[int]: Specify the dimensions of the mesh
+    :param axis_names: Sequence[str]: Name the axes of the mesh
+    :param backend: Specify the backend to use
+    :return: A mesh object
+
     """
-    array_devices = jax.numpy.ones((len(jax.devices() if backend == '' else jax.devices(backend)), 1))
+    array_devices = jax.numpy.ones((len(jax.devices() if backend == "" else jax.devices(backend)), 1))
     resh = array_devices.reshape(axis_dims).shape
 
     return jax.sharding.Mesh(
         create_device_mesh(resh), axis_names
     )
+
