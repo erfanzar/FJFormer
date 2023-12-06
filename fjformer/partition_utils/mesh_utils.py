@@ -295,7 +295,7 @@ def tree_apply(fns, tree):
 
 
 def create_mesh(
-        axis_dims: Sequence[int] = (1, -1, 1, 1), axis_names: Sequence[str] = ("dp", "fsdp", "tp", "mp"), backend=''
+        axis_dims: Sequence[int] = (1, -1, 1), axis_names: Sequence[str] = ("dp", "fsdp", "mp"), backend=''
 ):
     """
     The create_mesh function creates a mesh object that is used to shard the data.
