@@ -99,7 +99,7 @@ open an issue.
 
 Thank you for using fjformer, and happy training!
 """
-from fjformer.load import (
+from .load import (
     load_and_convert_checkpoint_to_torch,
     float_tensor_to_dtype,
     read_ckpt,
@@ -108,7 +108,7 @@ from fjformer.load import (
     get_float_dtype_by_name
 )
 
-from fjformer.partition_utils import (
+from .partition_utils import (
     get_jax_mesh,
     names_in_current_mesh,
     get_names_from_partition_spec,
@@ -125,7 +125,7 @@ from fjformer.partition_utils import (
     create_mesh
 )
 
-from fjformer.monitor import (
+from .monitor import (
     run,
     get_mem,
     is_notebook,
@@ -133,7 +133,7 @@ from fjformer.monitor import (
     initialise_tracking
 )
 
-from fjformer.datasets import (
+from .datasets import (
     get_dataloader
 )
 
