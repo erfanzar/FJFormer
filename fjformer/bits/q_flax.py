@@ -13,49 +13,155 @@
 # limitations under the License.
 """Flax layer for AQT injection."""
 
+import copy
 import enum
 import functools
+from typing import Iterable
+from typing import Optional
 from . import q_dot_general
 from . import calibration
 from . import config
 from . import int_numerics
+from . import no_numerics
+import flax
 import flax.linen as nn
+import jax
+from jax._src.numpy import lax_numpy
 import jax.numpy as jnp
-from typing import Optional, Union
 
 
-class Freezer(nn.Module, config.Preprocess):
+class QuantMode(enum.Enum):
+    TRAIN = 1
+    CONVERT = 2
+    SERVE = 3
+
+
+class Freezer(nn.Module):
     """Identity function that can freeze its input.
 
-    On default, it is an identity function that saves the input in a variable.
+    On default it is an identity function that saves the input in a variable.
     In 'use_frozen=True' mode, ignores the input and returns the frozen value. It
     is usefult to implement 'constant folding' and put quantized weights and
     scales in the checkpoint for serving.
     """
 
-    # If you want use 'params' make sure that there is another mechanism to hide
-    # these variables from the optimizer.
-    var_collection: str = 'q'
-
-    # If you set it to True, instead of returning the current input
-    # will return last input it got.
-    use_frozen: bool = False
+    quant_collection: str
+    quant_mode: QuantMode
+    q_shape: Iterable[int]
+    q_init: nn.initializers.Initializer
+    s_shape: Iterable[int]
+    s_init: nn.initializers.Initializer
 
     @nn.compact
-    def __call__(self, inputs):
-        # return inputs or the frozen value
-        collection = self.var_collection
-        frozen = self.variable(collection, 'frozen', jnp.zeros, inputs.shape)
-        if not self.use_frozen:
-            frozen.value = inputs
-        return frozen.value
+    def __call__(
+            self, inputs: Optional[q_dot_general.QTensor]
+    ) -> Optional[q_dot_general.QTensor]:
+        collection = self.quant_collection
+        if inputs is None:  # getter mode
+            if self.quant_mode == QuantMode.TRAIN:
+                return inputs
+            elif self.quant_mode == QuantMode.CONVERT:
+                return inputs
+            elif self.quant_mode == QuantMode.SERVE:
+                # We could have created one self.variable whose value is a QTensor,
+                # but this would complicate the init function, which could potentially
+                # be used by adding metadata such as sharding axises, etc.
+                qvalue = self.variable(collection, 'value', self.q_init, self.q_shape)
+                scale = self.variable(collection, 'scale', self.s_init, self.s_shape)
+                return q_dot_general.QTensor(qvalue.value, scale.value)
+            else:
+                assert False, 'Unknown quant mode.'
+        else:  # setter mode
+            if self.quant_mode == QuantMode.TRAIN:
+                pass
+            elif self.quant_mode == QuantMode.CONVERT:
+                qvalue = self.variable(collection, 'value', self.q_init, self.q_shape)
+                scale = self.variable(collection, 'scale', self.s_init, self.s_shape)
+                qvalue.value = inputs.qvalue
+                scale.value = inputs.qvalue_scale_t
+            elif self.quant_mode == QuantMode.SERVE:
+                # TODO(lew): Optionally compare stored and served value.
+                pass
+            else:
+                assert False, 'Unknown quant mode.'
+            return None
 
 
 class QDotGeneral(nn.Module):
     """A layer that can be injected into flax.nn.Dense, etc."""
 
-    cfg: Optional[Union[config.DotGeneral, None]] = None
-    prng_name: Optional[Union[str, None]] = 'params'
+    cfg: Optional[config.DotGeneral] = None
+    prng_name: Optional[str] = 'params'
+
+    # TODO(lew): split out separate class for each side.
+    lhs_quant_mode: QuantMode = QuantMode.TRAIN
+    lhs_init: nn.initializers.Initializer = jnp.zeros
+    lhs_scale_init: nn.initializers.Initializer = jnp.zeros
+    lhs_var_name: str = 'qlhs'
+
+    rhs_quant_mode: QuantMode = QuantMode.TRAIN
+    rhs_init: nn.initializers.Initializer = jnp.zeros
+    rhs_scale_init: nn.initializers.Initializer = jnp.zeros
+    rhs_var_name: str = 'qrhs'
+
+    # If you want use 'params' make sure that there is another mechanism to hide
+    # these variables from the optimizer.
+    quant_collection: str = 'aqt'
+
+    def make_aqt_dg(
+            self,
+            lhs_shape,
+            rhs_shape,
+            dimension_numbers: tuple[Iterable[int], Iterable[int]],
+    ):
+        lhs_scale_shape = list(lhs_shape)
+        rhs_scale_shape = list(rhs_shape)
+        (contr, _) = dimension_numbers
+        for li, ri in zip(*contr):
+            lhs_scale_shape[li] = 1
+            rhs_scale_shape[ri] = 1
+        lhs_scale = q_dot_general._lhs_scale_transpose(  # pylint: disable=protected-access
+            jnp.zeros(lhs_scale_shape), dimension_numbers, lhs_shape, rhs_shape
+        )
+        assert lhs_scale is not None
+        lhs_scale_shape = lhs_scale.shape
+        rhs_scale = q_dot_general._rhs_scale_transpose(  # pylint: disable=protected-access
+            jnp.zeros(rhs_scale_shape), dimension_numbers, lhs_shape, rhs_shape
+        )
+        assert rhs_scale is not None
+        rhs_scale_shape = rhs_scale.shape
+
+        cfg = copy.deepcopy(self.cfg)
+        if cfg is not None:
+            rhs_qm = self.rhs_quant_mode
+            lhs_qm = self.lhs_quant_mode
+
+            msg = 'The only function that is setting preprocess can be QQuantized.'
+            assert cfg.fwd.rhs.preprocess is None, msg
+            assert cfg.fwd.lhs.preprocess is None, msg
+            cfg.fwd.lhs.preprocess = Freezer(
+                name=self.lhs_var_name,
+                quant_mode=lhs_qm,
+                q_shape=lhs_shape,
+                q_init=self.lhs_init,
+                s_shape=lhs_scale_shape,
+                s_init=self.lhs_scale_init,
+                quant_collection=self.quant_collection,
+            )
+            cfg.fwd.rhs.preprocess = Freezer(
+                name=self.rhs_var_name,
+                quant_mode=rhs_qm,
+                q_shape=rhs_shape,
+                q_init=self.rhs_init,
+                s_shape=rhs_scale_shape,
+                s_init=self.rhs_scale_init,
+                quant_collection=self.quant_collection,
+            )
+        key = self.make_rng(self.prng_name) if self.prng_name is not None else None
+        context = q_dot_general.Context(key=key, train_step=None)
+        aqt_dg = q_dot_general.make_dot_general(cfg)
+        aqt_dg = functools.partial(aqt_dg, context=context)
+        return aqt_dg
 
     @nn.compact
     def __call__(
@@ -66,11 +172,8 @@ class QDotGeneral(nn.Module):
             precision,
             preferred_element_type=None,
     ):
-        key = self.make_rng(self.prng_name) if self.prng_name is not None else None
-        context = q_dot_general.Context(key=key, train_step=None)
-        q_dg = q_dot_general.make_dot_general(self.cfg)
-        q_dg = functools.partial(q_dg, context=context)
-        return q_dg(
+        aqt_dg = self.make_aqt_dg(lhs.shape, rhs.shape, dimension_numbers)
+        return aqt_dg(
             lhs,
             rhs,
             dimension_numbers,
@@ -79,113 +182,131 @@ class QDotGeneral(nn.Module):
         )
 
 
-class QEinsum(nn.Module):
+class QEinsum(flax.struct.PyTreeNode):
     """Quantized Einsum class for model injection."""
 
-    cfg: Optional[Union[config.DotGeneral, None]] = None
-    prng_name: Optional[Union[str, None]] = 'params'
+    cfg: Optional[config.DotGeneral] = None
+    prng_name: Optional[str] = 'params'
 
-    @nn.compact
-    def __call__(self, eqn, lhs, rhs):
-        key = self.make_rng(self.prng_name) if self.prng_name is not None else None
-        context = q_dot_general.Context(key=key, train_step=None)
-        q_dg = q_dot_general.make_dot_general(self.cfg)
-        q_dg = functools.partial(q_dg, context=context)
-        return jnp.einsum(eqn, lhs, rhs, _dot_general=q_dg)
+    # TODO(lew): split out separate class for each side.
+    lhs_quant_mode: QuantMode = QuantMode.TRAIN
+    lhs_init: nn.initializers.Initializer = jnp.zeros
+    lhs_scale_init: nn.initializers.Initializer = jnp.zeros
+    lhs_var_name: str = 'qlhs'
 
+    rhs_quant_mode: QuantMode = QuantMode.TRAIN
+    rhs_init: nn.initializers.Initializer = jnp.zeros
+    rhs_scale_init: nn.initializers.Initializer = jnp.zeros
+    rhs_var_name: str = 'qrhs'
 
-class QuantMode(enum.Enum):
-    DYNAMIC = 1
-    FREEZE = 2
-    SERVE_FROZEN = 3
+    # If you want use 'params' make sure that there is another mechanism to hide
+    # these variables from the optimizer.
+    quant_collection: str = 'aqt'
 
+    def __call__(self, eqn, lhs_g, rhs_g):
+        def einsum(lhs_l, rhs_l, dg=jax.lax.dot_general):
+            operands, contractions = lax_numpy._default_poly_einsum_handler(  # pylint: disable=protected-access
+                eqn, lhs_l, rhs_l, einsum_call=True, use_blas=True, optimize='optimal'
+            )
+            contractions = tuple((a, frozenset(b), c) for a, b, c, *_ in contractions)
+            return jax.named_call(lax_numpy._einsum, name=eqn)(  # pylint: disable=protected-access
+                operands,
+                contractions,
+                precision=None,
+                preferred_element_type=None,
+                _dot_general=dg,
+            )
 
-def mk_freezer(name: str, freeze_collection: str, mode: QuantMode):
-    """
-    The mk_freezer function is a helper function that returns a Freezer object.
+        # yes_swap = whether einsum swaps [lhs,rhs] when passing them to dot_general
+        a = jax.make_jaxpr(einsum)(lhs_g, rhs_g)
+        [lhs_g_id, rhs_g_id] = a.eqns[0].invars
+        [lhs_l_id, rhs_l_id] = a.jaxpr.invars
+        not_swap = lhs_g_id == lhs_l_id and rhs_g_id == rhs_l_id
+        yes_swap = lhs_g_id == rhs_l_id and rhs_g_id == lhs_l_id
+        assert not_swap != yes_swap
 
-    :param name: str: Name the freezer object
-    :param freeze_collection: str: Specify the collection of variables to be frozen
-    :param mode: QuantMode: Determine whether to use the frozen graph or not
-    :return: A freezer object
-    
-    """
-    assert mode in QuantMode
-    if mode == QuantMode.DYNAMIC:
-        return None
-    use_frozen = mode == QuantMode.SERVE_FROZEN
-    return functools.partial(
-        Freezer,
-        name=name,
-        use_frozen=use_frozen,
-        var_collection=freeze_collection,
-    )
+        cfg = copy.deepcopy(self.cfg)
+        prng_name = self.prng_name
 
+        lhs_quant_mode = self.lhs_quant_mode
+        lhs_init = self.lhs_init
+        lhs_scale_init = self.lhs_scale_init
+        lhs_var_name = self.lhs_var_name
 
-def set_rhs_quant_mode(
-        cfg: config.DotGeneral, mode: QuantMode, collection='q'
-):
-    cfg.fwd.rhs.preprocess_quant_cls = mk_freezer('rhs', collection, mode)
-    cfg.fwd.rhs.preprocess_scale_cls = mk_freezer('rhs_scale', collection, mode)
+        rhs_quant_mode = self.rhs_quant_mode
+        rhs_init = self.rhs_init
+        rhs_scale_init = self.rhs_scale_init
+        rhs_var_name = self.rhs_var_name
 
+        quant_collection = self.quant_collection
 
-def set_lhs_quant_mode(
-        cfg: config.DotGeneral, mode: QuantMode, collection='q'
-):
-    cfg.fwd.lhs.preprocess_quant_cls = mk_freezer('lhs', collection, mode)
-    cfg.fwd.lhs.preprocess_scale_cls = mk_freezer('lhs_scale', collection, mode)
+        if yes_swap:
+            if cfg is not None:
+                cfg.fwd.lhs, cfg.fwd.rhs = cfg.fwd.rhs, cfg.fwd.lhs
+                cfg.dlhs, cfg.drhs = cfg.drhs, cfg.dlhs
+            lhs_quant_mode, rhs_quant_mode = rhs_quant_mode, lhs_quant_mode
+            lhs_init, rhs_init = rhs_init, lhs_init
+            lhs_scale_init, rhs_scale_init = rhs_scale_init, lhs_scale_init
+            lhs_var_name, rhs_var_name = rhs_var_name, lhs_var_name
+
+        aqt_dg = QDotGeneral(
+            cfg=cfg,
+            prng_name=prng_name,
+            lhs_quant_mode=lhs_quant_mode,
+            lhs_init=lhs_init,
+            lhs_scale_init=lhs_scale_init,
+            lhs_var_name=lhs_var_name,
+            rhs_quant_mode=rhs_quant_mode,
+            rhs_init=rhs_init,
+            rhs_scale_init=rhs_scale_init,
+            rhs_var_name=rhs_var_name,
+            quant_collection=quant_collection,
+        )
+        return einsum(lhs_g, rhs_g, aqt_dg)
 
 
 def config_v4(
         *,
-        fwd_bits: Union[int, None],
-        dlhs_bits: Union[int, None],
-        drhs_bits: Union[int, None],
+        fwd_bits: Optional[int] = 8,
+        dlhs_bits: Optional[int] = 8,
+        drhs_bits: Optional[int] = None,
         # The dummy static bound flag is for performance benchmarking.
         use_dummy_static_bound: bool = False,
         rng_type: str = 'jax.uniform',  # 'custom-1'
-        dlhs_local_q: Union[config.LocalQ, None] = None,
-        drhs_local_q: Union[config.LocalQ, None] = None,
+        dlhs_local_aqt: Optional[config.LocalQ] = None,
+        drhs_local_aqt: Optional[config.LocalQ] = None,
         fwd_accumulator_dtype: ... = jnp.int32,
         dlhs_accumulator_dtype: ... = jnp.int32,
-        drhs_accumulator_dtype: ... = jnp.int32,
-        lhs_quant_mode: QuantMode = QuantMode.DYNAMIC,
-        rhs_quant_mode: QuantMode = QuantMode.DYNAMIC,
-        freeze_collection: str = 'q',
+        drhs_accumulator_dtype: ... = None,
 ) -> config.DotGeneral:
     """
-    The config_v4 function is a helper function that creates the configuration
-    for quantization. It takes in several arguments and returns a config object.
-    The config object contains three DotGeneralRaw objects, one for each of the forward pass, left hand side gradient,
-    and right hand side gradient. Each DotGeneralRaw object has two Tensor objects: one for the left hand side
-    tensor and another for the right hand side tensor. The Tensor class contains information about how to quantize
-     each of these tensors (e.g., number of bits). The following are some examples on how to use this function:
+    The config_v4 function is a helper function that creates a DotGeneral config
+    object. It takes in the following arguments:
+    - fwd_bits: The number of bits to use for forward pass quantization. If None, no quantization will be used.
+    Defaults to 8 bits.
+    - dlhs_bits: The number of bits to use for left hand side gradient quantization (i.e., the weights). If None,
+     no quantization will be used. Defaults to 8 bits..
+    - drhs_bits: The number of bits to use for right hand side gradient quanitzation
 
-    :param *: Pass in a dictionary of parameters
-    :param fwd_bits: Union[int,None]: Set the number of bits for the forward pass
-    :param dlhs_bits: Union[int,None]: Set the number of bits for the left hand side of a matrix multiplication
-    :param drhs_bits: Union[int,None]: Determine the number of bits for quantization
-    :param # The dummy static bound flag is for performance benchmarking.
-            use_dummy_static_bound: bool: Set the static bound to 1
-    :param rng_type: str: Set the random number generator type
-    :param # 'custom-1'
-            dlhs_local_q: Union[config.LocalQ,None]: Set the random number generator type
-    :param drhs_local_q: Union[config.LocalQ,None]: Set the quantization parameters for the right hand side of a matrix multiplication
+    :param *: Indicate that the function accepts a variable number of arguments
+    :param fwd_bits: Optional[int]: Set the number of bits for the forward pass
+    :param dlhs_bits: Optional[int]: Set the number of bits used for quantization
+    :param drhs_bits: Optional[int]: Set the number of bits for the right hand side
+    :param use_dummy_static_bound: bool: Set the static bound to 1
+    :param rng_type: str: Set the type of random number generator
+    :param dlhs_local_aqt: Optional[config.LocalQ]: Set the local quantization parameters for the lhs gradient
+    :param drhs_local_aqt: Optional[config.LocalQ]: Set the local quantization parameters for the drhs tensor
     :param fwd_accumulator_dtype: ...: Set the accumulator dtype for forward pass
-    :param dlhs_accumulator_dtype: ...: Set the accumulator dtype for the left hand side of a matrix multiplication
-    :param drhs_accumulator_dtype: ...: Set the accumulator dtype for the right hand side of a matrix multiplication
-    :param lhs_quant_mode: QuantMode: Determine whether the left hand side of the matrix multiplication is quantized or not
-    :param rhs_quant_mode: QuantMode: Determine whether the right hand side of the matrix multiplication is quantized or not
-    :param freeze_collection: str: Freeze the quantization parameters
-    :param : Determine which side of the matmul is frozen
+    :param dlhs_accumulator_dtype: ...: Determine the dtype of the accumulator in
+    :param drhs_accumulator_dtype: ...: Determine the dtype of the accumulator used in q_dot_general
+    :param : Determine the number of bits used for quantization
     :return: A config
-    
     """
 
-    def tensor_config(bits: Union[int, None]) -> config.Tensor:
+    def tensor_config(bits: Optional[int]) -> config.Tensor:
         assert bits is None or bits >= 2, 'Need at least 2 bits.'
         if bits is None:
-            numerics = config.NoNumerics()
+            numerics = no_numerics.NoNumerics()
         else:
             numerics = int_numerics.IntNumerics(
                 bits=bits,
@@ -195,6 +316,7 @@ def config_v4(
                 round=True,
                 noise_fn=None,
                 clip_gradient=False,  # Can be False when using abs-max scaling.
+                dtype=jnp.int8 if 2 <= bits <= 8 else None,
             )
 
         return config.Tensor(
@@ -206,11 +328,10 @@ def config_v4(
             use_fake_quant=False,
             # dtype_x=dtype,
             use_fwd_quant=None,
-            preprocess_quant_cls=None,
-            preprocess_scale_cls=None,
+            preprocess=None,
         )
 
-    def dg_raw_config(lhs_bits, rhs_bits, local_q=None) -> config.DotGeneralRaw:
+    def dg_raw_config(lhs_bits, rhs_bits, local_aqt=None) -> config.DotGeneralRaw:
         lhs_cfg = tensor_config(lhs_bits)
         rhs_cfg = tensor_config(rhs_bits)
         if (
@@ -220,25 +341,22 @@ def config_v4(
                 and lhs_bits <= 8
                 and rhs_bits <= 8
         ):
-            dg_in_dtype = jnp.int8
             dg_accumulator_dtype = jnp.int32
         else:
             # None determines the dtype on the fly in q_dot_general
-            dg_in_dtype = None
             dg_accumulator_dtype = None
 
         return config.DotGeneralRaw(
             lhs=lhs_cfg,
             rhs=rhs_cfg,
-            dg_in_dtype=dg_in_dtype,
             dg_accumulator_dtype=dg_accumulator_dtype,
-            local_q=local_q,
+            local_aqt=local_aqt,
         )
 
     cfg = config.DotGeneral(
         fwd=dg_raw_config(fwd_bits, fwd_bits),
-        dlhs=dg_raw_config(dlhs_bits, dlhs_bits, local_q=dlhs_local_q),
-        drhs=dg_raw_config(drhs_bits, drhs_bits, local_q=drhs_local_q),
+        dlhs=dg_raw_config(dlhs_bits, dlhs_bits, local_aqt=dlhs_local_aqt),
+        drhs=dg_raw_config(drhs_bits, drhs_bits, local_aqt=drhs_local_aqt),
     )
 
     cfg.dlhs.rhs.use_fwd_quant = False
@@ -263,15 +381,5 @@ def config_v4(
         dlhs_dtype=dlhs_accumulator_dtype,
         drhs_dtype=drhs_accumulator_dtype,
     )
-
-    assert (
-            lhs_quant_mode == QuantMode.DYNAMIC or rhs_quant_mode == QuantMode.DYNAMIC
-    ), (
-        'It seems unlikely that both sides of the matmul should be frozen.'
-        ' E.g. both sides of the matmul be weights. '
-    )
-
-    set_rhs_quant_mode(cfg, rhs_quant_mode, freeze_collection)
-    set_lhs_quant_mode(cfg, lhs_quant_mode, freeze_collection)
 
     return cfg

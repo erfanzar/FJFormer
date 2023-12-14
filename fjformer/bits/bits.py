@@ -60,7 +60,7 @@ def matmul(
     b_batch = []
 
     # Desired index in final output of each kind of dimension, in the order that
-    # aqt_dot_general will emit them.
+    # q_dot_general will emit them.
     idx_batch = []
     idx_a_other = []  # other = non-batch, non-contracting.
     idx_b_other = []

@@ -15,7 +15,6 @@
 
 import abc
 from typing import Union
-
 import flax.struct
 import jax.numpy as jnp
 

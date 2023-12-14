@@ -13,23 +13,37 @@
 # limitations under the License.
 """Numerics for int8, int4, binary and other integer types."""
 
-from typing import Optional
+from typing import Any, Optional
 from . import stochastic_rounding
+from . import numerics
 import flax.struct
 from jax import lax
 import jax.numpy as jnp
 
 
-class IntNumerics(flax.struct.PyTreeNode):
+class IntNumerics(numerics.QNumerics, flax.struct.PyTreeNode):
     """Numerics for int8, int4, binary, etc."""
 
     bits: int
     preserve_zero: bool
+    # false = map max val on the end of the last bucket
+    # true = map max val on the middle of the last
     preserve_max_val: bool
     clip: bool
     clip_gradient: bool
     round: bool
     noise_fn: Optional[stochastic_rounding.NoiseFn]
+    dtype: Optional[Any] = None
+
+    # pylint: disable=line-too-long
+    # Verifying the correctness of these functions amounts to verifying this table:
+    # if preserve_zero == F, zero might be rounded either to [-1, 0] bucket or to [0, 1] bucket
+    # preserve_zero, preserve_max_val, 8b, 2b, 1b
+    # F, F, 128.0, 2.0, 1.0  # bucket count is even; map onto the far edge of the last bucket
+    # F, T, 127.5, 1.5, 0.5  # bucket count is even; map onto the center of the last bucket
+    # T, F, 127.5, 1.5, 0.5  # bucket count is odd;  map onto the far edge of the last bucket
+    # T, T, 127.0, 1.0, 0.0  # bucket count is odd;  map onto the center of the last bucket
+    # pylint: enable=line-too-long
 
     def get_edge_of_last_int_bucket(self):
         ret = 2.0 ** (self.bits - 1)
@@ -48,10 +62,18 @@ class IntNumerics(flax.struct.PyTreeNode):
             return self.get_edge_of_last_int_bucket()
 
     def _get_fwd_clip_bound(self):
+        # If we are not rounding, we just clip to bucket edges.
         fwd_clip_bound = self.get_edge_of_last_int_bucket()
+        # If, after clip, we are rounding, we need to make sure that
+        # we won't round values at the clip_bound away to the
+        # non-existing bucket.
         if self.round:
+            # Reducing fwd_clip_bound by any value in (0.0, 1.0) is correct.
             fwd_clip_bound -= 0.5
         return fwd_clip_bound
+
+    def get_dtype(self):
+        return self.dtype
 
     def fwd(self, x, context):
         """Forward pass."""
@@ -71,6 +93,7 @@ class IntNumerics(flax.struct.PyTreeNode):
 
         # Maybe round
         if self.round:
+            # TODO(lew): Have bucket centers at 2*k + 1, not at halves.
             round_to_halves = not self.preserve_zero
             if round_to_halves:
                 x = jnp.floor(x) + 0.5
@@ -84,9 +107,15 @@ class IntNumerics(flax.struct.PyTreeNode):
         return self.fwd(x, context), res
 
     def vjp_bwd(self, res, grad):
+        # Gradient of the clip function.
+        # For boundary values we will have full gradient.
+        # When using abs(max(x)) scaling, x is always in the interior, and the
+        # gradient clip is always 1. So, we can always set clip_gradient to false.
+        # However, other types of scaling may result in x being outside (i.e., there
+        # is clipping). In that case it may be desirable to make the gradient zero.
         ret = grad
         if self.clip_gradient:
             (x,) = res
             clip_bound = self._get_fwd_clip_bound()
             ret *= (-clip_bound <= x) * (x <= clip_bound)
-        return ret, None
+        return (ret, None)

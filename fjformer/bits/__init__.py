@@ -8,4 +8,5 @@
 
 from .bits import matmul_true_int8, matmul, q_matmul_int8
 from .q_dot_general import make_dot_general, make_fake_quant, DotGeneralRes
-from .q_flax import QuantMode, Freezer, QDotGeneral, QEinsum
+from .q_flax import QuantMode, Freezer, QDotGeneral, QEinsum, config_v4
+from .config import fully_quantized
