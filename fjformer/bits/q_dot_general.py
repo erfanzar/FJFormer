@@ -25,8 +25,8 @@
 
 import functools
 from typing import Callable, Optional, Union
-from aqt.jax.v2 import config
-from aqt.jax.v2.numerics import no_numerics
+from . import config
+from . import no_numerics
 import flax.struct
 import jax
 from jax import lax
