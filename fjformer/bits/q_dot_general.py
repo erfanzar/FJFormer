@@ -373,7 +373,18 @@ def _dot_general_raw_attach_gradient(
         dlhs_dot_general_raw,
         drhs_dot_general_raw,
 ):
-    """Makes quantized lax.dot_general replacement with attached gradients."""
+    """
+    The _dot_general_raw_attach_gradient function is a helper function that attaches the gradient to the dot_general_raw
+       function. This allows for backpropagation through the dot general operation. The vjp (vector jacobian product)
+       calculates the gradients of each input tensor with respect to each output tensor, and returns them as a tuple in
+       order of inputs. In this case, it will return dlhs and drhs which are both TensorRes objects.
+
+    :param fwd_dot_general_raw: Compute the forward pass of the dot general operation
+    :param dlhs_dot_general_raw: Compute the gradient of dot_general with respect to lhs
+    :param drhs_dot_general_raw: Calculate the gradient of rhs
+    :param : Specify the function to be used for forward pass
+    :return: A function
+    """
 
     def make_fwd(return_residual):
 
@@ -476,7 +487,16 @@ def _dot_general_raw_attach_gradient(
 
 
 def make_dot_general(cfg: Optional[config.DotGeneral]):
-    """Makes quantized lax.dot_general replacement with attached gradients."""
+
+    """
+    The make_dot_general function is a wrapper around the dot_general function.
+    It takes in two QTensors, lhs and rhs, and returns a QTensor out.
+    The make_dot_general function also handles preprocessing of the inputs to dot_general (lhs and rhs)
+    and postprocessing of the output from dot_general (out).  The pre-/post-processing steps are:
+
+    :param cfg: Optional[config.DotGeneral]: Specify the configuration of the dot_general operation
+    :return: A function that returns a function
+    """
     if cfg is None:
         def ret_lax_dg(
                 lhs,
@@ -487,6 +507,23 @@ def make_dot_general(cfg: Optional[config.DotGeneral]):
                 *,
                 context=Context(key=None, train_step=None),
         ):
+
+            """
+            The ret_lax_dg function is a wrapper for the jax.lax.dot_general function,
+            which performs a general matrix multiplication of two arrays with batch dimensions
+            and/or transpositions applied to either or both inputs. The ret_lax_dg function
+            is used in the implementation of the dot operation in this module.
+
+            :param lhs: Specify the left-hand side of the dot product
+            :param rhs: Specify the right-hand side of the matrix multiplication
+            :param dimension_numbers: Specify the dimensions of the operands
+            :param precision: Specify the precision of the computation
+            :param preferred_element_type: Specify the type of element that should be used to store the result
+            :param *: Indicate that all the following parameters are keyword only
+            :param context: Pass in the context of the computation
+            :param : Specify the dimension numbers of the dot product
+            :return: The result of the dot_general operation
+            """
             del context
             return jax.lax.dot_general(
                 lhs, rhs, dimension_numbers, precision, preferred_element_type
@@ -509,6 +546,22 @@ def make_dot_general(cfg: Optional[config.DotGeneral]):
             *,
             context=Context(key=None, train_step=None),
     ):
+
+        """
+        The ret_dg function is a wrapper around the dg function.
+        It takes in two QTensors, lhs and rhs, and returns a QTensor out.
+        The ret_dg function also handles preprocessing of the inputs to dg (lhs and rhs)
+        and postprocessing of the output from dg (out).  The pre-/post-processing steps are:
+
+        :param lhs: Pass the left hand side of the matrix multiplication
+        :param rhs: Pass on the right hand side of the matrix multiplication
+        :param dimension_numbers: Specify the contraction pattern
+        :param precision: Specify the precision of the output
+        :param preferred_element_type: Specify the dtype of the output
+        :param *: Indicate that the argument is a keyword-only
+        :param context: Pass the context to the dg function
+        :return: A function that returns a function
+        """
         del preferred_element_type
         assert (
                 precision is None

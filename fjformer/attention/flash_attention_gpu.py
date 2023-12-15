@@ -553,13 +553,6 @@ def _mha_backward(sm_scale: float, causal: bool, block_q: int, block_k: int,
 
     if backward_pass_impl == "xla":
         raise Exception("use backward_pass_impl == triton")
-        # return jax.vjp(
-        #     functools.partial(mha_reference, sm_scale=sm_scale, causal=causal),
-        #     q,
-        #     k,
-        #     v,
-        #     segment_ids,
-        # )[1](do)
     elif backward_pass_impl == "triton":
         batch_size, seq_len, num_heads, head_dim = q.shape
         block_q = min(block_q, seq_len)

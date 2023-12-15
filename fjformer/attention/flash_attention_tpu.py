@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Flash Attention TPU kernel."""
+"""Module containing fused attention forward and backward pass."""
 from __future__ import annotations
 
 import dataclasses
@@ -451,29 +451,6 @@ def _flash_attention_impl(
         block_k,
         debug,
 ):
-    """
-    The _flash_attention_impl function is a JAX implementation of the Flash Attention algorithm.
-
-    :param q: Compute the attention weights
-    :param k: Compute the attention score
-    :param v: Compute the residuals
-    :param carry: Pass the previous l and m values to the next iteration
-    :param q_chunk_idx_start: Index into the q matrix
-    :param k_chunk_idx_start: Index the k and v tensors
-    :param ab: Pass the attention bias to the kernel
-    :param segment_ids: Mask out certain parts of the attention
-    :param save_residuals: Save the l and m matrices for later use
-    :param causal: Determine whether to use the masking or not
-    :param sm_scale: Scale the softmax function
-    :param block_b: Tile the batch dimension
-    :param block_q: Tile the query sequence
-    :param block_k_major: Determine the size of the block that is used to compute
-    :param block_k: Control the size of the block that is processed by a single thread
-    :param debug: Print out the shapes of the inputs and outputs
-    :param : Determine whether to use the causal mask or not
-    :return: A tuple of (o, l, m)
-    
-    """
     assert block_k_major == block_k, (block_k_major, block_k)
     batch_size, num_heads, q_seq_len, head_dim = q.shape
     _, _, kv_seq_len, _ = k.shape
@@ -677,39 +654,6 @@ def _flash_attention_dkv_kernel(
         block_q: int,
         block_k: int,
 ):
-    """
-    The _flash_attention_dkv_kernel function is a JAX-based kernel that computes the
-    gradient of the attention logits with respect to both keys and values. It does so by
-    performing a series of matrix multiplications, as well as some other operations such as
-    broadcasting and masking. The function takes in several arguments:
-
-    :param q_chunk_idx_start_ref: Store the index of the chunk in q_tile_ref
-    :param k_chunk_idx_start_ref: Store the index of the chunk that is being processed
-    :param q_tile_ref: Load the query tensor
-    :param k_tile_ref: Load the k_tile
-    :param v_tile_ref: Store the value of the attention
-    :param ab_tile_ref: Store the bias for each block
-    :param q_segment_ids_tile_ref: Mask the attention weights
-    :param kv_segment_ids_tile_ref: Mask out the attention weights
-    :param l_tile_ref: Store the length of each query
-    :param m_tile_ref: Store the mask value
-    :param do_tile_ref: Store the output of the dot product between p and v
-    :param di_tile_ref: Store the input of the attention layer
-    :param dk_tile_ref: Store the dk_scratch_ref parameter
-    :param dv_tile_ref: Store the dv_scratch_ref parameter
-    :param dk_scratch_ref: Store the dk_tile_ref
-    :param dv_scratch_ref: Store the dv_scratch array, which is used to store
-    :param *: Pass in the keyword arguments to the function
-    :param sm_scale: float: Scale the logits
-    :param causal: bool: Determine whether to use the mask_value or not
-    :param mask_value: float: Set the value of the mask
-    :param q_seq_len: int: Determine the number of times to run the q_body function
-    :param block_q: int: Determine the number of rows in the q_tile
-    :param block_k: int: Determine the size of the block that is being processed by each thread
-    :param : Determine the number of threads to be used
-    :return: Dk_tile_ref and dv_tile_ref
-    
-    """
     _, _, block_q_major, _ = q_tile_ref.shape
     _, _, block_k_major, _ = k_tile_ref.shape
 
@@ -865,35 +809,6 @@ def _flash_attention_bwd_dkv(
         mask_value: float = DEFAULT_MASK_VALUE,
         debug: bool = False,
 ):
-    """
-    The _flash_attention_bwd_dkv function is a helper function for the backward pass of the FlashTransformer.
-    It computes dk and dv, which are gradients with respect to k and v respectively.
-    The _flash_attention_bwd_dkv function takes in q, k, v (which are all tensors), ab (which is an attention bias), segment ids (if applicable), l and m (both of which are scalars) as well as do and di. It also takes in block sizes for q major, q minor, k major and k minor blocks along with a scale factor sm_scale that scales down
-
-    :param q_chunk_idx_start: Determine the starting index of q
-    :param k_chunk_idx_start: Calculate the next_q_index in qo_index_map
-    :param q: Compute the attention weights
-    :param k: Calculate the attention weights, but it is not used in the backward pass
-    :param v: Compute the gradients of the attention weights
-    :param ab: Pass the attention bias from the forward pass
-    :param segment_ids: Specify the segment_ids for q and kv
-    :param l: Determine the length of each block
-    :param m: Compute the mask
-    :param do: Pass the output of the forward pass to the backward
-    :param di: Determine the diagonal of the q block
-    :param *: Pass in keyword arguments
-    :param block_q_major: int | None: Specify the block size of the q sequence
-    :param block_q: int | None: Specify the block size for the q dimension
-    :param block_k_major: int | None: Specify the block size for the kv dimension
-    :param block_k: int | None: Specify the block size for
-    :param sm_scale: float: Scale the softmax
-    :param causal: bool: Determine whether to use the causal
-    :param mask_value: float: Set the mask value
-    :param debug: bool: Print out the shapes of each input and output
-    :param : Determine the number of blocks in a row
-    :return: The dk and dv values
-    
-    """
     batch_size, num_heads, q_seq_len, head_dim = q.shape
     _, _, kv_seq_len, _ = k.shape
     q_chunk_idx_start, k_chunk_idx_start = q_chunk_idx_start[None], k_chunk_idx_start[None]
@@ -1105,35 +1020,6 @@ def _flash_attention_dq_kernel(
         kv_seq_len: int,
         block_k: int,
 ):
-    """
-    The _flash_attention_dq_kernel function is a JAX-based kernel that computes the dq
-    gradient for a single block of q and kv. The function takes in the following arguments:
-
-    :param q_chunk_idx_start_ref: Index the q_tile_ref parameter
-    :param k_chunk_idx_start_ref: Determine the start of the key sequence
-    :param q_tile_ref: Store the query tensor
-    :param k_tile_ref: Load the key tensor
-    :param v_tile_ref: Store the values of the attention matrix
-    :param ab_tile_ref: Pass in the bias for the attention
-    :param q_segment_ids_tile_ref: Mask out the attention
-    :param kv_segment_ids_tile_ref: Mask out the attention logits
-    :param l_tile_ref: Store the length of each sequence
-    :param m_tile_ref: Store the logits
-    :param do_tile_ref: Store the output of the dot product between
-    :param di_tile_ref: Store the dot product of do_tile_ref and v_tile_ref
-    :param dq_tile_ref: Store the output of the function
-    :param dq_scratch_ref: Store the dq_scratch values
-    :param ds_tile_ref: Store the scaled dot product attention
-    :param *: Indicate that the parameters after it are keyword only
-    :param sm_scale: float: Scale the logits
-    :param causal: bool: Determine if the attention is causal or not
-    :param mask_value: float: Mask out the values that are not in the sequence
-    :param kv_seq_len: int: Determine the number of times to run the body function
-    :param block_k: int: Determine the size of the kv_seq_index loop
-    :param : Control the number of threads
-    :return: A function that takes the following arguments:
-    
-    """
     _, _, block_k_major, _ = k_tile_ref.shape
     _, _, block_q_major, _ = q_tile_ref.shape
 
@@ -1476,27 +1362,6 @@ def mha_reference_no_custom_vjp(
         sm_scale: float = 1.0,
         save_residuals: bool = False,
 ):
-    """
-    The mha_reference_no_custom_vjp function is a reference implementation of the Multi-Head Attention
-    module. It takes in three inputs: q, k and v. The q input is the query tensor, which has shape (batch_size,
-    num_heads, query_seq_len, head_dim). The k input is the key tensor and has shape (batch size, num heads
-    key/value seq len , head dim). Finally v is the value tensor with shape (batch size , num heads , key/value seq len
-    head dim) . This function returns an output with shape( batch size , num heads  query seq
-
-    :param q: Compute the logits
-    :param k: Calculate the logits, which are used to calculate the weights
-    :param v: Compute the output of the multihead attention layer
-    :param ab: jax.Array | None: Add bias to the logits
-    :param segment_ids: SegmentIds | None: Determine whether the input is segmented or not
-    :param *: Indicate that the following parameters are keyword-only
-    :param causal: bool: Determine whether the attention is causal or not
-    :param mask_value: float: Set the value of the mask
-    :param sm_scale: float: Scale the logits
-    :param save_residuals: bool: Save the residuals of the attention
-    :param : Save the residuals
-    :return: The same as the mha_reference function
-    
-    """
     logits = jnp.einsum("bhqc,bhkc->bhqk", q, k)
     if ab is not None:
         logits += ab
@@ -1543,25 +1408,6 @@ def mha_reference(
         mask_value: float = DEFAULT_MASK_VALUE,
         sm_scale=1.0,
 ):
-    """
-    The mha_reference function is a reference implementation of the Multi-Head Attention
-    mechanism. It takes in three inputs: query, key, and value tensors. The query tensor is
-    used to compute attention scores for each position in the key and value tensors. The output
-    of this function is a weighted sum of the values where weights are determined by softmaxing
-    the dot product between queries and keys at each position (with an optional mask).
-
-    :param q: Represent the query
-    :param k: Calculate the attention score
-    :param v: Calculate the attention weights
-    :param ab: Define the number of attention heads
-    :param segment_ids: SegmentIds | None: Specify the segment ids for the input tensors
-    :param causal: bool: Determine whether or not to use the causal mask
-    :param mask_value: float: Set the value of the mask
-    :param sm_scale: Scale the softmax output
-    :param : Save the residuals of each layer
-    :return: A tuple of the output and residuals
-    
-    """
     return _mha_reference(
         q,
         k,
@@ -1730,19 +1576,6 @@ _mha_reference.defvjp(fwd=_mha_reference_fwd, bwd=_mha_reference_bwd)
 
 
 def _verify_block(block_name, dim_name, block, dim, should_divide=True):
-    """
-    The _verify_block function is used to verify that the block size is smaller than
-    the dimension and, if should_divide=True, that the dimension can be divided by
-    the block size. This function raises a ValueError if either of these conditions are not met.
-
-    :param block_name: Provide a more informative error message
-    :param dim_name: Print the name of the dimension in case of an error
-    :param block: Specify the number of blocks in a dimension
-    :param dim: Specify the dimension of the input tensor
-    :param should_divide: Determine whether the dimension should be divisible by the block size
-    :return: A valueerror if the block is greater than the dimension, or if
-    
-    """
     if block > dim:
         raise ValueError(
             f"{block_name}={block} should be smaller or equal to {dim_name}={dim}"

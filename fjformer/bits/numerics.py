@@ -35,7 +35,7 @@ class QNumerics(flax.struct.PyTreeNode, abc.ABC):
     def abs_val_mapped_to(self):
         """The value returned is the end of quantization range.
 
-        It could be biggest value that can be represented by numerical format
+        It could be the biggest value that can be represented by numerical format
         exactly. E.g. in case of int8, 127 . Or it could be edge of the last bucket.
         Edge in case of int8, 127.5
         """

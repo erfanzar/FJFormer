@@ -26,24 +26,12 @@ class IntNumerics(numerics.QNumerics, flax.struct.PyTreeNode):
 
     bits: int
     preserve_zero: bool
-    # false = map max val on the end of the last bucket
-    # true = map max val on the middle of the last
     preserve_max_val: bool
     clip: bool
     clip_gradient: bool
     round: bool
     noise_fn: Optional[stochastic_rounding.NoiseFn]
     dtype: Optional[Any] = None
-
-    # pylint: disable=line-too-long
-    # Verifying the correctness of these functions amounts to verifying this table:
-    # if preserve_zero == F, zero might be rounded either to [-1, 0] bucket or to [0, 1] bucket
-    # preserve_zero, preserve_max_val, 8b, 2b, 1b
-    # F, F, 128.0, 2.0, 1.0  # bucket count is even; map onto the far edge of the last bucket
-    # F, T, 127.5, 1.5, 0.5  # bucket count is even; map onto the center of the last bucket
-    # T, F, 127.5, 1.5, 0.5  # bucket count is odd;  map onto the far edge of the last bucket
-    # T, T, 127.0, 1.0, 0.0  # bucket count is odd;  map onto the center of the last bucket
-    # pylint: enable=line-too-long
 
     def get_edge_of_last_int_bucket(self):
         ret = 2.0 ** (self.bits - 1)
@@ -78,7 +66,6 @@ class IntNumerics(numerics.QNumerics, flax.struct.PyTreeNode):
     def fwd(self, x, context):
         """Forward pass."""
         assert self.bits <= 22, 'Too many bits, float32 has less precision.'
-
         # Maybe noise
         if self.noise_fn:
             assert context.key is not None, (

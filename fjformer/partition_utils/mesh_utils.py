@@ -290,12 +290,21 @@ def get_weight_decay_mask(exclusions):
 
 
 def tree_apply(fns, tree):
-    """ Apply a pytree of functions to the pytree. """
+    """
+    The tree_apply function is a generalization of the map function.
+    It takes two arguments: a pytree of functions and a pytree of values.
+    The tree_apply function applies each function in the first argument to its corresponding value in the second argument,
+    and returns a new pytree with these results.
+
+    :param fns: Apply the functions to the tree
+    :param tree: Apply the function to each element in the tree
+    :return: A pytree of the same structure as the input
+    """
     return jax.tree_util.tree_map(lambda fn, x: fn(x), fns, tree)
 
 
 def create_mesh(
-        axis_dims: Sequence[int] = (1, -1, 1, 1), axis_names: Sequence[str] = ("dp", "fsdp", "mp", "sp"), backend=""
+        axis_dims: Sequence[int] = (1, -1, 1, 1), axis_names: Sequence[str] = ("dp", "fsdp", "tp", "sp"), backend=""
 ):
     """
     The create_mesh function creates a mesh object that can be used to shard arrays.
@@ -312,4 +321,3 @@ def create_mesh(
     return jax.sharding.Mesh(
         create_device_mesh(resh), axis_names
     )
-

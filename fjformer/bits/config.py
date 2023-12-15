@@ -72,10 +72,29 @@ class DotGeneralRaw:
 
     @classmethod
     def make(cls, *args, **kwargs) -> 'DotGeneralRaw':
+        """
+        The make function is a factory function that creates an instance of the DotGeneralRaw class.
+
+        :param cls: Create a new instance of the class
+        :param args: Send a non-keyworded variable length argument list to the function
+        :param kwargs: Pass a variable number of keyword arguments to the function
+        :return: A dotgeneralraw object
+        """
         return dot_general_raw_make(*args, **kwargs)
 
     @classmethod
     def make_conv_general_dilated(cls, *args, **kwargs) -> 'DotGeneralRaw':
+        """
+        The make_conv_general_dilated function is a wrapper for the conv_general_dilated_make function.
+        It allows us to use the make function in our DotGeneralRaw class, which we can then use as a
+        component of our network. The make function takes in arguments that are used by the
+        conv_general_dilated_make function to create an instance of DotGeneralRaw.
+
+        :param cls: Create a new instance of the class
+        :param args: Send a non-keyworded variable length argument list to the function
+        :param kwargs: Pass a variable number of keyword arguments to a function
+        :return: A dotgeneralraw object
+        """
         return conv_general_dilated_make(*args, **kwargs)
 
 
@@ -92,11 +111,14 @@ class DotGeneral:
         return dot_general_make(*args, **kwargs)
 
 
-################################################################################
-# Functions below are auxiliary helpers.
-
-
 def set_fwd_numerics(cfg, fwd_numerics: numerics.QNumerics):
+    """
+    The set_fwd_numerics function sets the numerics of the forward problem.
+
+    :param cfg: Store the configuration of the simulation
+    :param fwd_numerics: numerics.QNumerics: Set the numerical
+    :return: The configuration object with the numerics for the forward problem set
+    """
     cfg.fwd.lhs.numerics = fwd_numerics
     cfg.fwd.rhs.numerics = fwd_numerics
 
@@ -107,6 +129,19 @@ def set_accumulator_dtype(
         dlhs_dtype: Optional[DType],
         drhs_dtype: Optional[DType],
 ):
+    """
+    The set_accumulator_dtype function sets the accumulator dtype for each of the three
+    differentiable functions.  The accumulator dtype is used to store intermediate results
+    during forward and backward passes.  It is also used to store gradients during backward pass.
+    The default value for this parameter is None, which means that it will be set automatically by
+    the library based on other parameters such as input data types and output data type.
+
+    :param cfg: DotGeneral: Set the accumulator dtype for all three
+    :param fwd_dtype: Optional[DType]: Set the dtype of the forward pass
+    :param dlhs_dtype: Optional[DType]: Set the data type of the left hand side
+    :param drhs_dtype: Optional[DType]: Set the data type for the drhs accumulator
+    :param : Set the dtype of the accumulator
+    """
     cfg.fwd.dg_accumulator_dtype = fwd_dtype
     cfg.dlhs.dg_accumulator_dtype = dlhs_dtype
     cfg.drhs.dg_accumulator_dtype = drhs_dtype
@@ -114,9 +149,6 @@ def set_accumulator_dtype(
 
 def set_stochastic_rounding(
         cfg: DotGeneral,
-        # Typically we have (but it's a caller's responsibility to check):
-        # - vjp_lhs_stochastic_rounding is referring to the gradient and
-        # - vjp_rhs_stochastic_rounding is referring to the activations/weights.
         vjp_lhs_stochastic_rounding: bool,
         vjp_rhs_stochastic_rounding: bool,
         implementation: str,
@@ -147,6 +179,14 @@ def set_stochastic_rounding(
 
 def set_static_bound(cfg: DotGeneral, bound: float = 1.0):
 
+    """
+    The set_static_bound function sets the calibration of all the forward and backward
+    differentiation operators to a constant value. This is useful for testing purposes, as it
+    allows us to check that our implementation is correct by comparing against known values.
+
+    :param cfg: DotGeneral: Set the bounds for each of the six functions in a dotgeneral object
+    :param bound: float: Set the bound of the calibration
+    """
     cfg.fwd.lhs.calibration = calibration.ConstantCalibration(bound)
     cfg.fwd.rhs.calibration = calibration.ConstantCalibration(bound)
     cfg.drhs.lhs.calibration = calibration.ConstantCalibration(bound)
@@ -156,7 +196,13 @@ def set_static_bound(cfg: DotGeneral, bound: float = 1.0):
 
 
 def tensor_make(bits: Optional[int]) -> 'Tensor':
-    """Makes config.Tensor."""
+
+    """
+    The tensor_make function is a helper function that creates a Tensor object.
+
+    :param bits: Optional[int]: Set the number of bits for quantization
+    :return: A tensor object
+    """
     if bits is None:
         effective_numerics = no_numerics.NoNumerics()
     else:
@@ -180,7 +226,6 @@ def tensor_make(bits: Optional[int]) -> 'Tensor':
         calibration=calibration.AbsMaxCalibration(),
         po2_scale=False,
         use_fake_quant=False,
-        # dtype_x=dtype,
         use_fwd_quant=None,
         preprocess=None,
     )
@@ -191,7 +236,6 @@ def dot_general_raw_make(
         rhs_bits=None,
         local_aqt=None,
 ) -> 'DotGeneralRaw':
-
     """
     The dot_general_raw_make function is a helper function that creates a DotGeneralRaw object.
 
@@ -277,7 +321,6 @@ def fully_quantized(
         dlhs_local_aqt: Optional[LocalQ] = None,
         drhs_local_aqt: Optional[LocalQ] = None,
 ) -> DotGeneral:
-
     """
     The fully_quantized function is a helper function that allows you to quickly
     configure the dot_general primitive with all of its quantization parameters.
@@ -354,7 +397,6 @@ def config_v3(
         dlhs_accumulator_dtype: ... = jnp.int32,
         drhs_accumulator_dtype: ... = None,
 ) -> DotGeneral:
-
     """
     The config_v3 function is a helper function that configures the DotGeneral
     object. It takes in keyword arguments and returns a configured DotGeneral object.
