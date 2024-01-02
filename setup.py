@@ -7,12 +7,12 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name="fjformer",
-    version='0.0.20',
+    version="0.0.21",
     author="Erfan Zare Chavoshi",
     author_email="erfanzare82@yahoo.com",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/erfanzar/",
+    url="https://github.com/erfanzar/fjformer",
     packages=setuptools.find_packages(),
     install_requires=[
         "chex",
@@ -29,15 +29,15 @@ setuptools.setup(
         "IPython"
     ],
     python_requires=">=3.7",
-    license='Apache License 2.0',
+    license="Apache License 2.0",
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
-        'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.8',
-        'Programming Language :: Python :: 3.9',
-        'Programming Language :: Python :: 3.10',
-        'Programming Language :: Python :: 3.11',
+        "Programming Language :: Python :: 3",
+        "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: 3.9",
+        "Programming Language :: Python :: 3.10",
+        "Programming Language :: Python :: 3.11",
     ],
 )

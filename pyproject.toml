@@ -17,8 +17,9 @@ known_third_party = ["jax", 'jaxlib', 'flax', 'optax']
 [tool.flake8]
 max-line-length = 88
 [tool.poetry]
-# other poetry parameters...
+
 readme = "README.md"
+
 [tool.mypy]
 ignore_missing_imports = true
 warn_unused_configs = true
