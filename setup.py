@@ -7,7 +7,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name="FJFormer",
-    version="0.0.22",
+    version="0.0.23",
     author="Erfan Zare Chavoshi",
     author_email="erfanzare82@yahoo.com",
     long_description=long_description,
@@ -28,6 +28,7 @@ setuptools.setup(
         "tqdm~=4.64.1",
         "optax~=0.1.7",
         "setuptools~=68.1.2",
+        "ml_collections==0.1.1"
     ],
     python_requires=">=3.8",
     license="Apache License 2.0",
