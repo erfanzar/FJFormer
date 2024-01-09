@@ -61,8 +61,10 @@ def binary_cross_entropy(labels, predictions):
     """
     The binary_cross_entropy function computes the binary cross entropy loss between
     the labels and predictions. The function takes two arguments:
-        1) labels: a tensor of shape (batch_size, num_classes) containing the ground truth class indices for each example in the batch.
-        2) predictions: a tensor of shape (batch_size, num_classes) containing model output probabilities for each example in the batch.
+        1) labels: a tensor of shape (batch_size, num_classes) containing the ground truth class indices for each
+        example in the batch.
+        2) predictions: a tensor of shape (batch_size, num_classes) containing model output probabilities for each
+        example in the batch.
 
     :param labels: Specify the true class of each example
     :param predictions: Calculate the loss

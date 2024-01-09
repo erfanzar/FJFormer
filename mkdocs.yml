@@ -30,8 +30,8 @@ nav:
     - loss_func: fjformer-func-loss_func.md
     - _func: fjformer-func-_func.md
   - Load:
-    - streamer: fjformer-load-streamer.md
-    - _load: fjformer-load-_load.md
+    - streamer: fjformer-checkpoint-streamer.md
+    - _load: fjformer-checkpoint-_load.md
   - Optimizers:
     - adamw: fjformer-optimizers-adamw.md
     - lion: fjformer-optimizers-lion.md

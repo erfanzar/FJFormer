@@ -3,28 +3,30 @@ import msgpack
 from flax.serialization import from_bytes, to_bytes, to_state_dict
 from flax.traverse_util import flatten_dict
 
-from .streamer import StreamingCheckpointer
+from .streamer import CheckpointManager
 from jax import numpy as jnp
 
 
-def get_float_dtype_by_name(dtype):
-    return {
-        'bf16': jnp.bfloat16,
-        'bfloat16': jnp.bfloat16,
-        'fp16': jnp.float16,
-        'float16': jnp.float16,
-        'fp32': jnp.float32,
-        'float32': jnp.float32,
-        'fp64': jnp.float64,
-        'float64': jnp.float64,
-    }[dtype]
+def get_dtype(dtype):
+    if isinstance(dtype, str):
+        dtype = {
+            "bf16": jnp.bfloat16,
+            "bfloat16": jnp.bfloat16,
+            "fp16": jnp.float16,
+            "float16": jnp.float16,
+            "fp32": jnp.float32,
+            "float32": jnp.float32,
+            "fp64": jnp.float64,
+            "float64": jnp.float64,
+        }[dtype]
+    return dtype
 
 
 def float_tensor_to_dtype(tensor, dtype):
     if dtype is None or dtype == '':
         return tensor
     if isinstance(dtype, str):
-        dtype = get_float_dtype_by_name(dtype)
+        dtype = get_dtype(dtype)
     float_dtypes = (jnp.bfloat16, jnp.float16, jnp.float32, jnp.float64)
     if getattr(tensor, 'dtype', None) in float_dtypes:
         tensor = tensor.astype(dtype)
@@ -48,9 +50,14 @@ def load_and_convert_checkpoint_to_torch(path, dtype=jnp.float16, transpose_need
                 return False
         return True
 
-    _, flax_params = StreamingCheckpointer.load_trainstate_checkpoint('params::' + path)
-    flax_params = flatten_dict(flax_params['params'], sep='.') if select_params_field else flatten_dict(flax_params,
-                                                                                                        sep='.')
+    _, flax_params = CheckpointManager.load_state_checkpoint('params', path)
+    flax_params = flatten_dict(
+        flax_params['params'],
+        sep='.'
+    ) if select_params_field else flatten_dict(
+        flax_params,
+        sep='.'
+    )
     torch_params = {}
     for key, tensor in flax_params.items():
         if match_keywords(key, transpose_needed, transpose_not_needed):

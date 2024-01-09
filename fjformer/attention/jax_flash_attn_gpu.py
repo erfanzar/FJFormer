@@ -305,7 +305,7 @@ def _preprocess_backward_kernel(out_ref, dout_ref, l_ref,
     pid_m = pl.program_id(0)
 
     off_m = pl.ds(pid_m * block_q, block_q)
-    # load
+    # checkpoint
     o = pl.load(out_ref, (off_m, slice(None))).astype(jnp.float32)
     do = pl.load(dout_ref, (off_m, slice(None))).astype(jnp.float32)
     denom = pl.load(l_ref, (off_m,)).astype(jnp.float32)

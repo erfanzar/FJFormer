@@ -3,7 +3,7 @@ build-backend = "setuptools.build_meta"
 
 [tool.black]
 line-length = 88
-target-version = ["py37", "py38", "py39", "py310", "py311"]
+target-version = ["py37", "py38", "py39", "py310", "py311", "py312"]
 
 [tool.isort]
 line_length = 88
@@ -17,8 +17,15 @@ known_third_party = ["jax", 'jaxlib', 'flax', 'optax']
 [tool.flake8]
 max-line-length = 88
 [tool.poetry]
-
 readme = "README.md"
+authors = ["Erfan zare chavoshi"]
+name = "FJFormer"
+description = """
+Embark on a journey of paralleled/unparalleled computational prowess with FJFormer - an arsenal of custom Jax Flax
+Functions and Utils that elevate your AI endeavors to new heights!
+"""
+version = "0.0.22"
+
 
 [tool.mypy]
 ignore_missing_imports = true

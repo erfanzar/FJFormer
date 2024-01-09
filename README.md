@@ -1,7 +1,7 @@
 # FJFormer
 
-a package for custom Jax Flax Functions and Utils
-Welcome to FJFormer - A collection of useful functions and utilities for Flax and JAX!
+Embark on a journey of paralleled/unparalleled computational prowess with FJFormer - an arsenal of custom Jax Flax
+Functions and Utils that elevate your AI endeavors to new heights!
 
 ## Overview
 

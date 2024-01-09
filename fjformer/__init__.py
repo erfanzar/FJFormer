@@ -37,9 +37,9 @@ Once installed, you can import the package and start using its functions and uti
 use the checkpoint saver for loading models like :
 
 ```python
-from fjformer import StreamingCheckpointer
+from fjformer import CheckpointManager
 
-ckpt = StreamingCheckpointer.load_trainstate_checkpoint('params::<path to model>')
+ckpt = CheckpointManager.load_state_checkpoint('params::<path to model>')
 
 ```
 
@@ -99,13 +99,13 @@ open an issue.
 
 Thank you for using fjformer, and happy training!
 """
-from .load import (
+from .checkpoint import (
     load_and_convert_checkpoint_to_torch,
     float_tensor_to_dtype,
     read_ckpt,
     save_ckpt,
-    StreamingCheckpointer,
-    get_float_dtype_by_name
+    CheckpointManager,
+    get_dtype
 )
 
 from .partition_utils import (
@@ -127,7 +127,7 @@ from .partition_utils import (
 
 from .monitor import (
     run,
-    get_mem,
+    get_memory_information,
     is_notebook,
     threaded_log,
     initialise_tracking
@@ -151,4 +151,4 @@ from .utils import (
     count_num_params
 )
 
-__version__ = '0.0.21'
+__version__ = '0.0.22'

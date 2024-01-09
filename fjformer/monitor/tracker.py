@@ -1,5 +1,6 @@
 import curses
 import json
+import re
 import subprocess
 import time
 
@@ -62,9 +63,9 @@ def run(note_book=None, interval: float = 1, dir_prefix: str = '/dev/shm', dpr=T
         curses.endwin()
 
 
-def get_mem(dir_prefix: str = '/dev/shm') -> str:
+def get_memory_information(dir_prefix: str = '/dev/shm') -> str:
     """
-    The get_mem function is a wrapper around the go tool pprof command.
+    The get_memory_information function is a wrapper around the go tool pprof command.
     It takes in an optional argument, dir_prefix, which defaults to /dev/shm.
     The function then runs the go tool pprof command with arguments -tags and {dir_prefix}/memory.prof.
     The output of this command is captured and returned as a string.
@@ -119,7 +120,7 @@ def initialise_tracking(interval: float = 1., dir_prefix: str = '/dev/shm') -> N
 
 def threaded_log(interval: float = 1., dir_prefix: str = '/dev/shm', save_mem_json: bool = False) -> threading.Thread:
     """
-    The threaded_log function is a wrapper around the get_mem function.
+    The threaded_log function is a wrapper around the get_memory_information function.
     It allows you to monitor your memory usage in real time, and optionally save it to a JSON file.
     The threaded_log function returns a threading.Thread object that can be started with .start() and stopped with .join().
 
@@ -137,7 +138,7 @@ def threaded_log(interval: float = 1., dir_prefix: str = '/dev/shm', save_mem_js
         std = curses.initscr() if not note_book else None
         try:
             while True:
-                mem_info = get_mem()
+                mem_info = get_memory_information()
                 if not note_book:
                     std.clear()
                     std.addstr(mem_info)
@@ -158,3 +159,27 @@ def threaded_log(interval: float = 1., dir_prefix: str = '/dev/shm', save_mem_js
         target=show_
     )
     return thread
+
+
+def get_capacity_matrix(dir_prefix: str = '/dev/shm') -> dict:
+    pattern = r'(\d+\.\d+\wB) \((\d+\.\d+%)\): (\w+)(\(.*?\))?'
+
+    def calculate_full_size(size, percent):
+        size_in_gb = float(re.search(r'(\d+\.\d+)GB', size).group(1))
+        percent_value = 100 / float(re.search(r'(\d+\.\d+)%', percent).group(1))
+        full_size = size_in_gb * percent_value
+        return full_size
+
+    matches = re.findall(pattern, get_memory_information(dir_prefix=dir_prefix))
+    information = {}
+    try:
+        for match in matches:
+            information[match[2]] = {
+                "Used": match[0],
+                "Usage Percent": match[1],
+                "Process": match[3][1:] if match[3] else "∞",
+                "Full Capacity": calculate_full_size(match[0], match[1])
+            }
+    except (ArithmeticError, AttributeError, KeyError, ValueError):
+        ...
+    return information
