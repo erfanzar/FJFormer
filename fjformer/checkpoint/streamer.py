@@ -58,14 +58,16 @@ class CheckpointManager(object):
             self,
             state: struct.PyTreeNode,
             filename: str | os.PathLike,
-            gather_fns: dict[Callable] = None
+            gather_fns: dict[Callable] = None,
+            mismatch_allowed: bool = True
+
     ):
         if self.enable:
             path = os.path.join(self.checkpoint_dir, filename)
         else:
             path = "/dev/null"
         self.save_state_to_file(
-            state, path, gather_fns, self.float_dtype
+            state, path, gather_fns, self.float_dtype, mismatch_allowed=mismatch_allowed
         )
 
     @staticmethod
@@ -74,7 +76,8 @@ class CheckpointManager(object):
             path: str | os.PathLike,
             gather_fns: dict[Callable] = None,
             float_dtype=None,
-            verbose: bool = False
+            verbose: bool = False,
+            mismatch_allowed: bool = True
     ):
         state = to_state_dict(state)
         packer = msgpack.Packer()
@@ -86,11 +89,19 @@ class CheckpointManager(object):
             disable=not verbose,
             desc="Saving State to File",
         )
+
+        gather_functions_mismatch = 0
+
         with open(path, "wb") as stream:
             for key, value in pbar:
                 if gather_fns is not None:
                     callable_func = gather_fns[key]
+                    if callable_func is None and not mismatch_allowed:
+                        raise KeyError(f"Gather Function {key} is None and NoneType OBJ is not callable.")
                     value = callable_func(value) if callable_func is not None else value
+                    if callable_func is None:
+                        gather_functions_mismatch += 1
+                    pbar.set_postfix(gather_functions_mismatch=gather_functions_mismatch)
                 value = get_dtype(value, float_dtype)
                 stream.write(packer.pack((key, to_bytes(value))))
 
@@ -176,7 +187,8 @@ class CheckpointManager(object):
             target=None,
             shard_fns: dict[Callable] = None,
             remove_dict_prefix=None,
-            verbose: bool = False
+            verbose: bool = False,
+            mismatch_allowed: bool = True,
     ):
         """
         The load_checkpoint function is used to checkpoint a checkpoint from disk.
@@ -186,6 +198,7 @@ class CheckpointManager(object):
         :param shard_fns: Specify a function that will be applied to each tensor in the checkpoint
         :param remove_dict_prefix: Remove the prefix of a dictionary     
         :param verbose: print state and other stuff
+        :param mismatch_allowed: when ever to allow shard_fns to be passed even if their None
         :return:  of the form {key: value}, where key is a tuple and value is a tensor
         
         """
@@ -196,6 +209,8 @@ class CheckpointManager(object):
         if remove_dict_prefix is not None:
             remove_dict_prefix = tuple(remove_dict_prefix)
         flatten_state = {}
+
+        shard_functions_mismatch = 0
         with open(path, "rb") as fin:
             unpacker = msgpack.Unpacker(fin, read_size=83886080, max_buffer_size=0)
             pbar = tqdm.tqdm(
@@ -213,9 +228,14 @@ class CheckpointManager(object):
 
                 tensor = from_bytes(None, value)
                 if shard_fns is not None:
-                    tensor = shard_fns[key](tensor)
+                    callable_func = shard_fns[key]
+                    if callable_func is None and not mismatch_allowed:
+                        raise KeyError(f"Shard Function {key} is None and NoneType OBJ is not callable.")
+                    tensor = callable_func(tensor) if callable_func is not None else tensor
+                    if callable_func is None:
+                        shard_functions_mismatch += 1
                 flatten_state[key] = tensor
-
+                pbar.set_postfix(shard_functions_mismatch=shard_functions_mismatch)
         if target is not None:
             flattened_target = flatten_dict(
                 to_state_dict(target), keep_empty_nodes=True
@@ -263,7 +283,8 @@ class CheckpointManager(object):
             load_path: str | os.PathLike,
             state_target=None,
             state_shard_fns=None,
-            disallow_state=False
+            disallow_state=False,
+            mismatch_allowed: bool = True
     ):
         """
         The load_state_checkpoint function is used to checkpoint a checkpoint from disk.
@@ -274,6 +295,7 @@ class CheckpointManager(object):
         :param state_target: Specify the target for the train state
         :param state_shard_fns: Specify the sharding function
         :param disallow_state: Prevent loading the entire state
+        :param mismatch_allowed: when ever to allow shard func to be None
         :return: A tuple of two objects, the state and restored_params
         
         """
@@ -296,6 +318,7 @@ class CheckpointManager(object):
                 path=load_path,
                 target=state_target,
                 shard_fns=state_shard_fns,
+                mismatch_allowed=mismatch_allowed
             )
         elif load_type == "state_params":
             restored_params = cls.load_checkpoint(
@@ -303,6 +326,7 @@ class CheckpointManager(object):
                 target=params_target,
                 shard_fns=params_shard_fns,
                 remove_dict_prefix=("params", "params"),
+                mismatch_allowed=mismatch_allowed
             )
             restored_params = flax.core.frozen_dict.freeze(
                 {"params": restored_params}
@@ -312,6 +336,7 @@ class CheckpointManager(object):
                 path=load_path,
                 target=params_target,
                 shard_fns=params_shard_fns,
+                mismatch_allowed=mismatch_allowed
             )
             restored_params = flax.core.frozen_dict.freeze(
                 {"params": restored_params}
@@ -320,7 +345,7 @@ class CheckpointManager(object):
             restored_params = cls.load_flax_checkpoint(
                 path=load_path,
                 target=params_target,
-                shard_fns=params_shard_fns
+                shard_fns=params_shard_fns,
             )
             restored_params = flax.core.frozen_dict.freeze(
                 {"params": restored_params}
