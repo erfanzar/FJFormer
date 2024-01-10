@@ -95,13 +95,19 @@ class CheckpointManager(object):
         with open(path, "wb") as stream:
             for key, value in pbar:
                 if gather_fns is not None:
-                    callable_func = gather_fns[key]
-                    if callable_func is None and not mismatch_allowed:
-                        raise KeyError(f"Gather Function {key} is None and NoneType OBJ is not callable.")
-                    value = callable_func(value) if callable_func is not None else value
-                    if callable_func is None:
-                        gather_functions_mismatch += 1
-                    pbar.set_postfix(gather_functions_mismatch=gather_functions_mismatch)
+                    try:
+                        callable_func = gather_fns[key]
+                        if callable_func is None and not mismatch_allowed:
+                            raise KeyError(f"Gather Function {key} is None and NoneType OBJ is not callable.")
+                        value = callable_func(value) if callable_func is not None else value
+                        if callable_func is None:
+                            gather_functions_mismatch += 1
+                    except KeyError as k_err:
+                        if mismatch_allowed:
+                            gather_functions_mismatch += 1
+                        else:
+                            raise KeyError(k_err)
+                pbar.set_postfix(gather_functions_mismatch=gather_functions_mismatch)
                 value = get_dtype(value, float_dtype)
                 stream.write(packer.pack((key, to_bytes(value))))
 
@@ -228,12 +234,18 @@ class CheckpointManager(object):
 
                 tensor = from_bytes(None, value)
                 if shard_fns is not None:
-                    callable_func = shard_fns[key]
-                    if callable_func is None and not mismatch_allowed:
-                        raise KeyError(f"Shard Function {key} is None and NoneType OBJ is not callable.")
-                    tensor = callable_func(tensor) if callable_func is not None else tensor
-                    if callable_func is None:
-                        shard_functions_mismatch += 1
+                    try:
+                        callable_func = shard_fns[key]
+                        if callable_func is None and not mismatch_allowed:
+                            raise KeyError(f"Shard Function {key} is None and NoneType OBJ is not callable.")
+                        tensor = callable_func(tensor) if callable_func is not None else tensor
+                        if callable_func is None:
+                            shard_functions_mismatch += 1
+                    except KeyError as k_err:
+                        if mismatch_allowed:
+                            shard_functions_mismatch += 1
+                        else:
+                            raise KeyError(k_err)
                 flatten_state[key] = tensor
                 pbar.set_postfix(shard_functions_mismatch=shard_functions_mismatch)
         if target is not None:
