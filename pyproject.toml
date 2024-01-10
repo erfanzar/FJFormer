@@ -1,6 +1,21 @@
 [build-system]
 build-backend = "setuptools.build_meta"
-
+requires = [
+    "jax>=0.4.16",
+    "jaxlib>=0.4.16",
+    "numpy~=1.26.2",
+    "typing~=3.7.4.3",
+    "flax~=0.7.5",
+    "chex~=0.1.84",
+    "ipython~=8.17.2",
+    "datasets~=2.14.7",
+    "einops~=0.6.1",
+    "msgpack~=1.0.7",
+    "tqdm~=4.64.1",
+    "optax~=0.1.7",
+    "setuptools~=68.1.2",
+    "ml_collections==0.1.1"
+]
 [tool.black]
 line-length = 88
 target-version = ["py37", "py38", "py39", "py310", "py311", "py312"]
