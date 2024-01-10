@@ -89,7 +89,8 @@ class CheckpointManager(object):
         with open(path, "wb") as stream:
             for key, value in pbar:
                 if gather_fns is not None:
-                    value = gather_fns[key](value)
+                    callable_func = gather_fns[key]
+                    value = callable_func(value) if callable_func is not None else value
                 value = get_dtype(value, float_dtype)
                 stream.write(packer.pack((key, to_bytes(value))))
 
