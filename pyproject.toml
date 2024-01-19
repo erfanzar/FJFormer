@@ -47,3 +47,7 @@ keywords = [
 [build-system]
 requires = ["setuptools>=46.4.0", "wheel>=0.34.2"]
 build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages]
+
+find = { where = ["src"] }
