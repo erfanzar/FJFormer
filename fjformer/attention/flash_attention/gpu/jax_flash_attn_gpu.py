@@ -22,19 +22,15 @@ import jax
 from jax import lax
 from jax.experimental import pallas as pl
 import jax.numpy as jnp
+import numpy as np
 
-DEFAULT_MASK_VALUE = -0.7 * float(jnp.finfo(jnp.dtype("float32")).max)
+DEFAULT_MASK_VALUE = -0.7 * float(np.finfo(np.dtype("float32")).max)
 
 
 def mha_forward_kernel(
         q_ref,
         k_ref,
-        v_ref,
-        acc_ref,
-        l_ref,
-        m_ref,  # Input arrays
-        q_chunk_idx_start_ref,
-        k_chunk_idx_start_ref,
+        v_ref,  # Input arrays
         segment_ids_ref: jax.Array | None,  # segment_id arrays
         o_ref: Any,  # Output
         *residual_refs: Any,  # Residual outputs
@@ -45,47 +41,15 @@ def mha_forward_kernel(
         block_d: int,
         block_k: int,
 ):
-    """
-    The mha_forward_kernel function is the main function that performs the matrix multiplication
-    between query and key, as well as between softmax(query*key) and value. It also handles masking
-    and residual connections. The kernel is called by mha_forward_kernel_pipeline, which sets up a
-    pipeline to run this kernel on multiple blocks of q in parallel.
-
-    :param q_ref: Load the queries from dram to sram
-    :param k_ref: Store the key values
-    :param v_ref: Load the values from dram
-    :param acc_ref: Store the output of the attention layer
-    :param l_ref: Store the l_i values
-    :param m_ref: Store the max values of qk
-    :param q_chunk_idx_start_ref: Store the start index of q_ref
-    :param k_chunk_idx_start_ref: Index the k_ref array
-    :param segment_ids_ref: jax.Array | None: Determine whether to use segment masking
-    :param o_ref: Any: Store the output of the mha_forward_kernel function
-    :param # Output
-            *residual_refs: Any: Store the residual outputs
-    :param # Residual outputs
-            num_heads: int: Determine the number of heads in the attention layer
-    :param sm_scale: float: Scale the dot product of q and k
-    :param causal: bool: Determine whether to use the causal mask or not
-    :param block_q: int: Determine the size of the q tile
-    :param block_d: int: Specify the size of the output
-    :param block_k: int: Determine the size of the kv tile
-    :param : Determine the size of the output
-    :return: A program
-    
-    """
     seq_len = q_ref.shape[0]
     start_q = pl.program_id(0)
 
     # o is the buffer where we accumulate the output on sram.
     # m_i and l_i (see FlashAttention paper) are updated during the k,v loop.
-    m_i = pl.load(m_ref, (pl.dslice(start_q * block_q, block_q),))
-    l_i = pl.load(l_ref, (pl.dslice(start_q * block_q, block_q),))
+    m_i = jnp.zeros(block_q, dtype=jnp.float32) - float('inf')
+    l_i = jnp.zeros(block_q, dtype=jnp.float32)
     # acc is the buffer where we accumulate the output on sram.
-    o = pl.load(acc_ref, (pl.dslice(start_q * block_q, block_q), pl.dslice(None)))
-
-    q_chunk_idx_start = pl.load(q_chunk_idx_start_ref, (0,))
-    k_chunk_idx_start = pl.load(k_chunk_idx_start_ref, (0,))
+    o = jnp.zeros((block_q, block_d), dtype=jnp.float32)
 
     # Load q: it will stay in L1 throughout. Indices form a matrix because we
     # read, compute, and write all in 2d chunks. 1 element ~= 1 CUDA thread index.
@@ -126,8 +90,8 @@ def mha_forward_kernel(
             if segment_ids_ref is not None:
                 mask = segment_mask(q_segment_ids, kv_segment_ids)
             if causal:
-                span_q = (q_chunk_idx_start + start_q) * block_q + jnp.arange(block_q)
-                span_k = (k_chunk_idx_start + start_k) * block_k + jnp.arange(block_k)
+                span_q = start_q * block_q + jnp.arange(block_q)
+                span_k = start_k * block_k + jnp.arange(block_k)
                 causal_mask = span_q[:, None] >= span_k[None, :]
                 mask = (
                     causal_mask if mask is None else jnp.logical_and(mask, causal_mask)
@@ -155,9 +119,7 @@ def mha_forward_kernel(
 
     if causal:
         # Ceildiv (`pl.cdiv` and `//` do not work due to type of start_q)
-        upper_bound = lax.min(
-            lax.div(block_q * (q_chunk_idx_start + start_q + 1) + block_k - 1, block_k) - k_chunk_idx_start,
-            pl.cdiv(seq_len, block_k))
+        upper_bound = lax.div(block_q * (start_q + 1) + block_k - 1, block_k)
     else:
         upper_bound = pl.cdiv(seq_len, block_k)  # type: ignore
     o, m_i, l_i = lax.fori_loop(0, upper_bound, body, (o, m_i, l_i))
@@ -176,21 +138,6 @@ def segment_mask(
         kv_segment_ids: jax.Array,
 ):
     # [B, T, 1] or [T, 1]
-    """
-    The segment_mask function is used to mask out the attention scores for
-    the query-key pairs that are not in the same segment. This is done by
-    creating a boolean array of shape [B, T, S] or [T, S], where B and T are
-    the batch size and sequence length of the query tensor respectively; and S
-    is the sequence length of key/value tensors. The boolean array has True at
-    positions where q_segment_ids == kv_segment_ids (i.e., when they belong to
-    the same segment), otherwise False.
-
-    :param q_segment_ids: jax.Array: Create a mask for the query
-    :param kv_segment_ids: jax.Array: Create a mask
-    :param : Mask the attention weights
-    :return: A boolean mask that is true for all the
-    
-    """
     q_segment_ids = jnp.expand_dims(q_segment_ids, axis=-1)
     # [B, 1, S] or [1, S]
     if kv_segment_ids.ndim == 1:
@@ -200,53 +147,106 @@ def segment_mask(
     return jnp.equal(q_segment_ids, kv_segment_ids).astype(jnp.bool_)
 
 
+@functools.partial(
+    jax.custom_vjp, nondiff_argnums=[4, 5, 6, 7, 8, 9, 10, 11, 12, 13]
+)
+@functools.partial(
+    jax.jit,
+    static_argnames=[
+        "sm_scale",
+        "causal",
+        "block_q",
+        "block_k",
+        "backward_pass_impl",
+        "num_warps",
+        "num_stages",
+        "grid",
+        "interpret",
+        "debug",
+    ],
+)
+def mha(
+        q,
+        k,
+        v,
+        segment_ids: jnp.ndarray | None,
+        sm_scale: float = 1.0,
+        causal: bool = False,
+        block_q: int = 128,
+        block_k: int = 128,
+        backward_pass_impl: str = "triton",
+        num_warps: int | None = None,
+        num_stages: int = 2,
+        grid: tuple[int, ...] | None = None,
+        interpret: bool = False,
+        debug: bool = False,
+):
+    del backward_pass_impl
+    batch_size, seq_len, num_heads, head_dim = q.shape
+    block_q = min(block_q, seq_len)
+    block_k = min(block_k, seq_len)
+    # Heuristics.
+    grid_ = grid
+    if grid_ is None:
+        grid_ = (pl.cdiv(seq_len, block_q), batch_size, num_heads)
+
+    num_warps_ = num_warps
+    if num_warps_ is None:
+        num_warps_ = 4 if head_dim <= 64 else 8
+    kernel = functools.partial(mha_forward_kernel, num_heads=num_heads,
+                               sm_scale=sm_scale, block_q=block_q,
+                               block_k=block_k, block_d=head_dim,
+                               causal=causal)
+
+    in_specs = [
+        pl.BlockSpec(
+            lambda _, j, k: (j, 0, k, 0), (None, seq_len, None, head_dim)
+        ),
+        pl.BlockSpec(
+            lambda _, j, k: (j, 0, k, 0), (None, seq_len, None, head_dim)
+        ),
+        pl.BlockSpec(
+            lambda _, j, k: (j, 0, k, 0), (None, seq_len, None, head_dim)
+        ),
+    ]
+    in_specs.append(
+        None  # type: ignore[arg-type]
+        if segment_ids is None
+        else pl.BlockSpec(lambda _, j, k: (j, 0), (None, seq_len))
+    )
+    out_shape = jax.ShapeDtypeStruct(shape=q.shape, dtype=q.dtype)
+    return pl.pallas_call(
+        kernel,
+        grid=grid_,
+        in_specs=in_specs,
+        out_specs=pl.BlockSpec(
+            lambda _, j, k: (j, 0, k, 0), (None, seq_len, None, head_dim)
+        ),
+        num_warps=num_warps_,
+        num_stages=num_stages,
+        out_shape=out_shape,
+        debug=debug,
+        interpret=interpret,
+        name="mha_forward",
+    )(q, k, v, segment_ids)
+
+
 def _mha_forward(
         q,
         k,
         v,
-        carry,
-        q_chunk_idx_start,
-        k_chunk_idx_start,
         segment_ids: jax.Array | None,
         sm_scale: float,
         causal: bool,
         block_q: int,
         block_k: int,
         backward_pass_impl: str,
-        num_warps: Optional[int],
+        num_warps: int | None,
         num_stages: int,
         grid: Any,
         interpret: bool,
         debug: bool,
 ):
-    """
-    The _mha_forward function is a wrapper for the mha_forward_kernel function.
-    It takes in the query, key, and value tensors as well as other parameters such
-    as segment ids (if applicable), sm scale (scaling factor for softmax), causal
-    (whether or not to use causal attention), block q/k (the size of each chunk of
-    the sequence length dimension that will be processed by one thread block). It also takes in num warps which is the number of warps per SM on GPU. The grid parameter specifies how many blocks are launched per SM. If it's None then we use heur
-
-    :param q: Store the input query
-    :param k: Compute the attention weights
-    :param v: Store the output of the attention
-    :param carry: Store the output of the previous iteration
-    :param q_chunk_idx_start: Keep track of the current chunk
-    :param k_chunk_idx_start: Determine the starting index of the key
-    :param segment_ids: jax.Array | None: Determine whether the
-    :param sm_scale: float: Scale the softmax function
-    :param causal: bool: Determine whether the model is causal or not
-    :param block_q: int: Specify the number of blocks in the query
-    :param block_k: int: Determine the number of blocks in the kernel
-    :param backward_pass_impl: str: Choose the implementation of the backward pass
-    :param num_warps: Optional[int]: Set the number of warps
-    :param num_stages: int: Control the number of stages in the pipeline
-    :param grid: Any: Specify the size of the grid
-    :param interpret: bool: Print out the kernel code
-    :param debug: bool: Print out the shape of each input and output
-    :param : Determine the number of heads
-    :return: The following:
-    
-    """
     del backward_pass_impl
     batch_size, seq_len, num_heads, head_dim = q.shape
     block_q = min(block_q, seq_len)
@@ -272,25 +272,14 @@ def _mha_forward(
     in_specs = [
         pl.BlockSpec(
             lambda _, j, k: (j, 0, k, 0), (None, seq_len, None, head_dim)
-        ),  # q
+        ),
         pl.BlockSpec(
             lambda _, j, k: (j, 0, k, 0), (None, seq_len, None, head_dim)
-        ),  # k
+        ),
         pl.BlockSpec(
             lambda _, j, k: (j, 0, k, 0), (None, seq_len, None, head_dim)
-        ),  # v
-        pl.BlockSpec(
-            lambda _, j, k: (j, 0, k, 0), (None, seq_len, None, head_dim)
-        ),  # acc
-        pl.BlockSpec(
-            lambda _, j, k: (j, k, 0), (None, None, seq_len)
-        ),  # l
-        pl.BlockSpec(
-            lambda _, j, k: (j, k, 0), (None, None, seq_len)
-        ),  # m
+        ),
     ]
-    in_specs.append(pl.BlockSpec(lambda _, j, k: (0,), (1,)))
-    in_specs.append(pl.BlockSpec(lambda _, j, k: (0,), (1,)))
     in_specs.append(
         None  # type: ignore[arg-type]
         if segment_ids is None
@@ -313,8 +302,8 @@ def _mha_forward(
         debug=debug,
         interpret=interpret,
         name="mha_forward",
-    )(q, k, v, *carry, q_chunk_idx_start[None], k_chunk_idx_start[None], segment_ids)
-    return out, l, m
+    )(q, k, v, segment_ids)
+    return out, (q, k, v, segment_ids, out, l, m)
 
 
 def _preprocess_backward_kernel(out_ref, dout_ref, l_ref,
@@ -323,7 +312,7 @@ def _preprocess_backward_kernel(out_ref, dout_ref, l_ref,
     pid_m = pl.program_id(0)
 
     off_m = pl.ds(pid_m * block_q, block_q)
-    # checkpoint
+    # load
     o = pl.load(out_ref, (off_m, slice(None))).astype(jnp.float32)
     do = pl.load(dout_ref, (off_m, slice(None))).astype(jnp.float32)
     denom = pl.load(l_ref, (off_m,)).astype(jnp.float32)
@@ -339,23 +328,6 @@ def _preprocess_backward_kernel(out_ref, dout_ref, l_ref,
 @jax.named_scope("preprocess_backward")
 def _preprocess_backward(out, do, l, block_q: int,
                          debug: bool, interpret: bool):
-    """
-    The _preprocess_backward function is the backward pass of the preprocess function.
-    It takes in a tensor ``out``, which is the output of _preprocess_forward, and two other
-    tensors ``do`` and ``l``. The first one represents a scaled version of the attention weights
-    and has shape (batch_size, seq_len, num_heads). The second one represents an intermediate value used to compute
-    the gradient with respect to ln(q) and has shape (batch_size * num heads). It returns two tensors: do' which
-    represents a scaled version of datt
-
-    :param out: Compute the do_scaled parameter
-    :param do: Store the output of the previous layer
-    :param l: Store the length of each sequence in a batch
-    :param block_q: int: Control the number of threads in a block
-    :param debug: bool: Enable the debug mode of pallas
-    :param interpret: bool: Enable the interpreter mode
-    :return: A tuple of two arrays
-    
-    """
     batch_size, seq_len, num_heads, head_dim = out.shape
     out_shape = [
         jax.ShapeDtypeStruct(do.shape, do.dtype),
@@ -394,8 +366,6 @@ def mha_backward_kernel(
         m_ref,
         delta_ref,
         _,
-        q_chunk_idx_start_ref,
-        k_chunk_idx_start_ref,
         # Outputs
         dq_ref,
         dk_ref,
@@ -407,43 +377,8 @@ def mha_backward_kernel(
         block_d: int,
         block_k: int,
 ):
-    """
-    The mha_backward_kernel function is the backward pass of the multi-head attention
-    module. It takes in a reference to q, k, v and out tensors as well as references to
-    the segment_ids (if any), do_scaled (which is dout * scaled), l and m tensors. The
-    l and m tensors are used for calculating the softmax gradient. The function also takes in a delta value which is used for calculating gradients when there are masked values present in qk or when causal attention has been applied. Finally it also takes in references to chunk indices that indicate where each chunk starts within its respective sequence
-
-    :param # Inputs
-            q_ref: Load the query tensor
-    :param k_ref: Load the k_ref array
-    :param v_ref: Store the value matrix
-    :param segment_ids_ref: jax.Array | None: Determine whether or not to use segment masking
-    :param out_ref: Store the output of the mha_forward_kernel function
-    :param do_scaled_ref: Store the scaled output of the dot product between q and k
-    :param l_ref: Store the logits
-    :param m_ref: Store the maximum value of qk
-    :param delta_ref: Store the difference between the logits and softmax(logits)
-    :param _: Pass in the device
-    :param q_chunk_idx_start_ref: Keep track of the start index for each chunk
-    :param k_chunk_idx_start_ref: Store the index of the current chunk in k_ref
-    :param # Outputs
-            dq_ref: Store the output of the function
-    :param dk_ref: Store the gradients of k_ref
-    :param dv_ref: Store the output of the function
-    :param *: Pass in the parameters for the mha_backward_kernel function
-    :param sm_scale: float: Scale the qk matrix
-    :param causal: bool: Determine whether the mask should be applied
-    :param block_q: int: Determine the number of q values to be processed at a time
-    :param block_d: int: Specify the dimension of the dv_ref array
-    :param block_k: int: Determine the size of the block_k
-    :param : Determine the number of blocks in the sequence
-    :return: None
-    
-    """
     del out_ref, l_ref  # Not needed
     seq_len = q_ref.shape[0]
-    q_chunk_idx_start = pl.load(q_chunk_idx_start_ref, (0,))
-    k_chunk_idx_start = pl.load(k_chunk_idx_start_ref, (0,))
 
     def outer_loop(start_k, _):
 
@@ -451,7 +386,7 @@ def mha_backward_kernel(
         dk = jnp.zeros([block_k, block_d], dtype=jnp.float32)
         k = pl.load(k_ref, (pl.ds(start_k * block_k, block_k), slice(None)))
         v = pl.load(v_ref, (pl.ds(start_k * block_k, block_k), slice(None)))
-        span_k = (k_chunk_idx_start + start_k) * block_k + jnp.arange(block_k)
+        span_k = start_k * block_k + jnp.arange(block_k)
         kv_segment_ids = (
             None
             if segment_ids_ref is None
@@ -479,7 +414,7 @@ def mha_backward_kernel(
                     mask = segment_mask(q_segment_ids, kv_segment_ids)
 
                 if causal:
-                    span_q = (q_chunk_idx_start + start_q) * block_q + jnp.arange(block_q)
+                    span_q = start_q * block_q + jnp.arange(block_q)
                     causal_mask = span_q[:, None] >= span_k[None, :]
                     mask = (
                         causal_mask
@@ -507,7 +442,7 @@ def mha_backward_kernel(
             return dv, dk
 
         if causal:
-            lower_bound = lax.max(0, lax.div((k_chunk_idx_start + start_k) * block_k, block_q) - q_chunk_idx_start)
+            lower_bound = lax.div(start_k * block_k, block_q)
         else:
             lower_bound = 0
         dv, dk = lax.fori_loop(lower_bound, pl.cdiv(seq_len, block_q), inner_loop,
@@ -521,38 +456,20 @@ def mha_backward_kernel(
 
 
 def _mha_backward(sm_scale: float, causal: bool, block_q: int, block_k: int,
-                  backward_pass_impl: str, num_warps: Optional[int],
+                  backward_pass_impl: str, num_warps: int | None,
                   num_stages: int, grid: Any, interpret: bool,
-                  debug: bool, q_chunk_idx_start, k_chunk_idx_start, res, do):
-    """
-    The _mha_backward function is a helper function that computes the backward pass of
-    the MHA operation. It takes in the following arguments:
-        - sm_scale: The scale factor for softmax. This is used to prevent overflow when computing softmax.
-        - causal: Whether to use causal attention (i.e., mask future positions). If True, then we will only attend to past positions and ignore future ones (this is useful for language modeling). If False, then we will attend over all positions in the sequence (this is useful for translation).
-        - block_q: The size of each chunk along q
-
-    :param sm_scale: float: Scale the softmax output
-    :param causal: bool: Determine whether the mask is causal or not
-    :param block_q: int: Specify the number of rows in a block
-    :param block_k: int: Define the block size of the key matrix
-    :param backward_pass_impl: str: Specify whether to use the
-    :param num_warps: Optional[int]: Specify the number of warps
-    :param num_stages: int: Control the number of stages in the pallas kernel
-    :param grid: Any: Pass the grid to the kernel
-    :param interpret: bool: Enable the interpreter mode
-    :param debug: bool: Print the intermediate results of the kernel
-    :param q_chunk_idx_start: Determine the starting index of q in a chunked version of q
-    :param k_chunk_idx_start: Indicate the start index of the current chunk
-    :param res: Pass the output of the forward pass to the backward function
-    :param do: Accumulate the gradient into dq
-    :return: The gradient for the query, key and value
-    
-    """
+                  debug: bool, res, do):
     del num_warps, num_stages, grid
     q, k, v, segment_ids, out, l, m = res
 
     if backward_pass_impl == "xla":
-        raise Exception("use backward_pass_impl == triton")
+        return jax.vjp(
+            functools.partial(mha_reference, sm_scale=sm_scale, causal=causal),
+            q,
+            k,
+            v,
+            segment_ids,
+        )[1](do)
     elif backward_pass_impl == "triton":
         batch_size, seq_len, num_heads, head_dim = q.shape
         block_q = min(block_q, seq_len)
@@ -595,8 +512,6 @@ def _mha_backward(sm_scale: float, causal: bool, block_q: int, block_k: int,
         else:
             in_specs.insert(3, pl.BlockSpec(lambda j, k: (j, 0), (None, seq_len)))
             input_output_aliases = {9: 0}
-        in_specs.append(pl.BlockSpec(lambda j, k: (0,), (1,)))
-        in_specs.append(pl.BlockSpec(lambda j, k: (0,), (1,)))
         grid = (batch_size, num_heads)
         # TODO(sharadmv): figure out why num_warps=8 doesn't work!
         num_warps = 8
@@ -629,7 +544,35 @@ def _mha_backward(sm_scale: float, causal: bool, block_q: int, block_k: int,
             num_warps=num_warps,
             num_stages=1,
             input_output_aliases=input_output_aliases,
-        )(q, k, v, segment_ids, out, do_scaled, l, m, delta, dq, q_chunk_idx_start[None], k_chunk_idx_start[None])
+        )(q, k, v, segment_ids, out, do_scaled, l, m, delta, dq)
     else:
         raise ValueError(f"Invalid backward pass implementation: {backward_pass_impl}")
-    return dq.astype(q.dtype), dk, dv
+    return dq.astype(q.dtype), dk, dv, None
+
+
+mha.defvjp(_mha_forward, _mha_backward)
+
+
+@functools.partial(jax.jit, static_argnames=['sm_scale', 'causal'])
+def mha_reference(
+        q,
+        k,
+        v,
+        segment_ids: jnp.ndarray | None,
+        sm_scale=1.0,
+        causal: bool = False,
+):
+    q_seq_len = q.shape[1]
+    kv_seq_len = k.shape[1]
+    logits = jnp.einsum('bqhc,bkhc->bhqk', q, k).astype(jnp.float32)
+    mask = None
+    if segment_ids is not None:
+        mask = jnp.expand_dims(segment_mask(segment_ids, segment_ids), 1)
+        mask = jnp.broadcast_to(mask, logits.shape)
+    if causal:
+        causal_mask = jnp.tril(jnp.ones((1, 1, q_seq_len, kv_seq_len), dtype=bool))
+        causal_mask = jnp.broadcast_to(causal_mask, logits.shape)
+        mask = causal_mask if mask is None else jnp.logical_and(mask, causal_mask)
+    logits = logits if mask is None else jnp.where(mask, logits, float("-inf"))
+    weights = jax.nn.softmax(logits * sm_scale).astype(q.dtype)
+    return jnp.einsum('bhqk,bkhc->bqhc', weights, v)
