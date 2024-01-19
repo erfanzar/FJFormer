@@ -19,7 +19,7 @@ import collections
 import functools
 from typing import Callable, Dict, List, NamedTuple, Set, Tuple
 from jax import util as jax_util
-from jax.experimental.pallas.ops.tpu.splash_attention import splash_attention_mask as mask_lib
+from . import splash_attention_mask as mask_lib
 import numpy as np
 
 

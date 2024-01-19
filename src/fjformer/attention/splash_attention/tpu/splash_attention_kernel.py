@@ -27,8 +27,8 @@ from jax import lax
 from jax import tree_util
 from jax.experimental import pallas as pl
 from jax.experimental.pallas import tpu as pltpu
-from jax.experimental.pallas.ops.tpu.splash_attention import splash_attention_mask as mask_lib
-from jax.experimental.pallas.ops.tpu.splash_attention import splash_attention_mask_info as mask_info_lib
+from . import splash_attention_mask as mask_lib
+from . import splash_attention_mask_info as mask_info_lib
 import jax.numpy as jnp
 import numpy as np
 
