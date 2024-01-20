@@ -1,49 +1,52 @@
-site_name: FJFormer
-
 nav:
-  - Home: index.md
-  - FlashAttention:
-      - Flash attention 0: fjformer-attention-flash_attention_0.md
-      - Jax flash attn tpu: fjformer-attention-jax_flash_attn_tpu.md
-      - Flash attention: fjformer-attention-flash_attention.md
-      - Jax flash attn gpu: fjformer-attention-jax_flash_attn_gpu.md
-      - Flash attention tpu: fjformer-attention-flash_attention_tpu.md
-      - Efficient attention: fjformer-attention-efficient_attention.md
-      - Flash attention gpu: fjformer-attention-flash_attention_gpu.md
-  - Partition utils:
-      - mesh utils: fjformer-partition_utils-mesh_utils.md
-      - t5x partitioning: fjformer-partition_utils-t5x_partitioning.md
-  - Checkpoint:
-      - streamer: fjformer-checkpoint-streamer.md
-      - load: fjformer-checkpoint-_load.md
-  - GPU Pallas:
-      - softmax: fjformer-gpu_pallas-softmax.md
-      - layer norm: fjformer-gpu_pallas-layer_norm.md
-      - attention: fjformer-gpu_pallas-attention.md
-      - rms norm: fjformer-gpu_pallas-rms_norm.md
+  - Attention:
+      - Efficient Attention: generated-attention-efficient_attention.md
+      - Flash Attention:
+          - Gpu:
+              - Jax Flash Attn Gpu: generated-attention-flash_attention-gpu-jax_flash_attn_gpu.md
+          - Tpu:
+              - Jax Flash Attn Tpu: generated-attention-flash_attention-tpu-jax_flash_attn_tpu.md
+      - Splash Attention:
+          - Tpu:
+              - Splash Attention Kernel: generated-attention-splash_attention-tpu-splash_attention_kernel.md
+              - Splash Attention Mask: generated-attention-splash_attention-tpu-splash_attention_mask.md
+              - Splash Attention Mask Info: generated-attention-splash_attention-tpu-splash_attention_mask_info.md
   - Bits:
-      - q dot general: fjformer-bits-q_dot_general.md
-      - config: fjformer-bits-config.md
-      - no numerics: fjformer-bits-no_numerics.md
-      - bits: fjformer-bits-bits.md
-      - q flax: fjformer-bits-q_flax.md
-      - calibration: fjformer-bits-calibration.md
-      - stochastic rounding: fjformer-bits-stochastic_rounding.md
-      - numerics: fjformer-bits-numerics.md
-      - int numerics: fjformer-bits-int_numerics.md
-  - func:
-      - loss func: fjformer-func-loss_func.md
-      - _func: fjformer-func-_func.md
-  - Optimizers:
-      - Adamw: fjformer-optimizers-adamw.md
-      - Lion: fjformer-optimizers-lion.md
-      - Optimizer utils: fjformer-optimizers-optimizer_utils.md
-      - Adafactor: fjformer-optimizers-adafactor.md
+      - Bits: generated-bits-bits.md
+      - Calibration: generated-bits-calibration.md
+      - Config: generated-bits-config.md
+      - Int Numerics: generated-bits-int_numerics.md
+      - No Numerics: generated-bits-no_numerics.md
+      - Numerics: generated-bits-numerics.md
+      - Q Dot General: generated-bits-q_dot_general.md
+      - Q Flax: generated-bits-q_flax.md
+      - Stochastic Rounding: generated-bits-stochastic_rounding.md
+  - Checkpoint:
+      - Load: generated-checkpoint-_load.md
+      - Streamer: generated-checkpoint-streamer.md
   - Datasets:
-      - datasets: fjformer-datasets-datasets.md
+      - Datasets: generated-datasets-datasets.md
+  - Func:
+      - Func: generated-func-_func.md
+      - Loss Func: generated-func-loss_func.md
+  - Gpu Pallas:
+      - Attention: generated-gpu_pallas-attention.md
+      - Layer Norm: generated-gpu_pallas-layer_norm.md
+      - Rms Norm: generated-gpu_pallas-rms_norm.md
+      - Softmax: generated-gpu_pallas-softmax.md
+  - Home: index.md
   - Monitor:
-      - Tracker: fjformer-monitor-tracker.md
-  - Utils: fjformer-utils.md
+      - Tracker: generated-monitor-tracker.md
+  - Optimizers:
+      - Adafactor: generated-optimizers-adafactor.md
+      - Adamw: generated-optimizers-adamw.md
+      - Lion: generated-optimizers-lion.md
+      - Optimizer Utils: generated-optimizers-optimizer_utils.md
+      - Rmsprop: generated-optimizers-rmsprop.md
+  - Partition Utils:
+      - Mesh Utils: generated-partition_utils-mesh_utils.md
+      - T5x Partitioning: generated-partition_utils-t5x_partitioning.md
+  - Utils: generated-utils.md
 
 plugins:
   - search
@@ -53,13 +56,14 @@ plugins:
           options:
             docstring_style: sphinx
 
+repo_url: https://github.com/erfanzar/FJFormer
+site_author: Erfan Zare Chavoshi
+site_name: FJFormer
+copyright: Erfan Zare Chavoshi-FJFormer
+
 theme:
-  name: material
   highlightjs: true
   hljs_languages:
     - yaml
     - python
-
-copyright: "Erfan Zare Chavoshi-FJFormer"
-
-site_author: "Erfan Zare Chavoshi"
+  name: material
