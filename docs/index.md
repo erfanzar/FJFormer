@@ -1,7 +1,7 @@
 # FJFormer
 
-a package for custom Jax Flax Functions and Utils
-Welcome to FJFormer - A collection of useful functions and utilities for Flax and JAX!
+Embark on a journey of paralleled/unparalleled computational prowess with FJFormer - an arsenal of custom Jax Flax
+Functions and Utils that elevate your AI endeavors to new heights!
 
 ## Overview
 
@@ -12,7 +12,7 @@ The goal of FJFormer is to make your life easier when working with Flax and JAX.
 fine-tuning an existing one, or just exploring the capabilities of these powerful frameworks, FJFormer offers
 
 - FlashAttention on `TPU/GPU` 🧬
-- BITComputations for 8,6,4 BIT Flax Models
+- BITComputations for 8,6,4 BIT Flax Models 🤏
 - Smart Dataset Loading
 - Built-in functions and Loss functions
 - GPU-Pallas triton like implementation of `Softmax`, `FlashAttention`, `RMSNorm`, `LayerNorm`
@@ -20,9 +20,12 @@ fine-tuning an existing one, or just exploring the capabilities of these powerfu
 - Monitoring Utils for *TPU/GPU/CPU* memory `foot-print`
 - Special Optimizers with schedulers and Easy to Use
 - Partitioning Utils
+- LoRA with `XRapture` 🤠
 
 and A lot of these features are fully documented so i gusse FJFormer has something
-to offer and it's not just a Computation BackEnd for [EasyDel](https://github.com/erfanzar/EasyDel).
+to offer, and it's not just a Computation BackEnd for [EasyDel](https://github.com/erfanzar/EasyDel).
+
+checkout for documentations [here](https://erfanzar.github.io/FJFormer/).
 
 ## Contributing
 
@@ -31,3 +34,4 @@ just want to help out with development, please check out our GitHub repository a
 open an issue.
 
 Thank you for using FJFormer, and happy training!
+

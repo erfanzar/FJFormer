@@ -1,61 +1,61 @@
 nav:
   - Bits:
-      - Bits: generated-bits-bits.md
-      - Calibration: generated-bits-calibration.md
-      - Config: generated-bits-config.md
-      - Int Numerics: generated-bits-int_numerics.md
-      - No Numerics: generated-bits-no_numerics.md
-      - Numerics: generated-bits-numerics.md
-      - Q Dot General: generated-bits-q_dot_general.md
-      - Q Flax: generated-bits-q_flax.md
-      - Stochastic Rounding: generated-bits-stochastic_rounding.md
+    - Bits: generated-bits-bits.md
+    - Calibration: generated-bits-calibration.md
+    - Config: generated-bits-config.md
+    - Int Numerics: generated-bits-int_numerics.md
+    - No Numerics: generated-bits-no_numerics.md
+    - Numerics: generated-bits-numerics.md
+    - Q Dot General: generated-bits-q_dot_general.md
+    - Q Flax: generated-bits-q_flax.md
+    - Stochastic Rounding: generated-bits-stochastic_rounding.md
   - Checkpoint:
-      - Load: generated-checkpoint-_load.md
-      - Streamer: generated-checkpoint-streamer.md
+    - Load: generated-checkpoint-_load.md
+    - Streamer: generated-checkpoint-streamer.md
   - Datasets:
-      - Datasets: generated-datasets-datasets.md
+    - Datasets: generated-datasets-datasets.md
   - Func:
-      - Func: generated-func-_func.md
-      - Loss Func: generated-func-loss_func.md
+    - Func: generated-func-_func.md
+    - Loss Func: generated-func-loss_func.md
   - Home: index.md
   - Monitor:
-      - Tracker: generated-monitor-tracker.md
+    - Tracker: generated-monitor-tracker.md
   - Optimizers:
-      - Adafactor: generated-optimizers-adafactor.md
-      - Adamw: generated-optimizers-adamw.md
-      - Lion: generated-optimizers-lion.md
-      - Optimizer Utils: generated-optimizers-optimizer_utils.md
-      - Rmsprop: generated-optimizers-rmsprop.md
+    - Adafactor: generated-optimizers-adafactor.md
+    - Adamw: generated-optimizers-adamw.md
+    - Lion: generated-optimizers-lion.md
+    - Optimizer Utils: generated-optimizers-optimizer_utils.md
+    - Rmsprop: generated-optimizers-rmsprop.md
   - Pallas Operations:
-      - Efficient Attention:
-          - Efficient Attention: generated-pallas_operations-efficient_attention-efficient_attention.md
-      - Flash Attention:
-          - Gpu:
-              - Jax Flash Attn Gpu: generated-pallas_operations-flash_attention-gpu-jax_flash_attn_gpu.md
-          - Tpu:
-              - Jax Flash Attn Tpu: generated-pallas_operations-flash_attention-tpu-jax_flash_attn_tpu.md
-      - Layer Norm:
-          - Gpu:
-              - Layer Norm: generated-pallas_operations-layer_norm-gpu-layer_norm.md
-      - Rms Norm:
-          - Gpu:
-              - Rms Norm: generated-pallas_operations-rms_norm-gpu-rms_norm.md
-      - Softmax:
-          - Gpu:
-              - Softmax: generated-pallas_operations-softmax-gpu-softmax.md
-      - Splash Attention:
-          - Tpu:
-              - Splash Attention Kernel: generated-pallas_operations-splash_attention-tpu-splash_attention_kernel.md
-              - Splash Attention Mask: generated-pallas_operations-splash_attention-tpu-splash_attention_mask.md
-              - Splash Attention Mask Info: generated-pallas_operations-splash_attention-tpu-splash_attention_mask_info.md
+    - Efficient Attention:
+      - Efficient Attention: generated-pallas_operations-efficient_attention-efficient_attention.md
+    - Flash Attention:
+      - Gpu:
+        - Jax Flash Attn Gpu: generated-pallas_operations-flash_attention-gpu-jax_flash_attn_gpu.md
+      - Tpu:
+        - Jax Flash Attn Tpu: generated-pallas_operations-flash_attention-tpu-jax_flash_attn_tpu.md
+    - Layer Norm:
+      - Gpu:
+        - Layer Norm: generated-pallas_operations-layer_norm-gpu-layer_norm.md
+    - Rms Norm:
+      - Gpu:
+        - Rms Norm: generated-pallas_operations-rms_norm-gpu-rms_norm.md
+    - Softmax:
+      - Gpu:
+        - Softmax: generated-pallas_operations-softmax-gpu-softmax.md
+    - Splash Attention:
+      - Tpu:
+        - Splash Attention Kernel: generated-pallas_operations-splash_attention-tpu-splash_attention_kernel.md
+        - Splash Attention Mask: generated-pallas_operations-splash_attention-tpu-splash_attention_mask.md
+        - Splash Attention Mask Info: generated-pallas_operations-splash_attention-tpu-splash_attention_mask_info.md
   - Partition Utils:
-      - Mesh Utils: generated-partition_utils-mesh_utils.md
-      - T5x Partitioning: generated-partition_utils-t5x_partitioning.md
+    - Mesh Utils: generated-partition_utils-mesh_utils.md
+    - T5x Partitioning: generated-partition_utils-t5x_partitioning.md
   - Utils: generated-utils.md
   - Xrapture:
-      - Implicit Array: generated-xrapture-implicit_array.md
-      - Tracer: generated-xrapture-tracer.md
-      - Xrapture: generated-xrapture-xrapture.md
+    - Implicit Array: generated-xrapture-implicit_array.md
+    - Tracer: generated-xrapture-tracer.md
+    - Xrapture: generated-xrapture-xrapture.md
 
 plugins:
   - search
