@@ -22,7 +22,8 @@ dependencies = [
     "msgpack~=1.0.7",
     "tqdm~=4.64.1",
     "optax~=0.1.7",
-    "ml_collections==0.1.1"
+    "ml_collections==0.1.1",
+    "plum-dispatch==2.3.2"
 ]
 classifiers = [
     "Development Status :: 3 - Alpha",
