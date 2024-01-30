@@ -1,16 +1,4 @@
 nav:
-  - Attention:
-      - Efficient Attention: generated-attention-efficient_attention.md
-      - Flash Attention:
-          - Gpu:
-              - Jax Flash Attn Gpu: generated-attention-flash_attention-gpu-jax_flash_attn_gpu.md
-          - Tpu:
-              - Jax Flash Attn Tpu: generated-attention-flash_attention-tpu-jax_flash_attn_tpu.md
-      - Splash Attention:
-          - Tpu:
-              - Splash Attention Kernel: generated-attention-splash_attention-tpu-splash_attention_kernel.md
-              - Splash Attention Mask: generated-attention-splash_attention-tpu-splash_attention_mask.md
-              - Splash Attention Mask Info: generated-attention-splash_attention-tpu-splash_attention_mask_info.md
   - Bits:
       - Bits: generated-bits-bits.md
       - Calibration: generated-bits-calibration.md
@@ -29,11 +17,6 @@ nav:
   - Func:
       - Func: generated-func-_func.md
       - Loss Func: generated-func-loss_func.md
-  - Gpu Pallas:
-      - Attention: generated-gpu_pallas-attention.md
-      - Layer Norm: generated-gpu_pallas-layer_norm.md
-      - Rms Norm: generated-gpu_pallas-rms_norm.md
-      - Softmax: generated-gpu_pallas-softmax.md
   - Home: index.md
   - Monitor:
       - Tracker: generated-monitor-tracker.md
@@ -43,10 +26,36 @@ nav:
       - Lion: generated-optimizers-lion.md
       - Optimizer Utils: generated-optimizers-optimizer_utils.md
       - Rmsprop: generated-optimizers-rmsprop.md
+  - Pallas Operations:
+      - Efficient Attention:
+          - Efficient Attention: generated-pallas_operations-efficient_attention-efficient_attention.md
+      - Flash Attention:
+          - Gpu:
+              - Jax Flash Attn Gpu: generated-pallas_operations-flash_attention-gpu-jax_flash_attn_gpu.md
+          - Tpu:
+              - Jax Flash Attn Tpu: generated-pallas_operations-flash_attention-tpu-jax_flash_attn_tpu.md
+      - Layer Norm:
+          - Gpu:
+              - Layer Norm: generated-pallas_operations-layer_norm-gpu-layer_norm.md
+      - Rms Norm:
+          - Gpu:
+              - Rms Norm: generated-pallas_operations-rms_norm-gpu-rms_norm.md
+      - Softmax:
+          - Gpu:
+              - Softmax: generated-pallas_operations-softmax-gpu-softmax.md
+      - Splash Attention:
+          - Tpu:
+              - Splash Attention Kernel: generated-pallas_operations-splash_attention-tpu-splash_attention_kernel.md
+              - Splash Attention Mask: generated-pallas_operations-splash_attention-tpu-splash_attention_mask.md
+              - Splash Attention Mask Info: generated-pallas_operations-splash_attention-tpu-splash_attention_mask_info.md
   - Partition Utils:
       - Mesh Utils: generated-partition_utils-mesh_utils.md
       - T5x Partitioning: generated-partition_utils-t5x_partitioning.md
   - Utils: generated-utils.md
+  - Xrapture:
+      - Implicit Array: generated-xrapture-implicit_array.md
+      - Tracer: generated-xrapture-tracer.md
+      - Xrapture: generated-xrapture-xrapture.md
 
 plugins:
   - search
