@@ -17,4 +17,4 @@ from .implicit_array import (
     SymbolicConstant
 )
 
-# Edited from davisyoshida/qax which is MIT Licensed and ported in FJFormer in order to make some overall changes
+# Edited from davisyoshida/qax which is MIT Licensed and ported in FJFormer in order to make overall changes
