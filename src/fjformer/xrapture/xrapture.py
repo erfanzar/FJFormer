@@ -372,7 +372,10 @@ class XRapTure:
         def _ensure_delete(val):
             if not isinstance(val, jax.Array) or val.is_deleted():
                 return
-            val.device_buffer.delete()
+            try:
+                val.device_buffer.delete()
+            except ValueError:
+                val.device_buffers.delete()
 
         materialize = jax.jit(materialize_nested, donate_argnums=0 if destructive else ())
 
