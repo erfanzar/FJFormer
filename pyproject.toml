@@ -10,8 +10,8 @@ readme = "README.md"
 version = "0.0.30"
 
 dependencies = [
-    "jax>=0.4.22",
-    "jaxlib>=0.4.22",
+    "jax>=0.4.20",
+    "jaxlib>=0.4.20",
     "numpy~=1.26.2",
     "typing~=3.7.4.3",
     "flax~=0.7.5",
@@ -26,6 +26,7 @@ dependencies = [
     "plum-dispatch==2.3.2",
     "termcolor"
 ]
+
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Intended Audience :: Developers",
