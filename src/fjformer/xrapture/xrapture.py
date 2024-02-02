@@ -39,8 +39,7 @@ class LoraWeight(ImplicitArray):
     alpha: float = aux_field(default=1.)
 
     def __post_init__(self):
-        
-        """    
+        """
         The __post_init__ function is called after the __init__ function.
         It allows us to check that the shapes of our parameters are correct, and if not, raise an error.
         
@@ -49,13 +48,12 @@ class LoraWeight(ImplicitArray):
         
         """
         super().__post_init__()
-        assert self.a.shape[-2] == self.b.shape[-1]
-        assert self.w.shape[-2] == self.b.shape[-2]
-        assert self.w.shape[-1] == self.a.shape[-1]
+        assert self.a.shape[-2] == self.b.shape[-1], "A and B Array should be like a[K,N] B[M,K]"
+        assert self.w.shape[-2] == self.b.shape[-2], "A and B Array should be like W[M,N] B[M,K]"
+        assert self.w.shape[-1] == self.a.shape[-1], "A and B Array should be like W[M,N] A[K,N]"
 
     def materialize(self):
-        
-        """    
+        """
         The materialize function is used to create a new matrix from the parameters of the factorization.
         
         :param self: Access the attributes and methods of a class
@@ -65,8 +63,7 @@ class LoraWeight(ImplicitArray):
         return (self.w + self.get_scale() * self.b @ self.a).astype(self.w.dtype)
 
     def get_scale(self):
-        
-        """    
+        """
         The get_scale function returns the scale of the model.
         The scale is defined as alpha / number of columns in b.
         
@@ -98,7 +95,6 @@ def handle_dot_lhs(
         dimension_numbers,
         **kwargs
 ):
-    
     """
     The handle_dot_lhs function is a JAX primitive that allows us to perform
     matrix multiplication on LoraWeights. It does this by first performing the matrix
@@ -147,7 +143,6 @@ def handle_dot_rhs(
         dimension_numbers,
         **kwargs
 ):
-        
     """
     The handle_dot_rhs function is a partial application of the jax.lax.dot_general function,
     which takes in two arrays and returns their dot product (or matrix multiplication). The 
@@ -191,7 +186,6 @@ def handle_conv(
         dimension_numbers,
         **params
 ):
-    
     """
     The handle_conv function is a helper function that allows us to use LoraWeight objects as inputs to convolutions.
     
@@ -241,7 +235,6 @@ def handle_gather(
         slice_sizes,
         **params
 ):
-    
     """
     The handle_gather function is a JAX primitive handler that allows us to
     perform the gather operation on LoraWeight objects. This function is called by
@@ -251,10 +244,9 @@ def handle_gather(
     :param primitive: Identify the operation
     :param lora: LoraWeight: Pass the loraweight object to the function
     :param indices: jax.Array: Select the rows of the weight matrix
-    :param *: Pass in the parameters of the original function
     :param dimension_numbers: Specify the dimension numbers of
     :param slice_sizes: Specify the size of each slice
-    :param **params: Pass the dimension_numbers parameter to the gather function
+    :param params: Pass the dimension_numbers parameter to the gather function
     :return: A new loraweight
     
     """
@@ -285,7 +277,6 @@ def eval_lora_transpose(
         *,
         permutation
 ):
-    
     """
     The eval_lora_transpose function is used to transpose a LoraWeight object.
     
@@ -367,7 +358,7 @@ class XRapTure:
             lora_parameters,
             destructive=True,
     ):
-        
+
         """    
         The merge_parameters function is used to convert a LoraWeight into an array.
         
@@ -377,6 +368,7 @@ class XRapTure:
         :return: The parameters of the model
         
         """
+
         def _ensure_delete(val):
             if not isinstance(val, jax.Array) or val.is_deleted():
                 return
@@ -399,7 +391,7 @@ class XRapTure:
             path: list[jax.tree_util.DictKey],
             params: dict | jax.tree_util.PyTreeDef | None = None
     ):
-        
+
         """    
         The base_decision_function function is used to determine which parameters are frozen,
         which are fine-tuned with LoRA, and which are fully fine-tuned. The function takes in a path
@@ -450,7 +442,7 @@ class XRapTure:
             decision_fn: Optional[Callable] = None,
             tune_vectors: bool = False,
     ):
-        
+
         """    
         The make_lora_specs function is used to create a dictionary of LORA specs for the parameters
         of a model. The function takes in two arguments:
@@ -488,12 +480,11 @@ class XRapTure:
             alpha: float = 1.,
             is_leaf: bool = None
     ):
-        
 
-        """    
+        """
         The init_lora_parameters function takes in a parameter tree, the lora_spec, and some other parameters.
         It then iterates through the parameter tree using jax.tree_util.tree_map_with_path to get each path and value of 
-        the paramter tree (which is just a nested dictionary). It then checks if that value is either LORA_FREEZE or 
+        the parameter tree (which is just a nested dictionary). It then checks if that value is either LORA_FREEZE or
         LORA_FULL (these are constants defined above). If it's one of those two values, it returns the original parameter as-is; 
         otherwise it creates a new LoraWeight object with random values for b
         
@@ -507,6 +498,7 @@ class XRapTure:
         :return: A tree of loraweight objects
         
         """
+
         def iter_keys(key):
             while True:
                 key, out_key = jax.random.split(key)
@@ -566,7 +558,7 @@ class XRapTure:
             lora_spec,
             scalar_frozen_grads=False
     ):
-        
+
         """    
         The wrap_tx function takes a gradient transformation and wraps it in two
         freeze transformations. The first freezes all parameters that are marked as

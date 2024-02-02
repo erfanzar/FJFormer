@@ -1,4 +1,4 @@
-from abc import abstractmethod
+from abc import abstractmethod, ABCMeta
 from contextlib import contextmanager
 from contextvars import ContextVar
 from dataclasses import (
@@ -43,8 +43,14 @@ import jax.linear_util as lu
 from jax import tree_util
 
 
-class ArrayValue(ABC):
-    pass
+class ArrayValue(metaclass=ABCMeta):
+    """Helper class that provides a standard way to create an ABC using
+    inheritance.
+    """
+    __slots__ = ()
+    shape = None
+    e_num_val = None
+    is_registered_by_pJit = False
 
 
 ArrayValue.register(jax.Array)
