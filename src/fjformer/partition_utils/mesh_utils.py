@@ -3,7 +3,8 @@ import jax.numpy as jnp
 import re
 
 from jax.experimental.mesh_utils import create_device_mesh
-from jax.experimental.pjit import pjit, with_sharding_constraint as _with_sharding_constraint
+from jax.experimental.pjit import pjit
+from jax.lax import with_sharding_constraint as _with_sharding_constraint
 import numpy as np
 from jax.sharding import PartitionSpec as PS
 from jax.experimental import mesh_utils
