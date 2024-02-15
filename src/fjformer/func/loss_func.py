@@ -5,8 +5,10 @@ import jax.numpy as np
 from flax.training import common_utils
 from jax.scipy.special import logsumexp
 import jax
-from jax import numpy as jnp, Array
+from jax import numpy as jnp, Array, lax
 from typing import Mapping, Optional, Tuple, Union
+from functools import reduce
+from operator import mul
 
 
 # Mean Squared Error
@@ -371,7 +373,8 @@ def compute_weighted_cross_entropy(
         logits, soft_targets, z_loss=z_loss)
     total_loss = total_loss - normalizing_constant
 
-    weight_sum = np.prod(targets.shape)
+    shape_dtype_struct = jax.eval_shape(lambda x: x, targets)
+    weight_sum = reduce(mul, shape_dtype_struct.shape, 1)
     if weights is not None:
         total_loss = total_loss * weights
         total_z_loss = total_z_loss * weights
@@ -386,6 +389,41 @@ def compute_weighted_cross_entropy(
         total_loss /= loss_normalizing_factor
         total_z_loss /= loss_normalizing_factor
     return jnp.sum(total_loss), jnp.sum(total_z_loss), weight_sum
+
+
+def compute_weighted_cross_entropy_and_accuracy(
+    logits: jnp.ndarray,
+    targets: jnp.ndarray,
+    weights: Optional[jnp.ndarray] = None,
+    label_smoothing: float = 0.0,
+    z_loss: float = 0.0,
+    loss_normalizing_factor: Optional[float] = None,
+) -> Tuple[jnp.ndarray, jnp.ndarray, jnp.ndarray, jnp.ndarray]:
+    """Compute weighted cross entropy and entropy for log probs and targets.
+
+    Args:
+     logits: [batch, length, num_classes] float array.
+     targets: categorical targets [batch, length] int array.
+     weights: None or array of shape [batch, length].
+     label_smoothing: label smoothing constant, used to determine the on and off
+       values.
+     z_loss: coefficient for auxiliary z-loss loss term.
+     loss_normalizing_factor: Constant to divide loss by. If not specified, loss
+       will not be normalized. Intended for backward compatibility with T5-MTF
+       training. Should not normally be used.
+
+    Returns:
+      Tuple of scalar loss, z_loss, weight sum and accuracy
+    """
+    total_loss, total_z_loss, weight_sum = compute_weighted_cross_entropy(
+        logits, targets, weights, label_smoothing, z_loss, loss_normalizing_factor)
+
+    predictions = jnp.argmax(logits, axis=-1)
+    correct_predictions = jnp.equal(predictions, targets).astype(jnp.float32)
+    accuracy = jnp.sum(correct_predictions * weights) / weight_sum
+
+    return total_loss, total_z_loss, weight_sum, accuracy
+
 
 
 @enum.unique
