@@ -209,6 +209,7 @@ def get_rmsprop_with_warmup_linear_scheduler(
 def get_rmsprop_with_warm_up_cosine_scheduler(
         steps: int,
         learning_rate: float = 5e-5,
+        learning_rate_end: float = 1e-5,
         decay: float = 0.9,
         initial_scale: float = 0.,
         momentum: Optional[float] = None,
@@ -226,6 +227,7 @@ def get_rmsprop_with_warm_up_cosine_scheduler(
 
     :param steps: int: Define the number of steps in the warm up phase
     :param learning_rate: float: Set the learning rate of the optimizer
+    :param learning_rate_end: float: Set the final learning rate of the optimizer after decay
     :param decay: float: Control the decay rate of the rmsprop algorithm
     :param initial_scale: float: Scale the initial gradient
     :param momentum: Optional[float]: Define the momentum of the optimizer
@@ -243,7 +245,7 @@ def get_rmsprop_with_warm_up_cosine_scheduler(
         peak_value=learning_rate,
         warmup_steps=warmup_steps,
         decay_steps=steps,
-        end_value=learning_rate,
+        end_value=learning_rate_end,
         exponent=exponent
     )
 

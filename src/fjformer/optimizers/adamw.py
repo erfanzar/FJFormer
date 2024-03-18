@@ -170,6 +170,7 @@ def get_adamw_with_warmup_linear_scheduler(
 def get_adamw_with_warm_up_cosine_scheduler(
         steps: int,
         learning_rate: float = 5e-5,
+        learning_rate_end: float = 1e-5,
         b1: float = 0.9,
         b2: float = 0.999,
         eps: float = 1e-8,
@@ -184,6 +185,7 @@ def get_adamw_with_warm_up_cosine_scheduler(
 
     :param steps:
     :param learning_rate:
+    :param learning_rate_end:
     :param b1:
     :param b2:
     :param eps:
@@ -200,7 +202,7 @@ def get_adamw_with_warm_up_cosine_scheduler(
         peak_value=learning_rate,
         warmup_steps=warmup_steps,
         decay_steps=steps,
-        end_value=learning_rate,
+        end_value=learning_rate_end,
         exponent=exponent
     )
     tx = optax.chain(

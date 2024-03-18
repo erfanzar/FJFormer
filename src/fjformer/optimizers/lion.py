@@ -154,6 +154,7 @@ def get_lion_with_cosine_scheduler(
 def get_lion_with_warm_up_cosine_scheduler(
         steps: int,
         learning_rate=5e-5,
+        learning_rate_end=1e-5,
         exponent: float = 1.0,
         b1: float = 0.9,
         b2: float = 0.99,
@@ -165,6 +166,7 @@ def get_lion_with_warm_up_cosine_scheduler(
 
     :param steps:
     :param learning_rate:
+    :param learning_rate_end:
     :param exponent:
     :param b1:
     :param b2:
@@ -178,7 +180,7 @@ def get_lion_with_warm_up_cosine_scheduler(
         peak_value=learning_rate,
         warmup_steps=warmup_steps,
         decay_steps=steps,
-        end_value=learning_rate,
+        end_value=learning_rate_end,
         exponent=exponent,
     )
     tx = optax.chain(
