@@ -158,6 +158,7 @@ def get_lion_with_warm_up_cosine_scheduler(
         b1: float = 0.9,
         b2: float = 0.99,
         gradient_accumulation_steps: int = 1,
+        warmup_steps: int = 500,
         mu_dtype: Optional[chex.ArrayDType] = None,
 ):
     """
@@ -168,14 +169,15 @@ def get_lion_with_warm_up_cosine_scheduler(
     :param b1:
     :param b2:
     :param gradient_accumulation_steps:
+    :param warmup_steps:
     :param mu_dtype:
     :return:
     """
     scheduler = optax.warmup_cosine_decay_schedule(
         init_value=0.5e-7,
         peak_value=learning_rate,
-        warmup_steps=steps,
-        decay_steps=steps + 1,
+        warmup_steps=warmup_steps,
+        decay_steps=steps,
         end_value=learning_rate,
         exponent=exponent,
     )

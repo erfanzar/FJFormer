@@ -217,6 +217,7 @@ def get_rmsprop_with_warm_up_cosine_scheduler(
         weight_decay: float = 1e-1,
         exponent: float = 1.0,
         gradient_accumulation_steps: int = 1,
+        warmup_steps: int = 500,
 ):
     """
     The get_rmsprop_with_warm_up_cosine_scheduler function returns a tuple of two objects:
@@ -233,14 +234,15 @@ def get_rmsprop_with_warm_up_cosine_scheduler(
     :param weight_decay: float: Add a weight decay to the loss function
     :param exponent: float: Control the shape of the cosine curve
     :param gradient_accumulation_steps: int: Accumulate gradients over multiple batches
+    :param warmup_steps: int: Number of steps of the linear warmup
     :param : Control the learning rate
     :return: Optimizer,Scheduler
     """
     scheduler = optax.warmup_cosine_decay_schedule(
         init_value=0.5e-7,
         peak_value=learning_rate,
-        warmup_steps=steps,
-        decay_steps=steps + 1,
+        warmup_steps=warmup_steps,
+        decay_steps=steps,
         end_value=learning_rate,
         exponent=exponent
     )
