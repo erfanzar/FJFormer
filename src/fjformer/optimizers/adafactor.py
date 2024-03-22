@@ -210,6 +210,7 @@ def get_adafactor_with_cosine_scheduler(
 def get_adafactor_with_warm_up_cosine_scheduler(
         steps: int,
         learning_rate=5e-5,
+        learning_rate_end=1e-5,
         weight_decay=1e-1,
         min_dim_size_to_factor: int = 128,
         decay_rate: float = 0.8,
@@ -223,12 +224,14 @@ def get_adafactor_with_warm_up_cosine_scheduler(
         factored: bool = True,
         exponent: float = 1.0,
         weight_decay_mask=None,
-        gradient_accumulation_steps: int = 1
+        gradient_accumulation_steps: int = 1,
+        warmup_steps: int = 500,
 ):
     """
 
     :param steps:
     :param learning_rate:
+    :param learning_rate_end:
     :param weight_decay:
     :param min_dim_size_to_factor:
     :param decay_rate:
@@ -243,14 +246,15 @@ def get_adafactor_with_warm_up_cosine_scheduler(
     :param exponent:
     :param weight_decay_mask:
     :param gradient_accumulation_steps:
+    :param warmup_steps:
     :return:
     """
     scheduler = optax.warmup_cosine_decay_schedule(
         init_value=0.5e-7,
         peak_value=learning_rate,
-        warmup_steps=steps,
-        decay_steps=steps + 1,
-        end_value=learning_rate,
+        warmup_steps=warmup_steps,
+        decay_steps=steps,
+        end_value=learning_rate_end,
         exponent=exponent
     )
     tx = optax.chain(
