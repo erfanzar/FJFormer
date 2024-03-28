@@ -21,7 +21,7 @@ def is_notebook():
 
 
 # Edited version of Jax-SMI from https://github.com/ayaka14732/jax-smi/
-def run(note_book=None, interval: float = 1, dir_prefix: str = '/dev/shm', dpr=True):
+def run(note_book=None, interval: float = 1, dir_prefix: str = "/dev/shm", dpr=True):
     """
     The run function is a simple wrapper around the go tool pprof command.
     It runs the command every interval seconds and prints out its output to stdout.
@@ -43,10 +43,10 @@ def run(note_book=None, interval: float = 1, dir_prefix: str = '/dev/shm', dpr=T
             if not note_book and dpr:
                 std.clear()
             output = subprocess.run(
-                args=['go', 'tool', 'pprof', '-tags', f'{dir_prefix}/memory.prof'],
+                args=["go", "tool", "pprof", "-tags", f"{dir_prefix}/memory.prof"],
                 stdout=subprocess.PIPE,
                 stderr=subprocess.DEVNULL,
-            ).stdout.decode('utf-8')
+            ).stdout.decode("utf-8")
             if not note_book and dpr:
                 std.addstr(output)
                 std.refresh()
@@ -54,16 +54,16 @@ def run(note_book=None, interval: float = 1, dir_prefix: str = '/dev/shm', dpr=T
                 IPython.display.clear_output(True)
                 print(output)
 
-            with open(f'{dir_prefix}/memory.json', 'w') as fin:
+            with open(f"{dir_prefix}/memory.json", "w") as fin:
                 json.dump({
-                    'log': output
+                    "log": output
                 }, fin)
             time.sleep(interval)
     except KeyboardInterrupt:
         curses.endwin()
 
 
-def get_memory_information(dir_prefix: str = '/dev/shm') -> str:
+def get_memory_information(dir_prefix: str = "/dev/shm") -> str:
     """
     The get_memory_information function is a wrapper around the go tool pprof command.
     It takes in an optional argument, dir_prefix, which defaults to /dev/shm.
@@ -75,13 +75,13 @@ def get_memory_information(dir_prefix: str = '/dev/shm') -> str:
 
     """
     return subprocess.run(
-        args=['go', 'tool', 'pprof', '-tags', f'{dir_prefix}/memory.prof'],
+        args=["go", "tool", "pprof", "-tags", f"{dir_prefix}/memory.prof"],
         stdout=subprocess.PIPE,
         stderr=subprocess.DEVNULL,
-    ).stdout.decode('utf-8')
+    ).stdout.decode("utf-8")
 
 
-def initialise_tracking(interval: float = 1., dir_prefix: str = '/dev/shm') -> None:
+def initialise_tracking(interval: float = 1., dir_prefix: str = "/dev/shm") -> None:
     """
     The initialise_tracking function starts a daemon thread that periodically saves the memory profile to disk.
     The outer function starts the daemon thread and returns a context manager that stops it when
@@ -107,18 +107,18 @@ def initialise_tracking(interval: float = 1., dir_prefix: str = '/dev/shm') -> N
 
         """
         while True:
-            jax.profiler.save_device_memory_profile(f'{dir_prefix}/memory.prof.new')
+            jax.profiler.save_device_memory_profile(f"{dir_prefix}/memory.prof.new")
             if posix is not None:
-                os.rename(f'{dir_prefix}/memory.prof.new', f'{dir_prefix}/memory.prof')
+                os.rename(f"{dir_prefix}/memory.prof.new", f"{dir_prefix}/memory.prof")
             else:
-                posix.rename(f'{dir_prefix}/memory.prof.new', f'{dir_prefix}/memory.prof')
+                posix.rename(f"{dir_prefix}/memory.prof.new", f"{dir_prefix}/memory.prof")
             time.sleep(interval)
 
     thread = threading.Thread(target=inner, daemon=True)
     thread.start()
 
 
-def threaded_log(interval: float = 1., dir_prefix: str = '/dev/shm', save_mem_json: bool = False) -> threading.Thread:
+def threaded_log(interval: float = 1., dir_prefix: str = "/dev/shm", save_mem_json: bool = False) -> threading.Thread:
     """
     The threaded_log function is a wrapper around the get_memory_information function.
     It allows you to monitor your memory usage in real time, and optionally save it to a JSON file.
@@ -147,9 +147,9 @@ def threaded_log(interval: float = 1., dir_prefix: str = '/dev/shm', save_mem_js
                     IPython.display.clear_output(True)
                     print(mem_info)
                 if save_mem_json:
-                    with open(f'{dir_prefix}/memory.json', 'w') as fin:
+                    with open(f"{dir_prefix}/memory.json", "w") as fin:
                         json.dump({
-                            'log': mem_info
+                            "log": mem_info
                         }, fin)
                 time.sleep(interval)
         except KeyboardInterrupt:
@@ -161,12 +161,12 @@ def threaded_log(interval: float = 1., dir_prefix: str = '/dev/shm', save_mem_js
     return thread
 
 
-def get_capacity_matrix(dir_prefix: str = '/dev/shm') -> dict:
-    pattern = r'(\d+\.\d+\wB) \((\d+\.\d+%)\): (\w+)(\(.*?\))?'
+def get_capacity_matrix(dir_prefix: str = "/dev/shm") -> dict:
+    pattern = r"(\d+\.\d+\wB) \((\d+\.\d+%)\): (\w+)(\(.*?\))?"
 
     def calculate_full_size(size, percent):
-        size_in_gb = float(re.search(r'(\d+\.\d+)GB', size).group(1))
-        percent_value = 100 / float(re.search(r'(\d+\.\d+)%', percent).group(1))
+        size_in_gb = float(re.search(r"(\d+\.\d+)GB", size).group(1))
+        percent_value = 100 / float(re.search(r"(\d+\.\d+)%", percent).group(1))
         full_size = size_in_gb * percent_value
         return full_size
 
