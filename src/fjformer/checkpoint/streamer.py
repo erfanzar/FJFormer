@@ -10,7 +10,7 @@ import msgpack
 from jax import numpy as jnp
 
 from flax import struct
-from typing import Callable, Literal
+from typing import Callable, Literal, Union
 
 
 def get_dtype(tensor, dtype):
@@ -44,7 +44,7 @@ class CheckpointManager(object):
             self,
             checkpoint_dir,
             enable=True,
-            float_dtype: str | jnp.dtype = "bf16",
+            float_dtype: Union[str, jnp.dtype] = "bf16",
             save_optimizer_state: bool = True,
             verbose: bool = False
     ):
@@ -57,7 +57,7 @@ class CheckpointManager(object):
     def save_checkpoint(
             self,
             state: struct.PyTreeNode,
-            filename: str | os.PathLike,
+            filename: Union[str, os.PathLike],
             gather_fns: dict[Callable] = None,
             mismatch_allowed: bool = True
 
@@ -73,7 +73,7 @@ class CheckpointManager(object):
     @staticmethod
     def save_state_to_file(
             state: struct.PyTreeNode,
-            path: str | os.PathLike,
+            path: Union[str, os.PathLike],
             gather_fns: dict[Callable] = None,
             float_dtype=None,
             verbose: bool = False,
@@ -114,7 +114,7 @@ class CheckpointManager(object):
     def save_pickle(
             self,
             obj,
-            filename: str | os.PathLike
+            filename: Union[str, os.PathLike]
     ):
         """
         The save_pickle function saves a Python object to disk using the pickle module.
@@ -189,7 +189,7 @@ class CheckpointManager(object):
 
     @staticmethod
     def load_checkpoint(
-            path: str | os.PathLike,
+            path: Union[str, os.PathLike],
             target=None,
             shard_fns: dict[Callable] = None,
             remove_dict_prefix=None,
@@ -292,7 +292,7 @@ class CheckpointManager(object):
                 "params",
                 "flax_params"
             ],
-            load_path: str | os.PathLike,
+            load_path: Union[str, os.PathLike],
             state_target=None,
             state_shard_fns=None,
             disallow_state=False,

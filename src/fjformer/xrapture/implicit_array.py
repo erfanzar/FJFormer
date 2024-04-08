@@ -7,7 +7,7 @@ from dataclasses import (
     fields,
     is_dataclass
 )
-from typing import ClassVar
+from typing import ClassVar, Union
 import warnings
 
 import numpy as np
@@ -214,7 +214,7 @@ def use_implicit_args(f):
     return implicit_f
 
 
-def aux_field(metadata: dict | Any = None, **kwargs):
+def aux_field(metadata: Optional[Union[dict, Any]] = None, **kwargs):
     metadata = dict(metadata) if metadata else {}
     metadata["implicit_array_aux"] = True
     return field(metadata=metadata, **kwargs)

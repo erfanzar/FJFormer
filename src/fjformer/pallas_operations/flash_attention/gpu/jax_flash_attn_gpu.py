@@ -31,7 +31,7 @@ def mha_forward_kernel(
         q_ref,
         k_ref,
         v_ref,  # Input arrays
-        segment_ids_ref: jax.Array | None,  # segment_id arrays
+        segment_ids_ref: Optional[jax.Array],  # segment_id arrays
         o_ref: Any,  # Output
         *residual_refs: Any,  # Residual outputs
         num_heads: int,
@@ -169,15 +169,15 @@ def mha(
         q,
         k,
         v,
-        segment_ids: jnp.ndarray | None,
+        segment_ids: Optional[jnp.ndarray],
         sm_scale: float = 1.0,
         causal: bool = False,
         block_q: int = 128,
         block_k: int = 128,
         backward_pass_impl: str = "triton",
-        num_warps: int | None = None,
+        num_warps: Optional[int] = None,
         num_stages: int = 2,
-        grid: tuple[int, ...] | None = None,
+        grid: Optional[tuple[int, ...]] = None,
         interpret: bool = False,
         debug: bool = False,
 ):
@@ -235,13 +235,13 @@ def _mha_forward(
         q,
         k,
         v,
-        segment_ids: jax.Array | None,
+        segment_ids: Optional[jax.Array],
         sm_scale: float,
         causal: bool,
         block_q: int,
         block_k: int,
         backward_pass_impl: str,
-        num_warps: int | None,
+        num_warps: Optional[int],
         num_stages: int,
         grid: Any,
         interpret: bool,
@@ -359,7 +359,7 @@ def mha_backward_kernel(
         q_ref,
         k_ref,
         v_ref,
-        segment_ids_ref: jax.Array | None,
+        segment_ids_ref: Optional[jax.Array],
         out_ref,
         do_scaled_ref,
         l_ref,
@@ -456,7 +456,7 @@ def mha_backward_kernel(
 
 
 def _mha_backward(sm_scale: float, causal: bool, block_q: int, block_k: int,
-                  backward_pass_impl: str, num_warps: int | None,
+                  backward_pass_impl: str, num_warps: Optional[int],
                   num_stages: int, grid: Any, interpret: bool,
                   debug: bool, res, do):
     del num_warps, num_stages, grid
@@ -558,7 +558,7 @@ def mha_reference(
         q,
         k,
         v,
-        segment_ids: jnp.ndarray | None,
+        segment_ids: jOptional[np.ndarray],
         sm_scale=1.0,
         causal: bool = False,
 ):

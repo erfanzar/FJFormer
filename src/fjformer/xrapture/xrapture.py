@@ -27,7 +27,7 @@ LORA_FREEZE = 0
 LORA_FULL = -1
 
 from dataclasses import dataclass
-from typing import Optional, Callable, Any
+from typing import Optional, Callable, Any, Union
 
 
 @dataclass
@@ -339,10 +339,10 @@ class XRapTureConfig:
 
 @dataclass
 class XRapTureModule:
-    lora_opt_state: jax.tree_util.PyTreeDef | dict
-    lora_parameters: jax.tree_util.PyTreeDef | dict
-    lora_module: Any | flax.linen.Module
-    lora_specs: jax.tree_util.PyTreeDef | dict
+    lora_opt_state: Union[jax.tree_util.PyTreeDef, dict]
+    lora_parameters: Union[jax.tree_util.PyTreeDef, dict]
+    lora_module: Union[Any , flax.linen.Module]
+    lora_specs: Union[jax.tree_util.PyTreeDef, dict]
     lora_tx: optax.GradientTransformation
 
 
@@ -392,7 +392,7 @@ class XRapTure:
     def base_decision_function(
             self,
             path: list[jax.tree_util.DictKey],
-            params: dict | jax.tree_util.PyTreeDef | None = None
+            params: Optional[Union[dict, jax.tree_util.PyTreeDef]] = None
     ):
 
         """    
@@ -441,7 +441,7 @@ class XRapTure:
 
     def make_lora_specs(
             self,
-            parameters: dict | flax.core.FrozenDict,
+            parameters: Union[dict, flax.core.FrozenDict],
             decision_fn: Optional[Callable] = None,
             tune_vectors: bool = False,
     ):
@@ -593,8 +593,8 @@ class XRapTure:
 
     def apply_lora(
             self,
-            module: Any | flax.linen.Module,
-            parameters: dict | flax.core.FrozenDict,
+            module: Union[Any, flax.linen.Module],
+            parameters: Union[dict, flax.core.FrozenDict],
             tx: optax.GradientTransformation,
             decision_fn: Optional[Callable] = None,
             tune_vectors: bool = False,

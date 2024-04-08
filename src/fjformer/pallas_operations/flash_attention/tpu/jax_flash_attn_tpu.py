@@ -17,7 +17,7 @@ from __future__ import annotations
 
 import dataclasses
 import functools
-from typing import Any, NamedTuple
+from typing import Any, NamedTuple, Optional
 
 import jax
 from jax import lax
@@ -59,14 +59,14 @@ class BlockSizes:
     block_k: int
     block_b: int
 
-    block_q_major_dkv: int | None = None
-    block_k_major_dkv: int | None = None
-    block_k_dkv: int | None = None
-    block_q_dkv: int | None = None
+    block_q_major_dkv: Optional[int] = None
+    block_k_major_dkv: Optional[int] = None
+    block_k_dkv: Optional[int] = None
+    block_q_dkv: Optional[int] = None
 
-    block_k_major_dq: int | None = None
-    block_k_dq: int | None = None
-    block_q_dq: int | None = None
+    block_k_major_dq: Optional[int] = None
+    block_k_dq: Optional[int] = None
+    block_q_dq: Optional[int] = None
 
     def __post_init__(self):
         def verify_major_minor(prefix, suffix, major, minor):
@@ -145,7 +145,7 @@ def flash_attention(
         *,
         causal: bool = False,
         sm_scale: float = 1.0,
-        block_sizes: BlockSizes | None = None,
+        block_sizes: Optional[BlockSizes] = None,
         debug: bool = False,
 ):
     batch_size, num_heads, q_seq_len, d_model = q.shape
@@ -349,8 +349,8 @@ def _flash_attention_kernel_single_batch(
         m_scratch_ref,
         l_scratch_ref,
         acc_scratch_ref,
-        l_ref: Any | None = None,
-        m_ref: Any | None = None,
+        l_ref: Optional[Any] = None,
+        m_ref: Optional[Any] = None,
         *,
         causal,
         sm_scale,
@@ -499,8 +499,8 @@ def _flash_attention_kernel_single_batch_single_step(
         m_scratch_ref,
         l_scratch_ref,
         acc_scratch_ref,
-        l_ref: Any | None = None,
-        m_ref: Any | None = None,
+        l_ref: Optional[Any] = None,
+        m_ref: Optional[Any] = None,
         *,
         causal,
         sm_scale,
@@ -925,10 +925,10 @@ def _flash_attention_bwd_dkv(
         do,
         di,
         *,
-        block_q_major: int | None,
-        block_q: int | None,
-        block_k_major: int | None,
-        block_k: int | None,
+        block_q_major: Optional[int],
+        block_q: Optional[int],
+        block_k_major: Optional[int],
+        block_k: Optional[int],
         sm_scale: float,
         causal: bool = False,
         mask_value: float = DEFAULT_MASK_VALUE,
@@ -1278,9 +1278,9 @@ def _flash_attention_bwd_dq(
         do,
         di,
         *,
-        block_q_major: int | None,
-        block_k_major: int | None,
-        block_k: int | None,
+        block_q_major: Optional[int],
+        block_k_major: Optional[int],
+        block_k: Optional[int],
         sm_scale: float,
         causal: bool,
         mask_value: float,
@@ -1463,8 +1463,8 @@ def mha_reference_no_custom_vjp(
         q,
         k,
         v,
-        ab: jax.Array | None = None,
-        segment_ids: SegmentIds | None = None,
+        ab: Optional[jax.Array] = None,
+        segment_ids: Optional[SegmentIds] = None,
         *,
         causal: bool = False,
         mask_value: float = DEFAULT_MASK_VALUE,
@@ -1512,7 +1512,7 @@ def mha_reference(
         k,
         v,
         ab,
-        segment_ids: SegmentIds | None = None,
+        segment_ids: Optional[SegmentIds] = None,
         causal: bool = False,
         mask_value: float = DEFAULT_MASK_VALUE,
         sm_scale=1.0,
@@ -1536,7 +1536,7 @@ def _mha_reference(
         k,
         v,
         ab,
-        segment_ids: SegmentIds | None,
+        segment_ids: Optional[SegmentIds],
         causal: bool,
         mask_value: float,
         sm_scale: float,
@@ -1560,7 +1560,7 @@ def _mha_reference_fwd(
         k,
         v,
         ab,
-        segment_ids: SegmentIds | None,
+        segment_ids: Optional[SegmentIds],
         causal: bool,
         mask_value: float,
         sm_scale: float,
@@ -1597,7 +1597,7 @@ def mha_reference_bwd(
         k,
         v,
         ab,
-        segment_ids: SegmentIds | None,
+        segment_ids: Optional[SegmentIds],
         o,
         l,
         m,

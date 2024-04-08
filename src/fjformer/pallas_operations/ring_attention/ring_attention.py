@@ -17,7 +17,7 @@ from einops import rearrange
 from functools import partial
 import dataclasses
 import functools
-from typing import Any, NamedTuple
+from typing import Any, NamedTuple, Optional
 
 
 def _ring_attention_fwd(q, k, v, attn_bias, segment_ids, axis_name, float32_logits, blockwise_kwargs):
@@ -594,14 +594,14 @@ class BlockSizes:
     block_k: int
     block_b: int
 
-    block_q_major_dkv: int | None = None
-    block_k_major_dkv: int | None = None
-    block_k_dkv: int | None = None
-    block_q_dkv: int | None = None
+    block_q_major_dkv: Optional[int] = None
+    block_k_major_dkv: Optional[int] = None
+    block_k_dkv: Optional[int] = None
+    block_q_dkv: Optional[int] = None
 
-    block_k_major_dq: int | None = None
-    block_k_dq: int | None = None
-    block_q_dq: int | None = None
+    block_k_major_dq: Optional[int] = None
+    block_k_dq: Optional[int] = None
+    block_q_dq: Optional[int] = None
 
     def __post_init__(self):
         def verify_major_minor(prefix, suffix, major, minor):
@@ -847,8 +847,8 @@ def _flash_attention_kernel_single_batch(
         m_scratch_ref,
         l_scratch_ref,
         acc_scratch_ref,
-        l_ref: Any | None = None,
-        m_ref: Any | None = None,
+        l_ref: Optional[Any] = None,
+        m_ref: Optional[Any] = None,
         *,
         causal,
         sm_scale,
@@ -1406,10 +1406,10 @@ def _flash_attention_bwd_dkv(
         do,
         di,
         *,
-        block_q_major: int | None,
-        block_q: int | None,
-        block_k_major: int | None,
-        block_k: int | None,
+        block_q_major: Optional[int],
+        block_q: Optional[int],
+        block_k_major: Optional[int],
+        block_k: Optional[int],
         sm_scale: float,
         causal: bool = False,
         mask_value: float = DEFAULT_MASK_VALUE,
@@ -1801,9 +1801,9 @@ def _flash_attention_bwd_dq(
         do,
         di,
         *,
-        block_q_major: int | None,
-        block_k_major: int | None,
-        block_k: int | None,
+        block_q_major: Optional[int],
+        block_k_major: Optional[int],
+        block_k: Optional[int],
         sm_scale: float,
         causal: bool,
         mask_value: float,

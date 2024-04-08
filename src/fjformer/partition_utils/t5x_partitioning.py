@@ -457,7 +457,7 @@ class LocalChunker:
 
         return LocalChunkInfo(tuple(local_slice), replica_id)
 
-    def get_shard_id(self, sharded_mesh_axes: str | Set[Optional[str]]) -> int:
+    def get_shard_id(self, sharded_mesh_axes: Union[str, Set[Optional[str]]]) -> int:
         """Given mesh axes used for sharding, computes current host's shard id.
     
         To give an example, let's say there are two axes globally: replica, data,
@@ -493,7 +493,7 @@ class LocalChunker:
 
         return shard_id
 
-    def get_replica_id(self, sharded_mesh_axes: str | Set[Optional[str]]) -> int:
+    def get_replica_id(self, sharded_mesh_axes: Union[str, Set[Optional[str]]]) -> int:
         """Given mesh axes used for sharding, computes current host's replica id.
     
         To give an example, let's say there are two axes globally: data, and model,

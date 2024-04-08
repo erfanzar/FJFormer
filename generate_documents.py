@@ -116,7 +116,7 @@ theme:
     statics = {
         ("Home",): "index.md"
     }
-    cache = cache | statics
+    cache.update(statics)
     pages = unflatten_dict(cache)
     yaml_data = {
         "nav": pages,

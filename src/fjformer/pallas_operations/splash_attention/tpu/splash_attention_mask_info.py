@@ -17,7 +17,7 @@ from __future__ import annotations
 
 import collections
 import functools
-from typing import Callable, Dict, List, NamedTuple, Set, Tuple
+from typing import Callable, Dict, List, NamedTuple, Set, Tuple, Optional, Union
 from jax import util as jax_util
 from . import splash_attention_mask as mask_lib
 import numpy as np
@@ -65,11 +65,11 @@ class MaskInfo(NamedTuple):
         causal this is just np.arange(q_sequence_length).
     """
 
-    data_next: np.ndarray | None
-    mask_next: np.ndarray | None
-    block_mask: np.ndarray | None
-    partial_mask_blocks: np.ndarray | None
-    q_sequence: np.ndarray | None
+    data_next: Optional[np.ndarray]
+    mask_next: Optional[np.ndarray]
+    block_mask: Optional[np.ndarray]
+    partial_mask_blocks: Optional[np.ndarray]
+    q_sequence: Optional[np.ndarray]
 
 
 def _downcast_to_small_type(array: np.ndarray) -> np.ndarray:
@@ -174,7 +174,7 @@ def _get_mask_info_for_shard(
         q_seq_shard_size: int,
         blocked_q_seq_start: int,
         is_dkv: bool,
-) -> Tuple[np.ndarray, np.ndarray | None]:
+) -> Tuple[np.ndarray, Optional[np.ndarray]]:
     """Process a slice of the mask to compute data_next and mask_next.
 
     Args:
@@ -318,7 +318,7 @@ def _process_mask(
         head_shards: int = 1,
         q_seq_shards: int = 1,
         shrink_grid: bool = True,
-) -> tuple[MaskInfo, jax_util.HashableFunction | None]:
+) -> tuple[MaskInfo, Union[jax_util.HashableFunction, None]]:
     """Transform a dense mask into a sparse representation.
 
     The number of head and Q sequence shards are needed to create a MaskInfo
