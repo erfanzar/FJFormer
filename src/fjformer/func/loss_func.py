@@ -392,12 +392,12 @@ def compute_weighted_cross_entropy(
 
 
 def compute_weighted_cross_entropy_and_accuracy(
-    logits: jnp.ndarray,
-    targets: jnp.ndarray,
-    weights: Optional[jnp.ndarray] = None,
-    label_smoothing: float = 0.0,
-    z_loss: float = 0.0,
-    loss_normalizing_factor: Optional[float] = None,
+        logits: jnp.ndarray,
+        targets: jnp.ndarray,
+        weights: Optional[jnp.ndarray] = None,
+        label_smoothing: float = 0.0,
+        z_loss: float = 0.0,
+        loss_normalizing_factor: Optional[float] = None,
 ) -> Tuple[jnp.ndarray, jnp.ndarray, jnp.ndarray, jnp.ndarray]:
     """Compute weighted cross entropy and entropy for log probs and targets.
 
@@ -423,7 +423,6 @@ def compute_weighted_cross_entropy_and_accuracy(
     accuracy = jnp.sum(correct_predictions * weights) / weight_sum
 
     return total_loss, total_z_loss, weight_sum, accuracy
-
 
 
 @enum.unique
@@ -507,7 +506,8 @@ def _sum_weights_per_segment(positions: jnp.ndarray, segment_ids: jnp.ndarray,
 def get_loss_normalizing_factor_and_weights(
         loss_normalizing_factor: Optional[Union[float, int, str,
         SpecialLossNormalizingFactor]],
-        batch: Mapping[str, jnp.ndarray]):
+        batch: Mapping[str, jnp.ndarray]
+):
     """Get the float loss_normalizing_factor and loss weights.
 
     If loss_normalizing_factor is float or None, this will simply return the
@@ -548,14 +548,11 @@ def get_loss_normalizing_factor_and_weights(
         loss_weights = jnp.asarray(batch['decoder_target_tokens'] > 0, jnp.float32)
 
     output_normalizing_factor = None
-    if (loss_normalizing_factor ==
-            SpecialLossNormalizingFactor.NUM_REAL_TARGET_TOKENS):
+    if loss_normalizing_factor == SpecialLossNormalizingFactor.NUM_REAL_TARGET_TOKENS:
         output_normalizing_factor = jnp.sum(loss_weights)
-    elif (loss_normalizing_factor ==
-          SpecialLossNormalizingFactor.NUM_TOTAL_TARGET_TOKENS):
+    elif loss_normalizing_factor == SpecialLossNormalizingFactor.NUM_TOTAL_TARGET_TOKENS:
         output_normalizing_factor = np.prod(batch['decoder_target_tokens'].shape)
-    elif (loss_normalizing_factor ==
-          SpecialLossNormalizingFactor.AVERAGE_PER_SEQUENCE):
+    elif loss_normalizing_factor == SpecialLossNormalizingFactor.AVERAGE_PER_SEQUENCE:
         if 'decoder_segment_ids' in batch:  # is packed
             norm_vec = _sum_weights_per_segment(batch['decoder_positions'],
                                                 batch['decoder_segment_ids'],
@@ -570,4 +567,70 @@ def get_loss_normalizing_factor_and_weights(
         raise ValueError('Unsupported value of loss_normalizing_factor: %s' %
                          str(loss_normalizing_factor))
 
-    return (output_normalizing_factor, loss_weights)
+    return output_normalizing_factor, loss_weights
+
+
+def auxiliary_load_balancing_loss_func(
+        gate_logits: chex.Array,
+        num_experts: int,
+        top_k: int,
+        attention_mask: Optional[chex.Array],
+) -> chex.Array:
+    r"""
+    Computes auxiliary load balancing loss as in Switch Transformer - implemented in JAX.
+    See Switch Transformer (https://arxiv.org/abs/2101.03961) for more details. This function implements the loss
+    function presented in equations (4) - (6) of the paper. It aims at penalizing cases where the routing between
+    experts is too unbalanced.
+    :param gate_logits :Union[Array, Tuple[Array]: Logits from the `gate`, should be a tuple of
+     model.config.num_hidden_layers tensors of shape [batch_size X sequence_length, num_experts].
+    :param num_experts :int:Number of experts.
+    :param top_k :int: The number of experts each token is routed to.
+    :param attention_mask: Optional[chex.Array] : The attention_mask used in forward function shape
+        [batch_size X sequence_length] if not None.
+
+    :return loss: chex.Array: The auxiliary loss.
+    """
+    if gate_logits is None or not isinstance(gate_logits, tuple):
+        return jnp.array(0.0, dtype=jnp.float32)
+    elif isinstance(gate_logits, tuple):
+        concatenated_gate_logits = jnp.concatenate(gate_logits, axis=0)
+    else:
+        return jnp.array(0.0, dtype=jnp.float32)
+    routing_weights = jax.nn.softmax(
+        concatenated_gate_logits,
+        axis=-1
+    )
+
+    _, selected_experts = jax.lax.top_k(routing_weights, top_k)
+
+    expert_mask = jax.nn.one_hot(selected_experts, num_experts)
+
+    if attention_mask is None:
+        tokens_per_expert = jnp.mean(expert_mask.astype(jnp.float32), axis=0)
+        router_prob_per_expert = jnp.mean(routing_weights, axis=0)
+    else:
+        batch_size, sequence_length = attention_mask.shape
+        num_hidden_layers = concatenated_gate_logits.shape[0] // (batch_size * sequence_length)
+
+        expert_attention_mask = jnp.broadcast_to(
+            attention_mask[jnp.newaxis, :, :, jnp.newaxis, jnp.newaxis],
+            (num_hidden_layers, batch_size, sequence_length, top_k, num_experts)
+        ).reshape(-1, top_k, num_experts)
+
+        tokens_per_expert = jnp.sum(
+            expert_mask.astype(jnp.float32) * expert_attention_mask, axis=0
+        ) / jnp.sum(expert_attention_mask, axis=0)
+
+        router_per_expert_attention_mask = jnp.broadcast_to(
+            attention_mask[jnp.newaxis, :, :, jnp.newaxis],
+            (num_hidden_layers, batch_size, sequence_length, num_experts)
+        ).reshape(-1, num_experts)
+
+        # Compute the average probability of routing to these experts
+        router_prob_per_expert = jnp.sum(
+            routing_weights * router_per_expert_attention_mask,
+            axis=0
+        ) / jnp.sum(router_per_expert_attention_mask, axis=0)
+
+    overall_loss = jnp.sum(tokens_per_expert * jnp.expand_dims(router_prob_per_expert, 0))
+    return overall_loss * num_experts
