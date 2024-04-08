@@ -71,7 +71,7 @@ from .utils import (
 from . import pallas_operations as pallas_operations
 from . import optimizers as optimizers
 
-__version__ = "0.0.40"
+__version__ = "0.0.41"
 
 __all__ = (
     # Loss and extra function
