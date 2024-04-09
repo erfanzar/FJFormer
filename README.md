@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="logo/light-logo.png" alt="Alt text"/>
+</p>
+
 # FJFormer
 
 Embark on a journey of paralleled/unparalleled computational prowess with FJFormer - an arsenal of custom Jax Flax

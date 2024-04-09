@@ -32,10 +32,6 @@ from .monitor import (
     initialise_tracking as smi_initialise_tracking
 )
 
-from .datasets import (
-    get_dataloader
-)
-
 from .func import (
     average_metrics as average_metrics,
     global_norm as global_norm,

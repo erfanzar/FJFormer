@@ -8,12 +8,11 @@ nav:
     - Numerics: generated-bits-numerics.md
     - Q Dot General: generated-bits-q_dot_general.md
     - Q Flax: generated-bits-q_flax.md
+    - Qk: generated-bits-qk.md
     - Stochastic Rounding: generated-bits-stochastic_rounding.md
   - Checkpoint:
     - Load: generated-checkpoint-_load.md
     - Streamer: generated-checkpoint-streamer.md
-  - Datasets:
-    - Datasets: generated-datasets-datasets.md
   - Func:
     - Func: generated-func-_func.md
     - Loss Func: generated-func-loss_func.md
@@ -37,6 +36,8 @@ nav:
     - Layer Norm:
       - Gpu:
         - Layer Norm: generated-pallas_operations-layer_norm-gpu-layer_norm.md
+    - Ring Attention:
+      - Ring Attention: generated-pallas_operations-ring_attention-ring_attention.md
     - Rms Norm:
       - Gpu:
         - Rms Norm: generated-pallas_operations-rms_norm-gpu-rms_norm.md
