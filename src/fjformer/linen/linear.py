@@ -54,12 +54,32 @@ ConvGeneralDilatedT = Callable[..., Array]
 default_kernel_init = initializers.lecun_normal()
 
 
+def quantize(
+        array: jnp.ndarray,
+        int_dtype: jnp.dtype = jnp.int8,
+) -> Tuple[jnp.ndarray, jnp.ndarray]:
+    scale = (
+                    jnp.max(array) - jnp.min(array)
+            ) / (
+                    jnp.iinfo(int_dtype).max - jnp.iinfo(int_dtype).min
+            )
+    return round(array / scale), scale
+
+
+def de_quantize(
+        quantized: jnp.ndarray,
+        scale: jnp.ndarray,
+        float_dtype: jnp.dtype = jnp.float16,
+        threshold: float = 1e-6
+):
+    return (quantized.astype(float_dtype) * scale) + threshold
+
+
 @dataclasses.dataclass
-class Linear8Bit:
+class LinearBitKernel:
     kernel: Array
-    bias: Optional[Array] = None
-    _is_quantized: bool = False
     scale: Optional[float] = .0
+    _is_quantized: bool = False
 
     @property
     def shape(self):

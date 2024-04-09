@@ -131,7 +131,7 @@ class GenerateRNG:
         
         """
         self.seed = seed
-        self.rng = jax.random.PRNGKey(seed)
+        self._rng = jax.random.PRNGKey(seed)
 
     def __next__(self):
         """
@@ -146,5 +146,9 @@ class GenerateRNG:
         
         """
         while True:
-            self.rng, ke = jax.random.split(self.rng, 2)
+            self._rng, ke = jax.random.split(self._rng, 2)
             return ke
+
+    @property
+    def rng(self):
+        return next(self)

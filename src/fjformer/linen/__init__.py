@@ -1,1 +1,1 @@
-from .linear import Linear, Linear8Bit
+from .linear import Linear, LinearBitKernel, quantize, de_quantize
