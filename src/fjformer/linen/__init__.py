@@ -1,4 +1,4 @@
-from .linear import (
+from .linen import (
     Linear as Linear,
     LinearBitKernel as LinearBitKernel,
     quantize as quantize,
@@ -7,7 +7,20 @@ from .linear import (
     de_quantize_params as de_quantize_params,
     Conv as Conv,
     Embed as Embed,
-    promote_dtype as promote_dtype
+    promote_dtype as promote_dtype,
+    ConvTranspose as ConvTranspose,
+    GroupNorm as GroupNorm,
+    BatchNorm as BatchNorm,
+    LayerNorm as LayerNorm,
+    RMSNorm as RMSNorm,
+    WeightNorm as WeightNorm,
+    InstanceNorm as InstanceNorm,
+    SpectralNorm as SpectralNorm,
+    Module as Module,
+    ConvLocal as ConvLocal,
+    compact as compact,
+    initializers as initializers,
+
 )
 
 __all__ = (
@@ -19,5 +32,17 @@ __all__ = (
     "de_quantize_params",
     "Conv",
     "Embed",
-    "promote_dtype"
+    "promote_dtype",
+    "ConvTranspose",
+    "GroupNorm",
+    "BatchNorm",
+    "LayerNorm",
+    "RMSNorm",
+    "WeightNorm",
+    "InstanceNorm",
+    "SpectralNorm",
+    "Module",
+    "ConvLocal",
+    "compact",
+    "initializers"
 )
