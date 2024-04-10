@@ -66,8 +66,9 @@ from .utils import (
 
 from . import pallas_operations as pallas_operations
 from . import optimizers as optimizers
+from . import linen as linen
 
-__version__ = "0.0.41"
+__version__ = "0.0.42"
 
 __all__ = (
     # Loss and extra function
@@ -138,5 +139,8 @@ __all__ = (
     "pallas_operations",
 
     # Optimizers
-    "optimizers"
+    "optimizers",
+
+    # Linen
+    "linen"
 )
