@@ -38,7 +38,7 @@ from jax.core import ShapedArray
 import numpy as np
 import dataclasses
 import functools
-
+from ..partition_utils import with_sharding_constraint
 import jax
 import jax.numpy as jnp
 from jax import lax
@@ -164,15 +164,17 @@ def _canonicalize_tuple(x: Union[Sequence[int], int]) -> Tuple[int, ...]:
 
 def control_quantization(array, param_dtype):
     if isinstance(array, LinearBitKernel):
-        org_sharding = array.kernel.sharding
+        org_sharding = getattr(array.kernel, "sharding", None)
         array = de_quantize(
             array.kernel,
             array.scale,
             param_dtype,
             .0
         )
-
-        array = jax.device_put(array, org_sharding)
+        if org_sharding:
+            spec = getattr(org_sharding, "spec", None)
+            if spec:
+                array = with_sharding_constraint(array, spec)
     return array
 
 
@@ -211,12 +213,14 @@ class Linear(Module):
         Returns:
           The transformed input.
         """
+
         kernel = self.param(
             "kernel",
             self.kernel_init,
             (jnp.shape(inputs)[-1], self.features),
             self.param_dtype,
         )
+
         kernel = control_quantization(kernel, self.param_dtype)
 
         if self.use_bias:
