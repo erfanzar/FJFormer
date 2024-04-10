@@ -25,8 +25,12 @@ from typing import (
     Sequence,
     Tuple,
     Union,
+    Mapping
 )
 
+import chex
+import flax.traverse_util
+import jax.tree_util
 from flax.linen import initializers
 from flax.linen.dtypes import promote_dtype
 from flax.linen.module import compact
@@ -36,6 +40,7 @@ from jax import lax
 from jax.core import ShapedArray
 import jax.numpy as jnp
 import numpy as np
+from ..partition_utils import with_sharding_constraint
 
 PRNGKey = Any
 Shape = Tuple[int, ...]
@@ -58,12 +63,9 @@ def quantize(
         array: jnp.ndarray,
         int_dtype: jnp.dtype = jnp.int8,
 ) -> Tuple[jnp.ndarray, jnp.ndarray]:
-    scale = (
-                    jnp.max(array) - jnp.min(array)
-            ) / (
-                    jnp.iinfo(int_dtype).max - jnp.iinfo(int_dtype).min
-            )
-    return round(array / scale), scale
+    max_scale = (jnp.iinfo(int_dtype).max + abs(jnp.iinfo(int_dtype).min)) / 2
+    scale = jnp.max(jnp.abs(array), axis=-1, keepdims=True)
+    return jnp.int8(jnp.rint(array * (max_scale / scale))), scale
 
 
 def de_quantize(
@@ -72,14 +74,15 @@ def de_quantize(
         float_dtype: jnp.dtype = jnp.float16,
         threshold: float = 1e-6
 ):
-    return (quantized.astype(float_dtype) * scale) + threshold
+    max_scale = (jnp.iinfo(quantized.dtype).max + abs(jnp.iinfo(quantized.dtype).min)) / 2
+    return ((quantized.astype(float_dtype) * scale) / max_scale) + threshold
 
 
 @dataclasses.dataclass
 class LinearBitKernel:
     kernel: Array
-    scale: Optional[float] = .0
-    _is_quantized: bool = False
+    scale: Array
+    _is_quantized: bool = True
 
     @property
     def shape(self):
@@ -88,6 +91,50 @@ class LinearBitKernel:
     @property
     def quantized(self):
         return self._is_quantized
+
+
+jax.tree_util.register_pytree_node(
+    LinearBitKernel,
+    lambda x: ([x.kernel, x.scale, x.quantized], ()),
+    lambda _, children: LinearBitKernel(children[0], children[1], children[2])
+)
+
+
+def quantize_params(
+        params: jax.tree_util.PyTreeDef,
+        quantize_dtype: jnp.dtype = jnp.int8
+):
+    return jax.tree_util.tree_map(
+        lambda prm: LinearBitKernel(
+            *quantize(
+                prm, quantize_dtype
+            )
+        ),
+        params
+    )
+
+
+def de_quantize_params(
+        params: jax.tree_util.PyTreeDef,
+        dtype: jnp.dtype = jnp.float32,
+        shard_funcs: Optional[Mapping[str, Callable[[chex.Array], chex.Array]]] = None
+):
+    def _q(prm):
+        if isinstance(prm, LinearBitKernel):
+            return jnp.array(
+                de_quantize(
+                    prm.kernel, prm.scale, dtype, 0
+                )
+            )
+        return prm
+
+    prm = flax.traverse_util.flatten_dict(params)
+    for key in list(prm.keys()):
+        value = _q(prm[key])
+        if shard_funcs is not None:
+            value = shard_funcs[key](value)
+        prm[key] = value
+    return flax.traverse_util.unflatten_dict(prm)
 
 
 def _normalize_axes(axes: Tuple[int, ...], ndim: int) -> Tuple[int, ...]:
@@ -143,14 +190,36 @@ class Linear(Module):
             (jnp.shape(inputs)[-1], self.features),
             self.param_dtype,
         )
+        if isinstance(kernel, LinearBitKernel):
+            org_sharding = kernel.kernel.sharding
+            kernel = de_quantize(
+                kernel.kernel,
+                kernel.scale,
+                self.param_dtype,
+                .0
+            )
+
+            kernel = jax.device_put(kernel, org_sharding)
+
         if self.use_bias:
             bias = self.param(
-                "bias", self.bias_init, (self.features,), self.param_dtype
+                "bias",
+                self.bias_init,
+                (self.features,),
+                self.param_dtype
             )
+            if isinstance(bias, LinearBitKernel):
+                org_sharding = bias.kernel.sharding
+                bias = de_quantize(
+                    bias.kernel,
+                    bias.scale,
+                    self.param_dtype,
+                    .0
+                )
+                bias = jax.device_put(bias, org_sharding)
         else:
             bias = None
         inputs, kernel, bias = promote_dtype(inputs, kernel, bias, dtype=self.dtype)
-
         if self.dot_general_cls is not None:
             dot_general = self.dot_general_cls()
         elif self.dot_general is not None:
