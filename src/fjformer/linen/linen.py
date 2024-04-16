@@ -101,11 +101,11 @@ class LinearBitKernel:
         return self.kernel.shape
 
 
-jax.tree_util.register_pytree_node(
-    LinearBitKernel,
-    lambda x: ([x.kernel, x.scale], ()),
-    lambda _, children: LinearBitKernel(children[0], children[1])
-)
+# jax.tree_util.register_pytree_node(
+#     LinearBitKernel,
+#     lambda x: ([x.kernel, x.scale], ()),
+#     lambda _, children: LinearBitKernel(children[0], children[1])
+# )
 
 
 def quantize_params(
