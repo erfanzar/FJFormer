@@ -109,14 +109,15 @@ class LinearBitKernel:
 
 def quantize_parameters(
         filter_list_quantization: list,
-        params: dict
+        params: dict,
+        int_dtype: jnp.dtype = jnp.int8
 ):
     pattern = re.compile("({})".format("|".join(filter_list_quantization)))
 
     def lam_func(path, array):
         if pattern.search("/".join(p.key for p in path)):
             return LinearBitKernel(
-                *quantize(array)
+                *quantize(array, int_dtype=int_dtype)
             )
         return array
 
