@@ -33,12 +33,12 @@ import jax.tree_util
 from flax.linen.dtypes import promote_dtype
 from flax.linen.module import compact
 from flax.linen.module import Module
+import flax.struct
 from jax import eval_shape
 from jax.core import ShapedArray
 import numpy as np
 import dataclasses
 import functools
-from ..partition_utils import with_sharding_constraint
 import jax
 import jax.numpy as jnp
 from jax import lax
@@ -91,25 +91,20 @@ def de_quantize(
     return ((quantized.astype(float_dtype) * scale) / max_scale) + threshold
 
 
-@dataclasses.dataclass
+@flax.struct.dataclass
 class LinearBitKernel:
     kernel: Array
     scale: Array
-    _is_quantized: bool = True
 
     @property
     def shape(self):
         return self.kernel.shape
 
-    @property
-    def quantized(self):
-        return self._is_quantized
-
 
 jax.tree_util.register_pytree_node(
     LinearBitKernel,
-    lambda x: ([x.kernel, x.scale, x.quantized], ()),
-    lambda _, children: LinearBitKernel(children[0], children[1], children[2])
+    lambda x: ([x.kernel, x.scale], ()),
+    lambda _, children: LinearBitKernel(children[0], children[1])
 )
 
 
