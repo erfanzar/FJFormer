@@ -24,9 +24,9 @@ from typing import (
     Sequence,
     Tuple,
     Union,
-    Mapping
+    Mapping,
 )
-
+import re
 import chex
 import flax.traverse_util
 import jax.tree_util
@@ -107,19 +107,20 @@ class LinearBitKernel:
 #     lambda _, children: LinearBitKernel(children[0], children[1])
 # )
 
-
-def quantize_params(
-        params: jax.tree_util.PyTreeDef,
-        quantize_dtype: jnp.dtype = jnp.int8
+def quantize_parameters(
+        filter_list_quantization: list,
+        params: dict
 ):
-    return jax.tree_util.tree_map(
-        lambda prm: LinearBitKernel(
-            *quantize(
-                prm, quantize_dtype
+    pattern = re.compile("({})".format("|".join(filter_list_quantization)))
+
+    def lam_func(path, array):
+        if pattern.search("/".join(p.key for p in path)):
+            return LinearBitKernel(
+                *quantize(array)
             )
-        ),
-        params
-    )
+        return array
+
+    return jax.tree_util.tree_map_with_path(lam_func, params)
 
 
 def de_quantize_params(
