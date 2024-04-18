@@ -76,9 +76,10 @@ def quantize(
         array: jnp.ndarray,
         int_dtype: jnp.dtype = jnp.int8,
 ) -> Tuple[jnp.ndarray, jnp.ndarray]:
-    max_scale = (jnp.iinfo(int_dtype).max + abs(jnp.iinfo(int_dtype).min)) / 2
     scale = jnp.max(jnp.abs(array), axis=-1, keepdims=True)
-    return jnp.int8(jnp.rint(array * (max_scale / scale))), scale
+    return jax.lax.convert_element_type(
+        jnp.rint(array * ((jnp.iinfo(int_dtype).max + abs(jnp.iinfo(int_dtype).min)) / 2 / scale)), int_dtype
+    ), scale
 
 
 def de_quantize(
@@ -88,7 +89,7 @@ def de_quantize(
         threshold: float = 1e-6
 ):
     max_scale = (jnp.iinfo(quantized.dtype).max + abs(jnp.iinfo(quantized.dtype).min)) / 2
-    return ((quantized.astype(float_dtype) * scale) / max_scale) + threshold
+    return ((jax.lax.convert_element_type(quantized, float_dtype) * scale) / max_scale) + threshold
 
 
 @flax.struct.dataclass
@@ -99,6 +100,18 @@ class LinearBitKernel:
     @property
     def shape(self):
         return self.kernel.shape
+
+    @property
+    def dtype(self):
+        return self.kernel.dtype
+
+    @property
+    def sharding(self):
+        return self.kernel.sharding
+
+    @property
+    def size(self):
+        return self.kernel.size
 
 
 # jax.tree_util.register_pytree_node(
