@@ -116,11 +116,11 @@ def _attention_reference(
         q: jax.Array,
         k: jax.Array,
         v: jax.Array,
-        segment_ids: Optional[SegmentIds],
+        segment_ids: SegmentIds | None,
         save_residuals: Literal[False],
         mask_value: float,
         custom_type: str,
-        attn_logits_soft_cap: Optional[float],
+        attn_logits_soft_cap: float | None,
 ) -> jax.Array:
     ...
 
@@ -131,11 +131,11 @@ def _attention_reference(
         q: jax.Array,
         k: jax.Array,
         v: jax.Array,
-        segment_ids: Optional[SegmentIds],
+        segment_ids: SegmentIds | None,
         save_residuals: Literal[True],
         mask_value: float,
         custom_type: str,
-        attn_logits_soft_cap: Optional[float],
+        attn_logits_soft_cap: float | None,
 ) -> tuple[jax.Array, tuple[jax.Array]]:
     ...
 
@@ -145,11 +145,11 @@ def _attention_reference(
         q: jax.Array,  # [q_seq_len, head_dim]
         k: jax.Array,  # [kv_seq_len, head_dim]
         v: jax.Array,  # [kv_seq_len, head_dim]
-        segment_ids: Optional[SegmentIds],
+        segment_ids: SegmentIds | None,
         mask_value: float,
         save_residuals: bool,
         custom_type: str,
-        attn_logits_soft_cap: Optional[float],
+        attn_logits_soft_cap: float | None,
 ):
     return _attention_reference_default(  # pytype: disable=bad-return-type
         mask,
@@ -169,11 +169,11 @@ def _attention_reference_default(
         q: jax.Array,  # [q_seq_len, head_dim]
         k: jax.Array,  # [kv_seq_len, head_dim]
         v: jax.Array,  # [kv_seq_len, head_dim]
-        segment_ids: Optional[SegmentIds],
+        segment_ids: SegmentIds | None,
         mask_value: float,
         save_residuals: bool,
         custom_type: str,
-        attn_logits_soft_cap: Optional[float],
+        attn_logits_soft_cap: float | None,
 ):
     del custom_type
     logits = jnp.einsum("sd,td->st", q.astype(jnp.float32), k.astype(jnp.float32))
@@ -206,12 +206,12 @@ def attention_reference(
         q: jax.Array,  # [q_seq_len, head_dim]
         k: jax.Array,  # [kv_seq_len, head_dim]
         v: jax.Array,  # [kv_seq_len, head_dim]
-        segment_ids: Optional[SegmentIds],
+        segment_ids: SegmentIds | None,
         *,
         mask_value: float = DEFAULT_MASK_VALUE,
         save_residuals: bool = False,
         custom_type: str = "flash",
-        attn_logits_soft_cap: Optional[float] = None,
+        attn_logits_soft_cap: float | None = None,
 ) -> SplashCustomReturnType:
     return _attention_reference(  # pytype: disable=wrong-arg-types
         mask,
@@ -231,11 +231,11 @@ def _attention_reference_custom_fwd(
         q: jax.Array,  # [q_seq_len, head_dim]
         k: jax.Array,  # [kv_seq_len, head_dim]
         v: jax.Array,  # [kv_seq_len, head_dim]
-        segment_ids: Optional[SegmentIds],
+        segment_ids: SegmentIds | None,
         mask_value: float,
         save_residuals: bool,
         custom_type: str,
-        attn_logits_soft_cap: Optional[float],
+        attn_logits_soft_cap: float | None,
 ):
     if save_residuals:
         raise NotImplementedError("Higher-order AD not supported.")
@@ -258,7 +258,7 @@ def _attention_reference_custom_bwd(
         mask_value: float,
         save_residuals: bool,
         custom_type: str,
-        attn_logits_soft_cap: Optional[float],
+        attn_logits_soft_cap: float | None,
         res,
         do: jax.Array,
 ) -> tuple[None, jax.Array, jax.Array, jax.Array, None]:
@@ -316,12 +316,12 @@ def attention_reference_custom(
         q: jax.Array,  # [q_seq_len, head_dim]
         k: jax.Array,  # [kv_seq_len, head_dim]
         v: jax.Array,  # [kv_seq_len, head_dim]
-        segment_ids: Optional[SegmentIds],
+        segment_ids: SegmentIds | None,
         *,
         mask_value: float = DEFAULT_MASK_VALUE,
         save_residuals: bool = False,
         custom_type: str = "flash",
-        attn_logits_soft_cap: Optional[float] = None,
+        attn_logits_soft_cap: float | None = None,
 ):
     return _attention_reference_custom(
         mask,
@@ -337,7 +337,7 @@ def attention_reference_custom(
 
 
 def make_attention_reference(
-        mask: Union[mask_lib.Mask , np.ndarray],
+        mask: mask_lib.Mask | np.ndarray,
         is_mqa: bool,
         backward_impl: str = "vanilla",
         **params: Any,
@@ -355,11 +355,11 @@ def make_attention_reference(
             q: jax.Array,
             k: jax.Array,
             v: jax.Array,
-            segment_ids: Optional[SegmentIds] = None,
+            segment_ids: SegmentIds | None = None,
             *,
             mask_value: float = DEFAULT_MASK_VALUE,
             save_residuals: bool = False,
-            attn_logits_soft_cap: Optional[float] = None,
+            attn_logits_soft_cap: float | None = None,
     ):
         if backward_impl == "custom":
             attn_impl = partial(
@@ -419,9 +419,9 @@ def make_attention_reference(
         if is_grouped:
 
             def reshape_activations(activations):
-                if activations.ndim == 4:
-                    kv_heads, q_heads_per_kv_head, q_seq_len, head_dim = activations.shape
-                    return activations.reshape(
+                if activations.ndim == 4:  # pytype: disable=attribute-error
+                    kv_heads, q_heads_per_kv_head, q_seq_len, head_dim = activations.shape  # pytype: disable=attribute-error
+                    return activations.reshape(  # pytype: disable=attribute-error
                         kv_heads * q_heads_per_kv_head, q_seq_len, head_dim
                     )
                 return activations
@@ -476,14 +476,14 @@ class BlockSizes:
     """
     block_q: int
     block_kv: int
-    block_kv_compute: Optional[int] = None
+    block_kv_compute: int | None = None
 
-    block_q_dkv: Optional[int] = None
-    block_kv_dkv: Optional[int] = None
-    block_kv_dkv_compute: Optional[int] = None
+    block_q_dkv: int | None = None
+    block_kv_dkv: int | None = None
+    block_kv_dkv_compute: int | None = None
 
-    block_q_dq: Optional[int] = None
-    block_kv_dq: Optional[int] = None
+    block_q_dq: int | None = None
+    block_kv_dq: int | None = None
 
     use_fused_bwd_kernel: bool = False
 
@@ -583,11 +583,11 @@ def _apply_mask_and_soft_cap(
         *,
         attn_logits_soft_cap: float,
         k_slice: pl.Slice,
-        k_offset: int,
+        k_offset: int | jax.Array,
         bq: int,
         k_in_lanes=True,
         mask_function=None,
-) -> Union[jax.Array , tuple[jax.Array, jax.Array, jax.Array, jax.Array]]:
+) -> jax.Array | tuple[jax.Array, jax.Array, jax.Array, jax.Array]:
     assert mask_ref is None or q_sequence_ref is None
     assert (q_sequence_ref is None) == (mask_function is None)
 
@@ -694,8 +694,8 @@ def flash_attention_kernel(
         q_layout: QKVLayout,
         k_layout: QKVLayout,
         v_layout: QKVLayout,
-        attn_logits_soft_cap: Optional[float],
-        mask_function: Optional[MaskFunctionType],
+        attn_logits_soft_cap: float | None,
+        mask_function: MaskFunctionType | None,
 ):
     float32 = jnp.float32
     HEAD_DIM_MINOR = QKVLayout.HEAD_DIM_MINOR
@@ -756,7 +756,7 @@ def flash_attention_kernel(
 
         qk = apply_mask_and_soft_cap()
 
-        m_curr = qk.max(axis=-1)[:, None]
+        m_curr = qk.max(axis=-1)[:, None]  # pytype: disable=attribute-error
         assert m_curr.shape == (bq, 1)
         m_next = jnp.maximum(m_prev, m_curr)
         assert m_next.shape == (bq, NUM_LANES)
@@ -818,14 +818,14 @@ def _splash_attention_forward(
         q: jax.Array,
         k: jax.Array,
         v: jax.Array,
-        segment_ids: Optional[SegmentIds],
+        segment_ids: SegmentIds | None,
         mask_value: float,
         is_mqa: bool,
         block_sizes: BlockSizes,
-        residual_checkpoint_name: Optional[str],
-        mask_function: Optional[MaskFunctionType],
+        residual_checkpoint_name: str | None,
+        mask_function: MaskFunctionType | None,
         save_residuals: Literal[False] = False,
-        attn_logits_soft_cap: Optional[float] = None,
+        attn_logits_soft_cap: float | None = None,
 ) -> jax.Array:
     ...
 
@@ -836,14 +836,14 @@ def _splash_attention_forward(
         q: jax.Array,
         k: jax.Array,
         v: jax.Array,
-        segment_ids: Optional[SegmentIds],
+        segment_ids: SegmentIds | None,
         mask_value: float,
         is_mqa: bool,
         block_sizes: BlockSizes,
-        residual_checkpoint_name: Optional[str],
-        mask_function: Optional[MaskFunctionType],
+        residual_checkpoint_name: str | None,
+        mask_function: MaskFunctionType | None,
         save_residuals: Literal[True],
-        attn_logits_soft_cap: Optional[float] = None,
+        attn_logits_soft_cap: float | None = None,
 ) -> SplashCustomReturnType:
     ...
 
@@ -860,14 +860,14 @@ def _splash_attention_forward(
         q: jax.Array,
         k: jax.Array,
         v: jax.Array,
-        segment_ids: Optional[SegmentIds],
+        segment_ids: SegmentIds | None,
         mask_value: float,
         is_mqa: bool,
         block_sizes: BlockSizes,
-        residual_checkpoint_name: Optional[str],
+        residual_checkpoint_name: str | None,
         save_residuals: bool,
-        mask_function: Optional[MaskFunctionType],
-        attn_logits_soft_cap: Optional[float] = None,
+        mask_function: MaskFunctionType | None,
+        attn_logits_soft_cap: float | None = None,
 ) -> SplashCustomReturnType:
     num_q_heads, q_seq_len, head_dim = q.shape
     bq, bkv = block_sizes.block_q, block_sizes.block_kv
@@ -1153,19 +1153,19 @@ def _splash_attention_forward(
 @partial(jax.custom_vjp, nondiff_argnums=(7, 8, 9, 10, 11, 12, 13))
 def _splash_attention_custom(
         fwd_mask_info: mask_info_lib.MaskInfo,
-        dq_mask_info: Optional[mask_info_lib.MaskInfo],
-        dkv_mask_info: Optional[mask_info_lib.MaskInfo],
+        dq_mask_info: mask_info_lib.MaskInfo | None,
+        dkv_mask_info: mask_info_lib.MaskInfo | None,
         q: jax.Array,
         k: jax.Array,
         v: jax.Array,
-        segment_ids: Optional[SegmentIds],
+        segment_ids: SegmentIds | None,
         save_residuals: bool,
         mask_value: float,
         is_mqa: bool,
         block_sizes: BlockSizes,
-        residual_checkpoint_name: Optional[str],
-        mask_function: Optional[MaskFunctionType],
-        attn_logits_soft_cap: Optional[float] = None,
+        residual_checkpoint_name: str | None,
+        mask_function: MaskFunctionType | None,
+        attn_logits_soft_cap: float | None = None,
 ) -> SplashCustomReturnType:
     # The forward function does not use the dq and dkv MaskInfos, it just forwards
     # them to the backward function as residuals. This is a way to communicate
@@ -1196,19 +1196,19 @@ def _splash_attention_custom(
 
 def _splash_attention_fwd(
         fwd_mask_info: mask_info_lib.MaskInfo,
-        dq_mask_info: Optional[mask_info_lib.MaskInfo],
-        dkv_mask_info: Optional[mask_info_lib.MaskInfo],
+        dq_mask_info: mask_info_lib.MaskInfo | None,
+        dkv_mask_info: mask_info_lib.MaskInfo | None,
         q: jax.Array,
         k: jax.Array,
         v: jax.Array,
-        segment_ids: Optional[SegmentIds],
+        segment_ids: SegmentIds | None,
         save_residuals: bool,
         mask_value: float,
         is_mqa: bool,
         block_sizes: BlockSizes,
-        residual_checkpoint_name: Optional[str],
-        mask_function: Optional[MaskFunctionType],
-        attn_logits_soft_cap: Optional[float] = None,
+        residual_checkpoint_name: str | None,
+        mask_function: MaskFunctionType | None,
+        attn_logits_soft_cap: float | None = None,
 ) -> tuple[
     tuple[jax.Array],
     SplashResidualsType,
@@ -1266,11 +1266,11 @@ def _flash_attention_dq_kernel(
         grid_width: int,
         bq: int,
         bkv: int,
-        attn_logits_soft_cap: Optional[float] = None,
+        attn_logits_soft_cap: float | None = None,
         q_layout: QKVLayout,
         k_layout: QKVLayout,
         v_layout: QKVLayout,
-        mask_function: Optional[MaskFunctionType],
+        mask_function: MaskFunctionType | None,
 ):
     float32 = jnp.float32
     HEAD_DIM_MINOR = QKVLayout.HEAD_DIM_MINOR
@@ -1350,11 +1350,11 @@ def _splash_attention_bwd_dq(
         is_mqa: bool,
         mask_info: mask_info_lib.MaskInfo,
         mask_value: float,
-        attn_logits_soft_cap: Optional[float],
+        attn_logits_soft_cap: float | None,
         q_layout: QKVLayout,
         k_layout: QKVLayout,
         v_layout: QKVLayout,
-        mask_function: Optional[MaskFunctionType],
+        mask_function: MaskFunctionType | None,
 ):
     num_q_heads, q_seq_len, head_dim = q.shape
     if is_mqa:
@@ -1616,12 +1616,12 @@ def _flash_attention_dkv_kernel(
         bq: int,
         bkv_compute: int,
         is_mqa: bool,
-        attn_logits_soft_cap: Optional[float],
+        attn_logits_soft_cap: float | None,
         q_layout: QKVLayout,
         k_layout: QKVLayout,
         v_layout: QKVLayout,
         bkv: int,
-        mask_function: Optional[MaskFunctionType],
+        mask_function: MaskFunctionType | None,
 ):
     HEAD_DIM_MINOR = QKVLayout.HEAD_DIM_MINOR
     kv_index, q_head_index, q_index = (
@@ -1794,12 +1794,12 @@ def _splash_attention_bwd_dkv(
         is_mqa: bool,
         mask_info: mask_info_lib.MaskInfo,
         mask_value: float,
-        attn_logits_soft_cap: Optional[float],
+        attn_logits_soft_cap: float | None,
         use_fused_bwd_kernel: bool,
         q_layout: QKVLayout,
         k_layout: QKVLayout,
         v_layout: QKVLayout,
-        mask_function: Optional[MaskFunctionType],
+        mask_function: MaskFunctionType | None,
 ):
     num_q_heads, q_seq_len, head_dim = q.shape
     if is_mqa:
@@ -2154,19 +2154,19 @@ def _splash_attention_bwd(
         mask_value: float,
         is_mqa: bool,
         block_sizes: BlockSizes,
-        residual_checkpoint_name: Optional[str],
-        mask_function: Optional[MaskFunctionType],
-        attn_logits_soft_cap: Optional[float],
+        residual_checkpoint_name: str | None,
+        mask_function: MaskFunctionType | None,
+        attn_logits_soft_cap: float | None,
         res: SplashResidualsType,
         do: jax.Array,
 ) -> tuple[
-    Optional[mask_info_lib.MaskInfo],  # fwd_mask_info
-    Optional[mask_info_lib.MaskInfo],  # dq_mask_info
-    Optional[mask_info_lib.MaskInfo],  # dvk_mask_info
+    mask_info_lib.MaskInfo | None,  # fwd_mask_info
+    mask_info_lib.MaskInfo | None,  # dq_mask_info
+    mask_info_lib.MaskInfo | None,  # dvk_mask_info
     jax.Array,  # q
     jax.Array,  # k
     jax.Array,  # v
-    Optional[SegmentIds],  # segmend_ids
+    SegmentIds | None,  # segmend_ids
 ]:
     del save_residuals, residual_checkpoint_name
     if not block_sizes.has_backward_blocks:
@@ -2263,20 +2263,20 @@ _splash_attention_custom.defvjp(_splash_attention_fwd, _splash_attention_bwd)
 )
 def _splash_attention(
         fwd_mask_info: mask_info_lib.MaskInfo,
-        dq_mask_info: Optional[mask_info_lib.MaskInfo],
-        dkv_mask_info: Optional[mask_info_lib.MaskInfo],
+        dq_mask_info: mask_info_lib.MaskInfo | None,
+        dkv_mask_info: mask_info_lib.MaskInfo | None,
         q: jax.Array,
         k: jax.Array,
         v: jax.Array,
-        segment_ids: Optional[SegmentIds] = None,
+        segment_ids: SegmentIds | None = None,
         *,
         is_mqa: bool,
-        block_sizes: Optional[BlockSizes],
+        block_sizes: BlockSizes | None,
         save_residuals: bool,
         mask_value: float,
-        attn_logits_soft_cap: Optional[float],
-        residual_checkpoint_name: Optional[str],
-        mask_function: Optional[MaskFunctionType],
+        attn_logits_soft_cap: float | None,
+        residual_checkpoint_name: str | None,
+        mask_function: MaskFunctionType | None,
 ) -> SplashCustomReturnType:
     return _splash_attention_custom(
         fwd_mask_info,
@@ -2302,8 +2302,8 @@ class SplashAttentionKernel:
     def __init__(
             self,
             fwd_mask_info: mask_info_lib.MaskInfo,
-            dq_mask_info: Optional[mask_info_lib.MaskInfo],
-            dkv_mask_info: Optional[mask_info_lib.MaskInfo],
+            dq_mask_info: mask_info_lib.MaskInfo | None,
+            dkv_mask_info: mask_info_lib.MaskInfo | None,
             **kwargs,
     ):
         self.kwargs = kwargs
@@ -2385,17 +2385,17 @@ class SplashAttentionKernel:
 
 
 def _make_splash_attention(
-        mask: Union[np.ndarray, mask_lib.MultiHeadMask],
+        mask: np.ndarray | mask_lib.MultiHeadMask,
         *,
-        block_sizes: Optional[BlockSizes] = None,
+        block_sizes: BlockSizes | None = None,
         is_mqa: bool,
         save_residuals: bool = False,
         mask_value: float = DEFAULT_MASK_VALUE,
-        attn_logits_soft_cap: Optional[float] = None,
+        attn_logits_soft_cap: float | None = None,
         downcast_smem_data: bool = True,
         head_shards: int,
         q_seq_shards: int,
-        residual_checkpoint_name: Optional[str] = None,
+        residual_checkpoint_name: str | None = None,
 ):
     if len(mask.shape) != 3:
         raise ValueError(f'Unexpected mask shape: {mask.shape}')

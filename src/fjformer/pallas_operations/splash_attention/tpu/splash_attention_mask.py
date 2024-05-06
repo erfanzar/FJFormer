@@ -17,7 +17,7 @@
 from __future__ import annotations
 
 import dataclasses
-from typing import Any, Callable, Sequence, Tuple, Optional
+from typing import Any, Callable, Sequence, Tuple
 import numpy as np
 
 
@@ -75,7 +75,7 @@ def make_causal_mask(shape: Tuple[int, int], offset: int = 0) -> np.ndarray:
 
 def make_local_attention_mask(
         shape: Tuple[int, int],
-        window_size: Tuple[Optional[int], Optional[int]],
+        window_size: Tuple[int | None, int | None],
         *,
         offset: int = 0,
 ) -> np.ndarray:
@@ -331,14 +331,14 @@ class LocalMask(Mask):
     # TODO(amagni): Transform LocalMask into a _ComputableMask.
 
     _shape: Tuple[int, int]
-    window_size: Tuple[Optional[int], Optional[int]]
+    window_size: Tuple[int | None, int | None]
     offset: int
-    _q_sequence: Optional[np.ndarray] = None
+    _q_sequence: np.ndarray | None = None
 
     def __init__(
             self,
             shape: Tuple[int, int],
-            window_size: Tuple[Optional[int], Optional[int]],
+            window_size: Tuple[int | None, int | None],
             offset: int,
             shard_count: int = 1,
     ):
