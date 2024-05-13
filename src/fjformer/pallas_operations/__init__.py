@@ -46,6 +46,8 @@ from .ring_attention import (
     ring_attention as ring_attention
 )
 
+from .pallas_flash_attention import flash_attention as flash_attention
+
 __all__ = (
 
     # Splash Attention
@@ -87,5 +89,6 @@ __all__ = (
     "gpu_flash_attention",
 
     # Efficient Attention
-    "efficient_attention"
+    "efficient_attention",
+    "flash_attention"
 )
