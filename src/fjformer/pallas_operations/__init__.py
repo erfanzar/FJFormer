@@ -6,7 +6,7 @@ This file contains imports for various attention mechanisms used in our project.
 """
 
 from .efficient_attention import efficient_attention as efficient_attention
-from .flash_attention import (
+from .tpu_flash_attention import (
     flash_attention as tpu_flash_attention,
     mha as gpu_flash_attention,
     BlockSizes

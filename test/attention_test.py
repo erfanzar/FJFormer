@@ -1,5 +1,9 @@
 import math
+import os
 
+import jax
+
+os.environ['JAX_TRACEBACK_FILTERING'] = 'off'
 from flax.linen.attention import dot_product_attention, make_attention_mask, make_causal_mask, combine_masks
 
 from src.fjformer.pallas_operations import flash_attention
@@ -36,18 +40,17 @@ def main():
     # print(a)
     csm = make_causal_mask(jnp.ones((batch, seq)))
     mask = combine_masks(csm, a[:, None, None, :])
-    out = dot_product_attention(q, k, v, mask=mask)
+    b = jnp.where(mask, 0, jnp.finfo(jnp.float32).min)
+    out = dot_product_attention(q, k, v, b)
     cnk = seq // 2
     out_flash = flash_attention(
         q,
         k,
         v,
-        attention_mask=a,
-        causal=True,
-        sm_scale=1 / math.sqrt(hd),
+        b,
+        # sm_scale=1 / math.sqrt(hd),
         block_k=cnk,
         block_q=cnk,
-        is_left_padded=True
     )
     print(jnp.mean(jnp.sum(out_flash)))
     print(jnp.mean(jnp.sum(out)))
