@@ -112,14 +112,14 @@ def segment_mask(
         q_attention_mask: jax.Array,
         kv_attention_mask: jax.Array,
 ):
-    # [B, T, 1] or [T, 1]
-    q_attention_mask = jnp.expand_dims(q_attention_mask, axis=-1)
-    # [B, 1, S] or [1, S]
-    if kv_attention_mask.ndim == 1:
-        kv_attention_mask = jnp.expand_dims(kv_attention_mask, axis=0)
-    else:
-        kv_attention_mask = jnp.expand_dims(kv_attention_mask, axis=1)
-    return jnp.equal(q_attention_mask, kv_attention_mask).astype(jnp.bool_)
+    kv_attention_mask = jnp.atleast_2d(kv_attention_mask)
+    q_attention_mask = jnp.atleast_2d(q_attention_mask)
+    return jnp.bitwise_and(
+        jnp.bitwise_and(q_attention_mask.astype("bool"), kv_attention_mask.astype("bool")),
+        jnp.tril(jnp.ones(
+            (q_attention_mask.shape[-1], kv_attention_mask.shape[-1]), dtype="bool")
+        )[None, None, :, :]
+    ).astype("bool").reshape(q_attention_mask.shape[-1], kv_attention_mask.shape[-1])
 
 
 @functools.partial(
