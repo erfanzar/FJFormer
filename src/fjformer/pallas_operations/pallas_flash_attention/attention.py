@@ -9,7 +9,7 @@ os.environ["XLA_PYTHON_CLIENT_ALLOCATOR"] = "platform"
 
 import functools
 import math
-from typing import Any
+from typing import Any, Optional
 
 import jax
 from jax import lax
@@ -18,6 +18,41 @@ import jax.numpy as jnp
 import numpy as np
 
 DEFAULT_MASK_VALUE = -0.7 * float(np.finfo(np.dtype("float32")).max)
+
+
+def attention_mask_movement(
+        q_attention_mask: jax.Array,
+        kv_attention_mask: jax.Array,
+        is_left_padded: bool = False
+):
+    if is_left_padded:
+        q_attention_mask = jnp.atleast_2d(q_attention_mask)
+        kv_attention_mask = jnp.atleast_2d(kv_attention_mask)
+        combined_mask = jnp.atleast_2d(jnp.logical_or(q_attention_mask, kv_attention_mask.transpose(1, 0)))
+
+        # jax.debug.print("*************************************\nCOMB:\n{x}", x=combined_mask)
+        return combined_mask
+    else:
+        return jnp.bitwise_or(q_attention_mask, kv_attention_mask).astype(jnp.bool_)
+
+
+def control_combination(
+        causal_mask,
+        mask=None,
+        is_left_padded: bool = False
+):
+    if mask is None:
+        return causal_mask
+    if is_left_padded:
+        # jax.debug.print("*************************************\nMASK:\n{x}", x=mask)
+        mask = jnp.logical_or(mask[0, :], mask[-1, :])
+        # jax.debug.print("*************************************\nCASK:\n{x}", x=mask)
+        mask = jnp.logical_and(mask, causal_mask)
+        # jax.debug.print("*************************************\nFMSK:\n{x} " + "--" * 20, x=mask)
+
+    else:
+        mask = jnp.logical_and(mask, causal_mask)
+    return mask.astype(jnp.bool_)
 
 
 def flash_attention_forward_kernel(
@@ -29,6 +64,7 @@ def flash_attention_forward_kernel(
         *residual_refs: Any,  # Residual outputs
         num_heads: int,
         sm_scale: float,
+        is_left_padded: bool,
         causal: bool,
         block_q: int,
         block_d: int,
@@ -69,16 +105,13 @@ def flash_attention_forward_kernel(
                 mask = attention_mask_movement(
                     q_attention_mask,
                     kv_attention_mask,
+                    is_left_padded
                 )
             if causal:
                 span_q = start_q * block_q + jnp.arange(block_q)
                 span_k = start_k * block_k + jnp.arange(block_k)
                 causal_mask = span_q[:, None] >= span_k[None, :]
-                mask = (
-                    causal_mask if mask is None else jnp.logical_and(mask, causal_mask)
-                )
-                # jax.debug.print("{curr_q_slice} - {curr_k_slice} : {x}", x=mask, curr_q_slice=curr_q_slice,
-                #                 curr_k_slice=start_k * block_k)
+                mask = control_combination(causal_mask, mask, is_left_padded)
             qk = jnp.where(mask, qk, DEFAULT_MASK_VALUE)
 
         m_curr = qk.max(axis=-1)
@@ -112,25 +145,14 @@ def flash_attention_forward_kernel(
     pl.store(o_ref, (curr_q_slice, pl.dslice(None)), o)
 
 
-def attention_mask_movement(
-        q_attention_mask: jax.Array,
-        kv_attention_mask: jax.Array,
-):
-    q_attention_mask = jnp.expand_dims(q_attention_mask, axis=-1)
-    if kv_attention_mask.ndim == 1:
-        kv_attention_mask = jnp.expand_dims(kv_attention_mask, axis=0)
-    else:
-        kv_attention_mask = jnp.expand_dims(kv_attention_mask, axis=1)
-    return jnp.bitwise_or(q_attention_mask, kv_attention_mask).astype(jnp.bool_)
-
-
 @functools.partial(
-    jax.custom_vjp, nondiff_argnums=[4, 5, 6, 7, 8, 9, 10, 11, 12, 13]
+    jax.custom_vjp, nondiff_argnums=[4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
 )
 @functools.partial(
     jax.jit,
     static_argnames=[
         "sm_scale",
+        "is_left_padded",
         "causal",
         "block_q",
         "block_k",
@@ -146,20 +168,30 @@ def flash_attention(
         query,
         key,
         value,
-        attention_mask: jnp.ndarray | None,
+        attention_mask: Optional[jnp.ndarray] = None,
         sm_scale: float = 1.0,
         causal: bool = False,
         block_q: int = 128,
         block_k: int = 128,
         backward_pass_impl: str = "triton",
-        num_warps: int | None = None,
+        num_warps: Optional[int] = None,
         num_stages: int = 2,
-        grid: tuple[int, ...] | None = None,
-        interpret: bool = ...,
+        grid: Optional[tuple[int, ...]] = None,
+        interpret: Optional[bool] = None,
+        is_left_padded: Optional[bool] = None,
         debug: bool = False,
 ):
     del backward_pass_impl
+
     batch_size, seq_len, num_heads, head_dim = query.shape
+
+    if is_left_padded is None:
+        if attention_mask is None:
+            is_left_padded = False
+        # else:
+    if interpret is None:
+        interpret = not (seq_len / 16).is_integer() or jax.lib.xla_bridge.get_backend().platform == "cpu"
+
     block_q = min(block_q, seq_len)
     block_k = min(block_k, seq_len)
     # Heuristics.
@@ -170,10 +202,16 @@ def flash_attention(
     num_warps_ = num_warps
     if num_warps_ is None:
         num_warps_ = 4 if head_dim <= 64 else 8
-    kernel = functools.partial(flash_attention_forward_kernel, num_heads=num_heads,
-                               sm_scale=sm_scale, block_q=block_q,
-                               block_k=block_k, block_d=head_dim,
-                               causal=causal)
+    kernel = functools.partial(
+        flash_attention_forward_kernel,
+        is_left_padded=is_left_padded,
+        num_heads=num_heads,
+        sm_scale=sm_scale,
+        block_q=block_q,
+        block_k=block_k,
+        block_d=head_dim,
+        causal=causal,
+    )
 
     in_specs = [
         pl.BlockSpec(lambda _, j, k: (j, 0, k, 0), (None, seq_len, None, head_dim)),
@@ -182,8 +220,6 @@ def flash_attention(
         None if attention_mask is None else pl.BlockSpec(lambda _, j, k: (j, 0), (None, seq_len))
     ]
     out_shape = jax.ShapeDtypeStruct(shape=query.shape, dtype=query.dtype)
-    if interpret == Ellipsis:
-        interpret = not (seq_len / 16).is_integer() or jax.lib.xla_bridge.get_backend().platform == "cpu"
     return pl.pallas_call(
         kernel,
         grid=grid_,
@@ -207,6 +243,7 @@ def _flash_attention_forward(
         v,
         attention_mask: jax.Array | None,
         sm_scale: float,
+        is_left_padded: bool,
         causal: bool,
         block_q: int,
         block_k: int,
@@ -229,15 +266,20 @@ def _flash_attention_forward(
     num_warps_ = num_warps
     if num_warps_ is None:
         num_warps_ = 4 if head_dim <= 64 else 8
-    kernel = functools.partial(flash_attention_forward_kernel, num_heads=num_heads,
-                               sm_scale=sm_scale, causal=causal, block_q=block_q,
-                               block_k=block_k, block_d=head_dim)
+    kernel = functools.partial(
+        flash_attention_forward_kernel,
+        num_heads=num_heads,
+        sm_scale=sm_scale,
+        is_left_padded=is_left_padded,
+        causal=causal,
+        block_q=block_q,
+        block_k=block_k,
+        block_d=head_dim
+    )
     out_shape = [
         jax.ShapeDtypeStruct(shape=q.shape, dtype=q.dtype),  # out
-        jax.ShapeDtypeStruct(shape=(batch_size, num_heads, seq_len),  # l
-                             dtype=jnp.float32),
-        jax.ShapeDtypeStruct(shape=(batch_size, num_heads, seq_len),  # m
-                             dtype=jnp.float32)
+        jax.ShapeDtypeStruct(shape=(batch_size, num_heads, seq_len), dtype=jnp.float32),
+        jax.ShapeDtypeStruct(shape=(batch_size, num_heads, seq_len), dtype=jnp.float32)
     ]
     in_specs = [
         pl.BlockSpec(lambda _, j, k: (j, 0, k, 0), (None, seq_len, None, head_dim)),
@@ -346,6 +388,7 @@ def flash_attention_backward_kernel(
         dv_ref,
         *,
         sm_scale: float,
+        is_left_padded: bool,
         causal: bool,
         block_q: int,
         block_d: int,
@@ -385,16 +428,13 @@ def flash_attention_backward_kernel(
             if causal or attention_mask_ref is not None:
                 mask = None
                 if attention_mask_ref is not None:
-                    mask = attention_mask_movement(q_attention_mask, kv_attention_mask, )
+                    mask = attention_mask_movement(q_attention_mask, kv_attention_mask, is_left_padded)
 
                 if causal:
                     span_q = start_q * block_q + jnp.arange(block_q)
                     causal_mask = span_q[:, None] >= span_k[None, :]
-                    mask = (
-                        causal_mask
-                        if mask is None
-                        else jnp.logical_and(mask, causal_mask)
-                    )
+                    mask = control_combination(causal_mask, mask, is_left_padded)
+
                 qk = jnp.where(mask, qk, DEFAULT_MASK_VALUE)
 
             m = pl.load(m_ref, (pl.ds(start_q * block_q, block_q),))
@@ -451,6 +491,7 @@ def _flash_attention_reference(
 
 def _flash_attention_backward(
         sm_scale: float,
+        is_left_padded: bool,
         causal: bool,
         block_q: int,
         block_k: int,
@@ -536,6 +577,7 @@ def _flash_attention_backward(
                 block_d=head_dim,
                 block_k=block_k,
                 sm_scale=sm_scale,
+                is_left_padded=is_left_padded,
                 causal=causal,
             ),
             out_specs=out_specs,  # type:ignore
