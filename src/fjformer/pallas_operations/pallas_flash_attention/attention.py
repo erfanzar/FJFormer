@@ -66,7 +66,10 @@ def flash_attention_forward_kernel(
         if causal or attention_mask_ref is not None:
             mask = None
             if attention_mask_ref is not None:
-                mask = segment_mask(q_attention_mask, kv_attention_mask)
+                mask = attention_mask_movement(
+                    q_attention_mask,
+                    kv_attention_mask,
+                )
             if causal:
                 span_q = start_q * block_q + jnp.arange(block_q)
                 span_k = start_k * block_k + jnp.arange(block_k)
@@ -74,7 +77,8 @@ def flash_attention_forward_kernel(
                 mask = (
                     causal_mask if mask is None else jnp.logical_and(mask, causal_mask)
                 )
-            # Apply mask to qk.
+                # jax.debug.print("{curr_q_slice} - {curr_k_slice} : {x}", x=mask, curr_q_slice=curr_q_slice,
+                #                 curr_k_slice=start_k * block_k)
             qk = jnp.where(mask, qk, DEFAULT_MASK_VALUE)
 
         m_curr = qk.max(axis=-1)
@@ -108,18 +112,16 @@ def flash_attention_forward_kernel(
     pl.store(o_ref, (curr_q_slice, pl.dslice(None)), o)
 
 
-def segment_mask(
+def attention_mask_movement(
         q_attention_mask: jax.Array,
         kv_attention_mask: jax.Array,
 ):
-    kv_attention_mask = jnp.atleast_2d(kv_attention_mask)
-    q_attention_mask = jnp.atleast_2d(q_attention_mask)
-    return jnp.bitwise_and(
-        jnp.bitwise_and(q_attention_mask.astype("bool"), kv_attention_mask.astype("bool")),
-        jnp.tril(jnp.ones(
-            (q_attention_mask.shape[-1], kv_attention_mask.shape[-1]), dtype="bool")
-        )[None, None, :, :]
-    ).astype("bool").reshape(q_attention_mask.shape[-1], kv_attention_mask.shape[-1])
+    q_attention_mask = jnp.expand_dims(q_attention_mask, axis=-1)
+    if kv_attention_mask.ndim == 1:
+        kv_attention_mask = jnp.expand_dims(kv_attention_mask, axis=0)
+    else:
+        kv_attention_mask = jnp.expand_dims(kv_attention_mask, axis=1)
+    return jnp.bitwise_or(q_attention_mask, kv_attention_mask).astype(jnp.bool_)
 
 
 @functools.partial(
@@ -383,7 +385,7 @@ def flash_attention_backward_kernel(
             if causal or attention_mask_ref is not None:
                 mask = None
                 if attention_mask_ref is not None:
-                    mask = segment_mask(q_attention_mask, kv_attention_mask)
+                    mask = attention_mask_movement(q_attention_mask, kv_attention_mask, )
 
                 if causal:
                     span_q = start_q * block_q + jnp.arange(block_q)
@@ -436,7 +438,7 @@ def _flash_attention_reference(
     logits = jnp.einsum("bqhc,bkhc->bhqk", q, k).astype(jnp.float32)
     mask = None
     if attention_mask is not None:
-        mask = jnp.expand_dims(segment_mask(attention_mask, attention_mask), 1)
+        mask = jnp.expand_dims(attention_mask_movement(attention_mask, attention_mask), 1)
         mask = jnp.broadcast_to(mask, logits.shape)
     if causal:
         causal_mask = jnp.tril(jnp.ones((1, 1, q_seq_len, kv_seq_len), dtype=bool))
