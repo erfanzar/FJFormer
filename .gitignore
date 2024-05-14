@@ -8,7 +8,6 @@ env.py
 
 # Distribution / packaging
 .Python
-attention_test.py
 build/
 develop-eggs/
 dist/
