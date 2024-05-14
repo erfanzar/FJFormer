@@ -1,0 +1,4968 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+        <meta name="author" content="Erfan Zare Chavoshi">
+      
+      
+      
+        <link rel="prev" href="../generated-func-_func/">
+      
+      
+        <link rel="next" href="..">
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.0, mkdocs-material-9.5.22">
+    
+    
+      
+        <title>Loss Func - FJFormer</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.732c4fb1.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/_mkdocstrings.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#funcloss_func" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="FJFormer" class="md-header__button md-logo" aria-label="FJFormer" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            FJFormer
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Loss Func
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var media,input,key,value,palette=__md_get("__palette");if(palette&&palette.color){"(prefers-color-scheme)"===palette.color.media&&(media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']"),palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent"));for([key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/erfanzar/FJFormer" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="FJFormer" class="md-nav__button md-logo" aria-label="FJFormer" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    FJFormer
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/erfanzar/FJFormer" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_1" id="__nav_1_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Bits
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_1">
+            <span class="md-nav__icon md-icon"></span>
+            Bits
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../generated-bits-bits/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bits
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../generated-bits-calibration/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Calibration
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../generated-bits-config/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Config
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../generated-bits-int_numerics/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Int Numerics
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../generated-bits-no_numerics/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    No Numerics
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../generated-bits-numerics/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Numerics
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../generated-bits-q_dot_general/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Q Dot General
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../generated-bits-q_flax/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Q Flax
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../generated-bits-qk/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Qk
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../generated-bits-stochastic_rounding/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Stochastic Rounding
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Checkpoint
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Checkpoint
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../generated-checkpoint-_load/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Load
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../generated-checkpoint-streamer/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Streamer
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Func
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Func
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../generated-func-_func/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Func
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Loss Func
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Loss Func
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#src.fjformer.func.loss_func" class="md-nav__link">
+    <span class="md-ellipsis">
+      loss_func
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#src.fjformer.func.loss_func.SpecialLossNormalizingFactor" class="md-nav__link">
+    <span class="md-ellipsis">
+      SpecialLossNormalizingFactor
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#src.fjformer.func.loss_func.auxiliary_load_balancing_loss_func" class="md-nav__link">
+    <span class="md-ellipsis">
+      auxiliary_load_balancing_loss_func
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#src.fjformer.func.loss_func.binary_cross_entropy" class="md-nav__link">
+    <span class="md-ellipsis">
+      binary_cross_entropy
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#src.fjformer.func.loss_func.binary_cross_entropy_onehot" class="md-nav__link">
+    <span class="md-ellipsis">
+      binary_cross_entropy_onehot
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#src.fjformer.func.loss_func.compute_weighted_cross_entropy" class="md-nav__link">
+    <span class="md-ellipsis">
+      compute_weighted_cross_entropy
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#src.fjformer.func.loss_func.compute_weighted_cross_entropy_and_accuracy" class="md-nav__link">
+    <span class="md-ellipsis">
+      compute_weighted_cross_entropy_and_accuracy
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#src.fjformer.func.loss_func.convert_special_loss_normalizing_factor_to_enum" class="md-nav__link">
+    <span class="md-ellipsis">
+      convert_special_loss_normalizing_factor_to_enum
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#src.fjformer.func.loss_func.cross_entropy" class="md-nav__link">
+    <span class="md-ellipsis">
+      cross_entropy
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#src.fjformer.func.loss_func.cross_entropy_loss_and_accuracy" class="md-nav__link">
+    <span class="md-ellipsis">
+      cross_entropy_loss_and_accuracy
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#src.fjformer.func.loss_func.cross_entropy_onehot" class="md-nav__link">
+    <span class="md-ellipsis">
+      cross_entropy_onehot
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#src.fjformer.func.loss_func.cross_entropy_with_logits" class="md-nav__link">
+    <span class="md-ellipsis">
+      cross_entropy_with_logits
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#src.fjformer.func.loss_func.fused_cross_entropy_loss_and_accuracy" class="md-nav__link">
+    <span class="md-ellipsis">
+      fused_cross_entropy_loss_and_accuracy
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#src.fjformer.func.loss_func.get_loss_normalizing_factor_and_weights" class="md-nav__link">
+    <span class="md-ellipsis">
+      get_loss_normalizing_factor_and_weights
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#src.fjformer.func.loss_func.hinge" class="md-nav__link">
+    <span class="md-ellipsis">
+      hinge
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#src.fjformer.func.loss_func.l2" class="md-nav__link">
+    <span class="md-ellipsis">
+      l2
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#src.fjformer.func.loss_func.log_cosh" class="md-nav__link">
+    <span class="md-ellipsis">
+      log_cosh
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#src.fjformer.func.loss_func.mae" class="md-nav__link">
+    <span class="md-ellipsis">
+      mae
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#src.fjformer.func.loss_func.mse" class="md-nav__link">
+    <span class="md-ellipsis">
+      mse
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#src.fjformer.func.loss_func.mse_loss" class="md-nav__link">
+    <span class="md-ellipsis">
+      mse_loss
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#src.fjformer.func.loss_func.nll" class="md-nav__link">
+    <span class="md-ellipsis">
+      nll
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Home
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Monitor
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            Monitor
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../generated-monitor-tracker/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Tracker
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Optimizers
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            Optimizers
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../generated-optimizers-adafactor/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Adafactor
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../generated-optimizers-adamw/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Adamw
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../generated-optimizers-lion/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Lion
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../generated-optimizers-optimizer_utils/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Optimizer Utils
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../generated-optimizers-rmsprop/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Rmsprop
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Pallas Operations
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            Pallas Operations
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_7_1" id="__nav_7_1_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Efficient Attention
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_1">
+            <span class="md-nav__icon md-icon"></span>
+            Efficient Attention
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../generated-pallas_operations-efficient_attention-efficient_attention/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Efficient Attention
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_7_2" id="__nav_7_2_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Flash Attention
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_2">
+            <span class="md-nav__icon md-icon"></span>
+            Flash Attention
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_2_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_7_2_1" id="__nav_7_2_1_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Gpu
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_2_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_2_1">
+            <span class="md-nav__icon md-icon"></span>
+            Gpu
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../generated-pallas_operations-flash_attention-gpu-jax_flash_attn_gpu/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Jax Flash Attn Gpu
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_2_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_7_2_2" id="__nav_7_2_2_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Tpu
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_2_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            Tpu
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../generated-pallas_operations-flash_attention-tpu-jax_flash_attn_tpu/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Jax Flash Attn Tpu
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_7_3" id="__nav_7_3_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Layer Norm
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_3">
+            <span class="md-nav__icon md-icon"></span>
+            Layer Norm
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_3_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_7_3_1" id="__nav_7_3_1_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Gpu
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_3_1">
+            <span class="md-nav__icon md-icon"></span>
+            Gpu
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../generated-pallas_operations-layer_norm-gpu-layer_norm/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Layer Norm
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_7_4" id="__nav_7_4_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Ring Attention
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_4">
+            <span class="md-nav__icon md-icon"></span>
+            Ring Attention
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../generated-pallas_operations-ring_attention-ring_attention/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Ring Attention
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_7_5" id="__nav_7_5_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Rms Norm
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_5">
+            <span class="md-nav__icon md-icon"></span>
+            Rms Norm
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_5_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_7_5_1" id="__nav_7_5_1_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Gpu
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_5_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_5_1">
+            <span class="md-nav__icon md-icon"></span>
+            Gpu
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../generated-pallas_operations-rms_norm-gpu-rms_norm/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Rms Norm
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_7_6" id="__nav_7_6_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Softmax
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_6">
+            <span class="md-nav__icon md-icon"></span>
+            Softmax
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_6_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_7_6_1" id="__nav_7_6_1_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Gpu
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_6_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_6_1">
+            <span class="md-nav__icon md-icon"></span>
+            Gpu
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../generated-pallas_operations-softmax-gpu-softmax/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Softmax
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7_7" id="__nav_7_7_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Splash Attention
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_7">
+            <span class="md-nav__icon md-icon"></span>
+            Splash Attention
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_7_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_7_7_1" id="__nav_7_7_1_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Tpu
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_7_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_7_1">
+            <span class="md-nav__icon md-icon"></span>
+            Tpu
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../generated-pallas_operations-splash_attention-tpu-splash_attention_kernel/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Splash Attention Kernel
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../generated-pallas_operations-splash_attention-tpu-splash_attention_mask/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Splash Attention Mask
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../generated-pallas_operations-splash_attention-tpu-splash_attention_mask_info/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Splash Attention Mask Info
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Partition Utils
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            Partition Utils
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../generated-partition_utils-mesh_utils/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Mesh Utils
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../generated-partition_utils-t5x_partitioning/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    T5x Partitioning
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../generated-utils/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Utils
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" >
+        
+          
+          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Xrapture
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10">
+            <span class="md-nav__icon md-icon"></span>
+            Xrapture
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../generated-xrapture-implicit_array/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Implicit Array
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../generated-xrapture-tracer/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Tracer
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../generated-xrapture-xrapture/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Xrapture
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#src.fjformer.func.loss_func" class="md-nav__link">
+    <span class="md-ellipsis">
+      loss_func
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#src.fjformer.func.loss_func.SpecialLossNormalizingFactor" class="md-nav__link">
+    <span class="md-ellipsis">
+      SpecialLossNormalizingFactor
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#src.fjformer.func.loss_func.auxiliary_load_balancing_loss_func" class="md-nav__link">
+    <span class="md-ellipsis">
+      auxiliary_load_balancing_loss_func
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#src.fjformer.func.loss_func.binary_cross_entropy" class="md-nav__link">
+    <span class="md-ellipsis">
+      binary_cross_entropy
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#src.fjformer.func.loss_func.binary_cross_entropy_onehot" class="md-nav__link">
+    <span class="md-ellipsis">
+      binary_cross_entropy_onehot
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#src.fjformer.func.loss_func.compute_weighted_cross_entropy" class="md-nav__link">
+    <span class="md-ellipsis">
+      compute_weighted_cross_entropy
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#src.fjformer.func.loss_func.compute_weighted_cross_entropy_and_accuracy" class="md-nav__link">
+    <span class="md-ellipsis">
+      compute_weighted_cross_entropy_and_accuracy
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#src.fjformer.func.loss_func.convert_special_loss_normalizing_factor_to_enum" class="md-nav__link">
+    <span class="md-ellipsis">
+      convert_special_loss_normalizing_factor_to_enum
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#src.fjformer.func.loss_func.cross_entropy" class="md-nav__link">
+    <span class="md-ellipsis">
+      cross_entropy
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#src.fjformer.func.loss_func.cross_entropy_loss_and_accuracy" class="md-nav__link">
+    <span class="md-ellipsis">
+      cross_entropy_loss_and_accuracy
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#src.fjformer.func.loss_func.cross_entropy_onehot" class="md-nav__link">
+    <span class="md-ellipsis">
+      cross_entropy_onehot
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#src.fjformer.func.loss_func.cross_entropy_with_logits" class="md-nav__link">
+    <span class="md-ellipsis">
+      cross_entropy_with_logits
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#src.fjformer.func.loss_func.fused_cross_entropy_loss_and_accuracy" class="md-nav__link">
+    <span class="md-ellipsis">
+      fused_cross_entropy_loss_and_accuracy
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#src.fjformer.func.loss_func.get_loss_normalizing_factor_and_weights" class="md-nav__link">
+    <span class="md-ellipsis">
+      get_loss_normalizing_factor_and_weights
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#src.fjformer.func.loss_func.hinge" class="md-nav__link">
+    <span class="md-ellipsis">
+      hinge
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#src.fjformer.func.loss_func.l2" class="md-nav__link">
+    <span class="md-ellipsis">
+      l2
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#src.fjformer.func.loss_func.log_cosh" class="md-nav__link">
+    <span class="md-ellipsis">
+      log_cosh
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#src.fjformer.func.loss_func.mae" class="md-nav__link">
+    <span class="md-ellipsis">
+      mae
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#src.fjformer.func.loss_func.mse" class="md-nav__link">
+    <span class="md-ellipsis">
+      mse
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#src.fjformer.func.loss_func.mse_loss" class="md-nav__link">
+    <span class="md-ellipsis">
+      mse_loss
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#src.fjformer.func.loss_func.nll" class="md-nav__link">
+    <span class="md-ellipsis">
+      nll
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+<h1 id="funcloss_func">func.loss_func</h1>
+
+
+<div class="doc doc-object doc-module">
+
+
+
+<a id="src.fjformer.func.loss_func"></a>
+  <div class="doc doc-contents first">
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="src.fjformer.func.loss_func.SpecialLossNormalizingFactor" class="doc doc-heading">
+          <code>SpecialLossNormalizingFactor</code>
+
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+          <p class="doc doc-class-bases">
+            Bases: <code><span title="enum.Enum">Enum</span></code></p>
+
+  
+      <p>Specially calculated loss_normalizing_factors, that are not a constant.</p>
+<p>Attributes:
+  NUM_REAL_TARGET_TOKENS: Whether to divide the loss by the number of real
+    (non-padding) tokens in the current target batch. If
+    'decoder_loss_weights' are specified, it will be the sum of the weights.
+    Otherwise it will be the number of non-zero 'decoder_target_tokens'.
+  NUM_TOTAL_TARGET_TOKENS: Whether to divide the loss by the total number of
+    target tokens, i.e., batch_size * target_seq_length (including padding).
+  AVERAGE_PER_SEQUENCE: This will first compute the per-sequence loss
+    (averaged over the number of real target tokens in the sequence), and then
+    compute the average of that over the sequences. This can be preferable to
+    NUM_REAL_TARGET_TOKENS for finetuning, because it will weigh all examples
+    equally, regardless of sequence length (which can be especially important
+    for multi-task finetuning).</p>
+
+            <details class="quote">
+              <summary>Source code in <code>src/fjformer/func/loss_func.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">428</span>
+<span class="normal">429</span>
+<span class="normal">430</span>
+<span class="normal">431</span>
+<span class="normal">432</span>
+<span class="normal">433</span>
+<span class="normal">434</span>
+<span class="normal">435</span>
+<span class="normal">436</span>
+<span class="normal">437</span>
+<span class="normal">438</span>
+<span class="normal">439</span>
+<span class="normal">440</span>
+<span class="normal">441</span>
+<span class="normal">442</span>
+<span class="normal">443</span>
+<span class="normal">444</span>
+<span class="normal">445</span>
+<span class="normal">446</span>
+<span class="normal">447</span>
+<span class="normal">448</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@enum</span><span class="o">.</span><span class="n">unique</span>
+<span class="k">class</span> <span class="nc">SpecialLossNormalizingFactor</span><span class="p">(</span><span class="n">enum</span><span class="o">.</span><span class="n">Enum</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Specially calculated loss_normalizing_factors, that are not a constant.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">      NUM_REAL_TARGET_TOKENS: Whether to divide the loss by the number of real</span>
+<span class="sd">        (non-padding) tokens in the current target batch. If</span>
+<span class="sd">        &#39;decoder_loss_weights&#39; are specified, it will be the sum of the weights.</span>
+<span class="sd">        Otherwise it will be the number of non-zero &#39;decoder_target_tokens&#39;.</span>
+<span class="sd">      NUM_TOTAL_TARGET_TOKENS: Whether to divide the loss by the total number of</span>
+<span class="sd">        target tokens, i.e., batch_size * target_seq_length (including padding).</span>
+<span class="sd">      AVERAGE_PER_SEQUENCE: This will first compute the per-sequence loss</span>
+<span class="sd">        (averaged over the number of real target tokens in the sequence), and then</span>
+<span class="sd">        compute the average of that over the sequences. This can be preferable to</span>
+<span class="sd">        NUM_REAL_TARGET_TOKENS for finetuning, because it will weigh all examples</span>
+<span class="sd">        equally, regardless of sequence length (which can be especially important</span>
+<span class="sd">        for multi-task finetuning).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">NUM_REAL_TARGET_TOKENS</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">NUM_TOTAL_TARGET_TOKENS</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="n">AVERAGE_PER_SEQUENCE</span> <span class="o">=</span> <span class="mi">3</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+  </div>
+
+
+</div>
+
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h2 id="src.fjformer.func.loss_func.auxiliary_load_balancing_loss_func" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">auxiliary_load_balancing_loss_func</span><span class="p">(</span><span class="n">gate_logits</span><span class="p">,</span> <span class="n">num_experts</span><span class="p">,</span> <span class="n">top_k</span><span class="p">,</span> <span class="n">attention_mask</span><span class="p">)</span></code>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Computes auxiliary load balancing loss as in Switch Transformer - implemented in JAX.
+See Switch Transformer (https://arxiv.org/abs/2101.03961) for more details. This function implements the loss
+function presented in equations (4) - (6) of the paper. It aims at penalizing cases where the routing between
+experts is too unbalanced.</p>
+
+
+
+  <p><span class="doc-section-title">Parameters:</span></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr class="doc-section-item">
+          <td><code></code></td>
+          <td>
+                <code>gate_logits</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Union[Array, Tuple[Array]: Logits from the <code>gate</code>, should be a tuple of model.config.num_hidden_layers tensors of shape [batch_size X sequence_length, num_experts].</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr class="doc-section-item">
+          <td><code>attention_mask</code></td>
+          <td>
+                <code><span title="typing.Optional">Optional</span>[<span title="chex.Array">Array</span>]</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Optional[chex.Array] : The attention_mask used in forward function shape [batch_size X sequence_length] if not None.</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+
+  <p><span class="doc-section-title">Returns:</span></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr class="doc-section-item">
+          <td>
+                <code><span title="chex.Array">Array</span></code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>chex.Array: The auxiliary loss.</p>
+            </div>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+          <details class="quote">
+            <summary>Source code in <code>src/fjformer/func/loss_func.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">573</span>
+<span class="normal">574</span>
+<span class="normal">575</span>
+<span class="normal">576</span>
+<span class="normal">577</span>
+<span class="normal">578</span>
+<span class="normal">579</span>
+<span class="normal">580</span>
+<span class="normal">581</span>
+<span class="normal">582</span>
+<span class="normal">583</span>
+<span class="normal">584</span>
+<span class="normal">585</span>
+<span class="normal">586</span>
+<span class="normal">587</span>
+<span class="normal">588</span>
+<span class="normal">589</span>
+<span class="normal">590</span>
+<span class="normal">591</span>
+<span class="normal">592</span>
+<span class="normal">593</span>
+<span class="normal">594</span>
+<span class="normal">595</span>
+<span class="normal">596</span>
+<span class="normal">597</span>
+<span class="normal">598</span>
+<span class="normal">599</span>
+<span class="normal">600</span>
+<span class="normal">601</span>
+<span class="normal">602</span>
+<span class="normal">603</span>
+<span class="normal">604</span>
+<span class="normal">605</span>
+<span class="normal">606</span>
+<span class="normal">607</span>
+<span class="normal">608</span>
+<span class="normal">609</span>
+<span class="normal">610</span>
+<span class="normal">611</span>
+<span class="normal">612</span>
+<span class="normal">613</span>
+<span class="normal">614</span>
+<span class="normal">615</span>
+<span class="normal">616</span>
+<span class="normal">617</span>
+<span class="normal">618</span>
+<span class="normal">619</span>
+<span class="normal">620</span>
+<span class="normal">621</span>
+<span class="normal">622</span>
+<span class="normal">623</span>
+<span class="normal">624</span>
+<span class="normal">625</span>
+<span class="normal">626</span>
+<span class="normal">627</span>
+<span class="normal">628</span>
+<span class="normal">629</span>
+<span class="normal">630</span>
+<span class="normal">631</span>
+<span class="normal">632</span>
+<span class="normal">633</span>
+<span class="normal">634</span>
+<span class="normal">635</span>
+<span class="normal">636</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">auxiliary_load_balancing_loss_func</span><span class="p">(</span>
+        <span class="n">gate_logits</span><span class="p">:</span> <span class="n">chex</span><span class="o">.</span><span class="n">Array</span><span class="p">,</span>
+        <span class="n">num_experts</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">top_k</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">attention_mask</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">chex</span><span class="o">.</span><span class="n">Array</span><span class="p">],</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">chex</span><span class="o">.</span><span class="n">Array</span><span class="p">:</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Computes auxiliary load balancing loss as in Switch Transformer - implemented in JAX.</span>
+<span class="sd">    See Switch Transformer (https://arxiv.org/abs/2101.03961) for more details. This function implements the loss</span>
+<span class="sd">    function presented in equations (4) - (6) of the paper. It aims at penalizing cases where the routing between</span>
+<span class="sd">    experts is too unbalanced.</span>
+<span class="sd">    :param gate_logits :Union[Array, Tuple[Array]: Logits from the `gate`, should be a tuple of</span>
+<span class="sd">     model.config.num_hidden_layers tensors of shape [batch_size X sequence_length, num_experts].</span>
+<span class="sd">    :param num_experts :int:Number of experts.</span>
+<span class="sd">    :param top_k :int: The number of experts each token is routed to.</span>
+<span class="sd">    :param attention_mask: Optional[chex.Array] : The attention_mask used in forward function shape</span>
+<span class="sd">        [batch_size X sequence_length] if not None.</span>
+
+<span class="sd">    :return loss: chex.Array: The auxiliary loss.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">gate_logits</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">gate_logits</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">jnp</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">jnp</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">gate_logits</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
+        <span class="n">concatenated_gate_logits</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span><span class="n">gate_logits</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">jnp</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">jnp</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+    <span class="n">routing_weights</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">softmax</span><span class="p">(</span>
+        <span class="n">concatenated_gate_logits</span><span class="p">,</span>
+        <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span>
+    <span class="p">)</span>
+
+    <span class="n">_</span><span class="p">,</span> <span class="n">selected_experts</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">lax</span><span class="o">.</span><span class="n">top_k</span><span class="p">(</span><span class="n">routing_weights</span><span class="p">,</span> <span class="n">top_k</span><span class="p">)</span>
+
+    <span class="n">expert_mask</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">one_hot</span><span class="p">(</span><span class="n">selected_experts</span><span class="p">,</span> <span class="n">num_experts</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">attention_mask</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">tokens_per_expert</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">expert_mask</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">jnp</span><span class="o">.</span><span class="n">float32</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">router_prob_per_expert</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">routing_weights</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">batch_size</span><span class="p">,</span> <span class="n">sequence_length</span> <span class="o">=</span> <span class="n">attention_mask</span><span class="o">.</span><span class="n">shape</span>
+        <span class="n">num_hidden_layers</span> <span class="o">=</span> <span class="n">concatenated_gate_logits</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">//</span> <span class="p">(</span><span class="n">batch_size</span> <span class="o">*</span> <span class="n">sequence_length</span><span class="p">)</span>
+
+        <span class="n">expert_attention_mask</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">broadcast_to</span><span class="p">(</span>
+            <span class="n">attention_mask</span><span class="p">[</span><span class="n">jnp</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:,</span> <span class="n">jnp</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="n">jnp</span><span class="o">.</span><span class="n">newaxis</span><span class="p">],</span>
+            <span class="p">(</span><span class="n">num_hidden_layers</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">,</span> <span class="n">sequence_length</span><span class="p">,</span> <span class="n">top_k</span><span class="p">,</span> <span class="n">num_experts</span><span class="p">)</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">top_k</span><span class="p">,</span> <span class="n">num_experts</span><span class="p">)</span>
+
+        <span class="n">tokens_per_expert</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span>
+            <span class="n">expert_mask</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">jnp</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span> <span class="o">*</span> <span class="n">expert_attention_mask</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span>
+        <span class="p">)</span> <span class="o">/</span> <span class="n">jnp</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">expert_attention_mask</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+        <span class="n">router_per_expert_attention_mask</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">broadcast_to</span><span class="p">(</span>
+            <span class="n">attention_mask</span><span class="p">[</span><span class="n">jnp</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:,</span> <span class="n">jnp</span><span class="o">.</span><span class="n">newaxis</span><span class="p">],</span>
+            <span class="p">(</span><span class="n">num_hidden_layers</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">,</span> <span class="n">sequence_length</span><span class="p">,</span> <span class="n">num_experts</span><span class="p">)</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">num_experts</span><span class="p">)</span>
+
+        <span class="c1"># Compute the average probability of routing to these experts</span>
+        <span class="n">router_prob_per_expert</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span>
+            <span class="n">routing_weights</span> <span class="o">*</span> <span class="n">router_per_expert_attention_mask</span><span class="p">,</span>
+            <span class="n">axis</span><span class="o">=</span><span class="mi">0</span>
+        <span class="p">)</span> <span class="o">/</span> <span class="n">jnp</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">router_per_expert_attention_mask</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="n">overall_loss</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">tokens_per_expert</span> <span class="o">*</span> <span class="n">jnp</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">router_prob_per_expert</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">overall_loss</span> <span class="o">*</span> <span class="n">num_experts</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h2 id="src.fjformer.func.loss_func.binary_cross_entropy" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">binary_cross_entropy</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">predictions</span><span class="p">)</span></code>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>The binary_cross_entropy function computes the binary cross entropy loss between
+the labels and predictions. The function takes two arguments:
+    1) labels: a tensor of shape (batch_size, num_classes) containing the ground truth class indices for each
+    example in the batch.
+    2) predictions: a tensor of shape (batch_size, num_classes) containing model output probabilities for each
+    example in the batch.</p>
+
+
+
+  <p><span class="doc-section-title">Parameters:</span></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr class="doc-section-item">
+          <td><code>labels</code></td>
+          <td>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Specify the true class of each example</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr class="doc-section-item">
+          <td><code>predictions</code></td>
+          <td>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Calculate the loss</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+
+  <p><span class="doc-section-title">Returns:</span></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr class="doc-section-item">
+          <td>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The cross-entropy loss for binary classification</p>
+            </div>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+          <details class="quote">
+            <summary>Source code in <code>src/fjformer/func/loss_func.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">62</span>
+<span class="normal">63</span>
+<span class="normal">64</span>
+<span class="normal">65</span>
+<span class="normal">66</span>
+<span class="normal">67</span>
+<span class="normal">68</span>
+<span class="normal">69</span>
+<span class="normal">70</span>
+<span class="normal">71</span>
+<span class="normal">72</span>
+<span class="normal">73</span>
+<span class="normal">74</span>
+<span class="normal">75</span>
+<span class="normal">76</span>
+<span class="normal">77</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">binary_cross_entropy</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">predictions</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The binary_cross_entropy function computes the binary cross entropy loss between</span>
+<span class="sd">    the labels and predictions. The function takes two arguments:</span>
+<span class="sd">        1) labels: a tensor of shape (batch_size, num_classes) containing the ground truth class indices for each</span>
+<span class="sd">        example in the batch.</span>
+<span class="sd">        2) predictions: a tensor of shape (batch_size, num_classes) containing model output probabilities for each</span>
+<span class="sd">        example in the batch.</span>
+
+<span class="sd">    :param labels: Specify the true class of each example</span>
+<span class="sd">    :param predictions: Calculate the loss</span>
+<span class="sd">    :return: The cross-entropy loss for binary classification</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">labels</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">one_hot</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">predictions</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+    <span class="k">return</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">labels</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">predictions</span> <span class="o">+</span> <span class="mf">1e-8</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">labels</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">predictions</span> <span class="o">+</span> <span class="mf">1e-8</span><span class="p">))</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h2 id="src.fjformer.func.loss_func.binary_cross_entropy_onehot" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">binary_cross_entropy_onehot</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">predictions</span><span class="p">)</span></code>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>The binary_cross_entropy_onehot function takes in two arguments:
+    labels: a 1D array of integers, where each integer is the index of the correct class for that example.
+    predictions: a 2D array of floats, where each row represents an example and each column represents a class.</p>
+
+
+
+  <p><span class="doc-section-title">Parameters:</span></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr class="doc-section-item">
+          <td><code>labels</code></td>
+          <td>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Determine the correct class of each image</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr class="doc-section-item">
+          <td><code>predictions</code></td>
+          <td>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Calculate the loss</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+
+  <p><span class="doc-section-title">Returns:</span></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr class="doc-section-item">
+          <td>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The binary cross entropy loss between the labels and predictions</p>
+            </div>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+          <details class="quote">
+            <summary>Source code in <code>src/fjformer/func/loss_func.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">141</span>
+<span class="normal">142</span>
+<span class="normal">143</span>
+<span class="normal">144</span>
+<span class="normal">145</span>
+<span class="normal">146</span>
+<span class="normal">147</span>
+<span class="normal">148</span>
+<span class="normal">149</span>
+<span class="normal">150</span>
+<span class="normal">151</span>
+<span class="normal">152</span>
+<span class="normal">153</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">binary_cross_entropy_onehot</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">predictions</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The binary_cross_entropy_onehot function takes in two arguments:</span>
+<span class="sd">        labels: a 1D array of integers, where each integer is the index of the correct class for that example.</span>
+<span class="sd">        predictions: a 2D array of floats, where each row represents an example and each column represents a class.</span>
+
+<span class="sd">    :param labels: Determine the correct class of each image</span>
+<span class="sd">    :param predictions: Calculate the loss</span>
+<span class="sd">    :return: The binary cross entropy loss between the labels and predictions</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">labels</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">one_hot</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">predictions</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+    <span class="k">return</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">labels</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">predictions</span> <span class="o">+</span> <span class="mf">1e-8</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">labels</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">predictions</span> <span class="o">+</span> <span class="mf">1e-8</span><span class="p">))</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h2 id="src.fjformer.func.loss_func.compute_weighted_cross_entropy" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">compute_weighted_cross_entropy</span><span class="p">(</span><span class="n">logits</span><span class="p">,</span> <span class="n">targets</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">label_smoothing</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">z_loss</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">loss_normalizing_factor</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Compute weighted cross entropy and entropy for log probs and targets.</p>
+<p>Args:
+ logits: [batch, length, num_classes] float array.
+ targets: categorical targets [batch, length] int array.
+ weights: None or array of shape [batch, length].
+ label_smoothing: label smoothing constant, used to determine the on and off
+   values.
+ z_loss: coefficient for auxiliary z-loss loss term.
+ loss_normalizing_factor: Constant to divide loss by. If not specified, loss
+   will not be normalized. Intended for backward compatibility with T5-MTF
+   training. Should not normally be used.</p>
+<p>Returns:
+  Tuple of scalar loss, z_loss, and weight sum.</p>
+
+          <details class="quote">
+            <summary>Source code in <code>src/fjformer/func/loss_func.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">337</span>
+<span class="normal">338</span>
+<span class="normal">339</span>
+<span class="normal">340</span>
+<span class="normal">341</span>
+<span class="normal">342</span>
+<span class="normal">343</span>
+<span class="normal">344</span>
+<span class="normal">345</span>
+<span class="normal">346</span>
+<span class="normal">347</span>
+<span class="normal">348</span>
+<span class="normal">349</span>
+<span class="normal">350</span>
+<span class="normal">351</span>
+<span class="normal">352</span>
+<span class="normal">353</span>
+<span class="normal">354</span>
+<span class="normal">355</span>
+<span class="normal">356</span>
+<span class="normal">357</span>
+<span class="normal">358</span>
+<span class="normal">359</span>
+<span class="normal">360</span>
+<span class="normal">361</span>
+<span class="normal">362</span>
+<span class="normal">363</span>
+<span class="normal">364</span>
+<span class="normal">365</span>
+<span class="normal">366</span>
+<span class="normal">367</span>
+<span class="normal">368</span>
+<span class="normal">369</span>
+<span class="normal">370</span>
+<span class="normal">371</span>
+<span class="normal">372</span>
+<span class="normal">373</span>
+<span class="normal">374</span>
+<span class="normal">375</span>
+<span class="normal">376</span>
+<span class="normal">377</span>
+<span class="normal">378</span>
+<span class="normal">379</span>
+<span class="normal">380</span>
+<span class="normal">381</span>
+<span class="normal">382</span>
+<span class="normal">383</span>
+<span class="normal">384</span>
+<span class="normal">385</span>
+<span class="normal">386</span>
+<span class="normal">387</span>
+<span class="normal">388</span>
+<span class="normal">389</span>
+<span class="normal">390</span>
+<span class="normal">391</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">compute_weighted_cross_entropy</span><span class="p">(</span>
+        <span class="n">logits</span><span class="p">:</span> <span class="n">jnp</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+        <span class="n">targets</span><span class="p">:</span> <span class="n">jnp</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+        <span class="n">weights</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">jnp</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">label_smoothing</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+        <span class="n">z_loss</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+        <span class="n">loss_normalizing_factor</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">jnp</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">jnp</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">jnp</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute weighted cross entropy and entropy for log probs and targets.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">     logits: [batch, length, num_classes] float array.</span>
+<span class="sd">     targets: categorical targets [batch, length] int array.</span>
+<span class="sd">     weights: None or array of shape [batch, length].</span>
+<span class="sd">     label_smoothing: label smoothing constant, used to determine the on and off</span>
+<span class="sd">       values.</span>
+<span class="sd">     z_loss: coefficient for auxiliary z-loss loss term.</span>
+<span class="sd">     loss_normalizing_factor: Constant to divide loss by. If not specified, loss</span>
+<span class="sd">       will not be normalized. Intended for backward compatibility with T5-MTF</span>
+<span class="sd">       training. Should not normally be used.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">      Tuple of scalar loss, z_loss, and weight sum.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">logits</span><span class="o">.</span><span class="n">ndim</span> <span class="o">!=</span> <span class="n">targets</span><span class="o">.</span><span class="n">ndim</span> <span class="o">+</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Incorrect shapes. Got shape </span><span class="si">%s</span><span class="s1"> logits and </span><span class="si">%s</span><span class="s1"> targets&#39;</span> <span class="o">%</span>
+                         <span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">logits</span><span class="o">.</span><span class="n">shape</span><span class="p">),</span> <span class="nb">str</span><span class="p">(</span><span class="n">targets</span><span class="o">.</span><span class="n">shape</span><span class="p">)))</span>
+    <span class="n">vocab_size</span> <span class="o">=</span> <span class="n">logits</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">confidence</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">-</span> <span class="n">label_smoothing</span>
+    <span class="n">low_confidence</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">confidence</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">vocab_size</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">normalizing_constant</span> <span class="o">=</span> <span class="o">-</span><span class="p">(</span>
+            <span class="n">confidence</span> <span class="o">*</span> <span class="n">jnp</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">confidence</span><span class="p">)</span> <span class="o">+</span>
+            <span class="p">(</span><span class="n">vocab_size</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">low_confidence</span> <span class="o">*</span> <span class="n">jnp</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">low_confidence</span> <span class="o">+</span> <span class="mf">1e-20</span><span class="p">))</span>
+    <span class="n">soft_targets</span> <span class="o">=</span> <span class="n">common_utils</span><span class="o">.</span><span class="n">onehot</span><span class="p">(</span>
+        <span class="n">targets</span><span class="p">,</span> <span class="n">vocab_size</span><span class="p">,</span> <span class="n">on_value</span><span class="o">=</span><span class="n">confidence</span><span class="p">,</span> <span class="n">off_value</span><span class="o">=</span><span class="n">low_confidence</span><span class="p">)</span>
+    <span class="n">total_loss</span><span class="p">,</span> <span class="n">total_z_loss</span> <span class="o">=</span> <span class="n">cross_entropy_with_logits</span><span class="p">(</span>
+        <span class="n">logits</span><span class="p">,</span> <span class="n">soft_targets</span><span class="p">,</span> <span class="n">z_loss</span><span class="o">=</span><span class="n">z_loss</span><span class="p">)</span>
+    <span class="n">total_loss</span> <span class="o">=</span> <span class="n">total_loss</span> <span class="o">-</span> <span class="n">normalizing_constant</span>
+
+    <span class="n">shape_dtype_struct</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">eval_shape</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">,</span> <span class="n">targets</span><span class="p">)</span>
+    <span class="n">weight_sum</span> <span class="o">=</span> <span class="n">reduce</span><span class="p">(</span><span class="n">mul</span><span class="p">,</span> <span class="n">shape_dtype_struct</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">weights</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">total_loss</span> <span class="o">=</span> <span class="n">total_loss</span> <span class="o">*</span> <span class="n">weights</span>
+        <span class="n">total_z_loss</span> <span class="o">=</span> <span class="n">total_z_loss</span> <span class="o">*</span> <span class="n">weights</span>
+        <span class="n">weight_sum</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">weights</span><span class="p">)</span>
+
+    <span class="c1"># By default, we do not normalize loss based on anything.</span>
+    <span class="c1"># We don&#39;t normalize based on batch size because the optimizers we use are</span>
+    <span class="c1"># pretty much scale invariant, so this simplifies things.</span>
+    <span class="c1"># We don&#39;t normalize based on number of non-padding tokens in order to treat</span>
+    <span class="c1"># each token as equally important regardless of sequence length.</span>
+    <span class="k">if</span> <span class="n">loss_normalizing_factor</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">total_loss</span> <span class="o">/=</span> <span class="n">loss_normalizing_factor</span>
+        <span class="n">total_z_loss</span> <span class="o">/=</span> <span class="n">loss_normalizing_factor</span>
+    <span class="k">return</span> <span class="n">jnp</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">total_loss</span><span class="p">),</span> <span class="n">jnp</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">total_z_loss</span><span class="p">),</span> <span class="n">weight_sum</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h2 id="src.fjformer.func.loss_func.compute_weighted_cross_entropy_and_accuracy" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">compute_weighted_cross_entropy_and_accuracy</span><span class="p">(</span><span class="n">logits</span><span class="p">,</span> <span class="n">targets</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">label_smoothing</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">z_loss</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">loss_normalizing_factor</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Compute weighted cross entropy and entropy for log probs and targets.</p>
+<p>Args:
+ logits: [batch, length, num_classes] float array.
+ targets: categorical targets [batch, length] int array.
+ weights: None or array of shape [batch, length].
+ label_smoothing: label smoothing constant, used to determine the on and off
+   values.
+ z_loss: coefficient for auxiliary z-loss loss term.
+ loss_normalizing_factor: Constant to divide loss by. If not specified, loss
+   will not be normalized. Intended for backward compatibility with T5-MTF
+   training. Should not normally be used.</p>
+<p>Returns:
+  Tuple of scalar loss, z_loss, weight sum and accuracy</p>
+
+          <details class="quote">
+            <summary>Source code in <code>src/fjformer/func/loss_func.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">394</span>
+<span class="normal">395</span>
+<span class="normal">396</span>
+<span class="normal">397</span>
+<span class="normal">398</span>
+<span class="normal">399</span>
+<span class="normal">400</span>
+<span class="normal">401</span>
+<span class="normal">402</span>
+<span class="normal">403</span>
+<span class="normal">404</span>
+<span class="normal">405</span>
+<span class="normal">406</span>
+<span class="normal">407</span>
+<span class="normal">408</span>
+<span class="normal">409</span>
+<span class="normal">410</span>
+<span class="normal">411</span>
+<span class="normal">412</span>
+<span class="normal">413</span>
+<span class="normal">414</span>
+<span class="normal">415</span>
+<span class="normal">416</span>
+<span class="normal">417</span>
+<span class="normal">418</span>
+<span class="normal">419</span>
+<span class="normal">420</span>
+<span class="normal">421</span>
+<span class="normal">422</span>
+<span class="normal">423</span>
+<span class="normal">424</span>
+<span class="normal">425</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">compute_weighted_cross_entropy_and_accuracy</span><span class="p">(</span>
+        <span class="n">logits</span><span class="p">:</span> <span class="n">jnp</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+        <span class="n">targets</span><span class="p">:</span> <span class="n">jnp</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+        <span class="n">weights</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">jnp</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">label_smoothing</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+        <span class="n">z_loss</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+        <span class="n">loss_normalizing_factor</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">jnp</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">jnp</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">jnp</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">jnp</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute weighted cross entropy and entropy for log probs and targets.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">     logits: [batch, length, num_classes] float array.</span>
+<span class="sd">     targets: categorical targets [batch, length] int array.</span>
+<span class="sd">     weights: None or array of shape [batch, length].</span>
+<span class="sd">     label_smoothing: label smoothing constant, used to determine the on and off</span>
+<span class="sd">       values.</span>
+<span class="sd">     z_loss: coefficient for auxiliary z-loss loss term.</span>
+<span class="sd">     loss_normalizing_factor: Constant to divide loss by. If not specified, loss</span>
+<span class="sd">       will not be normalized. Intended for backward compatibility with T5-MTF</span>
+<span class="sd">       training. Should not normally be used.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">      Tuple of scalar loss, z_loss, weight sum and accuracy</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">total_loss</span><span class="p">,</span> <span class="n">total_z_loss</span><span class="p">,</span> <span class="n">weight_sum</span> <span class="o">=</span> <span class="n">compute_weighted_cross_entropy</span><span class="p">(</span>
+        <span class="n">logits</span><span class="p">,</span> <span class="n">targets</span><span class="p">,</span> <span class="n">weights</span><span class="p">,</span> <span class="n">label_smoothing</span><span class="p">,</span> <span class="n">z_loss</span><span class="p">,</span> <span class="n">loss_normalizing_factor</span><span class="p">)</span>
+
+    <span class="n">predictions</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">logits</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">correct_predictions</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">equal</span><span class="p">(</span><span class="n">predictions</span><span class="p">,</span> <span class="n">targets</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">jnp</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+    <span class="n">accuracy</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">correct_predictions</span> <span class="o">*</span> <span class="n">weights</span><span class="p">)</span> <span class="o">/</span> <span class="n">weight_sum</span>
+
+    <span class="k">return</span> <span class="n">total_loss</span><span class="p">,</span> <span class="n">total_z_loss</span><span class="p">,</span> <span class="n">weight_sum</span><span class="p">,</span> <span class="n">accuracy</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h2 id="src.fjformer.func.loss_func.convert_special_loss_normalizing_factor_to_enum" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">convert_special_loss_normalizing_factor_to_enum</span><span class="p">(</span><span class="n">x</span><span class="p">)</span></code>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Converts stringified version of LNF to an enum.</p>
+<p>This is useful because gin dynamic registration does not (currently)
+have support for enum.</p>
+<p>Args:
+  x: stringified version of SpecialLossNormalizingFactor enum.</p>
+<p>Returns:
+  SpecialLossNormalizingFactor enum instance.</p>
+
+          <details class="quote">
+            <summary>Source code in <code>src/fjformer/func/loss_func.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">451</span>
+<span class="normal">452</span>
+<span class="normal">453</span>
+<span class="normal">454</span>
+<span class="normal">455</span>
+<span class="normal">456</span>
+<span class="normal">457</span>
+<span class="normal">458</span>
+<span class="normal">459</span>
+<span class="normal">460</span>
+<span class="normal">461</span>
+<span class="normal">462</span>
+<span class="normal">463</span>
+<span class="normal">464</span>
+<span class="normal">465</span>
+<span class="normal">466</span>
+<span class="normal">467</span>
+<span class="normal">468</span>
+<span class="normal">469</span>
+<span class="normal">470</span>
+<span class="normal">471</span>
+<span class="normal">472</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">convert_special_loss_normalizing_factor_to_enum</span><span class="p">(</span>
+        <span class="n">x</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SpecialLossNormalizingFactor</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Converts stringified version of LNF to an enum.</span>
+
+<span class="sd">    This is useful because gin dynamic registration does not (currently)</span>
+<span class="sd">    have support for enum.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">      x: stringified version of SpecialLossNormalizingFactor enum.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">      SpecialLossNormalizingFactor enum instance.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">x</span> <span class="o">==</span> <span class="s1">&#39;NUM_REAL_TARGET_TOKENS&#39;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">SpecialLossNormalizingFactor</span><span class="o">.</span><span class="n">NUM_REAL_TARGET_TOKENS</span>
+    <span class="k">if</span> <span class="n">x</span> <span class="o">==</span> <span class="s1">&#39;NUM_TOTAL_TARGET_TOKENS&#39;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">SpecialLossNormalizingFactor</span><span class="o">.</span><span class="n">NUM_TOTAL_TARGET_TOKENS</span>
+    <span class="k">if</span> <span class="n">x</span> <span class="o">==</span> <span class="s1">&#39;AVERAGE_PER_SEQUENCE&#39;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">SpecialLossNormalizingFactor</span><span class="o">.</span><span class="n">AVERAGE_PER_SEQUENCE</span>
+    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+        <span class="s1">&#39;Could not convert string </span><span class="se">\&quot;</span><span class="si">%s</span><span class="se">\&quot;</span><span class="s1"> to SpecialLossNormalizingFactor&#39;</span> <span class="o">%</span> <span class="n">x</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h2 id="src.fjformer.func.loss_func.cross_entropy" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">cross_entropy</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">predictions</span><span class="p">,</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>The cross_entropy function computes the cross entropy loss between a set of labels and predictions.</p>
+
+
+
+  <p><span class="doc-section-title">Parameters:</span></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr class="doc-section-item">
+          <td><code>labels</code></td>
+          <td>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Calculate the cross entropy loss</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr class="doc-section-item">
+          <td><code>predictions</code></td>
+          <td>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Calculate the log_softmax</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr class="doc-section-item">
+          <td><code>ignore_index</code></td>
+          <td>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Mask out the loss from a specific class</p>
+            </div>
+          </td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+
+  <p><span class="doc-section-title">Returns:</span></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr class="doc-section-item">
+          <td>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The average cross entropy over the batch</p>
+            </div>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+          <details class="quote">
+            <summary>Source code in <code>src/fjformer/func/loss_func.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">41</span>
+<span class="normal">42</span>
+<span class="normal">43</span>
+<span class="normal">44</span>
+<span class="normal">45</span>
+<span class="normal">46</span>
+<span class="normal">47</span>
+<span class="normal">48</span>
+<span class="normal">49</span>
+<span class="normal">50</span>
+<span class="normal">51</span>
+<span class="normal">52</span>
+<span class="normal">53</span>
+<span class="normal">54</span>
+<span class="normal">55</span>
+<span class="normal">56</span>
+<span class="normal">57</span>
+<span class="normal">58</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">cross_entropy</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">predictions</span><span class="p">,</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The cross_entropy function computes the cross entropy loss between a set of labels and predictions.</span>
+
+<span class="sd">    :param labels: Calculate the cross entropy loss</span>
+<span class="sd">    :param predictions: Calculate the log_softmax</span>
+<span class="sd">    :param ignore_index: Mask out the loss from a specific class</span>
+<span class="sd">    :return: The average cross entropy over the batch</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">labels</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">one_hot</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">predictions</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+    <span class="k">if</span> <span class="n">ignore_index</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span>
+        <span class="n">mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">labels</span> <span class="o">==</span> <span class="n">ignore_index</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">mask</span><span class="p">)</span>
+        <span class="n">labels</span> <span class="o">=</span> <span class="n">labels</span> <span class="o">*</span> <span class="n">mask</span>
+        <span class="n">predictions</span> <span class="o">=</span> <span class="n">predictions</span> <span class="o">*</span> <span class="n">mask</span>
+    <span class="n">log_softmax</span> <span class="o">=</span> <span class="n">predictions</span> <span class="o">-</span> <span class="n">logsumexp</span><span class="p">(</span><span class="n">predictions</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">keepdims</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">return</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">labels</span> <span class="o">*</span> <span class="n">log_softmax</span><span class="p">)</span> <span class="o">/</span> <span class="n">labels</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h2 id="src.fjformer.func.loss_func.cross_entropy_loss_and_accuracy" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">cross_entropy_loss_and_accuracy</span><span class="p">(</span><span class="n">logits</span><span class="p">,</span> <span class="n">tokens</span><span class="p">,</span> <span class="n">valid</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      
+
+
+
+  <p><span class="doc-section-title">Parameters:</span></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr class="doc-section-item">
+          <td><code>logits</code></td>
+          <td>
+                <code><span title="chex.Array">Array</span></code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Logits</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr class="doc-section-item">
+          <td><code>tokens</code></td>
+          <td>
+                <code><span title="chex.Array">Array</span></code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>labels</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr class="doc-section-item">
+          <td><code>valid</code></td>
+          <td>
+                <code><span title="chex.Array">Array</span></code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>attention_mask</p>
+            </div>
+          </td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+
+  <p><span class="doc-section-title">Returns:</span></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr class="doc-section-item">
+          <td>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>loss and accuracy</p>
+            </div>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+          <details class="quote">
+            <summary>Source code in <code>src/fjformer/func/loss_func.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">196</span>
+<span class="normal">197</span>
+<span class="normal">198</span>
+<span class="normal">199</span>
+<span class="normal">200</span>
+<span class="normal">201</span>
+<span class="normal">202</span>
+<span class="normal">203</span>
+<span class="normal">204</span>
+<span class="normal">205</span>
+<span class="normal">206</span>
+<span class="normal">207</span>
+<span class="normal">208</span>
+<span class="normal">209</span>
+<span class="normal">210</span>
+<span class="normal">211</span>
+<span class="normal">212</span>
+<span class="normal">213</span>
+<span class="normal">214</span>
+<span class="normal">215</span>
+<span class="normal">216</span>
+<span class="normal">217</span>
+<span class="normal">218</span>
+<span class="normal">219</span>
+<span class="normal">220</span>
+<span class="normal">221</span>
+<span class="normal">222</span>
+<span class="normal">223</span>
+<span class="normal">224</span>
+<span class="normal">225</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">cross_entropy_loss_and_accuracy</span><span class="p">(</span><span class="n">logits</span><span class="p">:</span> <span class="n">chex</span><span class="o">.</span><span class="n">Array</span><span class="p">,</span> <span class="n">tokens</span><span class="p">:</span> <span class="n">chex</span><span class="o">.</span><span class="n">Array</span><span class="p">,</span> <span class="n">valid</span><span class="p">:</span> <span class="n">chex</span><span class="o">.</span><span class="n">Array</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">    :param logits: Logits</span>
+<span class="sd">    :param tokens: labels</span>
+<span class="sd">    :param valid: attention_mask</span>
+<span class="sd">    :return: loss and accuracy</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">valid</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">valid</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">tokens</span><span class="o">.</span><span class="n">shape</span><span class="p">[:</span><span class="mi">2</span><span class="p">])</span>
+    <span class="n">valid</span> <span class="o">=</span> <span class="n">valid</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">jnp</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+    <span class="n">valid_text_length</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="n">jnp</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">valid</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">),</span> <span class="mf">1e-10</span><span class="p">)</span>
+    <span class="n">logits</span> <span class="o">=</span> <span class="n">logits</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">jnp</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>  <span class="c1"># for numerical stability</span>
+    <span class="n">token_log_prob</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span>
+        <span class="n">jnp</span><span class="o">.</span><span class="n">take_along_axis</span><span class="p">(</span>
+            <span class="n">jax</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">log_softmax</span><span class="p">(</span><span class="n">logits</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">),</span>
+            <span class="n">jnp</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">tokens</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">),</span>
+            <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span>
+        <span class="p">),</span>
+        <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">token_log_prob</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">valid</span> <span class="o">&gt;</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">token_log_prob</span><span class="p">,</span> <span class="n">jnp</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="mf">0.0</span><span class="p">))</span>
+    <span class="n">loss</span> <span class="o">=</span> <span class="o">-</span><span class="n">jnp</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">jnp</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">token_log_prob</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="n">valid_text_length</span><span class="p">)</span>
+    <span class="n">correct</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">where</span><span class="p">(</span>
+        <span class="n">valid</span> <span class="o">&gt;</span> <span class="mf">0.0</span><span class="p">,</span>
+        <span class="n">jnp</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">logits</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span> <span class="o">==</span> <span class="n">tokens</span><span class="p">,</span>
+        <span class="n">jnp</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+    <span class="p">)</span>
+    <span class="n">accuracy</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">jnp</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">correct</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="n">valid_text_length</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">loss</span><span class="p">,</span> <span class="n">accuracy</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h2 id="src.fjformer.func.loss_func.cross_entropy_onehot" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">cross_entropy_onehot</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">predictions</span><span class="p">)</span></code>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>The cross_entropy_onehot function takes two arguments:
+labels - a 1D array of integers in the range [0, num_classes)
+predictions - a 2D array of floats with shape (num_examples, num_classes)
+The function returns the cross entropy loss between labels and predictions. The loss is averaged over all examples.</p>
+
+
+
+  <p><span class="doc-section-title">Parameters:</span></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr class="doc-section-item">
+          <td><code>labels</code></td>
+          <td>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Compute the one-hot encoding of the labels</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr class="doc-section-item">
+          <td><code>predictions</code></td>
+          <td>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Calculate the log_softmax</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+
+  <p><span class="doc-section-title">Returns:</span></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr class="doc-section-item">
+          <td>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The cross entropy loss</p>
+            </div>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+          <details class="quote">
+            <summary>Source code in <code>src/fjformer/func/loss_func.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">156</span>
+<span class="normal">157</span>
+<span class="normal">158</span>
+<span class="normal">159</span>
+<span class="normal">160</span>
+<span class="normal">161</span>
+<span class="normal">162</span>
+<span class="normal">163</span>
+<span class="normal">164</span>
+<span class="normal">165</span>
+<span class="normal">166</span>
+<span class="normal">167</span>
+<span class="normal">168</span>
+<span class="normal">169</span>
+<span class="normal">170</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">cross_entropy_onehot</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">predictions</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The cross_entropy_onehot function takes two arguments:</span>
+<span class="sd">    labels - a 1D array of integers in the range [0, num_classes)</span>
+<span class="sd">    predictions - a 2D array of floats with shape (num_examples, num_classes)</span>
+<span class="sd">    The function returns the cross entropy loss between labels and predictions. The loss is averaged over all examples.</span>
+
+<span class="sd">    :param labels: Compute the one-hot encoding of the labels</span>
+<span class="sd">    :param predictions: Calculate the log_softmax</span>
+<span class="sd">    :return: The cross entropy loss</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">labels</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">one_hot</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">predictions</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">log_softmax</span> <span class="o">=</span> <span class="n">predictions</span> <span class="o">-</span> <span class="n">logsumexp</span><span class="p">(</span><span class="n">predictions</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">keepdims</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">return</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">labels</span> <span class="o">*</span> <span class="n">log_softmax</span><span class="p">)</span> <span class="o">/</span> <span class="n">labels</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h2 id="src.fjformer.func.loss_func.cross_entropy_with_logits" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">cross_entropy_with_logits</span><span class="p">(</span><span class="n">logits</span><span class="p">,</span> <span class="n">targets</span><span class="p">,</span> <span class="n">z_loss</span><span class="p">)</span></code>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Computes cross entropy loss with stable custom gradient.</p>
+<p>Computes a stabilized-gradient version of:
+  -jnp.sum(targets * nn.log_softmax(logits), axis=-1)</p>
+<p>If z_loss &gt; 0, then an auxiliary loss equal to z_loss*log(z)^2
+will be added to the cross entropy loss (z = softmax normalization constant).
+The two uses of z_loss are:
+1. To keep the logits from drifting too far from zero, which can cause
+   unacceptable roundoff errors in bfloat16.
+2. To encourage the logits to be normalized log-probabilities.</p>
+<p>Args:
+  logits: [batch, length, num_classes] float array.
+  targets: categorical one-hot targets [batch, length, num_classes] float
+    array.
+  z_loss: coefficient for auxilliary z-loss loss term.</p>
+<p>Returns:
+  tuple with the total loss and the z_loss, both
+  float arrays with shape [batch, length].</p>
+
+          <details class="quote">
+            <summary>Source code in <code>src/fjformer/func/loss_func.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">261</span>
+<span class="normal">262</span>
+<span class="normal">263</span>
+<span class="normal">264</span>
+<span class="normal">265</span>
+<span class="normal">266</span>
+<span class="normal">267</span>
+<span class="normal">268</span>
+<span class="normal">269</span>
+<span class="normal">270</span>
+<span class="normal">271</span>
+<span class="normal">272</span>
+<span class="normal">273</span>
+<span class="normal">274</span>
+<span class="normal">275</span>
+<span class="normal">276</span>
+<span class="normal">277</span>
+<span class="normal">278</span>
+<span class="normal">279</span>
+<span class="normal">280</span>
+<span class="normal">281</span>
+<span class="normal">282</span>
+<span class="normal">283</span>
+<span class="normal">284</span>
+<span class="normal">285</span>
+<span class="normal">286</span>
+<span class="normal">287</span>
+<span class="normal">288</span>
+<span class="normal">289</span>
+<span class="normal">290</span>
+<span class="normal">291</span>
+<span class="normal">292</span>
+<span class="normal">293</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@jax</span><span class="o">.</span><span class="n">custom_vjp</span>
+<span class="k">def</span> <span class="nf">cross_entropy_with_logits</span><span class="p">(</span><span class="n">logits</span><span class="p">:</span> <span class="n">jnp</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">targets</span><span class="p">:</span> <span class="n">jnp</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+                              <span class="n">z_loss</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">jnp</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">jnp</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Computes cross entropy loss with stable custom gradient.</span>
+
+<span class="sd">    Computes a stabilized-gradient version of:</span>
+<span class="sd">      -jnp.sum(targets * nn.log_softmax(logits), axis=-1)</span>
+
+<span class="sd">    If z_loss &gt; 0, then an auxiliary loss equal to z_loss*log(z)^2</span>
+<span class="sd">    will be added to the cross entropy loss (z = softmax normalization constant).</span>
+<span class="sd">    The two uses of z_loss are:</span>
+<span class="sd">    1. To keep the logits from drifting too far from zero, which can cause</span>
+<span class="sd">       unacceptable roundoff errors in bfloat16.</span>
+<span class="sd">    2. To encourage the logits to be normalized log-probabilities.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">      logits: [batch, length, num_classes] float array.</span>
+<span class="sd">      targets: categorical one-hot targets [batch, length, num_classes] float</span>
+<span class="sd">        array.</span>
+<span class="sd">      z_loss: coefficient for auxilliary z-loss loss term.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">      tuple with the total loss and the z_loss, both</span>
+<span class="sd">      float arrays with shape [batch, length].</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">logits_sum</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">scipy</span><span class="o">.</span><span class="n">special</span><span class="o">.</span><span class="n">logsumexp</span><span class="p">(</span><span class="n">logits</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">keepdims</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">log_softmax</span> <span class="o">=</span> <span class="n">logits</span> <span class="o">-</span> <span class="n">logits_sum</span>
+    <span class="n">loss</span> <span class="o">=</span> <span class="o">-</span><span class="n">jnp</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">targets</span> <span class="o">*</span> <span class="n">log_softmax</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="c1"># Add auxilliary z-loss term.</span>
+    <span class="n">log_z</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="n">logits_sum</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">total_z_loss</span> <span class="o">=</span> <span class="n">z_loss</span> <span class="o">*</span> <span class="n">jax</span><span class="o">.</span><span class="n">lax</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">log_z</span><span class="p">)</span>
+    <span class="n">loss</span> <span class="o">+=</span> <span class="n">total_z_loss</span>
+    <span class="k">return</span> <span class="n">loss</span><span class="p">,</span> <span class="n">total_z_loss</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h2 id="src.fjformer.func.loss_func.fused_cross_entropy_loss_and_accuracy" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">fused_cross_entropy_loss_and_accuracy</span><span class="p">(</span><span class="n">logits</span><span class="p">,</span> <span class="n">tokens</span><span class="p">,</span> <span class="n">valid</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      
+
+
+
+  <p><span class="doc-section-title">Parameters:</span></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr class="doc-section-item">
+          <td><code>logits</code></td>
+          <td>
+                <code><span title="chex.Array">Array</span></code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Logits</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr class="doc-section-item">
+          <td><code>tokens</code></td>
+          <td>
+                <code><span title="chex.Array">Array</span></code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>labels</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr class="doc-section-item">
+          <td><code>valid</code></td>
+          <td>
+                <code><span title="chex.Array">Array</span></code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>attention_mask</p>
+            </div>
+          </td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+
+  <p><span class="doc-section-title">Returns:</span></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr class="doc-section-item">
+          <td>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>loss and accuracy</p>
+            </div>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+          <details class="quote">
+            <summary>Source code in <code>src/fjformer/func/loss_func.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">228</span>
+<span class="normal">229</span>
+<span class="normal">230</span>
+<span class="normal">231</span>
+<span class="normal">232</span>
+<span class="normal">233</span>
+<span class="normal">234</span>
+<span class="normal">235</span>
+<span class="normal">236</span>
+<span class="normal">237</span>
+<span class="normal">238</span>
+<span class="normal">239</span>
+<span class="normal">240</span>
+<span class="normal">241</span>
+<span class="normal">242</span>
+<span class="normal">243</span>
+<span class="normal">244</span>
+<span class="normal">245</span>
+<span class="normal">246</span>
+<span class="normal">247</span>
+<span class="normal">248</span>
+<span class="normal">249</span>
+<span class="normal">250</span>
+<span class="normal">251</span>
+<span class="normal">252</span>
+<span class="normal">253</span>
+<span class="normal">254</span>
+<span class="normal">255</span>
+<span class="normal">256</span>
+<span class="normal">257</span>
+<span class="normal">258</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">fused_cross_entropy_loss_and_accuracy</span><span class="p">(</span><span class="n">logits</span><span class="p">:</span> <span class="n">chex</span><span class="o">.</span><span class="n">Array</span><span class="p">,</span> <span class="n">tokens</span><span class="p">:</span> <span class="n">chex</span><span class="o">.</span><span class="n">Array</span><span class="p">,</span> <span class="n">valid</span><span class="p">:</span> <span class="n">chex</span><span class="o">.</span><span class="n">Array</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">    :param logits: Logits</span>
+<span class="sd">    :param tokens: labels</span>
+<span class="sd">    :param valid: attention_mask</span>
+<span class="sd">    :return: loss and accuracy</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">valid</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">valid</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">tokens</span><span class="o">.</span><span class="n">shape</span><span class="p">[:</span><span class="mi">2</span><span class="p">])</span>
+    <span class="n">valid</span> <span class="o">=</span> <span class="n">valid</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">jnp</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+    <span class="n">valid_text_length</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="n">jnp</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">valid</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">),</span> <span class="mf">1e-10</span><span class="p">)</span>
+    <span class="n">logits</span> <span class="o">=</span> <span class="n">logits</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">jnp</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+    <span class="n">log_probs</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">log_softmax</span><span class="p">(</span><span class="n">logits</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">token_log_prob</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span>
+        <span class="n">jnp</span><span class="o">.</span><span class="n">take_along_axis</span><span class="p">(</span>
+            <span class="n">log_probs</span><span class="p">,</span>
+            <span class="n">jnp</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">tokens</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">),</span>
+            <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span>
+        <span class="p">),</span>
+        <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">token_log_prob</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">valid</span> <span class="o">&gt;</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">token_log_prob</span><span class="p">,</span> <span class="n">jnp</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="mf">0.0</span><span class="p">))</span>
+    <span class="n">loss</span> <span class="o">=</span> <span class="o">-</span><span class="n">jnp</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">jnp</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">token_log_prob</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="n">valid_text_length</span><span class="p">)</span>
+    <span class="n">correct</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">where</span><span class="p">(</span>
+        <span class="n">valid</span> <span class="o">&gt;</span> <span class="mf">0.0</span><span class="p">,</span>
+        <span class="n">jnp</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">logits</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span> <span class="o">==</span> <span class="n">tokens</span><span class="p">,</span>
+        <span class="n">jnp</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+    <span class="p">)</span>
+    <span class="n">accuracy</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">jnp</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">correct</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="n">valid_text_length</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">loss</span><span class="p">,</span> <span class="n">accuracy</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h2 id="src.fjformer.func.loss_func.get_loss_normalizing_factor_and_weights" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">get_loss_normalizing_factor_and_weights</span><span class="p">(</span><span class="n">loss_normalizing_factor</span><span class="p">,</span> <span class="n">batch</span><span class="p">)</span></code>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Get the float loss_normalizing_factor and loss weights.</p>
+<p>If loss_normalizing_factor is float or None, this will simply return the
+input loss_normalizing_factor and batch.</p>
+<p>If loss_normalizing_factor is a SpecialLossNormalizingFactor, it will
+return a float loss_normalizing_factor and loss weights corresponding to
+the special LNF. See SpecialLossNormalizingFactor for more details.</p>
+<p>Args:
+  loss_normalizing_factor: The input LNF, which may be a float, None, or
+    SpecialLossNormalizingFactor (or a stringified SLNF).
+  batch: Input data batch.</p>
+<p>Returns:
+  Tuple of (output_loss_normalizing_factor, loss_weights).
+    'output_loss_normalizing_factor' is a scalar float (Python float
+    or jnp float).
+    'loss_weights' is the per token loss weight JNP array.</p>
+
+          <details class="quote">
+            <summary>Source code in <code>src/fjformer/func/loss_func.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">506</span>
+<span class="normal">507</span>
+<span class="normal">508</span>
+<span class="normal">509</span>
+<span class="normal">510</span>
+<span class="normal">511</span>
+<span class="normal">512</span>
+<span class="normal">513</span>
+<span class="normal">514</span>
+<span class="normal">515</span>
+<span class="normal">516</span>
+<span class="normal">517</span>
+<span class="normal">518</span>
+<span class="normal">519</span>
+<span class="normal">520</span>
+<span class="normal">521</span>
+<span class="normal">522</span>
+<span class="normal">523</span>
+<span class="normal">524</span>
+<span class="normal">525</span>
+<span class="normal">526</span>
+<span class="normal">527</span>
+<span class="normal">528</span>
+<span class="normal">529</span>
+<span class="normal">530</span>
+<span class="normal">531</span>
+<span class="normal">532</span>
+<span class="normal">533</span>
+<span class="normal">534</span>
+<span class="normal">535</span>
+<span class="normal">536</span>
+<span class="normal">537</span>
+<span class="normal">538</span>
+<span class="normal">539</span>
+<span class="normal">540</span>
+<span class="normal">541</span>
+<span class="normal">542</span>
+<span class="normal">543</span>
+<span class="normal">544</span>
+<span class="normal">545</span>
+<span class="normal">546</span>
+<span class="normal">547</span>
+<span class="normal">548</span>
+<span class="normal">549</span>
+<span class="normal">550</span>
+<span class="normal">551</span>
+<span class="normal">552</span>
+<span class="normal">553</span>
+<span class="normal">554</span>
+<span class="normal">555</span>
+<span class="normal">556</span>
+<span class="normal">557</span>
+<span class="normal">558</span>
+<span class="normal">559</span>
+<span class="normal">560</span>
+<span class="normal">561</span>
+<span class="normal">562</span>
+<span class="normal">563</span>
+<span class="normal">564</span>
+<span class="normal">565</span>
+<span class="normal">566</span>
+<span class="normal">567</span>
+<span class="normal">568</span>
+<span class="normal">569</span>
+<span class="normal">570</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_loss_normalizing_factor_and_weights</span><span class="p">(</span>
+        <span class="n">loss_normalizing_factor</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">SpecialLossNormalizingFactor</span><span class="p">]],</span>
+        <span class="n">batch</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">jnp</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the float loss_normalizing_factor and loss weights.</span>
+
+<span class="sd">    If loss_normalizing_factor is float or None, this will simply return the</span>
+<span class="sd">    input loss_normalizing_factor and batch.</span>
+
+<span class="sd">    If loss_normalizing_factor is a SpecialLossNormalizingFactor, it will</span>
+<span class="sd">    return a float loss_normalizing_factor and loss weights corresponding to</span>
+<span class="sd">    the special LNF. See SpecialLossNormalizingFactor for more details.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">      loss_normalizing_factor: The input LNF, which may be a float, None, or</span>
+<span class="sd">        SpecialLossNormalizingFactor (or a stringified SLNF).</span>
+<span class="sd">      batch: Input data batch.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">      Tuple of (output_loss_normalizing_factor, loss_weights).</span>
+<span class="sd">        &#39;output_loss_normalizing_factor&#39; is a scalar float (Python float</span>
+<span class="sd">        or jnp float).</span>
+<span class="sd">        &#39;loss_weights&#39; is the per token loss weight JNP array.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">loss_weights</span> <span class="o">=</span> <span class="n">batch</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;decoder_loss_weights&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">loss_normalizing_factor</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span>
+            <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">loss_normalizing_factor</span><span class="p">,</span>
+                           <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">SpecialLossNormalizingFactor</span><span class="p">))):</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">loss_normalizing_factor</span><span class="p">,</span> <span class="n">loss_weights</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">loss_normalizing_factor</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="n">loss_normalizing_factor</span> <span class="o">=</span> <span class="n">convert_special_loss_normalizing_factor_to_enum</span><span class="p">(</span>
+            <span class="n">loss_normalizing_factor</span><span class="p">)</span>
+
+    <span class="c1"># If `loss_weights` are not provided, we assume that the padding id is 0 and</span>
+    <span class="c1"># that non-padding tokens in the decoder all correspond to the positions</span>
+    <span class="c1"># where loss should be taken. If more fine-grained behavior (e.g., taking</span>
+    <span class="c1"># loss on subset of &#39;decoder_target_tokens&#39;) is desired, provide</span>
+    <span class="c1"># `loss_weights` that account for this.</span>
+    <span class="k">if</span> <span class="n">loss_weights</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">loss_weights</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">batch</span><span class="p">[</span><span class="s1">&#39;decoder_target_tokens&#39;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="n">jnp</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+
+    <span class="n">output_normalizing_factor</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">if</span> <span class="n">loss_normalizing_factor</span> <span class="o">==</span> <span class="n">SpecialLossNormalizingFactor</span><span class="o">.</span><span class="n">NUM_REAL_TARGET_TOKENS</span><span class="p">:</span>
+        <span class="n">output_normalizing_factor</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">loss_weights</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">loss_normalizing_factor</span> <span class="o">==</span> <span class="n">SpecialLossNormalizingFactor</span><span class="o">.</span><span class="n">NUM_TOTAL_TARGET_TOKENS</span><span class="p">:</span>
+        <span class="n">output_normalizing_factor</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">prod</span><span class="p">(</span><span class="n">batch</span><span class="p">[</span><span class="s1">&#39;decoder_target_tokens&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">loss_normalizing_factor</span> <span class="o">==</span> <span class="n">SpecialLossNormalizingFactor</span><span class="o">.</span><span class="n">AVERAGE_PER_SEQUENCE</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s1">&#39;decoder_segment_ids&#39;</span> <span class="ow">in</span> <span class="n">batch</span><span class="p">:</span>  <span class="c1"># is packed</span>
+            <span class="n">norm_vec</span> <span class="o">=</span> <span class="n">_sum_weights_per_segment</span><span class="p">(</span><span class="n">batch</span><span class="p">[</span><span class="s1">&#39;decoder_positions&#39;</span><span class="p">],</span>
+                                                <span class="n">batch</span><span class="p">[</span><span class="s1">&#39;decoder_segment_ids&#39;</span><span class="p">],</span>
+                                                <span class="n">loss_weights</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">norm_vec</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">loss_weights</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">keepdims</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="c1"># Handle divide-by-zero.</span>
+        <span class="n">loss_weights</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">nan_to_num</span><span class="p">(</span>
+            <span class="n">loss_weights</span> <span class="o">/</span> <span class="n">norm_vec</span><span class="p">,</span> <span class="n">nan</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">posinf</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">neginf</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">output_normalizing_factor</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">loss_weights</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Unsupported value of loss_normalizing_factor: </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span>
+                         <span class="nb">str</span><span class="p">(</span><span class="n">loss_normalizing_factor</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">output_normalizing_factor</span><span class="p">,</span> <span class="n">loss_weights</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h2 id="src.fjformer.func.loss_func.hinge" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">hinge</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">predictions</span><span class="p">)</span></code>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>The hinge function is a loss function used for training classifiers.
+The hinge loss is used for &quot;maximum-margin&quot; classification, most notably
+for support vector machines (SVMs).
+For an intended output t = + 1 or - 1 and a classifier score y, the hinge loss of the prediction y is defined as:</p>
+
+
+
+  <p><span class="doc-section-title">Parameters:</span></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr class="doc-section-item">
+          <td><code>labels</code></td>
+          <td>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Calculate the hinge loss</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr class="doc-section-item">
+          <td><code>predictions</code></td>
+          <td>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Calculate the hinge loss</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+
+  <p><span class="doc-section-title">Returns:</span></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr class="doc-section-item">
+          <td>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The average loss over the training set</p>
+            </div>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+          <details class="quote">
+            <summary>Source code in <code>src/fjformer/func/loss_func.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">107</span>
+<span class="normal">108</span>
+<span class="normal">109</span>
+<span class="normal">110</span>
+<span class="normal">111</span>
+<span class="normal">112</span>
+<span class="normal">113</span>
+<span class="normal">114</span>
+<span class="normal">115</span>
+<span class="normal">116</span>
+<span class="normal">117</span>
+<span class="normal">118</span>
+<span class="normal">119</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">hinge</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">predictions</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The hinge function is a loss function used for training classifiers.</span>
+<span class="sd">    The hinge loss is used for &amp;quot;maximum-margin&amp;quot; classification, most notably</span>
+<span class="sd">    for support vector machines (SVMs).</span>
+<span class="sd">    For an intended output t = + 1 or - 1 and a classifier score y, the hinge loss of the prediction y is defined as:</span>
+
+<span class="sd">    :param labels: Calculate the hinge loss</span>
+<span class="sd">    :param predictions: Calculate the hinge loss</span>
+<span class="sd">    :return: The average loss over the training set</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">labels</span> <span class="o">*</span> <span class="n">predictions</span><span class="p">))</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h2 id="src.fjformer.func.loss_func.l2" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">l2</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">predictions</span><span class="p">)</span></code>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>The l2 function computes the sum of squared differences between labels and predictions.</p>
+
+
+
+  <p><span class="doc-section-title">Parameters:</span></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr class="doc-section-item">
+          <td><code>labels</code></td>
+          <td>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Calculate the difference between the labels and predictions</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr class="doc-section-item">
+          <td><code>predictions</code></td>
+          <td>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Calculate the difference between the labels and predictions</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+
+  <p><span class="doc-section-title">Returns:</span></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr class="doc-section-item">
+          <td>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The sum of the squared differences between labels and predictions</p>
+            </div>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+          <details class="quote">
+            <summary>Source code in <code>src/fjformer/func/loss_func.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 94</span>
+<span class="normal"> 95</span>
+<span class="normal"> 96</span>
+<span class="normal"> 97</span>
+<span class="normal"> 98</span>
+<span class="normal"> 99</span>
+<span class="normal">100</span>
+<span class="normal">101</span>
+<span class="normal">102</span>
+<span class="normal">103</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">l2</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">predictions</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The l2 function computes the sum of squared differences between labels and predictions.</span>
+
+<span class="sd">    :param labels: Calculate the difference between the labels and predictions</span>
+<span class="sd">    :param predictions: Calculate the difference between the labels and predictions</span>
+<span class="sd">    :return: The sum of the squared differences between labels and predictions</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">((</span><span class="n">labels</span> <span class="o">-</span> <span class="n">predictions</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h2 id="src.fjformer.func.loss_func.log_cosh" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">log_cosh</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">predictions</span><span class="p">)</span></code>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>The log_cosh function is a loss function that takes in two arguments: labels and predictions.
+The log_cosh function returns the mean of the logarithm of the hyperbolic cosine of (predictions - labels).
+This loss function is used to measure how well our model performs on data it has not seen before.</p>
+
+
+
+  <p><span class="doc-section-title">Parameters:</span></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr class="doc-section-item">
+          <td><code>labels</code></td>
+          <td>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Pass the actual values of the data</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr class="doc-section-item">
+          <td><code>predictions</code></td>
+          <td>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Pass the predictions of your model</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+
+  <p><span class="doc-section-title">Returns:</span></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr class="doc-section-item">
+          <td>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The logarithm of the hyperbolic cosine of the prediction error</p>
+            </div>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+          <details class="quote">
+            <summary>Source code in <code>src/fjformer/func/loss_func.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">123</span>
+<span class="normal">124</span>
+<span class="normal">125</span>
+<span class="normal">126</span>
+<span class="normal">127</span>
+<span class="normal">128</span>
+<span class="normal">129</span>
+<span class="normal">130</span>
+<span class="normal">131</span>
+<span class="normal">132</span>
+<span class="normal">133</span>
+<span class="normal">134</span>
+<span class="normal">135</span>
+<span class="normal">136</span>
+<span class="normal">137</span>
+<span class="normal">138</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">log_cosh</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">predictions</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The log_cosh function is a loss function that takes in two arguments: labels and predictions.</span>
+<span class="sd">    The log_cosh function returns the mean of the logarithm of the hyperbolic cosine of (predictions - labels).</span>
+<span class="sd">    This loss function is used to measure how well our model performs on data it has not seen before.</span>
+
+<span class="sd">    :param labels: Pass the actual values of the data</span>
+<span class="sd">    :param predictions: Pass the predictions of your model</span>
+<span class="sd">    :return: The logarithm of the hyperbolic cosine of the prediction error</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">cosh</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">x</span><span class="p">))</span> <span class="o">/</span> <span class="mi">2</span>
+
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">cosh</span><span class="p">(</span><span class="n">predictions</span> <span class="o">-</span> <span class="n">labels</span><span class="p">)))</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h2 id="src.fjformer.func.loss_func.mae" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">mae</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">predictions</span><span class="p">)</span></code>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>The mae function calculates the mean absolute error between two lists of numbers.</p>
+
+
+
+  <p><span class="doc-section-title">Parameters:</span></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr class="doc-section-item">
+          <td><code>labels</code></td>
+          <td>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Store the actual values of the data</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr class="doc-section-item">
+          <td><code>predictions</code></td>
+          <td>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Store the predictions from the model</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+
+  <p><span class="doc-section-title">Returns:</span></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr class="doc-section-item">
+          <td>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The mean absolute error between the labels and predictions</p>
+            </div>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+          <details class="quote">
+            <summary>Source code in <code>src/fjformer/func/loss_func.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">28</span>
+<span class="normal">29</span>
+<span class="normal">30</span>
+<span class="normal">31</span>
+<span class="normal">32</span>
+<span class="normal">33</span>
+<span class="normal">34</span>
+<span class="normal">35</span>
+<span class="normal">36</span>
+<span class="normal">37</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">mae</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">predictions</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The mae function calculates the mean absolute error between two lists of numbers.</span>
+
+<span class="sd">    :param labels: Store the actual values of the data</span>
+<span class="sd">    :param predictions: Store the predictions from the model</span>
+<span class="sd">    :return: The mean absolute error between the labels and predictions</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">labels</span> <span class="o">-</span> <span class="n">predictions</span><span class="p">))</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h2 id="src.fjformer.func.loss_func.mse" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">mse</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">predictions</span><span class="p">)</span></code>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>The mse function computes the mean squared error between two arrays.</p>
+
+
+
+  <p><span class="doc-section-title">Parameters:</span></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr class="doc-section-item">
+          <td><code>labels</code></td>
+          <td>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Pass in the actual values of the data, and predictions is used to pass in our predicted values</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr class="doc-section-item">
+          <td><code>predictions</code></td>
+          <td>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Store the predictions made by the model</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+
+  <p><span class="doc-section-title">Returns:</span></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr class="doc-section-item">
+          <td>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The mean squared error (mse) between the labels and predictions</p>
+            </div>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+          <details class="quote">
+            <summary>Source code in <code>src/fjformer/func/loss_func.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">mse</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">predictions</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The mse function computes the mean squared error between two arrays.</span>
+
+<span class="sd">    :param labels: Pass in the actual values of the data, and predictions is used to pass in our predicted values</span>
+<span class="sd">    :param predictions: Store the predictions made by the model</span>
+<span class="sd">    :return: The mean squared error (mse) between the labels and predictions</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">((</span><span class="n">labels</span> <span class="o">-</span> <span class="n">predictions</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h2 id="src.fjformer.func.loss_func.mse_loss" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">mse_loss</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">valid</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>The mse_loss function computes the mean squared error between two arrays.</p>
+
+
+
+  <p><span class="doc-section-title">Parameters:</span></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr class="doc-section-item">
+          <td><code>val</code></td>
+          <td>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Store the output of the model</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr class="doc-section-item">
+          <td><code>target</code></td>
+          <td>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Calculate the loss</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr class="doc-section-item">
+          <td><code>valid</code></td>
+          <td>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Mask out the loss of certain pixels</p>
+            </div>
+          </td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+
+  <p><span class="doc-section-title">Returns:</span></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr class="doc-section-item">
+          <td>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The mean square error of the input and target</p>
+            </div>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+          <details class="quote">
+            <summary>Source code in <code>src/fjformer/func/loss_func.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">173</span>
+<span class="normal">174</span>
+<span class="normal">175</span>
+<span class="normal">176</span>
+<span class="normal">177</span>
+<span class="normal">178</span>
+<span class="normal">179</span>
+<span class="normal">180</span>
+<span class="normal">181</span>
+<span class="normal">182</span>
+<span class="normal">183</span>
+<span class="normal">184</span>
+<span class="normal">185</span>
+<span class="normal">186</span>
+<span class="normal">187</span>
+<span class="normal">188</span>
+<span class="normal">189</span>
+<span class="normal">190</span>
+<span class="normal">191</span>
+<span class="normal">192</span>
+<span class="normal">193</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">mse_loss</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">valid</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The mse_loss function computes the mean squared error between two arrays.</span>
+
+<span class="sd">    :param val: Store the output of the model</span>
+<span class="sd">    :param target: Calculate the loss</span>
+<span class="sd">    :param valid: Mask out the loss of certain pixels</span>
+<span class="sd">    :return: The mean square error of the input and target</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">valid</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">valid</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="o">*</span><span class="n">target</span><span class="o">.</span><span class="n">shape</span><span class="p">[:</span><span class="mi">2</span><span class="p">],</span> <span class="mi">1</span><span class="p">))</span>
+    <span class="n">valid</span> <span class="o">=</span> <span class="n">valid</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">jnp</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+    <span class="n">loss</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span>
+        <span class="n">jnp</span><span class="o">.</span><span class="n">where</span><span class="p">(</span>
+            <span class="n">valid</span> <span class="o">&gt;</span> <span class="mf">0.0</span><span class="p">,</span>
+            <span class="n">jnp</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">val</span> <span class="o">-</span> <span class="n">target</span><span class="p">),</span>
+            <span class="mf">0.0</span>
+        <span class="p">)</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">loss</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h2 id="src.fjformer.func.loss_func.nll" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">nll</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">predictions</span><span class="p">)</span></code>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>The nll function computes the negative log likelihood of a set of predictions.</p>
+
+
+
+  <p><span class="doc-section-title">Parameters:</span></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr class="doc-section-item">
+          <td><code>labels</code></td>
+          <td>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Calculate the loss</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr class="doc-section-item">
+          <td><code>predictions</code></td>
+          <td>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Calculate the loss</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+
+  <p><span class="doc-section-title">Returns:</span></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr class="doc-section-item">
+          <td>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The negative log likelihood of the predictions</p>
+            </div>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+          <details class="quote">
+            <summary>Source code in <code>src/fjformer/func/loss_func.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">81</span>
+<span class="normal">82</span>
+<span class="normal">83</span>
+<span class="normal">84</span>
+<span class="normal">85</span>
+<span class="normal">86</span>
+<span class="normal">87</span>
+<span class="normal">88</span>
+<span class="normal">89</span>
+<span class="normal">90</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">nll</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">predictions</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The nll function computes the negative log likelihood of a set of predictions.</span>
+
+<span class="sd">    :param labels: Calculate the loss</span>
+<span class="sd">    :param predictions: Calculate the loss</span>
+<span class="sd">    :return: The negative log likelihood of the predictions</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">labels</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">predictions</span> <span class="o">+</span> <span class="mf">1e-8</span><span class="p">))</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div>
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Erfan Zare Chavoshi-FJFormer
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "..", "features": [], "search": "../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.5cfa9459.min.js"></script>
+      
+    
+  </body>
+</html>

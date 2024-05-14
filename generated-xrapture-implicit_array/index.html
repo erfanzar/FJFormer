@@ -1,0 +1,3402 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+        <meta name="author" content="Erfan Zare Chavoshi">
+      
+      
+      
+        <link rel="prev" href="../generated-utils/">
+      
+      
+        <link rel="next" href="../generated-xrapture-tracer/">
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.0, mkdocs-material-9.5.22">
+    
+    
+      
+        <title>Implicit Array - FJFormer</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.732c4fb1.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/_mkdocstrings.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#xraptureimplicit_array" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="FJFormer" class="md-header__button md-logo" aria-label="FJFormer" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            FJFormer
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Implicit Array
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var media,input,key,value,palette=__md_get("__palette");if(palette&&palette.color){"(prefers-color-scheme)"===palette.color.media&&(media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']"),palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent"));for([key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/erfanzar/FJFormer" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="FJFormer" class="md-nav__button md-logo" aria-label="FJFormer" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    FJFormer
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/erfanzar/FJFormer" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_1" id="__nav_1_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Bits
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_1">
+            <span class="md-nav__icon md-icon"></span>
+            Bits
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../generated-bits-bits/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bits
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../generated-bits-calibration/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Calibration
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../generated-bits-config/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Config
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../generated-bits-int_numerics/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Int Numerics
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../generated-bits-no_numerics/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    No Numerics
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../generated-bits-numerics/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Numerics
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../generated-bits-q_dot_general/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Q Dot General
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../generated-bits-q_flax/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Q Flax
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../generated-bits-qk/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Qk
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../generated-bits-stochastic_rounding/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Stochastic Rounding
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Checkpoint
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Checkpoint
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../generated-checkpoint-_load/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Load
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../generated-checkpoint-streamer/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Streamer
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Func
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Func
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../generated-func-_func/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Func
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../generated-func-loss_func/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Loss Func
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Home
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Monitor
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            Monitor
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../generated-monitor-tracker/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Tracker
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Optimizers
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            Optimizers
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../generated-optimizers-adafactor/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Adafactor
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../generated-optimizers-adamw/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Adamw
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../generated-optimizers-lion/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Lion
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../generated-optimizers-optimizer_utils/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Optimizer Utils
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../generated-optimizers-rmsprop/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Rmsprop
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Pallas Operations
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            Pallas Operations
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_7_1" id="__nav_7_1_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Efficient Attention
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_1">
+            <span class="md-nav__icon md-icon"></span>
+            Efficient Attention
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../generated-pallas_operations-efficient_attention-efficient_attention/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Efficient Attention
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_7_2" id="__nav_7_2_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Flash Attention
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_2">
+            <span class="md-nav__icon md-icon"></span>
+            Flash Attention
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_2_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_7_2_1" id="__nav_7_2_1_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Gpu
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_2_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_2_1">
+            <span class="md-nav__icon md-icon"></span>
+            Gpu
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../generated-pallas_operations-flash_attention-gpu-jax_flash_attn_gpu/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Jax Flash Attn Gpu
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_2_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_7_2_2" id="__nav_7_2_2_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Tpu
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_2_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            Tpu
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../generated-pallas_operations-flash_attention-tpu-jax_flash_attn_tpu/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Jax Flash Attn Tpu
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_7_3" id="__nav_7_3_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Layer Norm
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_3">
+            <span class="md-nav__icon md-icon"></span>
+            Layer Norm
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_3_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_7_3_1" id="__nav_7_3_1_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Gpu
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_3_1">
+            <span class="md-nav__icon md-icon"></span>
+            Gpu
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../generated-pallas_operations-layer_norm-gpu-layer_norm/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Layer Norm
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_7_4" id="__nav_7_4_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Ring Attention
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_4">
+            <span class="md-nav__icon md-icon"></span>
+            Ring Attention
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../generated-pallas_operations-ring_attention-ring_attention/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Ring Attention
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_7_5" id="__nav_7_5_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Rms Norm
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_5">
+            <span class="md-nav__icon md-icon"></span>
+            Rms Norm
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_5_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_7_5_1" id="__nav_7_5_1_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Gpu
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_5_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_5_1">
+            <span class="md-nav__icon md-icon"></span>
+            Gpu
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../generated-pallas_operations-rms_norm-gpu-rms_norm/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Rms Norm
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_7_6" id="__nav_7_6_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Softmax
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_6">
+            <span class="md-nav__icon md-icon"></span>
+            Softmax
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_6_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_7_6_1" id="__nav_7_6_1_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Gpu
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_6_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_6_1">
+            <span class="md-nav__icon md-icon"></span>
+            Gpu
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../generated-pallas_operations-softmax-gpu-softmax/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Softmax
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7_7" id="__nav_7_7_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Splash Attention
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_7">
+            <span class="md-nav__icon md-icon"></span>
+            Splash Attention
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_7_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_7_7_1" id="__nav_7_7_1_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Tpu
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_7_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_7_1">
+            <span class="md-nav__icon md-icon"></span>
+            Tpu
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../generated-pallas_operations-splash_attention-tpu-splash_attention_kernel/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Splash Attention Kernel
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../generated-pallas_operations-splash_attention-tpu-splash_attention_mask/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Splash Attention Mask
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../generated-pallas_operations-splash_attention-tpu-splash_attention_mask_info/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Splash Attention Mask Info
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Partition Utils
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            Partition Utils
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../generated-partition_utils-mesh_utils/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Mesh Utils
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../generated-partition_utils-t5x_partitioning/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    T5x Partitioning
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../generated-utils/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Utils
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Xrapture
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_10">
+            <span class="md-nav__icon md-icon"></span>
+            Xrapture
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Implicit Array
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Implicit Array
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#src.fjformer.xrapture.implicit_array" class="md-nav__link">
+    <span class="md-ellipsis">
+      implicit_array
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#src.fjformer.xrapture.implicit_array.ArrayValue" class="md-nav__link">
+    <span class="md-ellipsis">
+      ArrayValue
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#src.fjformer.xrapture.implicit_array.Complement" class="md-nav__link">
+    <span class="md-ellipsis">
+      Complement
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#src.fjformer.xrapture.implicit_array.ImplicitArray" class="md-nav__link">
+    <span class="md-ellipsis">
+      ImplicitArray
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="ImplicitArray">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#src.fjformer.xrapture.implicit_array.ImplicitArray.compute_dtype" class="md-nav__link">
+    <span class="md-ellipsis">
+      compute_dtype
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#src.fjformer.xrapture.implicit_array.ImplicitArray.compute_shape" class="md-nav__link">
+    <span class="md-ellipsis">
+      compute_shape
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#src.fjformer.xrapture.implicit_array.apply_updates" class="md-nav__link">
+    <span class="md-ellipsis">
+      apply_updates
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#src.fjformer.xrapture.implicit_array.freeze_subtrees" class="md-nav__link">
+    <span class="md-ellipsis">
+      freeze_subtrees
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#src.fjformer.xrapture.implicit_array.get_common_prefix_transforms" class="md-nav__link">
+    <span class="md-ellipsis">
+      get_common_prefix_transforms
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#src.fjformer.xrapture.implicit_array.materialize_nested" class="md-nav__link">
+    <span class="md-ellipsis">
+      materialize_nested
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#src.fjformer.xrapture.implicit_array.set_to_zero_scalar" class="md-nav__link">
+    <span class="md-ellipsis">
+      set_to_zero_scalar
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#src.fjformer.xrapture.implicit_array.use_implicit_args" class="md-nav__link">
+    <span class="md-ellipsis">
+      use_implicit_args
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#src.fjformer.xrapture.implicit_array.vmap_all_but_one" class="md-nav__link">
+    <span class="md-ellipsis">
+      vmap_all_but_one
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../generated-xrapture-tracer/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Tracer
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../generated-xrapture-xrapture/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Xrapture
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#src.fjformer.xrapture.implicit_array" class="md-nav__link">
+    <span class="md-ellipsis">
+      implicit_array
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#src.fjformer.xrapture.implicit_array.ArrayValue" class="md-nav__link">
+    <span class="md-ellipsis">
+      ArrayValue
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#src.fjformer.xrapture.implicit_array.Complement" class="md-nav__link">
+    <span class="md-ellipsis">
+      Complement
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#src.fjformer.xrapture.implicit_array.ImplicitArray" class="md-nav__link">
+    <span class="md-ellipsis">
+      ImplicitArray
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="ImplicitArray">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#src.fjformer.xrapture.implicit_array.ImplicitArray.compute_dtype" class="md-nav__link">
+    <span class="md-ellipsis">
+      compute_dtype
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#src.fjformer.xrapture.implicit_array.ImplicitArray.compute_shape" class="md-nav__link">
+    <span class="md-ellipsis">
+      compute_shape
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#src.fjformer.xrapture.implicit_array.apply_updates" class="md-nav__link">
+    <span class="md-ellipsis">
+      apply_updates
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#src.fjformer.xrapture.implicit_array.freeze_subtrees" class="md-nav__link">
+    <span class="md-ellipsis">
+      freeze_subtrees
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#src.fjformer.xrapture.implicit_array.get_common_prefix_transforms" class="md-nav__link">
+    <span class="md-ellipsis">
+      get_common_prefix_transforms
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#src.fjformer.xrapture.implicit_array.materialize_nested" class="md-nav__link">
+    <span class="md-ellipsis">
+      materialize_nested
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#src.fjformer.xrapture.implicit_array.set_to_zero_scalar" class="md-nav__link">
+    <span class="md-ellipsis">
+      set_to_zero_scalar
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#src.fjformer.xrapture.implicit_array.use_implicit_args" class="md-nav__link">
+    <span class="md-ellipsis">
+      use_implicit_args
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#src.fjformer.xrapture.implicit_array.vmap_all_but_one" class="md-nav__link">
+    <span class="md-ellipsis">
+      vmap_all_but_one
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+<h1 id="xraptureimplicit_array">xrapture.implicit_array</h1>
+
+
+<div class="doc doc-object doc-module">
+
+
+
+<a id="src.fjformer.xrapture.implicit_array"></a>
+  <div class="doc doc-contents first">
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="src.fjformer.xrapture.implicit_array.ArrayValue" class="doc doc-heading">
+          <code>ArrayValue</code>
+
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+
+  
+      <p>Helper class that provides a standard way to create an ABC using
+inheritance.</p>
+
+            <details class="quote">
+              <summary>Source code in <code>src/fjformer/xrapture/implicit_array.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">46</span>
+<span class="normal">47</span>
+<span class="normal">48</span>
+<span class="normal">49</span>
+<span class="normal">50</span>
+<span class="normal">51</span>
+<span class="normal">52</span>
+<span class="normal">53</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">ArrayValue</span><span class="p">(</span><span class="n">metaclass</span><span class="o">=</span><span class="n">ABCMeta</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Helper class that provides a standard way to create an ABC using</span>
+<span class="sd">    inheritance.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">()</span>
+    <span class="n">shape</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">e_num_val</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">is_registered_by_pJit</span> <span class="o">=</span> <span class="kc">False</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+  </div>
+
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="src.fjformer.xrapture.implicit_array.Complement" class="doc doc-heading">
+          <code>Complement</code>
+
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+
+  
+      <p>Relative complement
+I.e. Complement[A, B] = A - B</p>
+
+            <details class="quote">
+              <summary>Source code in <code>src/fjformer/xrapture/implicit_array.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">876</span>
+<span class="normal">877</span>
+<span class="normal">878</span>
+<span class="normal">879</span>
+<span class="normal">880</span>
+<span class="normal">881</span>
+<span class="normal">882</span>
+<span class="normal">883</span>
+<span class="normal">884</span>
+<span class="normal">885</span>
+<span class="normal">886</span>
+<span class="normal">887</span>
+<span class="normal">888</span>
+<span class="normal">889</span>
+<span class="normal">890</span>
+<span class="normal">891</span>
+<span class="normal">892</span>
+<span class="normal">893</span>
+<span class="normal">894</span>
+<span class="normal">895</span>
+<span class="normal">896</span>
+<span class="normal">897</span>
+<span class="normal">898</span>
+<span class="normal">899</span>
+<span class="normal">900</span>
+<span class="normal">901</span>
+<span class="normal">902</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@parametric</span>
+<span class="k">class</span> <span class="nc">Complement</span><span class="p">(</span><span class="n">metaclass</span><span class="o">=</span><span class="n">_ComplementMeta</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Relative complement</span>
+<span class="sd">    I.e. Complement[A, B] = A - B</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="nd">@dispatch</span>
+    <span class="k">def</span> <span class="nf">__init_type_parameter__</span><span class="p">(</span>
+            <span class="bp">cls</span><span class="p">,</span>
+            <span class="n">a</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span>
+            <span class="n">b</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span>
+    <span class="p">):</span>
+        <span class="k">return</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="nd">@dispatch</span>
+    <span class="k">def</span> <span class="nf">__le_type_parameter__</span><span class="p">(</span>
+            <span class="bp">cls</span><span class="p">,</span>
+            <span class="n">left</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Optional</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Any</span><span class="p">]],</span>
+            <span class="n">right</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Optional</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Any</span><span class="p">]],</span>
+    <span class="p">):</span>
+        <span class="n">a_left</span><span class="p">,</span> <span class="n">b_left</span> <span class="o">=</span> <span class="n">left</span>
+        <span class="n">a_right</span><span class="p">,</span> <span class="n">b_right</span> <span class="o">=</span> <span class="n">right</span>
+
+        <span class="k">return</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">a_left</span><span class="p">,</span> <span class="n">a_right</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">b_right</span><span class="p">,</span> <span class="n">b_left</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+  </div>
+
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="src.fjformer.xrapture.implicit_array.ImplicitArray" class="doc doc-heading">
+          <code>ImplicitArray</code>
+
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-dataclass"><code>dataclass</code></small>
+  </span>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+          <p class="doc doc-class-bases">
+            Bases: <code><span title="src.fjformer.xrapture.implicit_array._ImplicitArrayBase">_ImplicitArrayBase</span></code></p>
+
+  
+      <p>Abstract class for representing an abstract array of a given shape/dtype without actually instantiating it.
+Subclasses must implement the materialize method, which defines the relationship between the implicit array
+and the value it represents. Subclasses are valid arguments to functions decorated with qax.use_implicit_args.</p>
+<p>All subclasses are automatically registered as pytrees using jax.tree_util.register_pytree_with_keys_class.
+Any dataclass attributes added will be included as children, unless they are decorated with qax.aux_field
+in which case they are passed as auxiliary data during flattening.</p>
+<p>The represented shape and dtype may be defined in any of the following ways:
+    - Explicitly passing shape/dtype keyword arguments at initialization
+    - Overriding the default_shape/default_dtype class variables
+    - Overriding the compute_shape/compute_dtype methods, which are called during <strong>post_init</strong>
+    - Overriding <strong>post_init</strong> and manually setting shape/dtype before calling super().<strong>post_init</strong>
+    - None of the above, in which case an shape/dtype will be inferred by by running jax.eval_shape()
+      on the subclass"s materialize method.</p>
+
+            <details class="quote">
+              <summary>Source code in <code>src/fjformer/xrapture/implicit_array.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">266</span>
+<span class="normal">267</span>
+<span class="normal">268</span>
+<span class="normal">269</span>
+<span class="normal">270</span>
+<span class="normal">271</span>
+<span class="normal">272</span>
+<span class="normal">273</span>
+<span class="normal">274</span>
+<span class="normal">275</span>
+<span class="normal">276</span>
+<span class="normal">277</span>
+<span class="normal">278</span>
+<span class="normal">279</span>
+<span class="normal">280</span>
+<span class="normal">281</span>
+<span class="normal">282</span>
+<span class="normal">283</span>
+<span class="normal">284</span>
+<span class="normal">285</span>
+<span class="normal">286</span>
+<span class="normal">287</span>
+<span class="normal">288</span>
+<span class="normal">289</span>
+<span class="normal">290</span>
+<span class="normal">291</span>
+<span class="normal">292</span>
+<span class="normal">293</span>
+<span class="normal">294</span>
+<span class="normal">295</span>
+<span class="normal">296</span>
+<span class="normal">297</span>
+<span class="normal">298</span>
+<span class="normal">299</span>
+<span class="normal">300</span>
+<span class="normal">301</span>
+<span class="normal">302</span>
+<span class="normal">303</span>
+<span class="normal">304</span>
+<span class="normal">305</span>
+<span class="normal">306</span>
+<span class="normal">307</span>
+<span class="normal">308</span>
+<span class="normal">309</span>
+<span class="normal">310</span>
+<span class="normal">311</span>
+<span class="normal">312</span>
+<span class="normal">313</span>
+<span class="normal">314</span>
+<span class="normal">315</span>
+<span class="normal">316</span>
+<span class="normal">317</span>
+<span class="normal">318</span>
+<span class="normal">319</span>
+<span class="normal">320</span>
+<span class="normal">321</span>
+<span class="normal">322</span>
+<span class="normal">323</span>
+<span class="normal">324</span>
+<span class="normal">325</span>
+<span class="normal">326</span>
+<span class="normal">327</span>
+<span class="normal">328</span>
+<span class="normal">329</span>
+<span class="normal">330</span>
+<span class="normal">331</span>
+<span class="normal">332</span>
+<span class="normal">333</span>
+<span class="normal">334</span>
+<span class="normal">335</span>
+<span class="normal">336</span>
+<span class="normal">337</span>
+<span class="normal">338</span>
+<span class="normal">339</span>
+<span class="normal">340</span>
+<span class="normal">341</span>
+<span class="normal">342</span>
+<span class="normal">343</span>
+<span class="normal">344</span>
+<span class="normal">345</span>
+<span class="normal">346</span>
+<span class="normal">347</span>
+<span class="normal">348</span>
+<span class="normal">349</span>
+<span class="normal">350</span>
+<span class="normal">351</span>
+<span class="normal">352</span>
+<span class="normal">353</span>
+<span class="normal">354</span>
+<span class="normal">355</span>
+<span class="normal">356</span>
+<span class="normal">357</span>
+<span class="normal">358</span>
+<span class="normal">359</span>
+<span class="normal">360</span>
+<span class="normal">361</span>
+<span class="normal">362</span>
+<span class="normal">363</span>
+<span class="normal">364</span>
+<span class="normal">365</span>
+<span class="normal">366</span>
+<span class="normal">367</span>
+<span class="normal">368</span>
+<span class="normal">369</span>
+<span class="normal">370</span>
+<span class="normal">371</span>
+<span class="normal">372</span>
+<span class="normal">373</span>
+<span class="normal">374</span>
+<span class="normal">375</span>
+<span class="normal">376</span>
+<span class="normal">377</span>
+<span class="normal">378</span>
+<span class="normal">379</span>
+<span class="normal">380</span>
+<span class="normal">381</span>
+<span class="normal">382</span>
+<span class="normal">383</span>
+<span class="normal">384</span>
+<span class="normal">385</span>
+<span class="normal">386</span>
+<span class="normal">387</span>
+<span class="normal">388</span>
+<span class="normal">389</span>
+<span class="normal">390</span>
+<span class="normal">391</span>
+<span class="normal">392</span>
+<span class="normal">393</span>
+<span class="normal">394</span>
+<span class="normal">395</span>
+<span class="normal">396</span>
+<span class="normal">397</span>
+<span class="normal">398</span>
+<span class="normal">399</span>
+<span class="normal">400</span>
+<span class="normal">401</span>
+<span class="normal">402</span>
+<span class="normal">403</span>
+<span class="normal">404</span>
+<span class="normal">405</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">ImplicitArray</span><span class="p">(</span><span class="n">_ImplicitArrayBase</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Abstract class for representing an abstract array of a given shape/dtype without actually instantiating it.</span>
+<span class="sd">    Subclasses must implement the materialize method, which defines the relationship between the implicit array</span>
+<span class="sd">    and the value it represents. Subclasses are valid arguments to functions decorated with qax.use_implicit_args.</span>
+
+<span class="sd">    All subclasses are automatically registered as pytrees using jax.tree_util.register_pytree_with_keys_class.</span>
+<span class="sd">    Any dataclass attributes added will be included as children, unless they are decorated with qax.aux_field</span>
+<span class="sd">    in which case they are passed as auxiliary data during flattening.</span>
+
+<span class="sd">    The represented shape and dtype may be defined in any of the following ways:</span>
+<span class="sd">        - Explicitly passing shape/dtype keyword arguments at initialization</span>
+<span class="sd">        - Overriding the default_shape/default_dtype class variables</span>
+<span class="sd">        - Overriding the compute_shape/compute_dtype methods, which are called during __post_init__</span>
+<span class="sd">        - Overriding __post_init__ and manually setting shape/dtype before calling super().__post_init__</span>
+<span class="sd">        - None of the above, in which case an shape/dtype will be inferred by by running jax.eval_shape()</span>
+<span class="sd">          on the subclass&quot;s materialize method.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">shape</span> <span class="o">=</span> <span class="n">_AvalDescriptor</span><span class="p">()</span>
+    <span class="n">dtype</span> <span class="o">=</span> <span class="n">_AvalDescriptor</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">aval</span> <span class="o">=</span> <span class="n">_get_materialization_aval</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">UninitializedAval</span><span class="p">:</span>
+            <span class="c1"># Materialization depends on currently uninitialized shape/dtype</span>
+            <span class="n">aval</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="n">shape</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">shape</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">shape</span>
+        <span class="k">except</span> <span class="n">UninitializedAval</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">shape</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">shape</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_shape</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">aval</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">shape</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">shape</span> <span class="o">=</span> <span class="n">aval</span><span class="o">.</span><span class="n">shape</span>
+            <span class="k">elif</span> <span class="n">shape</span> <span class="o">!=</span> <span class="n">aval</span><span class="o">.</span><span class="n">shape</span><span class="p">:</span>
+                <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;ImplicitArray shape </span><span class="si">{</span><span class="n">shape</span><span class="si">}</span><span class="s2"> does not match materialization shape </span><span class="si">{</span><span class="n">aval</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">shape</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">UninitializedAval</span><span class="p">(</span><span class="s2">&quot;shape&quot;</span><span class="p">)</span>
+
+        <span class="n">dtype</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">dtype</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dtype</span>
+        <span class="k">except</span> <span class="n">UninitializedAval</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">dtype</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dtype</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_dtype</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">dtype</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">aval</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># We have a shape but not a dtype, try once again to infer the dtype</span>
+            <span class="n">aval</span> <span class="o">=</span> <span class="n">_get_materialization_aval</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">aval</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">dtype</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">dtype</span> <span class="o">=</span> <span class="n">aval</span><span class="o">.</span><span class="n">dtype</span>
+            <span class="k">elif</span> <span class="n">dtype</span> <span class="o">!=</span> <span class="n">aval</span><span class="o">.</span><span class="n">dtype</span><span class="p">:</span>
+                <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;ImplicitArray dtype </span><span class="si">{</span><span class="n">dtype</span><span class="si">}</span><span class="s2"> does not match materialization dtype </span><span class="si">{</span><span class="n">aval</span><span class="o">.</span><span class="n">dtype</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">dtype</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">UninitializedAval</span><span class="p">(</span><span class="s2">&quot;dtype&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">compute_shape</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Override this method if the subclass instance&quot;s shape should be computed based on its other properties.</span>
+<span class="sd">        Returns: shape</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_shape</span>
+
+    <span class="k">def</span> <span class="nf">compute_dtype</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Override this method if the subclass instance&quot;s dtype should be computed based on its other properties.</span>
+<span class="sd">        Returns: dtype</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_dtype</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">aval</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">core</span><span class="o">.</span><span class="n">ShapedArray</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">default_handler</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">primitive</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">params</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">params</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">return</span> <span class="n">materialize_handler</span><span class="p">(</span><span class="n">primitive</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">)</span>
+
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">materialize</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span>
+
+    <span class="k">def</span> <span class="nf">tree_flatten_with_keys</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">children</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">aux_data</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">is_aux</span> <span class="ow">in</span> <span class="n">_get_names_and_aux</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">value</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+            <span class="k">except</span> <span class="n">UninitializedAval</span><span class="p">:</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">_aval_discovery</span><span class="o">.</span><span class="n">get</span><span class="p">():</span>
+                    <span class="k">raise</span>
+                <span class="n">value</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="k">if</span> <span class="n">is_aux</span><span class="p">:</span>
+                <span class="n">aux_data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">children</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">children</span><span class="p">,</span> <span class="n">aux_data</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">tree_unflatten</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">aux_data</span><span class="p">,</span> <span class="n">children</span><span class="p">):</span>
+        <span class="n">child_it</span> <span class="o">=</span> <span class="nb">iter</span><span class="p">(</span><span class="n">children</span><span class="p">)</span>
+        <span class="n">aux_it</span> <span class="o">=</span> <span class="nb">iter</span><span class="p">(</span><span class="n">aux_data</span><span class="p">)</span>
+        <span class="n">obj</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">is_aux</span> <span class="ow">in</span> <span class="n">_get_names_and_aux</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">aux_it</span> <span class="k">if</span> <span class="n">is_aux</span> <span class="k">else</span> <span class="n">child_it</span><span class="p">)</span>
+            <span class="nb">setattr</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">obj</span>
+
+    <span class="k">def</span> <span class="nf">handle_primitive</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">primitive</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">params</span><span class="p">):</span>
+        <span class="n">handler</span> <span class="o">=</span> <span class="n">lu</span><span class="o">.</span><span class="n">wrap_init</span><span class="p">(</span><span class="n">partial</span><span class="p">(</span><span class="n">get_primitive_handler</span><span class="p">(</span><span class="n">primitive</span><span class="p">),</span> <span class="n">primitive</span><span class="p">))</span>
+        <span class="n">use_params</span> <span class="o">=</span> <span class="n">params</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">commute_ops</span><span class="p">:</span>
+            <span class="n">args</span><span class="p">,</span> <span class="n">use_params</span> <span class="o">=</span> <span class="n">_maybe_swap_args</span><span class="p">(</span><span class="n">primitive</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">use_params</span><span class="p">)</span>
+
+        <span class="c1"># maybe_kwargs = {&quot;params&quot;: params} if params else {}</span>
+        <span class="n">flat_args</span><span class="p">,</span> <span class="n">in_tree</span> <span class="o">=</span> <span class="n">flatten_one_implicit_layer</span><span class="p">((</span><span class="n">args</span><span class="p">,</span> <span class="n">params</span><span class="p">))</span>
+        <span class="n">flat_handler</span><span class="p">,</span> <span class="n">out_tree</span> <span class="o">=</span> <span class="n">flatten_fun</span><span class="p">(</span><span class="n">handler</span><span class="p">,</span> <span class="n">in_tree</span><span class="p">)</span>
+
+        <span class="n">result</span> <span class="o">=</span> <span class="n">use_implicit_args</span><span class="p">(</span><span class="n">flat_handler</span><span class="o">.</span><span class="n">call_wrapped</span><span class="p">)(</span><span class="o">*</span><span class="n">flat_args</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">jax</span><span class="o">.</span><span class="n">tree_util</span><span class="o">.</span><span class="n">tree_unflatten</span><span class="p">(</span><span class="n">out_tree</span><span class="p">(),</span> <span class="n">result</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__init_subclass__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">commute_ops</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__init_subclass__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">is_dataclass</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">cls</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> must be a dataclass&quot;</span><span class="p">)</span>
+        <span class="n">core</span><span class="o">.</span><span class="n">pytype_aval_mappings</span><span class="p">[</span><span class="bp">cls</span><span class="p">]</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">aval</span>
+        <span class="n">register_pytree_with_keys_class</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">cls</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="src.fjformer.xrapture.implicit_array.ImplicitArray.compute_dtype" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">compute_dtype</span><span class="p">()</span></code>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Override this method if the subclass instance"s dtype should be computed based on its other properties.
+Returns: dtype</p>
+
+          <details class="quote">
+            <summary>Source code in <code>src/fjformer/xrapture/implicit_array.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">335</span>
+<span class="normal">336</span>
+<span class="normal">337</span>
+<span class="normal">338</span>
+<span class="normal">339</span>
+<span class="normal">340</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">compute_dtype</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Override this method if the subclass instance&quot;s dtype should be computed based on its other properties.</span>
+<span class="sd">    Returns: dtype</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_dtype</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="src.fjformer.xrapture.implicit_array.ImplicitArray.compute_shape" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">compute_shape</span><span class="p">()</span></code>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Override this method if the subclass instance"s shape should be computed based on its other properties.
+Returns: shape</p>
+
+          <details class="quote">
+            <summary>Source code in <code>src/fjformer/xrapture/implicit_array.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">328</span>
+<span class="normal">329</span>
+<span class="normal">330</span>
+<span class="normal">331</span>
+<span class="normal">332</span>
+<span class="normal">333</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">compute_shape</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Override this method if the subclass instance&quot;s shape should be computed based on its other properties.</span>
+<span class="sd">    Returns: shape</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_shape</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div>
+
+
+
+  </div>
+
+  </div>
+
+
+</div>
+
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h2 id="src.fjformer.xrapture.implicit_array.apply_updates" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">apply_updates</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">updates</span><span class="p">)</span></code>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Like optax.apply_updates, but updates can be SymbolicConstant instances</p>
+
+          <details class="quote">
+            <summary>Source code in <code>src/fjformer/xrapture/implicit_array.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">979</span>
+<span class="normal">980</span>
+<span class="normal">981</span>
+<span class="normal">982</span>
+<span class="normal">983</span>
+<span class="normal">984</span>
+<span class="normal">985</span>
+<span class="normal">986</span>
+<span class="normal">987</span>
+<span class="normal">988</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">apply_updates</span><span class="p">(</span><span class="n">params</span><span class="p">:</span> <span class="n">optax</span><span class="o">.</span><span class="n">Params</span><span class="p">,</span> <span class="n">updates</span><span class="p">:</span> <span class="n">optax</span><span class="o">.</span><span class="n">Updates</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">optax</span><span class="o">.</span><span class="n">Params</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Like optax.apply_updates, but updates can be SymbolicConstant instances</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">updates_flat</span><span class="p">,</span> <span class="n">update_struct</span> <span class="o">=</span> <span class="n">tree_util</span><span class="o">.</span><span class="n">tree_flatten</span><span class="p">(</span><span class="n">updates</span><span class="p">,</span> <span class="n">is_leaf</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">SymbolicConstant</span><span class="p">))</span>
+    <span class="n">semi_flat_params</span> <span class="o">=</span> <span class="n">update_struct</span><span class="o">.</span><span class="n">flatten_up_to</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
+
+    <span class="n">updated_flat</span> <span class="o">=</span> <span class="n">use_implicit_args</span><span class="p">(</span><span class="n">optax</span><span class="o">.</span><span class="n">apply_updates</span><span class="p">)(</span><span class="n">semi_flat_params</span><span class="p">,</span> <span class="n">updates_flat</span><span class="p">)</span>
+    <span class="n">updated</span> <span class="o">=</span> <span class="n">update_struct</span><span class="o">.</span><span class="n">unflatten</span><span class="p">(</span><span class="n">updated_flat</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">updated</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h2 id="src.fjformer.xrapture.implicit_array.freeze_subtrees" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">freeze_subtrees</span><span class="p">(</span><span class="n">optimizer</span><span class="p">,</span> <span class="n">label_fn</span><span class="p">,</span> <span class="n">use_scalar_zeros</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></code>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Utility which wraps an optimizer such that subtrees specified by
+label_fn will receive zeros as updates.
+Subtrees to be frozen should be labeled with "freeze"
+and all other subtrees should be labeled with "train"</p>
+
+          <details class="quote">
+            <summary>Source code in <code>src/fjformer/xrapture/implicit_array.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">930</span>
+<span class="normal">931</span>
+<span class="normal">932</span>
+<span class="normal">933</span>
+<span class="normal">934</span>
+<span class="normal">935</span>
+<span class="normal">936</span>
+<span class="normal">937</span>
+<span class="normal">938</span>
+<span class="normal">939</span>
+<span class="normal">940</span>
+<span class="normal">941</span>
+<span class="normal">942</span>
+<span class="normal">943</span>
+<span class="normal">944</span>
+<span class="normal">945</span>
+<span class="normal">946</span>
+<span class="normal">947</span>
+<span class="normal">948</span>
+<span class="normal">949</span>
+<span class="normal">950</span>
+<span class="normal">951</span>
+<span class="normal">952</span>
+<span class="normal">953</span>
+<span class="normal">954</span>
+<span class="normal">955</span>
+<span class="normal">956</span>
+<span class="normal">957</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">freeze_subtrees</span><span class="p">(</span><span class="n">optimizer</span><span class="p">:</span> <span class="n">optax</span><span class="o">.</span><span class="n">GradientTransformation</span><span class="p">,</span> <span class="n">label_fn</span><span class="p">,</span> <span class="n">use_scalar_zeros</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Utility which wraps an optimizer such that subtrees specified by</span>
+<span class="sd">    label_fn will receive zeros as updates.</span>
+<span class="sd">    Subtrees to be frozen should be labeled with &quot;freeze&quot;</span>
+<span class="sd">    and all other subtrees should be labeled with &quot;train&quot;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">multi_transformed_optimizer</span> <span class="o">=</span> <span class="n">optax</span><span class="o">.</span><span class="n">multi_transform</span><span class="p">(</span>
+        <span class="p">{</span>
+            <span class="s1">&#39;freeze&#39;</span><span class="p">:</span> <span class="n">set_to_zero_scalar</span><span class="p">()</span> <span class="k">if</span> <span class="n">use_scalar_zeros</span> <span class="k">else</span> <span class="n">optax</span><span class="o">.</span><span class="n">set_to_zero</span><span class="p">(),</span>
+            <span class="s1">&#39;train&#39;</span><span class="p">:</span> <span class="n">optimizer</span>
+        <span class="p">},</span>
+        <span class="n">label_fn</span>
+    <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">new_update</span><span class="p">(</span><span class="n">grads</span><span class="p">,</span> <span class="n">opt_state</span><span class="p">,</span> <span class="n">params</span><span class="p">):</span>
+        <span class="k">def</span> <span class="nf">map_float0</span><span class="p">(</span><span class="n">param</span><span class="p">,</span> <span class="n">grad</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">grad</span><span class="o">.</span><span class="n">dtype</span> <span class="o">==</span> <span class="n">float0</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">jnp</span><span class="o">.</span><span class="n">zeros</span><span class="p">((),</span> <span class="n">param</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span> <span class="k">if</span> <span class="n">use_scalar_zeros</span> <span class="k">else</span> <span class="n">jnp</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">param</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">grad</span>
+
+        <span class="n">fixed_grads</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">tree_map</span><span class="p">(</span><span class="n">map_float0</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">grads</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">multi_transformed_optimizer</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">fixed_grads</span><span class="p">,</span> <span class="n">opt_state</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">optax</span><span class="o">.</span><span class="n">GradientTransformation</span><span class="p">(</span>
+        <span class="n">multi_transformed_optimizer</span><span class="o">.</span><span class="n">init</span><span class="p">,</span>
+        <span class="n">new_update</span>
+    <span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h2 id="src.fjformer.xrapture.implicit_array.get_common_prefix_transforms" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">get_common_prefix_transforms</span><span class="p">(</span><span class="n">trees</span><span class="p">)</span></code>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Given an iterable of pytrees which have the same structure after all
+ImplicitArray instances are materialized, return a list of callables
+which will transform each tree into the largest common structure
+obtainable via materialization of ImplicitArrays.</p>
+
+          <details class="quote">
+            <summary>Source code in <code>src/fjformer/xrapture/implicit_array.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">733</span>
+<span class="normal">734</span>
+<span class="normal">735</span>
+<span class="normal">736</span>
+<span class="normal">737</span>
+<span class="normal">738</span>
+<span class="normal">739</span>
+<span class="normal">740</span>
+<span class="normal">741</span>
+<span class="normal">742</span>
+<span class="normal">743</span>
+<span class="normal">744</span>
+<span class="normal">745</span>
+<span class="normal">746</span>
+<span class="normal">747</span>
+<span class="normal">748</span>
+<span class="normal">749</span>
+<span class="normal">750</span>
+<span class="normal">751</span>
+<span class="normal">752</span>
+<span class="normal">753</span>
+<span class="normal">754</span>
+<span class="normal">755</span>
+<span class="normal">756</span>
+<span class="normal">757</span>
+<span class="normal">758</span>
+<span class="normal">759</span>
+<span class="normal">760</span>
+<span class="normal">761</span>
+<span class="normal">762</span>
+<span class="normal">763</span>
+<span class="normal">764</span>
+<span class="normal">765</span>
+<span class="normal">766</span>
+<span class="normal">767</span>
+<span class="normal">768</span>
+<span class="normal">769</span>
+<span class="normal">770</span>
+<span class="normal">771</span>
+<span class="normal">772</span>
+<span class="normal">773</span>
+<span class="normal">774</span>
+<span class="normal">775</span>
+<span class="normal">776</span>
+<span class="normal">777</span>
+<span class="normal">778</span>
+<span class="normal">779</span>
+<span class="normal">780</span>
+<span class="normal">781</span>
+<span class="normal">782</span>
+<span class="normal">783</span>
+<span class="normal">784</span>
+<span class="normal">785</span>
+<span class="normal">786</span>
+<span class="normal">787</span>
+<span class="normal">788</span>
+<span class="normal">789</span>
+<span class="normal">790</span>
+<span class="normal">791</span>
+<span class="normal">792</span>
+<span class="normal">793</span>
+<span class="normal">794</span>
+<span class="normal">795</span>
+<span class="normal">796</span>
+<span class="normal">797</span>
+<span class="normal">798</span>
+<span class="normal">799</span>
+<span class="normal">800</span>
+<span class="normal">801</span>
+<span class="normal">802</span>
+<span class="normal">803</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_common_prefix_transforms</span><span class="p">(</span><span class="n">trees</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Given an iterable of pytrees which have the same structure after all</span>
+<span class="sd">    ImplicitArray instances are materialized, return a list of callables</span>
+<span class="sd">    which will transform each tree into the largest common structure</span>
+<span class="sd">    obtainable via materialization of ImplicitArrays.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">trees</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">[</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">trees</span><span class="p">]</span>
+
+    <span class="n">all_leaves</span><span class="p">,</span> <span class="n">structures</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="p">(</span><span class="n">tree_flatten_with_implicit</span><span class="p">(</span><span class="n">tree</span><span class="p">)</span> <span class="k">for</span> <span class="n">tree</span> <span class="ow">in</span> <span class="n">trees</span><span class="p">))</span>
+    <span class="n">post_materialization_avals</span> <span class="o">=</span> <span class="p">[</span><span class="n">core</span><span class="o">.</span><span class="n">get_aval</span><span class="p">(</span><span class="n">leaf</span><span class="p">)</span> <span class="k">for</span> <span class="n">leaf</span> <span class="ow">in</span> <span class="n">all_leaves</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">leaves</span><span class="p">,</span> <span class="n">structure</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">all_leaves</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span> <span class="n">structures</span><span class="p">[</span><span class="mi">1</span><span class="p">:]),</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">structure</span> <span class="o">!=</span> <span class="n">structures</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Trees do not have the same structure after materialization&#39;</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">leaf</span><span class="p">,</span> <span class="n">expected_aval</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">leaves</span><span class="p">,</span> <span class="n">post_materialization_avals</span><span class="p">):</span>
+            <span class="n">aval</span> <span class="o">=</span> <span class="n">core</span><span class="o">.</span><span class="n">get_aval</span><span class="p">(</span><span class="n">leaf</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">aval</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="n">expected_aval</span><span class="o">.</span><span class="n">shape</span> <span class="ow">and</span> <span class="n">aval</span><span class="o">.</span><span class="n">dtype</span> <span class="o">==</span> <span class="n">expected_aval</span><span class="o">.</span><span class="n">dtype</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s1">&#39;Trees do not have the same avals after materialization. Tree 0: </span><span class="si">{</span><span class="n">expected_aval</span><span class="si">}</span><span class="s1">, Tree </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">: </span><span class="si">{</span><span class="n">aval</span><span class="si">}</span><span class="s1">&#39;</span>
+                <span class="p">)</span>
+
+    <span class="c1"># Stack will contain tuples of (path, nodes)</span>
+    <span class="c1"># path = a sequence of integers specifying which child</span>
+    <span class="c1"># was taken at each _flatten_one_implicit_layer call</span>
+    <span class="c1"># or the first flatten_with_implicit call</span>
+    <span class="c1"># nodes = one node from each tree</span>
+    <span class="n">stack</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="n">all_leaves</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">tree</span> <span class="ow">in</span> <span class="n">trees</span><span class="p">:</span>
+        <span class="n">all_leaves</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">tree_leaves_with_implicit</span><span class="p">(</span><span class="n">tree</span><span class="p">))</span>
+
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">nodes</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="n">all_leaves</span><span class="p">)):</span>
+        <span class="n">stack</span><span class="o">.</span><span class="n">append</span><span class="p">(((</span><span class="n">i</span><span class="p">,),</span> <span class="n">nodes</span><span class="p">))</span>
+
+    <span class="n">materialization_paths</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+    <span class="k">while</span> <span class="n">stack</span><span class="p">:</span>
+        <span class="n">path_prefix</span><span class="p">,</span> <span class="n">nodes</span> <span class="o">=</span> <span class="n">stack</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">any</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">ImplicitArray</span><span class="p">)</span> <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">nodes</span><span class="p">):</span>
+            <span class="k">continue</span>
+
+        <span class="n">all_leaves</span><span class="p">,</span> <span class="n">all_structures</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="p">(</span>
+            <span class="n">flatten_one_implicit_layer</span><span class="p">(</span><span class="n">node</span><span class="p">)</span> <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">nodes</span>
+        <span class="p">))</span>
+        <span class="n">node_structures</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">all_structures</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">node_structures</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">materialization_paths</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">path_prefix</span><span class="p">)</span>
+            <span class="k">continue</span>
+
+        <span class="n">aval_diff</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">for</span> <span class="n">leaves</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="n">all_leaves</span><span class="p">):</span>
+            <span class="n">first_aval</span> <span class="o">=</span> <span class="n">core</span><span class="o">.</span><span class="n">get_aval</span><span class="p">(</span><span class="n">leaves</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="n">shape</span> <span class="o">=</span> <span class="n">first_aval</span><span class="o">.</span><span class="n">shape</span>
+            <span class="n">dtype</span> <span class="o">=</span> <span class="n">first_aval</span><span class="o">.</span><span class="n">dtype</span>
+            <span class="k">for</span> <span class="n">leaf</span> <span class="ow">in</span> <span class="n">leaves</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span>
+                <span class="n">aval</span> <span class="o">=</span> <span class="n">core</span><span class="o">.</span><span class="n">get_aval</span><span class="p">(</span><span class="n">leaf</span><span class="p">)</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">aval</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="n">shape</span> <span class="ow">and</span> <span class="n">aval</span><span class="o">.</span><span class="n">dtype</span> <span class="o">==</span> <span class="n">dtype</span><span class="p">):</span>
+                    <span class="n">materialization_paths</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">path_prefix</span><span class="p">)</span>
+                    <span class="n">aval_diff</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">if</span> <span class="n">aval_diff</span><span class="p">:</span>
+                <span class="k">break</span>
+
+        <span class="k">if</span> <span class="n">aval_diff</span><span class="p">:</span>
+            <span class="k">continue</span>
+
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">leaf_group</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="n">all_leaves</span><span class="p">)):</span>
+            <span class="n">stack</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">path_prefix</span> <span class="o">+</span> <span class="p">(</span><span class="n">i</span><span class="p">,),</span> <span class="n">leaf_group</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="p">[</span><span class="n">_get_pruning_transform</span><span class="p">(</span><span class="n">tree</span><span class="p">,</span> <span class="n">materialization_paths</span><span class="p">)</span> <span class="k">for</span> <span class="n">tree</span> <span class="ow">in</span> <span class="n">trees</span><span class="p">]</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h2 id="src.fjformer.xrapture.implicit_array.materialize_nested" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">materialize_nested</span><span class="p">(</span><span class="n">implicit_arr</span><span class="p">,</span> <span class="n">full</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></code>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Materialize an ImplicitArray instance, handling the case where implicit_arr.materialize()
+involves further ImplicitArray instances.
+Arguments:
+    implicit_arr: An ImplicitArray instance
+    full: If True, repeatedly materialize until the result is a concrete array
+Returns:
+    The materialized array</p>
+
+          <details class="quote">
+            <summary>Source code in <code>src/fjformer/xrapture/implicit_array.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">806</span>
+<span class="normal">807</span>
+<span class="normal">808</span>
+<span class="normal">809</span>
+<span class="normal">810</span>
+<span class="normal">811</span>
+<span class="normal">812</span>
+<span class="normal">813</span>
+<span class="normal">814</span>
+<span class="normal">815</span>
+<span class="normal">816</span>
+<span class="normal">817</span>
+<span class="normal">818</span>
+<span class="normal">819</span>
+<span class="normal">820</span>
+<span class="normal">821</span>
+<span class="normal">822</span>
+<span class="normal">823</span>
+<span class="normal">824</span>
+<span class="normal">825</span>
+<span class="normal">826</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">materialize_nested</span><span class="p">(</span><span class="n">implicit_arr</span><span class="p">,</span> <span class="n">full</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Materialize an ImplicitArray instance, handling the case where implicit_arr.materialize()</span>
+<span class="sd">    involves further ImplicitArray instances.</span>
+<span class="sd">    Arguments:</span>
+<span class="sd">        implicit_arr: An ImplicitArray instance</span>
+<span class="sd">        full: If True, repeatedly materialize until the result is a concrete array</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        The materialized array</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">while</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">implicit_arr</span><span class="p">,</span> <span class="n">ImplicitArray</span><span class="p">):</span>
+        <span class="n">wrapped</span> <span class="o">=</span> <span class="n">lu</span><span class="o">.</span><span class="n">wrap_init</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">implicit_arr</span><span class="p">)</span><span class="o">.</span><span class="n">materialize</span><span class="p">)</span>
+        <span class="n">flat</span><span class="p">,</span> <span class="n">in_tree</span> <span class="o">=</span> <span class="n">flatten_one_implicit_layer</span><span class="p">((</span><span class="n">implicit_arr</span><span class="p">,))</span>
+        <span class="n">flat_fn</span><span class="p">,</span> <span class="n">out_tree</span> <span class="o">=</span> <span class="n">flatten_fun_nokwargs</span><span class="p">(</span><span class="n">wrapped</span><span class="p">,</span> <span class="n">in_tree</span><span class="p">)</span>
+        <span class="n">out_flat</span> <span class="o">=</span> <span class="n">use_implicit_args</span><span class="p">(</span><span class="n">flat_fn</span><span class="o">.</span><span class="n">call_wrapped</span><span class="p">)(</span><span class="o">*</span><span class="n">flat</span><span class="p">)</span>
+        <span class="n">implicit_arr</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">tree_util</span><span class="o">.</span><span class="n">tree_unflatten</span><span class="p">(</span><span class="n">out_tree</span><span class="p">(),</span> <span class="n">out_flat</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">full</span><span class="p">:</span>
+            <span class="k">break</span>
+
+    <span class="k">return</span> <span class="n">implicit_arr</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h2 id="src.fjformer.xrapture.implicit_array.set_to_zero_scalar" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">set_to_zero_scalar</span><span class="p">()</span></code>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Returns a gradient transformation that sets all gradients to 0 in order to
+make downstream constant folding cheaper.</p>
+
+          <details class="quote">
+            <summary>Source code in <code>src/fjformer/xrapture/implicit_array.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 991</span>
+<span class="normal"> 992</span>
+<span class="normal"> 993</span>
+<span class="normal"> 994</span>
+<span class="normal"> 995</span>
+<span class="normal"> 996</span>
+<span class="normal"> 997</span>
+<span class="normal"> 998</span>
+<span class="normal"> 999</span>
+<span class="normal">1000</span>
+<span class="normal">1001</span>
+<span class="normal">1002</span>
+<span class="normal">1003</span>
+<span class="normal">1004</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">set_to_zero_scalar</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">optax</span><span class="o">.</span><span class="n">GradientTransformation</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns a gradient transformation that sets all gradients to 0 in order to</span>
+<span class="sd">    make downstream constant folding cheaper.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">init_fn</span><span class="p">(</span><span class="n">params</span><span class="p">):</span>
+        <span class="k">del</span> <span class="n">params</span>
+        <span class="k">return</span> <span class="n">optax</span><span class="o">.</span><span class="n">EmptyState</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">update_fn</span><span class="p">(</span><span class="n">updates</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">jax</span><span class="o">.</span><span class="n">tree_map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">jnp</span><span class="o">.</span><span class="n">zeros</span><span class="p">((),</span> <span class="n">x</span><span class="o">.</span><span class="n">dtype</span><span class="p">),</span> <span class="n">updates</span><span class="p">),</span> <span class="n">state</span>
+
+    <span class="k">return</span> <span class="n">optax</span><span class="o">.</span><span class="n">GradientTransformation</span><span class="p">(</span><span class="n">init_fn</span><span class="p">,</span> <span class="n">update_fn</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h2 id="src.fjformer.xrapture.implicit_array.use_implicit_args" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">use_implicit_args</span><span class="p">(</span><span class="n">f</span><span class="p">)</span></code>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Decorator which allows a function to accept arguments which subclass ImplicitArray, possibly
+including further ImplicitArray instances as children.
+Any number of arguments (including 0) may be ImplicitArrays.</p>
+
+          <details class="quote">
+            <summary>Source code in <code>src/fjformer/xrapture/implicit_array.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">199</span>
+<span class="normal">200</span>
+<span class="normal">201</span>
+<span class="normal">202</span>
+<span class="normal">203</span>
+<span class="normal">204</span>
+<span class="normal">205</span>
+<span class="normal">206</span>
+<span class="normal">207</span>
+<span class="normal">208</span>
+<span class="normal">209</span>
+<span class="normal">210</span>
+<span class="normal">211</span>
+<span class="normal">212</span>
+<span class="normal">213</span>
+<span class="normal">214</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">use_implicit_args</span><span class="p">(</span><span class="n">f</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Decorator which allows a function to accept arguments which subclass ImplicitArray, possibly</span>
+<span class="sd">    including further ImplicitArray instances as children.</span>
+<span class="sd">    Any number of arguments (including 0) may be ImplicitArrays.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="nd">@wraps</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">implicit_f</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">flat_args</span><span class="p">,</span> <span class="n">in_tree</span> <span class="o">=</span> <span class="n">tree_flatten_with_implicit</span><span class="p">((</span><span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">))</span>
+        <span class="n">f_flat</span><span class="p">,</span> <span class="n">out_tree</span> <span class="o">=</span> <span class="n">flatten_fun</span><span class="p">(</span><span class="n">lu</span><span class="o">.</span><span class="n">wrap_init</span><span class="p">(</span><span class="n">f</span><span class="p">),</span> <span class="n">in_tree</span><span class="p">)</span>
+        <span class="n">f_wrapped</span> <span class="o">=</span> <span class="n">_with_implicit_flat</span><span class="p">(</span><span class="n">f_flat</span><span class="p">)</span>
+        <span class="n">outs_flat</span> <span class="o">=</span> <span class="n">f_wrapped</span><span class="o">.</span><span class="n">call_wrapped</span><span class="p">(</span><span class="o">*</span><span class="n">flat_args</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">out_tree</span><span class="p">()</span><span class="o">.</span><span class="n">unflatten</span><span class="p">(</span><span class="n">outs_flat</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">implicit_f</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h2 id="src.fjformer.xrapture.implicit_array.vmap_all_but_one" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">vmap_all_but_one</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">axis</span><span class="p">,</span> <span class="n">out_ndim</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span></code>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Repeatedly calls vmap to map over all axes except for <code>axis.</code>
+All args will be mapped on the same dimensions.</p>
+
+          <details class="quote">
+            <summary>Source code in <code>src/fjformer/xrapture/implicit_array.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">905</span>
+<span class="normal">906</span>
+<span class="normal">907</span>
+<span class="normal">908</span>
+<span class="normal">909</span>
+<span class="normal">910</span>
+<span class="normal">911</span>
+<span class="normal">912</span>
+<span class="normal">913</span>
+<span class="normal">914</span>
+<span class="normal">915</span>
+<span class="normal">916</span>
+<span class="normal">917</span>
+<span class="normal">918</span>
+<span class="normal">919</span>
+<span class="normal">920</span>
+<span class="normal">921</span>
+<span class="normal">922</span>
+<span class="normal">923</span>
+<span class="normal">924</span>
+<span class="normal">925</span>
+<span class="normal">926</span>
+<span class="normal">927</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">vmap_all_but_one</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">axis</span><span class="p">,</span> <span class="n">out_ndim</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Repeatedly calls vmap to map over all axes except for `axis.`</span>
+<span class="sd">    All args will be mapped on the same dimensions.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="nd">@wraps</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">inner</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>
+        <span class="n">n_dim</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">ndim</span>
+        <span class="k">if</span> <span class="n">axis</span> <span class="o">&gt;=</span> <span class="n">n_dim</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Axis </span><span class="si">{</span><span class="n">axis</span><span class="si">}</span><span class="s1"> is out of bounds for array of dimension </span><span class="si">{</span><span class="n">n_dim</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">fn</span> <span class="o">=</span> <span class="n">f</span>
+        <span class="n">vmap_dim</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">out_dim</span> <span class="o">=</span> <span class="n">out_ndim</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">reversed</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">n_dim</span><span class="p">)):</span>
+            <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="n">axis</span><span class="p">:</span>
+                <span class="n">vmap_dim</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="n">out_dim</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">fn</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">vmap</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="n">vmap_dim</span><span class="p">,</span> <span class="n">out_dim</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">fn</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">inner</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div>
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Erfan Zare Chavoshi-FJFormer
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "..", "features": [], "search": "../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.5cfa9459.min.js"></script>
+      
+    
+  </body>
+</html>

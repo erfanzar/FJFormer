@@ -1,0 +1,4499 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+        <meta name="author" content="Erfan Zare Chavoshi">
+      
+      
+      
+        <link rel="prev" href="../generated-bits-calibration/">
+      
+      
+        <link rel="next" href="../generated-bits-int_numerics/">
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.0, mkdocs-material-9.5.22">
+    
+    
+      
+        <title>Config - FJFormer</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.732c4fb1.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/_mkdocstrings.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#bitsconfig" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="FJFormer" class="md-header__button md-logo" aria-label="FJFormer" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            FJFormer
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Config
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var media,input,key,value,palette=__md_get("__palette");if(palette&&palette.color){"(prefers-color-scheme)"===palette.color.media&&(media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']"),palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent"));for([key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/erfanzar/FJFormer" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="FJFormer" class="md-nav__button md-logo" aria-label="FJFormer" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    FJFormer
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/erfanzar/FJFormer" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_1" id="__nav_1_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Bits
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_1_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_1">
+            <span class="md-nav__icon md-icon"></span>
+            Bits
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../generated-bits-bits/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Bits
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../generated-bits-calibration/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Calibration
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Config
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Config
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#src.fjformer.bits.config" class="md-nav__link">
+    <span class="md-ellipsis">
+      config
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#src.fjformer.bits.config.DotGeneral" class="md-nav__link">
+    <span class="md-ellipsis">
+      DotGeneral
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#src.fjformer.bits.config.DotGeneralRaw" class="md-nav__link">
+    <span class="md-ellipsis">
+      DotGeneralRaw
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="DotGeneralRaw">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#src.fjformer.bits.config.DotGeneralRaw.make" class="md-nav__link">
+    <span class="md-ellipsis">
+      make
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#src.fjformer.bits.config.DotGeneralRaw.make_conv_general_dilated" class="md-nav__link">
+    <span class="md-ellipsis">
+      make_conv_general_dilated
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#src.fjformer.bits.config.Tensor" class="md-nav__link">
+    <span class="md-ellipsis">
+      Tensor
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#src.fjformer.bits.config.config_v3" class="md-nav__link">
+    <span class="md-ellipsis">
+      config_v3
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#src.fjformer.bits.config.conv_general_dilated_make" class="md-nav__link">
+    <span class="md-ellipsis">
+      conv_general_dilated_make
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#src.fjformer.bits.config.dot_general_make" class="md-nav__link">
+    <span class="md-ellipsis">
+      dot_general_make
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#src.fjformer.bits.config.dot_general_raw_make" class="md-nav__link">
+    <span class="md-ellipsis">
+      dot_general_raw_make
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#src.fjformer.bits.config.fully_quantized" class="md-nav__link">
+    <span class="md-ellipsis">
+      fully_quantized
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#src.fjformer.bits.config.set_accumulator_dtype" class="md-nav__link">
+    <span class="md-ellipsis">
+      set_accumulator_dtype
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#src.fjformer.bits.config.set_fwd_numerics" class="md-nav__link">
+    <span class="md-ellipsis">
+      set_fwd_numerics
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#src.fjformer.bits.config.set_static_bound" class="md-nav__link">
+    <span class="md-ellipsis">
+      set_static_bound
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#src.fjformer.bits.config.set_stochastic_rounding" class="md-nav__link">
+    <span class="md-ellipsis">
+      set_stochastic_rounding
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#src.fjformer.bits.config.tensor_make" class="md-nav__link">
+    <span class="md-ellipsis">
+      tensor_make
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../generated-bits-int_numerics/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Int Numerics
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../generated-bits-no_numerics/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    No Numerics
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../generated-bits-numerics/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Numerics
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../generated-bits-q_dot_general/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Q Dot General
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../generated-bits-q_flax/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Q Flax
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../generated-bits-qk/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Qk
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../generated-bits-stochastic_rounding/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Stochastic Rounding
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Checkpoint
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Checkpoint
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../generated-checkpoint-_load/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Load
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../generated-checkpoint-streamer/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Streamer
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Func
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Func
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../generated-func-_func/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Func
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../generated-func-loss_func/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Loss Func
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Home
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Monitor
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            Monitor
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../generated-monitor-tracker/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Tracker
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Optimizers
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            Optimizers
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../generated-optimizers-adafactor/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Adafactor
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../generated-optimizers-adamw/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Adamw
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../generated-optimizers-lion/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Lion
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../generated-optimizers-optimizer_utils/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Optimizer Utils
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../generated-optimizers-rmsprop/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Rmsprop
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Pallas Operations
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            Pallas Operations
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_7_1" id="__nav_7_1_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Efficient Attention
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_1">
+            <span class="md-nav__icon md-icon"></span>
+            Efficient Attention
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../generated-pallas_operations-efficient_attention-efficient_attention/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Efficient Attention
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_7_2" id="__nav_7_2_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Flash Attention
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_2">
+            <span class="md-nav__icon md-icon"></span>
+            Flash Attention
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_2_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_7_2_1" id="__nav_7_2_1_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Gpu
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_2_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_2_1">
+            <span class="md-nav__icon md-icon"></span>
+            Gpu
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../generated-pallas_operations-flash_attention-gpu-jax_flash_attn_gpu/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Jax Flash Attn Gpu
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_2_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_7_2_2" id="__nav_7_2_2_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Tpu
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_2_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            Tpu
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../generated-pallas_operations-flash_attention-tpu-jax_flash_attn_tpu/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Jax Flash Attn Tpu
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_7_3" id="__nav_7_3_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Layer Norm
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_3">
+            <span class="md-nav__icon md-icon"></span>
+            Layer Norm
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_3_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_7_3_1" id="__nav_7_3_1_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Gpu
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_3_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_3_1">
+            <span class="md-nav__icon md-icon"></span>
+            Gpu
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../generated-pallas_operations-layer_norm-gpu-layer_norm/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Layer Norm
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_7_4" id="__nav_7_4_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Ring Attention
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_4">
+            <span class="md-nav__icon md-icon"></span>
+            Ring Attention
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../generated-pallas_operations-ring_attention-ring_attention/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Ring Attention
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_7_5" id="__nav_7_5_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Rms Norm
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_5">
+            <span class="md-nav__icon md-icon"></span>
+            Rms Norm
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_5_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_7_5_1" id="__nav_7_5_1_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Gpu
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_5_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_5_1">
+            <span class="md-nav__icon md-icon"></span>
+            Gpu
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../generated-pallas_operations-rms_norm-gpu-rms_norm/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Rms Norm
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_7_6" id="__nav_7_6_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Softmax
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_6">
+            <span class="md-nav__icon md-icon"></span>
+            Softmax
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_6_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_7_6_1" id="__nav_7_6_1_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Gpu
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_6_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_6_1">
+            <span class="md-nav__icon md-icon"></span>
+            Gpu
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../generated-pallas_operations-softmax-gpu-softmax/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Softmax
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7_7" id="__nav_7_7_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Splash Attention
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_7">
+            <span class="md-nav__icon md-icon"></span>
+            Splash Attention
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_7_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_7_7_1" id="__nav_7_7_1_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Tpu
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_7_7_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7_7_1">
+            <span class="md-nav__icon md-icon"></span>
+            Tpu
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../generated-pallas_operations-splash_attention-tpu-splash_attention_kernel/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Splash Attention Kernel
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../generated-pallas_operations-splash_attention-tpu-splash_attention_mask/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Splash Attention Mask
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../generated-pallas_operations-splash_attention-tpu-splash_attention_mask_info/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Splash Attention Mask Info
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Partition Utils
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            Partition Utils
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../generated-partition_utils-mesh_utils/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Mesh Utils
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../generated-partition_utils-t5x_partitioning/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    T5x Partitioning
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../generated-utils/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Utils
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" >
+        
+          
+          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Xrapture
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10">
+            <span class="md-nav__icon md-icon"></span>
+            Xrapture
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../generated-xrapture-implicit_array/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Implicit Array
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../generated-xrapture-tracer/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Tracer
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../generated-xrapture-xrapture/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Xrapture
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#src.fjformer.bits.config" class="md-nav__link">
+    <span class="md-ellipsis">
+      config
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#src.fjformer.bits.config.DotGeneral" class="md-nav__link">
+    <span class="md-ellipsis">
+      DotGeneral
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#src.fjformer.bits.config.DotGeneralRaw" class="md-nav__link">
+    <span class="md-ellipsis">
+      DotGeneralRaw
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="DotGeneralRaw">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#src.fjformer.bits.config.DotGeneralRaw.make" class="md-nav__link">
+    <span class="md-ellipsis">
+      make
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#src.fjformer.bits.config.DotGeneralRaw.make_conv_general_dilated" class="md-nav__link">
+    <span class="md-ellipsis">
+      make_conv_general_dilated
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#src.fjformer.bits.config.Tensor" class="md-nav__link">
+    <span class="md-ellipsis">
+      Tensor
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#src.fjformer.bits.config.config_v3" class="md-nav__link">
+    <span class="md-ellipsis">
+      config_v3
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#src.fjformer.bits.config.conv_general_dilated_make" class="md-nav__link">
+    <span class="md-ellipsis">
+      conv_general_dilated_make
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#src.fjformer.bits.config.dot_general_make" class="md-nav__link">
+    <span class="md-ellipsis">
+      dot_general_make
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#src.fjformer.bits.config.dot_general_raw_make" class="md-nav__link">
+    <span class="md-ellipsis">
+      dot_general_raw_make
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#src.fjformer.bits.config.fully_quantized" class="md-nav__link">
+    <span class="md-ellipsis">
+      fully_quantized
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#src.fjformer.bits.config.set_accumulator_dtype" class="md-nav__link">
+    <span class="md-ellipsis">
+      set_accumulator_dtype
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#src.fjformer.bits.config.set_fwd_numerics" class="md-nav__link">
+    <span class="md-ellipsis">
+      set_fwd_numerics
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#src.fjformer.bits.config.set_static_bound" class="md-nav__link">
+    <span class="md-ellipsis">
+      set_static_bound
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#src.fjformer.bits.config.set_stochastic_rounding" class="md-nav__link">
+    <span class="md-ellipsis">
+      set_stochastic_rounding
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#src.fjformer.bits.config.tensor_make" class="md-nav__link">
+    <span class="md-ellipsis">
+      tensor_make
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+<h1 id="bitsconfig">bits.config</h1>
+
+
+<div class="doc doc-object doc-module">
+
+
+
+<a id="src.fjformer.bits.config"></a>
+  <div class="doc doc-contents first">
+  
+      <p>Configuration dataclasses.</p>
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="src.fjformer.bits.config.DotGeneral" class="doc doc-heading">
+          <code>DotGeneral</code>
+
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-dataclass"><code>dataclass</code></small>
+  </span>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+
+  
+      <p>Configuration of quantization of dot_general and its gradients.</p>
+
+            <details class="quote">
+              <summary>Source code in <code>src/fjformer/bits/config.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">101</span>
+<span class="normal">102</span>
+<span class="normal">103</span>
+<span class="normal">104</span>
+<span class="normal">105</span>
+<span class="normal">106</span>
+<span class="normal">107</span>
+<span class="normal">108</span>
+<span class="normal">109</span>
+<span class="normal">110</span>
+<span class="normal">111</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@dataclasses</span><span class="o">.</span><span class="n">dataclass</span><span class="p">(</span><span class="n">slots</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">DotGeneral</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Configuration of quantization of dot_general and its gradients.&quot;&quot;&quot;</span>
+
+    <span class="n">fwd</span><span class="p">:</span> <span class="n">DotGeneralRaw</span>
+    <span class="n">dlhs</span><span class="p">:</span> <span class="n">DotGeneralRaw</span>
+    <span class="n">drhs</span><span class="p">:</span> <span class="n">DotGeneralRaw</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">make</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;DotGeneral&#39;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">dot_general_make</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+  </div>
+
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="src.fjformer.bits.config.DotGeneralRaw" class="doc doc-heading">
+          <code>DotGeneralRaw</code>
+
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-dataclass"><code>dataclass</code></small>
+  </span>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+
+  
+      <p>Configuration of quantization of one dot_general without gradient.</p>
+
+            <details class="quote">
+              <summary>Source code in <code>src/fjformer/bits/config.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">64</span>
+<span class="normal">65</span>
+<span class="normal">66</span>
+<span class="normal">67</span>
+<span class="normal">68</span>
+<span class="normal">69</span>
+<span class="normal">70</span>
+<span class="normal">71</span>
+<span class="normal">72</span>
+<span class="normal">73</span>
+<span class="normal">74</span>
+<span class="normal">75</span>
+<span class="normal">76</span>
+<span class="normal">77</span>
+<span class="normal">78</span>
+<span class="normal">79</span>
+<span class="normal">80</span>
+<span class="normal">81</span>
+<span class="normal">82</span>
+<span class="normal">83</span>
+<span class="normal">84</span>
+<span class="normal">85</span>
+<span class="normal">86</span>
+<span class="normal">87</span>
+<span class="normal">88</span>
+<span class="normal">89</span>
+<span class="normal">90</span>
+<span class="normal">91</span>
+<span class="normal">92</span>
+<span class="normal">93</span>
+<span class="normal">94</span>
+<span class="normal">95</span>
+<span class="normal">96</span>
+<span class="normal">97</span>
+<span class="normal">98</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@dataclasses</span><span class="o">.</span><span class="n">dataclass</span><span class="p">(</span><span class="n">slots</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">DotGeneralRaw</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Configuration of quantization of one dot_general without gradient.&quot;&quot;&quot;</span>
+
+    <span class="n">lhs</span><span class="p">:</span> <span class="n">Tensor</span>
+    <span class="n">rhs</span><span class="p">:</span> <span class="n">Tensor</span>
+    <span class="n">dg_accumulator_dtype</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">DType</span><span class="p">]</span>
+    <span class="n">local_aqt</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">LocalQ</span><span class="p">]</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">make</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;DotGeneralRaw&#39;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The make function is a factory function that creates an instance of the DotGeneralRaw class.</span>
+
+<span class="sd">        :param cls: Create a new instance of the class</span>
+<span class="sd">        :param args: Send a non-keyworded variable length argument list to the function</span>
+<span class="sd">        :param kwargs: Pass a variable number of keyword arguments to the function</span>
+<span class="sd">        :return: A dotgeneralraw object</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">dot_general_raw_make</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">make_conv_general_dilated</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;DotGeneralRaw&#39;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The make_conv_general_dilated function is a wrapper for the conv_general_dilated_make function.</span>
+<span class="sd">        It allows us to use the make function in our DotGeneralRaw class, which we can then use as a</span>
+<span class="sd">        component of our network. The make function takes in arguments that are used by the</span>
+<span class="sd">        conv_general_dilated_make function to create an instance of DotGeneralRaw.</span>
+
+<span class="sd">        :param cls: Create a new instance of the class</span>
+<span class="sd">        :param args: Send a non-keyworded variable length argument list to the function</span>
+<span class="sd">        :param kwargs: Pass a variable number of keyword arguments to a function</span>
+<span class="sd">        :return: A dotgeneralraw object</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">conv_general_dilated_make</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="src.fjformer.bits.config.DotGeneralRaw.make" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">make</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></code>
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-classmethod"><code>classmethod</code></small>
+  </span>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>The make function is a factory function that creates an instance of the DotGeneralRaw class.</p>
+
+
+
+  <p><span class="doc-section-title">Parameters:</span></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr class="doc-section-item">
+          <td><code>cls</code></td>
+          <td>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Create a new instance of the class</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr class="doc-section-item">
+          <td><code>args</code></td>
+          <td>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Send a non-keyworded variable length argument list to the function</p>
+            </div>
+          </td>
+          <td>
+                <code>()</code>
+          </td>
+        </tr>
+        <tr class="doc-section-item">
+          <td><code>kwargs</code></td>
+          <td>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Pass a variable number of keyword arguments to the function</p>
+            </div>
+          </td>
+          <td>
+                <code>{}</code>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+
+  <p><span class="doc-section-title">Returns:</span></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr class="doc-section-item">
+          <td>
+                <code><a class="autorefs autorefs-internal" title="src.fjformer.bits.config.DotGeneralRaw" href="#src.fjformer.bits.config.DotGeneralRaw">DotGeneralRaw</a></code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>A dotgeneralraw object</p>
+            </div>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+          <details class="quote">
+            <summary>Source code in <code>src/fjformer/bits/config.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">73</span>
+<span class="normal">74</span>
+<span class="normal">75</span>
+<span class="normal">76</span>
+<span class="normal">77</span>
+<span class="normal">78</span>
+<span class="normal">79</span>
+<span class="normal">80</span>
+<span class="normal">81</span>
+<span class="normal">82</span>
+<span class="normal">83</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@classmethod</span>
+<span class="k">def</span> <span class="nf">make</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;DotGeneralRaw&#39;</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The make function is a factory function that creates an instance of the DotGeneralRaw class.</span>
+
+<span class="sd">    :param cls: Create a new instance of the class</span>
+<span class="sd">    :param args: Send a non-keyworded variable length argument list to the function</span>
+<span class="sd">    :param kwargs: Pass a variable number of keyword arguments to the function</span>
+<span class="sd">    :return: A dotgeneralraw object</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">dot_general_raw_make</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="src.fjformer.bits.config.DotGeneralRaw.make_conv_general_dilated" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">make_conv_general_dilated</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></code>
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-classmethod"><code>classmethod</code></small>
+  </span>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>The make_conv_general_dilated function is a wrapper for the conv_general_dilated_make function.
+It allows us to use the make function in our DotGeneralRaw class, which we can then use as a
+component of our network. The make function takes in arguments that are used by the
+conv_general_dilated_make function to create an instance of DotGeneralRaw.</p>
+
+
+
+  <p><span class="doc-section-title">Parameters:</span></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr class="doc-section-item">
+          <td><code>cls</code></td>
+          <td>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Create a new instance of the class</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr class="doc-section-item">
+          <td><code>args</code></td>
+          <td>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Send a non-keyworded variable length argument list to the function</p>
+            </div>
+          </td>
+          <td>
+                <code>()</code>
+          </td>
+        </tr>
+        <tr class="doc-section-item">
+          <td><code>kwargs</code></td>
+          <td>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Pass a variable number of keyword arguments to a function</p>
+            </div>
+          </td>
+          <td>
+                <code>{}</code>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+
+  <p><span class="doc-section-title">Returns:</span></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr class="doc-section-item">
+          <td>
+                <code><a class="autorefs autorefs-internal" title="src.fjformer.bits.config.DotGeneralRaw" href="#src.fjformer.bits.config.DotGeneralRaw">DotGeneralRaw</a></code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>A dotgeneralraw object</p>
+            </div>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+          <details class="quote">
+            <summary>Source code in <code>src/fjformer/bits/config.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">85</span>
+<span class="normal">86</span>
+<span class="normal">87</span>
+<span class="normal">88</span>
+<span class="normal">89</span>
+<span class="normal">90</span>
+<span class="normal">91</span>
+<span class="normal">92</span>
+<span class="normal">93</span>
+<span class="normal">94</span>
+<span class="normal">95</span>
+<span class="normal">96</span>
+<span class="normal">97</span>
+<span class="normal">98</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@classmethod</span>
+<span class="k">def</span> <span class="nf">make_conv_general_dilated</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;DotGeneralRaw&#39;</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The make_conv_general_dilated function is a wrapper for the conv_general_dilated_make function.</span>
+<span class="sd">    It allows us to use the make function in our DotGeneralRaw class, which we can then use as a</span>
+<span class="sd">    component of our network. The make function takes in arguments that are used by the</span>
+<span class="sd">    conv_general_dilated_make function to create an instance of DotGeneralRaw.</span>
+
+<span class="sd">    :param cls: Create a new instance of the class</span>
+<span class="sd">    :param args: Send a non-keyworded variable length argument list to the function</span>
+<span class="sd">    :param kwargs: Pass a variable number of keyword arguments to a function</span>
+<span class="sd">    :return: A dotgeneralraw object</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">conv_general_dilated_make</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div>
+
+
+
+  </div>
+
+  </div>
+
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="src.fjformer.bits.config.Tensor" class="doc doc-heading">
+          <code>Tensor</code>
+
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-dataclass"><code>dataclass</code></small>
+  </span>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+
+  
+      <p>Configuration of quantization of one tensor or one side of tensor op.</p>
+
+            <details class="quote">
+              <summary>Source code in <code>src/fjformer/bits/config.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">32</span>
+<span class="normal">33</span>
+<span class="normal">34</span>
+<span class="normal">35</span>
+<span class="normal">36</span>
+<span class="normal">37</span>
+<span class="normal">38</span>
+<span class="normal">39</span>
+<span class="normal">40</span>
+<span class="normal">41</span>
+<span class="normal">42</span>
+<span class="normal">43</span>
+<span class="normal">44</span>
+<span class="normal">45</span>
+<span class="normal">46</span>
+<span class="normal">47</span>
+<span class="normal">48</span>
+<span class="normal">49</span>
+<span class="normal">50</span>
+<span class="normal">51</span>
+<span class="normal">52</span>
+<span class="normal">53</span>
+<span class="normal">54</span>
+<span class="normal">55</span>
+<span class="normal">56</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@dataclasses</span><span class="o">.</span><span class="n">dataclass</span><span class="p">(</span><span class="n">slots</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">Tensor</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Configuration of quantization of one tensor or one side of tensor op.&quot;&quot;&quot;</span>
+
+    <span class="n">numerics</span><span class="p">:</span> <span class="n">numerics</span><span class="o">.</span><span class="n">QNumerics</span>
+    <span class="n">calib_shared_axes</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]]</span>
+    <span class="n">scale_stop_grad</span><span class="p">:</span> <span class="nb">bool</span>
+    <span class="c1"># noise+clip+round</span>
+    <span class="c1"># We apply gradient of clip_and_round in bwd pass.</span>
+    <span class="n">calibration</span><span class="p">:</span> <span class="n">calibration</span><span class="o">.</span><span class="n">Calibration</span>
+    <span class="c1"># Round up the calibration to power of 2 (po2).</span>
+    <span class="n">po2_scale</span><span class="p">:</span> <span class="nb">bool</span>
+    <span class="n">use_fake_quant</span><span class="p">:</span> <span class="nb">bool</span>
+    <span class="c1"># Controls at what value of input tensor should be used.</span>
+    <span class="c1"># Setting it to True, but not quantizing fwd pass will assert-fail.</span>
+    <span class="n">use_fwd_quant</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span>
+    <span class="c1"># Operations for retrieving or storing quantized tensors and their scales</span>
+    <span class="c1"># TODO(yichizh): Factor out auxilliary dataclasses into a separate file.</span>
+    <span class="c1"># The following dtype Any should be q_dot_general.QTensor but that triggers</span>
+    <span class="c1"># recursive importing</span>
+    <span class="n">preprocess</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Callable</span><span class="p">[[</span><span class="n">Optional</span><span class="p">[</span><span class="n">Any</span><span class="p">]],</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Any</span><span class="p">]]]</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">make</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;Tensor&#39;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">tensor_make</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+  </div>
+
+
+</div>
+
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h2 id="src.fjformer.bits.config.config_v3" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">config_v3</span><span class="p">(</span><span class="o">*</span><span class="p">,</span> <span class="n">fwd_bits</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">dlhs_bits</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">drhs_bits</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">use_dummy_static_bound</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">rng_type</span><span class="o">=</span><span class="s1">&#39;jax.uniform&#39;</span><span class="p">,</span> <span class="n">dlhs_local_aqt</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">drhs_local_aqt</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fwd_accumulator_dtype</span><span class="o">=</span><span class="n">jnp</span><span class="o">.</span><span class="n">int32</span><span class="p">,</span> <span class="n">dlhs_accumulator_dtype</span><span class="o">=</span><span class="n">jnp</span><span class="o">.</span><span class="n">int32</span><span class="p">,</span> <span class="n">drhs_accumulator_dtype</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>The config_v3 function is a helper function that configures the DotGeneral
+object. It takes in keyword arguments and returns a configured DotGeneral object.
+The following are the keyword arguments:</p>
+
+
+
+  <p><span class="doc-section-title">Parameters:</span></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr class="doc-section-item">
+          <td><code>*</code></td>
+          <td>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Indicate that all the following parameters are keyword-only</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr class="doc-section-item">
+          <td><code>fwd_bits</code></td>
+          <td>
+                <code><span title="typing.Optional">Optional</span>[int]</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Optional[int]: Set the number of bits used for forward pass</p>
+            </div>
+          </td>
+          <td>
+                <code>8</code>
+          </td>
+        </tr>
+        <tr class="doc-section-item">
+          <td><code>dlhs_bits</code></td>
+          <td>
+                <code><span title="typing.Optional">Optional</span>[int]</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Optional[int]: Set the number of bits for the</p>
+            </div>
+          </td>
+          <td>
+                <code>8</code>
+          </td>
+        </tr>
+        <tr class="doc-section-item">
+          <td><code>drhs_bits</code></td>
+          <td>
+                <code><span title="typing.Optional">Optional</span>[int]</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Optional[int]: Specify the number of bits</p>
+            </div>
+          </td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr class="doc-section-item">
+          <td><code>use_dummy_static_bound</code></td>
+          <td>
+                <code>bool</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>bool: Set the static bound to 1</p>
+            </div>
+          </td>
+          <td>
+                <code>False</code>
+          </td>
+        </tr>
+        <tr class="doc-section-item">
+          <td><code>rng_type</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>str: Specify the random number generator</p>
+            </div>
+          </td>
+          <td>
+                <code>&#39;jax.uniform&#39;</code>
+          </td>
+        </tr>
+        <tr class="doc-section-item">
+          <td><code>dlhs_local_aqt</code></td>
+          <td>
+                <code><span title="typing.Optional">Optional</span>[<span title="src.fjformer.bits.config.LocalQ">LocalQ</span>]</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Optional[LocalQ]: Set the local quantization of the dlhs</p>
+            </div>
+          </td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr class="doc-section-item">
+          <td><code>drhs_local_aqt</code></td>
+          <td>
+                <code><span title="typing.Optional">Optional</span>[<span title="src.fjformer.bits.config.LocalQ">LocalQ</span>]</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Optional[LocalQ]: Set the local quantization</p>
+            </div>
+          </td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr class="doc-section-item">
+          <td><code>fwd_accumulator_dtype</code></td>
+          <td>
+                <code>...</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>...: Specify the accumulator dtype for the forward pass</p>
+            </div>
+          </td>
+          <td>
+                <code><span title="jax.numpy.int32">int32</span></code>
+          </td>
+        </tr>
+        <tr class="doc-section-item">
+          <td><code>dlhs_accumulator_dtype</code></td>
+          <td>
+                <code>...</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>...: Specify the accumulator dtype for the gradient</p>
+            </div>
+          </td>
+          <td>
+                <code><span title="jax.numpy.int32">int32</span></code>
+          </td>
+        </tr>
+        <tr class="doc-section-item">
+          <td><code>drhs_accumulator_dtype</code></td>
+          <td>
+                <code>...</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>...: Specify the data type of the accumulator in drhs</p>
+            </div>
+          </td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr class="doc-section-item">
+          <td><code></code></td>
+          <td>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Specify the number of bits used for quantization</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+
+  <p><span class="doc-section-title">Returns:</span></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr class="doc-section-item">
+          <td>
+                <code><a class="autorefs autorefs-internal" title="src.fjformer.bits.config.DotGeneral" href="#src.fjformer.bits.config.DotGeneral">DotGeneral</a></code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>A dotgeneral object</p>
+            </div>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+          <details class="quote">
+            <summary>Source code in <code>src/fjformer/bits/config.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">387</span>
+<span class="normal">388</span>
+<span class="normal">389</span>
+<span class="normal">390</span>
+<span class="normal">391</span>
+<span class="normal">392</span>
+<span class="normal">393</span>
+<span class="normal">394</span>
+<span class="normal">395</span>
+<span class="normal">396</span>
+<span class="normal">397</span>
+<span class="normal">398</span>
+<span class="normal">399</span>
+<span class="normal">400</span>
+<span class="normal">401</span>
+<span class="normal">402</span>
+<span class="normal">403</span>
+<span class="normal">404</span>
+<span class="normal">405</span>
+<span class="normal">406</span>
+<span class="normal">407</span>
+<span class="normal">408</span>
+<span class="normal">409</span>
+<span class="normal">410</span>
+<span class="normal">411</span>
+<span class="normal">412</span>
+<span class="normal">413</span>
+<span class="normal">414</span>
+<span class="normal">415</span>
+<span class="normal">416</span>
+<span class="normal">417</span>
+<span class="normal">418</span>
+<span class="normal">419</span>
+<span class="normal">420</span>
+<span class="normal">421</span>
+<span class="normal">422</span>
+<span class="normal">423</span>
+<span class="normal">424</span>
+<span class="normal">425</span>
+<span class="normal">426</span>
+<span class="normal">427</span>
+<span class="normal">428</span>
+<span class="normal">429</span>
+<span class="normal">430</span>
+<span class="normal">431</span>
+<span class="normal">432</span>
+<span class="normal">433</span>
+<span class="normal">434</span>
+<span class="normal">435</span>
+<span class="normal">436</span>
+<span class="normal">437</span>
+<span class="normal">438</span>
+<span class="normal">439</span>
+<span class="normal">440</span>
+<span class="normal">441</span>
+<span class="normal">442</span>
+<span class="normal">443</span>
+<span class="normal">444</span>
+<span class="normal">445</span>
+<span class="normal">446</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">config_v3</span><span class="p">(</span>
+        <span class="o">*</span><span class="p">,</span>
+        <span class="n">fwd_bits</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="mi">8</span><span class="p">,</span>
+        <span class="n">dlhs_bits</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="mi">8</span><span class="p">,</span>
+        <span class="n">drhs_bits</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">use_dummy_static_bound</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">rng_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;jax.uniform&#39;</span><span class="p">,</span>  <span class="c1"># &#39;custom-1&#39;</span>
+        <span class="n">dlhs_local_aqt</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">LocalQ</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">drhs_local_aqt</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">LocalQ</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">fwd_accumulator_dtype</span><span class="p">:</span> <span class="o">...</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">int32</span><span class="p">,</span>
+        <span class="n">dlhs_accumulator_dtype</span><span class="p">:</span> <span class="o">...</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">int32</span><span class="p">,</span>
+        <span class="n">drhs_accumulator_dtype</span><span class="p">:</span> <span class="o">...</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DotGeneral</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The config_v3 function is a helper function that configures the DotGeneral</span>
+<span class="sd">    object. It takes in keyword arguments and returns a configured DotGeneral object.</span>
+<span class="sd">    The following are the keyword arguments:</span>
+
+<span class="sd">    :param *: Indicate that all the following parameters are keyword-only</span>
+<span class="sd">    :param fwd_bits: Optional[int]: Set the number of bits used for forward pass</span>
+<span class="sd">    :param dlhs_bits: Optional[int]: Set the number of bits for the</span>
+<span class="sd">    :param drhs_bits: Optional[int]: Specify the number of bits</span>
+<span class="sd">    :param use_dummy_static_bound: bool: Set the static bound to 1</span>
+<span class="sd">    :param rng_type: str: Specify the random number generator</span>
+<span class="sd">    :param dlhs_local_aqt: Optional[LocalQ]: Set the local quantization of the dlhs</span>
+<span class="sd">    :param drhs_local_aqt: Optional[LocalQ]: Set the local quantization</span>
+<span class="sd">    :param fwd_accumulator_dtype: ...: Specify the accumulator dtype for the forward pass</span>
+<span class="sd">    :param dlhs_accumulator_dtype: ...: Specify the accumulator dtype for the gradient</span>
+<span class="sd">    :param drhs_accumulator_dtype: ...: Specify the data type of the accumulator in drhs</span>
+<span class="sd">    :param : Specify the number of bits used for quantization</span>
+<span class="sd">    :return: A dotgeneral object</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">fwd</span> <span class="o">=</span> <span class="n">dot_general_raw_make</span><span class="p">(</span><span class="n">fwd_bits</span><span class="p">,</span> <span class="n">fwd_bits</span><span class="p">)</span>
+    <span class="n">dlhs</span> <span class="o">=</span> <span class="n">dot_general_raw_make</span><span class="p">(</span><span class="n">dlhs_bits</span><span class="p">,</span> <span class="n">dlhs_bits</span><span class="p">,</span> <span class="n">local_aqt</span><span class="o">=</span><span class="n">dlhs_local_aqt</span><span class="p">)</span>
+    <span class="n">drhs</span> <span class="o">=</span> <span class="n">dot_general_raw_make</span><span class="p">(</span><span class="n">drhs_bits</span><span class="p">,</span> <span class="n">drhs_bits</span><span class="p">,</span> <span class="n">local_aqt</span><span class="o">=</span><span class="n">drhs_local_aqt</span><span class="p">)</span>
+    <span class="n">cfg</span> <span class="o">=</span> <span class="n">DotGeneral</span><span class="p">(</span><span class="n">fwd</span><span class="o">=</span><span class="n">fwd</span><span class="p">,</span> <span class="n">dlhs</span><span class="o">=</span><span class="n">dlhs</span><span class="p">,</span> <span class="n">drhs</span><span class="o">=</span><span class="n">drhs</span><span class="p">)</span>
+
+    <span class="n">cfg</span><span class="o">.</span><span class="n">dlhs</span><span class="o">.</span><span class="n">rhs</span><span class="o">.</span><span class="n">use_fwd_quant</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">cfg</span><span class="o">.</span><span class="n">drhs</span><span class="o">.</span><span class="n">rhs</span><span class="o">.</span><span class="n">use_fwd_quant</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="c1"># Typically we have (but I don&#39;t know if it is guraranteed):</span>
+    <span class="c1"># - vjp_lhs_stochastic_rounding is referring to the gradient and</span>
+    <span class="c1"># - vjp_rhs_stochastic_rounding is referring to the activations/weights.</span>
+    <span class="n">set_stochastic_rounding</span><span class="p">(</span>
+        <span class="n">cfg</span><span class="p">,</span>
+        <span class="n">vjp_lhs_stochastic_rounding</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">vjp_rhs_stochastic_rounding</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">implementation</span><span class="o">=</span><span class="n">rng_type</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">use_dummy_static_bound</span><span class="p">:</span>
+        <span class="n">set_static_bound</span><span class="p">(</span><span class="n">cfg</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+
+    <span class="n">set_accumulator_dtype</span><span class="p">(</span>
+        <span class="n">cfg</span><span class="p">,</span>
+        <span class="n">fwd_dtype</span><span class="o">=</span><span class="n">fwd_accumulator_dtype</span><span class="p">,</span>
+        <span class="n">dlhs_dtype</span><span class="o">=</span><span class="n">dlhs_accumulator_dtype</span><span class="p">,</span>
+        <span class="n">drhs_dtype</span><span class="o">=</span><span class="n">drhs_accumulator_dtype</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">cfg</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h2 id="src.fjformer.bits.config.conv_general_dilated_make" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">conv_general_dilated_make</span><span class="p">(</span><span class="n">spatial_dimensions</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">lhs_bits</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">rhs_bits</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Create quantization config conv_general_dilated.</p>
+
+          <details class="quote">
+            <summary>Source code in <code>src/fjformer/bits/config.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">270</span>
+<span class="normal">271</span>
+<span class="normal">272</span>
+<span class="normal">273</span>
+<span class="normal">274</span>
+<span class="normal">275</span>
+<span class="normal">276</span>
+<span class="normal">277</span>
+<span class="normal">278</span>
+<span class="normal">279</span>
+<span class="normal">280</span>
+<span class="normal">281</span>
+<span class="normal">282</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">conv_general_dilated_make</span><span class="p">(</span>
+        <span class="n">spatial_dimensions</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+        <span class="n">lhs_bits</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">rhs_bits</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;DotGeneralRaw&#39;</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create quantization config conv_general_dilated.&quot;&quot;&quot;</span>
+    <span class="n">config</span> <span class="o">=</span> <span class="n">dot_general_raw_make</span><span class="p">(</span><span class="n">lhs_bits</span><span class="p">,</span> <span class="n">rhs_bits</span><span class="p">)</span>
+    <span class="c1"># Hardcoding flax assumptions.</span>
+    <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">lhs</span><span class="p">:</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">lhs</span><span class="o">.</span><span class="n">calib_shared_axes</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">spatial_dimensions</span> <span class="o">+</span> <span class="mi">2</span><span class="p">))</span>
+    <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">rhs</span><span class="p">:</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">rhs</span><span class="o">.</span><span class="n">calib_shared_axes</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">spatial_dimensions</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">config</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h2 id="src.fjformer.bits.config.dot_general_make" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">dot_general_make</span><span class="p">(</span><span class="n">lhs_bits</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">rhs_bits</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">bwd_bits</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">use_fwd_quant</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">dlhs_local_aqt</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">drhs_local_aqt</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Create quantization configs for input matrices to a matmul.</p>
+
+          <details class="quote">
+            <summary>Source code in <code>src/fjformer/bits/config.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">285</span>
+<span class="normal">286</span>
+<span class="normal">287</span>
+<span class="normal">288</span>
+<span class="normal">289</span>
+<span class="normal">290</span>
+<span class="normal">291</span>
+<span class="normal">292</span>
+<span class="normal">293</span>
+<span class="normal">294</span>
+<span class="normal">295</span>
+<span class="normal">296</span>
+<span class="normal">297</span>
+<span class="normal">298</span>
+<span class="normal">299</span>
+<span class="normal">300</span>
+<span class="normal">301</span>
+<span class="normal">302</span>
+<span class="normal">303</span>
+<span class="normal">304</span>
+<span class="normal">305</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">dot_general_make</span><span class="p">(</span>
+        <span class="n">lhs_bits</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">rhs_bits</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">bwd_bits</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">use_fwd_quant</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">dlhs_local_aqt</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">drhs_local_aqt</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;DotGeneral&#39;</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create quantization configs for input matrices to a matmul.&quot;&quot;&quot;</span>
+    <span class="n">fwd</span> <span class="o">=</span> <span class="n">dot_general_raw_make</span><span class="p">(</span><span class="n">lhs_bits</span><span class="p">,</span> <span class="n">rhs_bits</span><span class="p">)</span>
+    <span class="n">dlhs</span> <span class="o">=</span> <span class="n">dot_general_raw_make</span><span class="p">(</span><span class="n">bwd_bits</span><span class="p">,</span> <span class="n">bwd_bits</span><span class="p">,</span> <span class="n">local_aqt</span><span class="o">=</span><span class="n">dlhs_local_aqt</span><span class="p">)</span>
+    <span class="n">drhs</span> <span class="o">=</span> <span class="n">dot_general_raw_make</span><span class="p">(</span><span class="n">bwd_bits</span><span class="p">,</span> <span class="n">bwd_bits</span><span class="p">,</span> <span class="n">local_aqt</span><span class="o">=</span><span class="n">drhs_local_aqt</span><span class="p">)</span>
+    <span class="n">cfg</span> <span class="o">=</span> <span class="n">DotGeneral</span><span class="p">(</span><span class="n">fwd</span><span class="o">=</span><span class="n">fwd</span><span class="p">,</span> <span class="n">dlhs</span><span class="o">=</span><span class="n">dlhs</span><span class="p">,</span> <span class="n">drhs</span><span class="o">=</span><span class="n">drhs</span><span class="p">)</span>
+
+    <span class="c1"># Surprising: lhs quantization determines what drhs can do.</span>
+    <span class="k">if</span> <span class="n">lhs_bits</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1"># Only rhs is accepting MultiTensor.</span>
+        <span class="n">cfg</span><span class="o">.</span><span class="n">drhs</span><span class="o">.</span><span class="n">rhs</span><span class="o">.</span><span class="n">use_fwd_quant</span> <span class="o">=</span> <span class="n">use_fwd_quant</span>
+    <span class="k">if</span> <span class="n">rhs_bits</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">cfg</span><span class="o">.</span><span class="n">dlhs</span><span class="o">.</span><span class="n">rhs</span><span class="o">.</span><span class="n">use_fwd_quant</span> <span class="o">=</span> <span class="n">use_fwd_quant</span>
+    <span class="k">return</span> <span class="n">cfg</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h2 id="src.fjformer.bits.config.dot_general_raw_make" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">dot_general_raw_make</span><span class="p">(</span><span class="n">lhs_bits</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">rhs_bits</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">local_aqt</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>The dot_general_raw_make function is a helper function that creates a DotGeneralRaw object.</p>
+
+
+
+  <p><span class="doc-section-title">Parameters:</span></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr class="doc-section-item">
+          <td><code>lhs_bits</code></td>
+          <td>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Determine the dtype of the lhs tensor</p>
+            </div>
+          </td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr class="doc-section-item">
+          <td><code>rhs_bits</code></td>
+          <td>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Determine the dtype of the accumulator</p>
+            </div>
+          </td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr class="doc-section-item">
+          <td><code>local_aqt</code></td>
+          <td>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Determine the type of accumulator used</p>
+            </div>
+          </td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr class="doc-section-item">
+          <td><code></code></td>
+          <td>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Determine the dtype of the accumulator</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+
+  <p><span class="doc-section-title">Returns:</span></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr class="doc-section-item">
+          <td>
+                <code><a class="autorefs autorefs-internal" title="src.fjformer.bits.config.DotGeneralRaw" href="#src.fjformer.bits.config.DotGeneralRaw">DotGeneralRaw</a></code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>A dotgeneralraw object</p>
+            </div>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+          <details class="quote">
+            <summary>Source code in <code>src/fjformer/bits/config.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">234</span>
+<span class="normal">235</span>
+<span class="normal">236</span>
+<span class="normal">237</span>
+<span class="normal">238</span>
+<span class="normal">239</span>
+<span class="normal">240</span>
+<span class="normal">241</span>
+<span class="normal">242</span>
+<span class="normal">243</span>
+<span class="normal">244</span>
+<span class="normal">245</span>
+<span class="normal">246</span>
+<span class="normal">247</span>
+<span class="normal">248</span>
+<span class="normal">249</span>
+<span class="normal">250</span>
+<span class="normal">251</span>
+<span class="normal">252</span>
+<span class="normal">253</span>
+<span class="normal">254</span>
+<span class="normal">255</span>
+<span class="normal">256</span>
+<span class="normal">257</span>
+<span class="normal">258</span>
+<span class="normal">259</span>
+<span class="normal">260</span>
+<span class="normal">261</span>
+<span class="normal">262</span>
+<span class="normal">263</span>
+<span class="normal">264</span>
+<span class="normal">265</span>
+<span class="normal">266</span>
+<span class="normal">267</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">dot_general_raw_make</span><span class="p">(</span>
+        <span class="n">lhs_bits</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">rhs_bits</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">local_aqt</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;DotGeneralRaw&#39;</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The dot_general_raw_make function is a helper function that creates a DotGeneralRaw object.</span>
+
+<span class="sd">    :param lhs_bits: Determine the dtype of the lhs tensor</span>
+<span class="sd">    :param rhs_bits: Determine the dtype of the accumulator</span>
+<span class="sd">    :param local_aqt: Determine the type of accumulator used</span>
+<span class="sd">    :param : Determine the dtype of the accumulator</span>
+<span class="sd">    :return: A dotgeneralraw object</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">lhs_cfg</span> <span class="o">=</span> <span class="n">tensor_make</span><span class="p">(</span><span class="n">lhs_bits</span><span class="p">)</span>
+    <span class="n">rhs_cfg</span> <span class="o">=</span> <span class="n">tensor_make</span><span class="p">(</span><span class="n">rhs_bits</span><span class="p">)</span>
+
+    <span class="c1"># Binary uses 0.5 right now.</span>
+    <span class="k">if</span> <span class="p">(</span>
+            <span class="n">lhs_bits</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+            <span class="ow">and</span> <span class="n">rhs_bits</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+            <span class="ow">and</span> <span class="mi">2</span> <span class="o">&lt;=</span> <span class="n">lhs_bits</span> <span class="o">&lt;=</span> <span class="mi">8</span>
+            <span class="ow">and</span> <span class="mi">2</span> <span class="o">&lt;=</span> <span class="n">rhs_bits</span> <span class="o">&lt;=</span> <span class="mi">8</span>
+    <span class="p">):</span>
+        <span class="n">dg_accumulator_dtype</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">int32</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">dg_accumulator_dtype</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">return</span> <span class="n">DotGeneralRaw</span><span class="p">(</span>
+        <span class="n">lhs</span><span class="o">=</span><span class="n">lhs_cfg</span><span class="p">,</span>
+        <span class="n">rhs</span><span class="o">=</span><span class="n">rhs_cfg</span><span class="p">,</span>
+        <span class="n">dg_accumulator_dtype</span><span class="o">=</span><span class="n">dg_accumulator_dtype</span><span class="p">,</span>
+        <span class="n">local_aqt</span><span class="o">=</span><span class="n">local_aqt</span><span class="p">,</span>
+    <span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h2 id="src.fjformer.bits.config.fully_quantized" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">fully_quantized</span><span class="p">(</span><span class="o">*</span><span class="p">,</span> <span class="n">fwd_bits</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">bwd_bits</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">use_fwd_quant</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">use_stochastic_rounding</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">vjp_lhs_stochastic_rounding</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">vjp_rhs_stochastic_rounding</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">use_dummy_static_bound</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">dlhs_local_aqt</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">drhs_local_aqt</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>The fully_quantized function is a helper function that allows you to quickly
+configure the dot_general primitive with all of its quantization parameters.
+It takes in keyword arguments for each of the quantization parameters, and returns
+a DotGeneral configuration object. The following table shows what each parameter does:</p>
+
+
+
+  <p><span class="doc-section-title">Parameters:</span></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr class="doc-section-item">
+          <td><code>*</code></td>
+          <td>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Indicate that all the parameters are keyword-only</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr class="doc-section-item">
+          <td><code>fwd_bits</code></td>
+          <td>
+                <code><span title="typing.Optional">Optional</span>[int]</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Optional[int]: Specify the number of bits used for forward quantization</p>
+            </div>
+          </td>
+          <td>
+                <code>8</code>
+          </td>
+        </tr>
+        <tr class="doc-section-item">
+          <td><code>bwd_bits</code></td>
+          <td>
+                <code><span title="typing.Optional">Optional</span>[int]</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Optional[int]: Set the number of bits used for backpropagation</p>
+            </div>
+          </td>
+          <td>
+                <code>8</code>
+          </td>
+        </tr>
+        <tr class="doc-section-item">
+          <td><code>use_fwd_quant</code></td>
+          <td>
+                <code>bool</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>bool: Control whether to quantize the</p>
+            </div>
+          </td>
+          <td>
+                <code>True</code>
+          </td>
+        </tr>
+        <tr class="doc-section-item">
+          <td><code>use_stochastic_rounding</code></td>
+          <td>
+                <code><span title="typing.Optional">Optional</span>[bool]</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Optional[bool]: Enable stochastic rounding</p>
+            </div>
+          </td>
+          <td>
+                <code>True</code>
+          </td>
+        </tr>
+        <tr class="doc-section-item">
+          <td><code>vjp_lhs_stochastic_rounding</code></td>
+          <td>
+                <code><span title="typing.Optional">Optional</span>[bool]</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Optional[bool]: Ensure that we don't mix</p>
+            </div>
+          </td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr class="doc-section-item">
+          <td><code>vjp_rhs_stochastic_rounding</code></td>
+          <td>
+                <code><span title="typing.Optional">Optional</span>[bool]</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Optional[bool]:</p>
+            </div>
+          </td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr class="doc-section-item">
+          <td><code>use_dummy_static_bound</code></td>
+          <td>
+                <code>bool</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>bool: Set the static bound to 1</p>
+            </div>
+          </td>
+          <td>
+                <code>False</code>
+          </td>
+        </tr>
+        <tr class="doc-section-item">
+          <td><code>dlhs_local_aqt</code></td>
+          <td>
+                <code><span title="typing.Optional">Optional</span>[<span title="src.fjformer.bits.config.LocalQ">LocalQ</span>]</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Optional[LocalQ]: Specify the quantization scheme for the left-hand side of a matrix multiplication</p>
+            </div>
+          </td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr class="doc-section-item">
+          <td><code>drhs_local_aqt</code></td>
+          <td>
+                <code><span title="typing.Optional">Optional</span>[<span title="src.fjformer.bits.config.LocalQ">LocalQ</span>]</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Optional[LocalQ]: Specify the quantization scheme for the right hand side of a matrix multiplication</p>
+            </div>
+          </td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr class="doc-section-item">
+          <td><code></code></td>
+          <td>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Set the number of bits used for forward and backward pass</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+
+  <p><span class="doc-section-title">Returns:</span></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr class="doc-section-item">
+          <td>
+                <code><a class="autorefs autorefs-internal" title="src.fjformer.bits.config.DotGeneral" href="#src.fjformer.bits.config.DotGeneral">DotGeneral</a></code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>A dotgeneral object, which is a</p>
+            </div>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+          <details class="quote">
+            <summary>Source code in <code>src/fjformer/bits/config.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">308</span>
+<span class="normal">309</span>
+<span class="normal">310</span>
+<span class="normal">311</span>
+<span class="normal">312</span>
+<span class="normal">313</span>
+<span class="normal">314</span>
+<span class="normal">315</span>
+<span class="normal">316</span>
+<span class="normal">317</span>
+<span class="normal">318</span>
+<span class="normal">319</span>
+<span class="normal">320</span>
+<span class="normal">321</span>
+<span class="normal">322</span>
+<span class="normal">323</span>
+<span class="normal">324</span>
+<span class="normal">325</span>
+<span class="normal">326</span>
+<span class="normal">327</span>
+<span class="normal">328</span>
+<span class="normal">329</span>
+<span class="normal">330</span>
+<span class="normal">331</span>
+<span class="normal">332</span>
+<span class="normal">333</span>
+<span class="normal">334</span>
+<span class="normal">335</span>
+<span class="normal">336</span>
+<span class="normal">337</span>
+<span class="normal">338</span>
+<span class="normal">339</span>
+<span class="normal">340</span>
+<span class="normal">341</span>
+<span class="normal">342</span>
+<span class="normal">343</span>
+<span class="normal">344</span>
+<span class="normal">345</span>
+<span class="normal">346</span>
+<span class="normal">347</span>
+<span class="normal">348</span>
+<span class="normal">349</span>
+<span class="normal">350</span>
+<span class="normal">351</span>
+<span class="normal">352</span>
+<span class="normal">353</span>
+<span class="normal">354</span>
+<span class="normal">355</span>
+<span class="normal">356</span>
+<span class="normal">357</span>
+<span class="normal">358</span>
+<span class="normal">359</span>
+<span class="normal">360</span>
+<span class="normal">361</span>
+<span class="normal">362</span>
+<span class="normal">363</span>
+<span class="normal">364</span>
+<span class="normal">365</span>
+<span class="normal">366</span>
+<span class="normal">367</span>
+<span class="normal">368</span>
+<span class="normal">369</span>
+<span class="normal">370</span>
+<span class="normal">371</span>
+<span class="normal">372</span>
+<span class="normal">373</span>
+<span class="normal">374</span>
+<span class="normal">375</span>
+<span class="normal">376</span>
+<span class="normal">377</span>
+<span class="normal">378</span>
+<span class="normal">379</span>
+<span class="normal">380</span>
+<span class="normal">381</span>
+<span class="normal">382</span>
+<span class="normal">383</span>
+<span class="normal">384</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">fully_quantized</span><span class="p">(</span>
+        <span class="o">*</span><span class="p">,</span>
+        <span class="n">fwd_bits</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="mi">8</span><span class="p">,</span>
+        <span class="n">bwd_bits</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="mi">8</span><span class="p">,</span>
+        <span class="n">use_fwd_quant</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">use_stochastic_rounding</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="c1"># Typically we have (but it&#39;s a caller&#39;s responsibility to check):</span>
+        <span class="c1"># - vjp_lhs_stochastic_rounding is referring to the gradient and</span>
+        <span class="c1"># - vjp_rhs_stochastic_rounding is referring to the activations/weights.</span>
+        <span class="n">vjp_lhs_stochastic_rounding</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">vjp_rhs_stochastic_rounding</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="c1"># The dummy static bound flag is temporary, for performance benchmarking.</span>
+        <span class="n">use_dummy_static_bound</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">dlhs_local_aqt</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">LocalQ</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">drhs_local_aqt</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">LocalQ</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DotGeneral</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The fully_quantized function is a helper function that allows you to quickly</span>
+<span class="sd">    configure the dot_general primitive with all of its quantization parameters.</span>
+<span class="sd">    It takes in keyword arguments for each of the quantization parameters, and returns</span>
+<span class="sd">    a DotGeneral configuration object. The following table shows what each parameter does:</span>
+
+<span class="sd">    :param *: Indicate that all the parameters are keyword-only</span>
+<span class="sd">    :param fwd_bits: Optional[int]: Specify the number of bits used for forward quantization</span>
+<span class="sd">    :param bwd_bits: Optional[int]: Set the number of bits used for backpropagation</span>
+<span class="sd">    :param use_fwd_quant: bool: Control whether to quantize the</span>
+<span class="sd">    :param use_stochastic_rounding: Optional[bool]: Enable stochastic rounding</span>
+<span class="sd">    :param vjp_lhs_stochastic_rounding: Optional[bool]: Ensure that we don&#39;t mix</span>
+<span class="sd">    :param vjp_rhs_stochastic_rounding: Optional[bool]:</span>
+<span class="sd">    :param use_dummy_static_bound: bool: Set the static bound to 1</span>
+<span class="sd">    :param dlhs_local_aqt: Optional[LocalQ]: Specify the quantization scheme for the left-hand side of a matrix multiplication</span>
+<span class="sd">    :param drhs_local_aqt: Optional[LocalQ]: Specify the quantization scheme for the right hand side of a matrix multiplication</span>
+<span class="sd">    :param : Set the number of bits used for forward and backward pass</span>
+<span class="sd">    :return: A dotgeneral object, which is a</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">cfg</span> <span class="o">=</span> <span class="n">dot_general_make</span><span class="p">(</span>
+        <span class="n">lhs_bits</span><span class="o">=</span><span class="n">fwd_bits</span><span class="p">,</span>
+        <span class="n">rhs_bits</span><span class="o">=</span><span class="n">fwd_bits</span><span class="p">,</span>
+        <span class="n">bwd_bits</span><span class="o">=</span><span class="n">bwd_bits</span><span class="p">,</span>
+        <span class="n">use_fwd_quant</span><span class="o">=</span><span class="n">use_fwd_quant</span><span class="p">,</span>
+        <span class="n">dlhs_local_aqt</span><span class="o">=</span><span class="n">dlhs_local_aqt</span><span class="p">,</span>
+        <span class="n">drhs_local_aqt</span><span class="o">=</span><span class="n">drhs_local_aqt</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Stochastic Rounding</span>
+    <span class="c1"># These 3 variables are used to ensure we don&#39;t mix</span>
+    <span class="c1"># old and new style of SR configuration.</span>
+    <span class="n">old_style_sr_config</span> <span class="o">=</span> <span class="n">use_stochastic_rounding</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+    <span class="n">new_style_sr_config_lhs</span> <span class="o">=</span> <span class="n">vjp_lhs_stochastic_rounding</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+    <span class="n">new_style_sr_config_rhs</span> <span class="o">=</span> <span class="n">vjp_rhs_stochastic_rounding</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+    <span class="k">assert</span> <span class="n">new_style_sr_config_lhs</span> <span class="o">==</span> <span class="n">new_style_sr_config_rhs</span><span class="p">,</span> <span class="p">(</span>
+        <span class="s1">&#39;if you use new style SR config (vjp_xhs_stochastic_rounding), do pass&#39;</span>
+        <span class="s1">&#39; both lhs and rhs explicitely.&#39;</span>
+    <span class="p">)</span>
+    <span class="k">assert</span> <span class="n">new_style_sr_config_lhs</span> <span class="o">!=</span> <span class="n">old_style_sr_config</span>
+
+    <span class="n">true</span> <span class="o">=</span> <span class="kc">True</span>  <span class="c1"># A crude way to get around g-explicit-bool-comparison warning</span>
+
+    <span class="k">assert</span> <span class="ow">not</span> <span class="p">(</span><span class="n">vjp_lhs_stochastic_rounding</span> <span class="ow">and</span> <span class="n">vjp_rhs_stochastic_rounding</span><span class="p">),</span> <span class="p">(</span>
+        <span class="s1">&#39;This config is buggy when you set both to True. Contact lew@ or use&#39;</span>
+        <span class="s1">&#39; config_v3&#39;</span>
+    <span class="p">)</span>
+
+    <span class="c1"># By default use jax.uniform for stochastic rounding</span>
+    <span class="k">if</span> <span class="n">use_stochastic_rounding</span> <span class="o">==</span> <span class="n">true</span><span class="p">:</span>
+        <span class="n">set_stochastic_rounding</span><span class="p">(</span><span class="n">cfg</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="s1">&#39;jax.uniform&#39;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">vjp_lhs_stochastic_rounding</span> <span class="o">==</span> <span class="n">true</span><span class="p">:</span>
+        <span class="n">set_stochastic_rounding</span><span class="p">(</span><span class="n">cfg</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="s1">&#39;jax.uniform&#39;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">vjp_rhs_stochastic_rounding</span> <span class="o">==</span> <span class="n">true</span><span class="p">:</span>
+        <span class="n">set_stochastic_rounding</span><span class="p">(</span><span class="n">cfg</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="s1">&#39;jax.uniform&#39;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">use_dummy_static_bound</span><span class="p">:</span>
+        <span class="n">set_static_bound</span><span class="p">(</span><span class="n">cfg</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">cfg</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h2 id="src.fjformer.bits.config.set_accumulator_dtype" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">set_accumulator_dtype</span><span class="p">(</span><span class="n">cfg</span><span class="p">,</span> <span class="n">fwd_dtype</span><span class="p">,</span> <span class="n">dlhs_dtype</span><span class="p">,</span> <span class="n">drhs_dtype</span><span class="p">)</span></code>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>The set_accumulator_dtype function sets the accumulator dtype for each of the three
+differentiable functions.  The accumulator dtype is used to store intermediate results
+during forward and backward passes.  It is also used to store gradients during backward pass.
+The default value for this parameter is None, which means that it will be set automatically by
+the library based on other parameters such as input data types and output data type.</p>
+
+
+
+  <p><span class="doc-section-title">Parameters:</span></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr class="doc-section-item">
+          <td><code>cfg</code></td>
+          <td>
+                <code><a class="autorefs autorefs-internal" title="src.fjformer.bits.config.DotGeneral" href="#src.fjformer.bits.config.DotGeneral">DotGeneral</a></code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>DotGeneral: Set the accumulator dtype for all three</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr class="doc-section-item">
+          <td><code>fwd_dtype</code></td>
+          <td>
+                <code><span title="typing.Optional">Optional</span>[<span title="src.fjformer.bits.config.DType">DType</span>]</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Optional[DType]: Set the dtype of the forward pass</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr class="doc-section-item">
+          <td><code>dlhs_dtype</code></td>
+          <td>
+                <code><span title="typing.Optional">Optional</span>[<span title="src.fjformer.bits.config.DType">DType</span>]</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Optional[DType]: Set the data type of the left hand side</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr class="doc-section-item">
+          <td><code>drhs_dtype</code></td>
+          <td>
+                <code><span title="typing.Optional">Optional</span>[<span title="src.fjformer.bits.config.DType">DType</span>]</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Optional[DType]: Set the data type for the drhs accumulator</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr class="doc-section-item">
+          <td><code></code></td>
+          <td>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Set the dtype of the accumulator</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+          <details class="quote">
+            <summary>Source code in <code>src/fjformer/bits/config.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">126</span>
+<span class="normal">127</span>
+<span class="normal">128</span>
+<span class="normal">129</span>
+<span class="normal">130</span>
+<span class="normal">131</span>
+<span class="normal">132</span>
+<span class="normal">133</span>
+<span class="normal">134</span>
+<span class="normal">135</span>
+<span class="normal">136</span>
+<span class="normal">137</span>
+<span class="normal">138</span>
+<span class="normal">139</span>
+<span class="normal">140</span>
+<span class="normal">141</span>
+<span class="normal">142</span>
+<span class="normal">143</span>
+<span class="normal">144</span>
+<span class="normal">145</span>
+<span class="normal">146</span>
+<span class="normal">147</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">set_accumulator_dtype</span><span class="p">(</span>
+        <span class="n">cfg</span><span class="p">:</span> <span class="n">DotGeneral</span><span class="p">,</span>
+        <span class="n">fwd_dtype</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">DType</span><span class="p">],</span>
+        <span class="n">dlhs_dtype</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">DType</span><span class="p">],</span>
+        <span class="n">drhs_dtype</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">DType</span><span class="p">],</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The set_accumulator_dtype function sets the accumulator dtype for each of the three</span>
+<span class="sd">    differentiable functions.  The accumulator dtype is used to store intermediate results</span>
+<span class="sd">    during forward and backward passes.  It is also used to store gradients during backward pass.</span>
+<span class="sd">    The default value for this parameter is None, which means that it will be set automatically by</span>
+<span class="sd">    the library based on other parameters such as input data types and output data type.</span>
+
+<span class="sd">    :param cfg: DotGeneral: Set the accumulator dtype for all three</span>
+<span class="sd">    :param fwd_dtype: Optional[DType]: Set the dtype of the forward pass</span>
+<span class="sd">    :param dlhs_dtype: Optional[DType]: Set the data type of the left hand side</span>
+<span class="sd">    :param drhs_dtype: Optional[DType]: Set the data type for the drhs accumulator</span>
+<span class="sd">    :param : Set the dtype of the accumulator</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">cfg</span><span class="o">.</span><span class="n">fwd</span><span class="o">.</span><span class="n">dg_accumulator_dtype</span> <span class="o">=</span> <span class="n">fwd_dtype</span>
+    <span class="n">cfg</span><span class="o">.</span><span class="n">dlhs</span><span class="o">.</span><span class="n">dg_accumulator_dtype</span> <span class="o">=</span> <span class="n">dlhs_dtype</span>
+    <span class="n">cfg</span><span class="o">.</span><span class="n">drhs</span><span class="o">.</span><span class="n">dg_accumulator_dtype</span> <span class="o">=</span> <span class="n">drhs_dtype</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h2 id="src.fjformer.bits.config.set_fwd_numerics" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">set_fwd_numerics</span><span class="p">(</span><span class="n">cfg</span><span class="p">,</span> <span class="n">fwd_numerics</span><span class="p">)</span></code>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>The set_fwd_numerics function sets the numerics of the forward problem.</p>
+
+
+
+  <p><span class="doc-section-title">Parameters:</span></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr class="doc-section-item">
+          <td><code>cfg</code></td>
+          <td>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Store the configuration of the simulation</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr class="doc-section-item">
+          <td><code>fwd_numerics</code></td>
+          <td>
+                <code><a class="autorefs autorefs-internal" title="src.fjformer.bits.numerics.QNumerics" href="../generated-bits-numerics/#src.fjformer.bits.numerics.QNumerics">QNumerics</a></code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>numerics.QNumerics: Set the numerical</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+
+  <p><span class="doc-section-title">Returns:</span></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr class="doc-section-item">
+          <td>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The configuration object with the numerics for the forward problem set</p>
+            </div>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+          <details class="quote">
+            <summary>Source code in <code>src/fjformer/bits/config.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">114</span>
+<span class="normal">115</span>
+<span class="normal">116</span>
+<span class="normal">117</span>
+<span class="normal">118</span>
+<span class="normal">119</span>
+<span class="normal">120</span>
+<span class="normal">121</span>
+<span class="normal">122</span>
+<span class="normal">123</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">set_fwd_numerics</span><span class="p">(</span><span class="n">cfg</span><span class="p">,</span> <span class="n">fwd_numerics</span><span class="p">:</span> <span class="n">numerics</span><span class="o">.</span><span class="n">QNumerics</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The set_fwd_numerics function sets the numerics of the forward problem.</span>
+
+<span class="sd">    :param cfg: Store the configuration of the simulation</span>
+<span class="sd">    :param fwd_numerics: numerics.QNumerics: Set the numerical</span>
+<span class="sd">    :return: The configuration object with the numerics for the forward problem set</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">cfg</span><span class="o">.</span><span class="n">fwd</span><span class="o">.</span><span class="n">lhs</span><span class="o">.</span><span class="n">numerics</span> <span class="o">=</span> <span class="n">fwd_numerics</span>
+    <span class="n">cfg</span><span class="o">.</span><span class="n">fwd</span><span class="o">.</span><span class="n">rhs</span><span class="o">.</span><span class="n">numerics</span> <span class="o">=</span> <span class="n">fwd_numerics</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h2 id="src.fjformer.bits.config.set_static_bound" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">set_static_bound</span><span class="p">(</span><span class="n">cfg</span><span class="p">,</span> <span class="n">bound</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span></code>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>The set_static_bound function sets the calibration of all the forward and backward
+differentiation operators to a constant value. This is useful for testing purposes, as it
+allows us to check that our implementation is correct by comparing against known values.</p>
+
+
+
+  <p><span class="doc-section-title">Parameters:</span></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr class="doc-section-item">
+          <td><code>cfg</code></td>
+          <td>
+                <code><a class="autorefs autorefs-internal" title="src.fjformer.bits.config.DotGeneral" href="#src.fjformer.bits.config.DotGeneral">DotGeneral</a></code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>DotGeneral: Set the bounds for each of the six functions in a dotgeneral object</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr class="doc-section-item">
+          <td><code>bound</code></td>
+          <td>
+                <code>float</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>float: Set the bound of the calibration</p>
+            </div>
+          </td>
+          <td>
+                <code>1.0</code>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+          <details class="quote">
+            <summary>Source code in <code>src/fjformer/bits/config.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">180</span>
+<span class="normal">181</span>
+<span class="normal">182</span>
+<span class="normal">183</span>
+<span class="normal">184</span>
+<span class="normal">185</span>
+<span class="normal">186</span>
+<span class="normal">187</span>
+<span class="normal">188</span>
+<span class="normal">189</span>
+<span class="normal">190</span>
+<span class="normal">191</span>
+<span class="normal">192</span>
+<span class="normal">193</span>
+<span class="normal">194</span>
+<span class="normal">195</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">set_static_bound</span><span class="p">(</span><span class="n">cfg</span><span class="p">:</span> <span class="n">DotGeneral</span><span class="p">,</span> <span class="n">bound</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">):</span>
+
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The set_static_bound function sets the calibration of all the forward and backward</span>
+<span class="sd">    differentiation operators to a constant value. This is useful for testing purposes, as it</span>
+<span class="sd">    allows us to check that our implementation is correct by comparing against known values.</span>
+
+<span class="sd">    :param cfg: DotGeneral: Set the bounds for each of the six functions in a dotgeneral object</span>
+<span class="sd">    :param bound: float: Set the bound of the calibration</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">cfg</span><span class="o">.</span><span class="n">fwd</span><span class="o">.</span><span class="n">lhs</span><span class="o">.</span><span class="n">calibration</span> <span class="o">=</span> <span class="n">calibration</span><span class="o">.</span><span class="n">ConstantCalibration</span><span class="p">(</span><span class="n">bound</span><span class="p">)</span>
+    <span class="n">cfg</span><span class="o">.</span><span class="n">fwd</span><span class="o">.</span><span class="n">rhs</span><span class="o">.</span><span class="n">calibration</span> <span class="o">=</span> <span class="n">calibration</span><span class="o">.</span><span class="n">ConstantCalibration</span><span class="p">(</span><span class="n">bound</span><span class="p">)</span>
+    <span class="n">cfg</span><span class="o">.</span><span class="n">drhs</span><span class="o">.</span><span class="n">lhs</span><span class="o">.</span><span class="n">calibration</span> <span class="o">=</span> <span class="n">calibration</span><span class="o">.</span><span class="n">ConstantCalibration</span><span class="p">(</span><span class="n">bound</span><span class="p">)</span>
+    <span class="n">cfg</span><span class="o">.</span><span class="n">drhs</span><span class="o">.</span><span class="n">rhs</span><span class="o">.</span><span class="n">calibration</span> <span class="o">=</span> <span class="n">calibration</span><span class="o">.</span><span class="n">ConstantCalibration</span><span class="p">(</span><span class="n">bound</span><span class="p">)</span>
+    <span class="n">cfg</span><span class="o">.</span><span class="n">dlhs</span><span class="o">.</span><span class="n">lhs</span><span class="o">.</span><span class="n">calibration</span> <span class="o">=</span> <span class="n">calibration</span><span class="o">.</span><span class="n">ConstantCalibration</span><span class="p">(</span><span class="n">bound</span><span class="p">)</span>
+    <span class="n">cfg</span><span class="o">.</span><span class="n">dlhs</span><span class="o">.</span><span class="n">rhs</span><span class="o">.</span><span class="n">calibration</span> <span class="o">=</span> <span class="n">calibration</span><span class="o">.</span><span class="n">ConstantCalibration</span><span class="p">(</span><span class="n">bound</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h2 id="src.fjformer.bits.config.set_stochastic_rounding" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">set_stochastic_rounding</span><span class="p">(</span><span class="n">cfg</span><span class="p">,</span> <span class="n">vjp_lhs_stochastic_rounding</span><span class="p">,</span> <span class="n">vjp_rhs_stochastic_rounding</span><span class="p">,</span> <span class="n">implementation</span><span class="p">)</span></code>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Configure stochastic rounding implementation.</p>
+
+          <details class="quote">
+            <summary>Source code in <code>src/fjformer/bits/config.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">150</span>
+<span class="normal">151</span>
+<span class="normal">152</span>
+<span class="normal">153</span>
+<span class="normal">154</span>
+<span class="normal">155</span>
+<span class="normal">156</span>
+<span class="normal">157</span>
+<span class="normal">158</span>
+<span class="normal">159</span>
+<span class="normal">160</span>
+<span class="normal">161</span>
+<span class="normal">162</span>
+<span class="normal">163</span>
+<span class="normal">164</span>
+<span class="normal">165</span>
+<span class="normal">166</span>
+<span class="normal">167</span>
+<span class="normal">168</span>
+<span class="normal">169</span>
+<span class="normal">170</span>
+<span class="normal">171</span>
+<span class="normal">172</span>
+<span class="normal">173</span>
+<span class="normal">174</span>
+<span class="normal">175</span>
+<span class="normal">176</span>
+<span class="normal">177</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">set_stochastic_rounding</span><span class="p">(</span>
+        <span class="n">cfg</span><span class="p">:</span> <span class="n">DotGeneral</span><span class="p">,</span>
+        <span class="n">vjp_lhs_stochastic_rounding</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+        <span class="n">vjp_rhs_stochastic_rounding</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+        <span class="n">implementation</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Configure stochastic rounding implementation.&quot;&quot;&quot;</span>
+    <span class="n">noise_implementations</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;jax.uniform&#39;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">shape</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="n">jax</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">shape</span><span class="p">)</span> <span class="o">-</span> <span class="mf">0.5</span><span class="p">,</span>
+        <span class="s1">&#39;custom-1&#39;</span><span class="p">:</span> <span class="n">stochastic_rounding</span><span class="o">.</span><span class="n">random_centered_uniform</span><span class="p">,</span>
+    <span class="p">}</span>
+    <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">implementation</span><span class="si">}</span><span class="s1"> not supported.&#39;</span>
+    <span class="k">assert</span> <span class="n">implementation</span> <span class="ow">in</span> <span class="n">noise_implementations</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span> <span class="n">msg</span>
+    <span class="n">noise_fn</span> <span class="o">=</span> <span class="n">noise_implementations</span><span class="p">[</span><span class="n">implementation</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="n">vjp_lhs_stochastic_rounding</span><span class="p">:</span>
+        <span class="n">cfg</span><span class="o">.</span><span class="n">dlhs</span><span class="o">.</span><span class="n">lhs</span><span class="o">.</span><span class="n">numerics</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">dlhs</span><span class="o">.</span><span class="n">lhs</span><span class="o">.</span><span class="n">numerics</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">noise_fn</span><span class="o">=</span><span class="n">noise_fn</span><span class="p">)</span>
+        <span class="n">cfg</span><span class="o">.</span><span class="n">drhs</span><span class="o">.</span><span class="n">lhs</span><span class="o">.</span><span class="n">numerics</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">drhs</span><span class="o">.</span><span class="n">lhs</span><span class="o">.</span><span class="n">numerics</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">noise_fn</span><span class="o">=</span><span class="n">noise_fn</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">cfg</span><span class="o">.</span><span class="n">dlhs</span><span class="o">.</span><span class="n">lhs</span><span class="o">.</span><span class="n">numerics</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">dlhs</span><span class="o">.</span><span class="n">lhs</span><span class="o">.</span><span class="n">numerics</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">noise_fn</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+        <span class="n">cfg</span><span class="o">.</span><span class="n">drhs</span><span class="o">.</span><span class="n">lhs</span><span class="o">.</span><span class="n">numerics</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">drhs</span><span class="o">.</span><span class="n">lhs</span><span class="o">.</span><span class="n">numerics</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">noise_fn</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">vjp_rhs_stochastic_rounding</span><span class="p">:</span>
+        <span class="n">cfg</span><span class="o">.</span><span class="n">dlhs</span><span class="o">.</span><span class="n">rhs</span><span class="o">.</span><span class="n">numerics</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">dlhs</span><span class="o">.</span><span class="n">rhs</span><span class="o">.</span><span class="n">numerics</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">noise_fn</span><span class="o">=</span><span class="n">noise_fn</span><span class="p">)</span>
+        <span class="n">cfg</span><span class="o">.</span><span class="n">drhs</span><span class="o">.</span><span class="n">rhs</span><span class="o">.</span><span class="n">numerics</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">drhs</span><span class="o">.</span><span class="n">rhs</span><span class="o">.</span><span class="n">numerics</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">noise_fn</span><span class="o">=</span><span class="n">noise_fn</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">cfg</span><span class="o">.</span><span class="n">dlhs</span><span class="o">.</span><span class="n">rhs</span><span class="o">.</span><span class="n">numerics</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">dlhs</span><span class="o">.</span><span class="n">rhs</span><span class="o">.</span><span class="n">numerics</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">noise_fn</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+        <span class="n">cfg</span><span class="o">.</span><span class="n">drhs</span><span class="o">.</span><span class="n">rhs</span><span class="o">.</span><span class="n">numerics</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">drhs</span><span class="o">.</span><span class="n">rhs</span><span class="o">.</span><span class="n">numerics</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">noise_fn</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h2 id="src.fjformer.bits.config.tensor_make" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">tensor_make</span><span class="p">(</span><span class="n">bits</span><span class="p">)</span></code>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>The tensor_make function is a helper function that creates a Tensor object.</p>
+
+
+
+  <p><span class="doc-section-title">Parameters:</span></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr class="doc-section-item">
+          <td><code>bits</code></td>
+          <td>
+                <code><span title="typing.Optional">Optional</span>[int]</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>Optional[int]: Set the number of bits for quantization</p>
+            </div>
+          </td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+
+  <p><span class="doc-section-title">Returns:</span></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr class="doc-section-item">
+          <td>
+                <code><a class="autorefs autorefs-internal" title="src.fjformer.bits.config.Tensor" href="#src.fjformer.bits.config.Tensor">Tensor</a></code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>A tensor object</p>
+            </div>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+          <details class="quote">
+            <summary>Source code in <code>src/fjformer/bits/config.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">198</span>
+<span class="normal">199</span>
+<span class="normal">200</span>
+<span class="normal">201</span>
+<span class="normal">202</span>
+<span class="normal">203</span>
+<span class="normal">204</span>
+<span class="normal">205</span>
+<span class="normal">206</span>
+<span class="normal">207</span>
+<span class="normal">208</span>
+<span class="normal">209</span>
+<span class="normal">210</span>
+<span class="normal">211</span>
+<span class="normal">212</span>
+<span class="normal">213</span>
+<span class="normal">214</span>
+<span class="normal">215</span>
+<span class="normal">216</span>
+<span class="normal">217</span>
+<span class="normal">218</span>
+<span class="normal">219</span>
+<span class="normal">220</span>
+<span class="normal">221</span>
+<span class="normal">222</span>
+<span class="normal">223</span>
+<span class="normal">224</span>
+<span class="normal">225</span>
+<span class="normal">226</span>
+<span class="normal">227</span>
+<span class="normal">228</span>
+<span class="normal">229</span>
+<span class="normal">230</span>
+<span class="normal">231</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">tensor_make</span><span class="p">(</span><span class="n">bits</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s1">&#39;Tensor&#39;</span><span class="p">:</span>
+
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The tensor_make function is a helper function that creates a Tensor object.</span>
+
+<span class="sd">    :param bits: Optional[int]: Set the number of bits for quantization</span>
+<span class="sd">    :return: A tensor object</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">bits</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">effective_numerics</span> <span class="o">=</span> <span class="n">no_numerics</span><span class="o">.</span><span class="n">NoNumerics</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">pz</span> <span class="o">=</span> <span class="kc">False</span> <span class="k">if</span> <span class="n">bits</span> <span class="o">==</span> <span class="mi">1</span> <span class="k">else</span> <span class="kc">True</span>
+        <span class="n">dtype</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">int8</span> <span class="k">if</span> <span class="mi">2</span> <span class="o">&lt;=</span> <span class="n">bits</span> <span class="o">&lt;=</span> <span class="mi">8</span> <span class="ow">and</span> <span class="n">pz</span> <span class="k">else</span> <span class="kc">None</span>
+        <span class="n">effective_numerics</span> <span class="o">=</span> <span class="n">int_numerics</span><span class="o">.</span><span class="n">IntNumerics</span><span class="p">(</span>
+            <span class="n">bits</span><span class="o">=</span><span class="n">bits</span><span class="p">,</span>
+            <span class="n">preserve_zero</span><span class="o">=</span><span class="n">pz</span><span class="p">,</span>
+            <span class="n">preserve_max_val</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">clip</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="nb">round</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">noise_fn</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">clip_gradient</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>  <span class="c1"># This can be disabled when using abs-max scaling.</span>
+            <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">,</span>
+        <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">Tensor</span><span class="p">(</span>
+        <span class="n">numerics</span><span class="o">=</span><span class="n">effective_numerics</span><span class="p">,</span>
+        <span class="n">calib_shared_axes</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">scale_stop_grad</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">calibration</span><span class="o">=</span><span class="n">calibration</span><span class="o">.</span><span class="n">AbsMaxCalibration</span><span class="p">(),</span>
+        <span class="n">po2_scale</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">use_fake_quant</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">use_fwd_quant</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">preprocess</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div>
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Erfan Zare Chavoshi-FJFormer
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "..", "features": [], "search": "../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.5cfa9459.min.js"></script>
+      
+    
+  </body>
+</html>
