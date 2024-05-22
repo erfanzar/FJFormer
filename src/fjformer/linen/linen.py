@@ -25,11 +25,16 @@ from typing import (
     Tuple,
     Union,
     Mapping,
+    Dict,
+    TypeVar,
+    Hashable,
+    Protocol, Generic
 )
 import re
 import chex
 import flax.traverse_util
 import jax.tree_util
+from flax.core import FrozenDict
 from flax.linen.dtypes import promote_dtype
 from flax.linen.module import compact
 from flax.linen.module import Module
@@ -45,29 +50,103 @@ from jax import lax
 from flax.linen import initializers
 
 from flax.linen import dtypes, module, transforms
-from flax.typing import (
-    Array,
-    PRNGKey as PRNGKey,
-    Dtype,
-    Shape as Shape,
-    Initializer,
-    Axes,
-)
 
-field = dataclasses.field
-canonicalize_dtype = dtypes.canonicalize_dtype
-merge_param = module.merge_param
-map_variables = transforms.map_variables
+# General
+
+Array = Union[jax.Array, Any]
+PRNGKey = jax.Array
+RNGSequences = Dict[str, PRNGKey]
+Dtype = Union[jax.typing.DTypeLike, Any]
+Shape = Sequence[int]
+K = TypeVar('K')
+
+
+class Key(Hashable, Protocol):
+    def __lt__(self: K, value: K, /) -> bool:
+        ...
+
+
+Path = str
+PathParts = Tuple[Key, ...]
+
+Leaf = Any
+
+# Linear
 
 PrecisionLike = Union[
     None,
     str,
-    lax.Precision,
+    jax.lax.Precision,
     Tuple[str, str],
-    Tuple[lax.Precision, lax.Precision],
+    Tuple[jax.lax.Precision, jax.lax.Precision],
 ]
 DotGeneralT = Callable[..., Array]
 ConvGeneralDilatedT = Callable[..., Array]
+
+PaddingLike = Union[str, int, Sequence[Union[int, Tuple[int, int]]]]
+LaxPadding = Union[str, Sequence[Tuple[int, int]]]
+
+# Initializers
+
+Initializer = Union[jax.nn.initializers.Initializer, Callable[..., Any]]
+
+# Collections
+
+Collection = Mapping[str, Any]
+MutableCollection = Dict[str, Any]
+
+# Dicts
+
+VariableDict = Mapping[str, Collection]
+FrozenVariableDict = FrozenDict[str, Collection]
+MutableVariableDict = Dict[str, MutableCollection]
+
+PRNGFoldable = Union[int, str]
+
+# Axes
+
+T = TypeVar('T')
+
+
+@dataclasses.dataclass(frozen=True)
+class In(Generic[T]):
+    """Specifies a variable collection should only be lifted as input."""
+
+    axis: T
+
+
+@dataclasses.dataclass(frozen=True)
+class Out(Generic[T]):
+    """Specifies a variable collection should only be lifted as output."""
+
+    axis: T
+
+
+Axis = Optional[int]
+InOutAxis = Union[Axis, In[Axis], Out[Axis]]
+
+ScanAxis = int
+InOutScanAxis = Union[ScanAxis, In[ScanAxis], Out[ScanAxis]]
+
+Axes = Union[int, Sequence[int]]
+
+# SPMD
+
+LogicalNames = Tuple[Union[str, None], ...]
+
+# Maps each logical axis  to physical mesh, can be either None (replicated),
+# one physical axis or a tuple of physical axes.
+LogicalRules = Sequence[Tuple[str, Union[str, Tuple[str, ...], None]]]
+ArrayPytree = Any  # pylint: disable=invalid-name
+LogicalPartitionSpec = Any  # pylint: disable=invalid-name
+LogicalPartitionSpecPytree = Any  # pylint: disable=invalid-name
+PartitionSpecPytree = Any  # pylint: disable=invalid-name
+
+Sharding = Tuple[Optional[str], ...]
+field = dataclasses.field
+canonicalize_dtype = dtypes.canonicalize_dtype
+merge_param = module.merge_param
+map_variables = transforms.map_variables
 
 default_kernel_init = initializers.lecun_normal()
 
@@ -77,9 +156,10 @@ def quantize(
         int_dtype: jnp.dtype = jnp.int8,
 ) -> Tuple[jnp.ndarray, jnp.ndarray]:
     scale = jnp.max(jnp.abs(array), axis=-1, keepdims=True)
-    return jax.lax.convert_element_type(
+    array = jax.lax.convert_element_type(
         jnp.rint(array * ((jnp.iinfo(int_dtype).max + abs(jnp.iinfo(int_dtype).min)) / 2 / scale)), int_dtype
-    ), scale
+    )
+    return array, scale
 
 
 def de_quantize(

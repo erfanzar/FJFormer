@@ -32,10 +32,10 @@ def main():
         jax.random.randint(rng_gen.rng, (1, 68), minval=0, maxval=512)
     )
 
-    quantized_params = nn.quantize_params(params)
+    quantized_params = nn.quantize_parameters(["kernel", "embedding"], params)
 
     inputs = jax.random.randint(rng_gen.rng, (1, 1), minval=0, maxval=512)
-
+    print(quantized_params)
     org_pred = net.apply(params, inputs)
     qun_pred = net.apply(quantized_params, inputs)
     print(jnp.allclose(org_pred, qun_pred, rtol=1e-2, atol=1e-8))

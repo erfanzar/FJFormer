@@ -23,68 +23,8 @@ from .linen import (
 
 )
 
-from flax.linen.activation import (
-    GeGLU as GeGLU,
-    PReLU as PReLU,
-    celu as celu,
-    elu as elu,
-    gelu as gelu,
-    glu as glu,
-    hard_sigmoid as hard_sigmoid,
-    hard_silu as hard_silu,
-    hard_swish as hard_swish,
-    hard_tanh as hard_tanh,
-    leaky_relu as leaky_relu,
-    log_sigmoid as log_sigmoid,
-    log_softmax as log_softmax,
-    logsumexp as logsumexp,
-    normalize as normalize,
-    one_hot as one_hot,
-    relu6 as relu6,
-    relu as relu,
-    selu as selu,
-    sigmoid as sigmoid,
-    silu as silu,
-    soft_sign as soft_sign,
-    softmax as softmax,
-    softplus as softplus,
-    standardize as standardize,
-    swish as swish,
-    tanh as tanh,
-)
-
-from flax.linen.spmd import (
-    LogicallyPartitioned as LogicallyPartitioned,
-    get_logical_axis_rules as get_logical_axis_rules,
-    logical_axis_rules as logical_axis_rules,
-    logical_to_mesh,
-    logical_to_mesh_axes,
-    logical_to_mesh_sharding,
-    set_logical_axis_rules as set_logical_axis_rules,
-    with_logical_constraint,
-    with_logical_partitioning as with_logical_partitioning,
-)
-from flax.linen.stochastic import Dropout as Dropout
-
-from flax.linen.transforms import (
-    add_metadata_axis,
-    checkpoint as checkpoint,
-    cond as cond,
-    custom_vjp as custom_vjp,
-    jit as jit,
-    jvp as jvp,
-    map_variables as map_variables,
-    named_call as named_call,
-    remat_scan as remat_scan,
-    remat as remat,
-    scan as scan,
-    switch as switch,
-    vjp as vjp,
-    grad as grad,
-    value_and_grad as value_and_grad,
-    vmap as vmap,
-    while_loop as while_loop,
-)
+from flax.linen import *
+from flax.linen import Dropout
 
 __all__ = (
     "Linear",
