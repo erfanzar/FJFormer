@@ -12,7 +12,7 @@ class DummyNet(nn.Module):
 
         )(
             nn.Dense(
-                2
+                64
             )(
                 nn.Embed(
                     512, 1024
@@ -34,13 +34,14 @@ def main():
 
     quantized_params = nn.quantize_int8_parameters(["kernel", "embedding"], params)
 
-    inputs = jax.random.randint(rng_gen.rng, (1, 1), minval=0, maxval=512)
+    inputs = jax.random.randint(rng_gen.rng, (1, 128), minval=0, maxval=512)
     print(quantized_params)
     org_pred = net.apply(params, inputs)
     qun_pred = net.apply(quantized_params, inputs)
     print(jnp.allclose(org_pred, qun_pred, rtol=1e-2, atol=1e-8))
     print(org_pred)
     print(qun_pred)
+    print((qun_pred - org_pred).sum().mean())
 
 
 if __name__ == '__main__':

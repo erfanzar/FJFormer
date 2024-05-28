@@ -153,49 +153,49 @@ default_kernel_init = initializers.lecun_normal()
 
 def quantize(
         array: Array,
+        axis: int = -1
 ) -> Tuple[Array, Array, Array]:
-    absmax = jnp.max(jnp.abs(array))
-    x_norm = array / absmax
+    min_vals = jnp.min(array, axis=axis, keepdims=True)
+    max_vals = jnp.max(array, axis=axis, keepdims=True)
 
-    # Calculate zero point
-    zero_point = jnp.array(2 ** 7, dtype=jnp.int8)
+    # Compute the scaling factors
+    scale = (max_vals - min_vals) / (2 ** 7 - 1)
 
-    # Quantize with zero point offset and clip
-    x_quant = jnp.clip(
-        jnp.round(x_norm * (2 ** 7 - 1)).astype(jnp.int8) + zero_point,
-        jnp.iinfo(jnp.int8).min,
-        jnp.iinfo(jnp.int8).max
-    )
+    # Quantize the data
+    quantized_data = jnp.round((array - min_vals) / scale)
 
-    return x_quant, zero_point, absmax
+    # Clip the quantized values to ensure they lie within the representable range
+    quantized_data = jnp.clip(quantized_data, 0, 2 ** 7 - 1).astype(jnp.uint8)
+
+    return quantized_data, scale, min_vals
 
 
 def dequantize(
         array_quant: Array,
-        zero_point: Array,
-        absmax: Array,
+        scale: Array,
+        min_vals: Array,
         float_dtype: jnp.dtype = jnp.float16,
 ):
-    return ((array_quant.astype(float_dtype) - zero_point) / (2 ** (8 - 1) - 1)) * absmax
+    return array_quant * scale + min_vals
 
 
 @jax.tree_util.register_pytree_node_class
 @dataclasses.dataclass
 class Int8Params:
     kernel: Array
-    zero_point: Array
-    absmax: Array
+    scale: Array
+    min_vals: Array
 
     def tree_flatten(self):
-        return (self.kernel, self.zero_point, self.absmax), {}
+        return (self.kernel, self.scale, self.min_vals), {}
 
     @classmethod
     def tree_unflatten(cls, aux, data):
-        kernel, zero_point, absmax = data
+        kernel, scale, min_vals = data
         return cls(
             kernel=kernel,
-            zero_point=zero_point,
-            absmax=absmax
+            scale=scale,
+            min_vals=min_vals
         )
 
     @property
@@ -237,7 +237,7 @@ def dequantize_int8_parameters(
 ):
     def _q(pr):
         if isinstance(pr, Int8Params):
-            return jnp.array(dequantize(pr.kernel, pr.zero_point, pr.absmax, dtype))
+            return jnp.array(dequantize(pr.kernel, pr.scale, pr.min_vals, dtype))
         return pr
 
     prm = flax.traverse_util.flatten_dict(params)
@@ -265,8 +265,8 @@ def control_quantization(array, param_dtype):
     if isinstance(array, Int8Params):
         array = dequantize(
             array.kernel,
-            array.zero_point,
-            array.absmax,
+            array.scale,
+            array.min_vals,
             param_dtype,
         )
 
