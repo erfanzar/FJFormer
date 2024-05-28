@@ -11,7 +11,7 @@ class DummyNet(nn.Module):
         return nn.LayerNorm(
 
         )(
-            nn.Linear(
+            nn.Dense(
                 2
             )(
                 nn.Embed(
@@ -32,7 +32,7 @@ def main():
         jax.random.randint(rng_gen.rng, (1, 68), minval=0, maxval=512)
     )
 
-    quantized_params = nn.quantize_parameters(["kernel", "embedding"], params)
+    quantized_params = nn.quantize_int8_parameters(["kernel", "embedding"], params)
 
     inputs = jax.random.randint(rng_gen.rng, (1, 1), minval=0, maxval=512)
     print(quantized_params)

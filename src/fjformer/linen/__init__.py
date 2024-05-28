@@ -1,10 +1,12 @@
+from flax.linen import *
+from flax.linen import Dropout
 from .linen import (
-    Linear as Linear,
-    LinearBitKernel as LinearBitKernel,
+    Dense as Dense,
+    Int8Params as Int8Params,
     quantize as quantize,
-    de_quantize as de_quantize,
-    quantize_parameters as quantize_parameters,
-    de_quantize_params as de_quantize_params,
+    dequantize as dequantize,
+    quantize_int8_parameters as quantize_int8_parameters,
+    dequantize_int8_parameters as dequantize_int8_parameters,
     Conv as Conv,
     Embed as Embed,
     promote_dtype as promote_dtype,
@@ -23,16 +25,13 @@ from .linen import (
 
 )
 
-from flax.linen import *
-from flax.linen import Dropout
-
 __all__ = (
-    "Linear",
-    "LinearBitKernel",
+    "Dense",
+    "Int8Params",
     "quantize",
-    "de_quantize",
-    "quantize_parameters",
-    "de_quantize_params",
+    "dequantize",
+    "quantize_int8_parameters",
+    "dequantize_int8_parameters",
     "Conv",
     "Embed",
     "promote_dtype",

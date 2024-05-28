@@ -13,7 +13,7 @@
 # limitations under the License.
 # duplicated in order to add quantization parameters
 
-"""Linear modules."""
+"""Dense modules."""
 
 from typing import (
     Any,
@@ -71,7 +71,7 @@ PathParts = Tuple[Key, ...]
 
 Leaf = Any
 
-# Linear
+# Dense
 
 PrecisionLike = Union[
     None,
@@ -152,30 +152,51 @@ default_kernel_init = initializers.lecun_normal()
 
 
 def quantize(
-        array: jnp.ndarray,
-        int_dtype: jnp.dtype = jnp.int8,
-) -> Tuple[jnp.ndarray, jnp.ndarray]:
-    scale = jnp.max(jnp.abs(array), axis=-1, keepdims=True)
-    array = jax.lax.convert_element_type(
-        jnp.rint(array * ((jnp.iinfo(int_dtype).max + abs(jnp.iinfo(int_dtype).min)) / 2 / scale)), int_dtype
+        array: Array,
+) -> Tuple[Array, Array, Array]:
+    absmax = jnp.max(jnp.abs(array))
+    x_norm = array / absmax
+
+    # Calculate zero point
+    zero_point = jnp.array(2 ** 7, dtype=jnp.int8)
+
+    # Quantize with zero point offset and clip
+    x_quant = jnp.clip(
+        jnp.round(x_norm * (2 ** 7 - 1)).astype(jnp.int8) + zero_point,
+        jnp.iinfo(jnp.int8).min,
+        jnp.iinfo(jnp.int8).max
     )
-    return array, scale
+
+    return x_quant, zero_point, absmax
 
 
-def de_quantize(
-        quantized: jnp.ndarray,
-        scale: jnp.ndarray,
+def dequantize(
+        array_quant: Array,
+        zero_point: Array,
+        absmax: Array,
         float_dtype: jnp.dtype = jnp.float16,
-        threshold: float = 1e-6
 ):
-    max_scale = (jnp.iinfo(quantized.dtype).max + abs(jnp.iinfo(quantized.dtype).min)) / 2
-    return ((jax.lax.convert_element_type(quantized, float_dtype) * scale) / max_scale) + threshold
+    return ((array_quant.astype(float_dtype) - zero_point) / (2 ** (8 - 1) - 1)) * absmax
 
 
-@flax.struct.dataclass
-class LinearBitKernel:
+@jax.tree_util.register_pytree_node_class
+@dataclasses.dataclass
+class Int8Params:
     kernel: Array
-    scale: Array
+    zero_point: Array
+    absmax: Array
+
+    def tree_flatten(self):
+        return (self.kernel, self.zero_point, self.absmax), {}
+
+    @classmethod
+    def tree_unflatten(cls, aux, data):
+        kernel, zero_point, absmax = data
+        return cls(
+            kernel=kernel,
+            zero_point=zero_point,
+            absmax=absmax
+        )
 
     @property
     def shape(self):
@@ -194,41 +215,29 @@ class LinearBitKernel:
         return self.kernel.size
 
 
-# jax.tree_util.register_pytree_node(
-#     LinearBitKernel,
-#     lambda x: ([x.kernel, x.scale], ()),
-#     lambda _, children: LinearBitKernel(children[0], children[1])
-# )
-
-def quantize_parameters(
+def quantize_int8_parameters(
         filter_list_quantization: list,
         params: dict,
-        int_dtype: jnp.dtype = jnp.int8
 ):
     pattern = re.compile("({})".format("|".join(filter_list_quantization)))
 
-    def lam_func(path, array):
+    def lam_func(path, array: Array):
         if pattern.search("/".join(p.key for p in path)):
-            return LinearBitKernel(
-                *quantize(array, int_dtype=int_dtype)
-            )
+            array = Int8Params(*quantize(array))
+            return array
         return array
 
     return jax.tree_util.tree_map_with_path(lam_func, params)
 
 
-def de_quantize_params(
+def dequantize_int8_parameters(
         params: jax.tree_util.PyTreeDef,
         dtype: jnp.dtype = jnp.float32,
         shard_funcs: Optional[Mapping[str, Callable[[chex.Array], chex.Array]]] = None
 ):
     def _q(pr):
-        if isinstance(pr, LinearBitKernel):
-            return jnp.array(
-                de_quantize(
-                    pr.kernel, pr.scale, dtype, 0
-                )
-            )
+        if isinstance(pr, Int8Params):
+            return jnp.array(dequantize(pr.kernel, pr.zero_point, pr.absmax, dtype))
         return pr
 
     prm = flax.traverse_util.flatten_dict(params)
@@ -253,17 +262,18 @@ def _canonicalize_tuple(x: Union[Sequence[int], int]) -> Tuple[int, ...]:
 
 
 def control_quantization(array, param_dtype):
-    if isinstance(array, LinearBitKernel):
-        array = de_quantize(
+    if isinstance(array, Int8Params):
+        array = dequantize(
             array.kernel,
-            array.scale,
+            array.zero_point,
+            array.absmax,
             param_dtype,
-            .0
         )
+
     return array
 
 
-class Linear(Module):
+class Dense(Module):
     """A linear transformation applied over the last dimension of the input.
 
     Attributes:
@@ -343,10 +353,6 @@ def _conv_dimension_numbers(input_shape):
     rhs_spec = (ndim - 1, ndim - 2) + tuple(range(0, ndim - 2))
     out_spec = lhs_spec
     return lax.ConvDimensionNumbers(lhs_spec, rhs_spec, out_spec)
-
-
-PaddingLike = Union[str, int, Sequence[Union[int, Tuple[int, int]]]]
-LaxPadding = Union[str, Sequence[Tuple[int, int]]]
 
 
 def canonicalize_padding(padding: PaddingLike, rank: int) -> LaxPadding:
@@ -430,7 +436,7 @@ class _Conv(Module):
     conv_general_dilated_cls: Any = None
 
     @property
-    def shared_weights(self) -> bool:  # type: ignore
+    def shared_weights(self) -> bool:  # noqa
         """Defines whether weights are shared or not between different pixels.
 
         Returns:
@@ -585,7 +591,7 @@ class _Conv(Module):
                 bias_shape = (self.features,)
             else:
                 # One bias weight per output entry, unshared betwen pixels.
-                bias_shape = conv_output_shape[1:]  # type: ignore
+                bias_shape = conv_output_shape[1:]  # noqa
 
             bias = self.param("bias", self.bias_init, bias_shape, self.param_dtype)
             bias = control_quantization(bias, self.param_dtype)
@@ -629,7 +635,7 @@ class _Conv(Module):
             y += bias
 
         if num_batch_dimensions != 1:
-            output_shape = input_batch_shape + y.shape[1:]
+            output_shape = input_batch_shape + y.shape[1:]  # noqa
             y = jnp.reshape(y, output_shape)
         return y
 
@@ -899,7 +905,7 @@ class ConvTranspose(Module):
             y += jnp.reshape(bias, (1,) * (y.ndim - 1) + (-1,))
 
         if num_batch_dimensions != 1:
-            output_shape = input_batch_shape + y.shape[1:]
+            output_shape = input_batch_shape + y.shape[1:]  # noqa
             y = jnp.reshape(y, output_shape)
 
         return y
@@ -1771,7 +1777,7 @@ class SpectralNorm(Module):
             u0 = _l2_normalize(jnp.matmul(v0, value), eps=self.epsilon)
 
         u0 = jax.lax.stop_gradient(u0)
-        v0 = jax.lax.stop_gradient(v0)
+        v0 = jax.lax.stop_gradient(v0)  # noqa
 
         sigma = jnp.matmul(jnp.matmul(v0, value), jnp.transpose(u0))[0, 0]
 
