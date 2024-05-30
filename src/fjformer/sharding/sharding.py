@@ -13,7 +13,7 @@ from jax.sharding import Mesh
 from typing import Sequence
 
 
-def make_shard_and_gather_fns(partition_specs, dtype_specs=None):
+def make_shard_and_gather_fns(partition_specs, mesh, dtype_specs=None):
     """
     The make_shard_and_gather_fns function takes in a partition_specs and dtype_specs,
     and returns two functions: shard_fns and gather_fns. The shard function is used to
@@ -42,7 +42,7 @@ def make_shard_and_gather_fns(partition_specs, dtype_specs=None):
         jax_shard_function = jax.jit(
             make_to_dtype_fn(dtype_spec),
             in_shardings=None,
-            out_shardings=partition_spec
+            out_shardings=jax.sharding.NamedSharding(spec=partition_spec, mesh=mesh)
         )
 
         def shard_fn(tensor):
@@ -53,8 +53,8 @@ def make_shard_and_gather_fns(partition_specs, dtype_specs=None):
     def make_gather_fn(partition_spec, dtype_spec=None):
         jax_gather_fn = jax.jit(
             make_to_dtype_fn(dtype_spec),
-            in_shardings=partition_spec,
-            out_shardings=jax.sharding.PartitionSpec(),
+            in_shardings=jax.sharding.NamedSharding(spec=partition_spec, mesh=mesh),
+            out_shardings=jax.sharding.NamedSharding(spec=jax.sharding.PartitionSpec(), mesh=mesh),
         )
 
         def gather_fn(tensor):
