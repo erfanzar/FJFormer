@@ -13,7 +13,7 @@ from jax.sharding import Mesh
 from typing import Sequence
 
 
-def make_shard_and_gather_fns(partition_specs, mesh: Mesh, dtype_specs=None):
+def make_shard_and_gather_fns(partition_specs, dtype_specs=None):
     """
     The make_shard_and_gather_fns function takes in a partition_specs and dtype_specs,
     and returns two functions: shard_fns and gather_fns. The shard function is used to
@@ -21,7 +21,6 @@ def make_shard_and_gather_fns(partition_specs, mesh: Mesh, dtype_specs=None):
     gather all the shards back together into one tensor.
 
     :param partition_specs: Specify the sharding of the input tensor
-    :param mesh: Mesh to shard the input
     :param dtype_specs: Specify the dtype of the tensor
     :return: A tuple of functions
     

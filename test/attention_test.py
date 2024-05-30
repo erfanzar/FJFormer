@@ -7,9 +7,6 @@ os.environ['JAX_TRACEBACK_FILTERING'] = 'off'
 from flax.linen.attention import dot_product_attention, make_attention_mask, make_causal_mask, combine_masks
 
 from src.fjformer.pallas_operations import flash_attention
-import pandas as pd
-import matplotlib.pyplot as plt
-import seaborn as sns
 from jax import random, numpy as jnp
 
 batch = 1
