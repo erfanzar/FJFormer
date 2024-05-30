@@ -3,7 +3,6 @@ import jax.numpy as jnp
 import re
 
 from jax.experimental.mesh_utils import create_device_mesh
-from jax.experimental.pjit import pjit
 from jax.lax import with_sharding_constraint as _with_sharding_constraint
 import numpy as np
 from jax.sharding import PartitionSpec as PS
@@ -14,7 +13,7 @@ from jax.sharding import Mesh
 from typing import Sequence
 
 
-def make_shard_and_gather_fns(partition_specs, dtype_specs=None):
+def make_shard_and_gather_fns(partition_specs, mesh: Mesh, dtype_specs=None):
     """
     The make_shard_and_gather_fns function takes in a partition_specs and dtype_specs,
     and returns two functions: shard_fns and gather_fns. The shard function is used to
@@ -22,6 +21,7 @@ def make_shard_and_gather_fns(partition_specs, dtype_specs=None):
     gather all the shards back together into one tensor.
 
     :param partition_specs: Specify the sharding of the input tensor
+    :param mesh: Mesh to shard the input
     :param dtype_specs: Specify the dtype of the tensor
     :return: A tuple of functions
     
@@ -30,17 +30,17 @@ def make_shard_and_gather_fns(partition_specs, dtype_specs=None):
 
     def make_to_dtype_fn(dtype_spec):
         def to_dtype(tensor):
-            if dtype_specs in float_dtypes and getattr(tensor, 'dtype', None) in float_dtypes:
-                # force np array to jax numpy array
-                return jnp.asarray(tensor).astype(dtype_specs)
-            elif hasattr(dtype_spec, 'dtype') and hasattr(tensor, 'dtype'):
-                return jnp.asarray(tensor).astype(dtype_spec.dtype)
-            return jnp.asarray(tensor)
+            assert isinstance(tensor, jax.Array)
+            if dtype_specs in float_dtypes and getattr(tensor, "dtype", None) in float_dtypes:
+                return tensor.astype(dtype_specs)
+            elif hasattr(dtype_spec, "dtype") and hasattr(tensor, "dtype"):
+                return tensor.astype(dtype_spec.dtype)
+            return tensor
 
         return to_dtype
 
     def make_shard_fn(partition_spec, dtype_spec=None):
-        jax_shard_function = pjit(
+        jax_shard_function = jax.jit(
             make_to_dtype_fn(dtype_spec),
             in_shardings=None,
             out_shardings=partition_spec
@@ -52,10 +52,10 @@ def make_shard_and_gather_fns(partition_specs, dtype_specs=None):
         return shard_fn
 
     def make_gather_fn(partition_spec, dtype_spec=None):
-        jax_gather_fn = pjit(
+        jax_gather_fn = jax.jit(
             make_to_dtype_fn(dtype_spec),
             in_shardings=partition_spec,
-            out_shardings=None
+            out_shardings=jax.sharding.PartitionSpec(),
         )
 
         def gather_fn(tensor):
@@ -67,12 +67,8 @@ def make_shard_and_gather_fns(partition_specs, dtype_specs=None):
         shard_fns = jax.tree_util.tree_map(make_shard_fn, partition_specs)
         gather_fns = jax.tree_util.tree_map(make_gather_fn, partition_specs)
     else:
-        shard_fns = jax.tree_util.tree_map(
-            make_shard_fn, partition_specs, dtype_specs
-        )
-        gather_fns = jax.tree_util.tree_map(
-            make_gather_fn, partition_specs, dtype_specs
-        )
+        shard_fns = jax.tree_util.tree_map(make_shard_fn, partition_specs, dtype_specs)
+        gather_fns = jax.tree_util.tree_map(make_gather_fn, partition_specs, dtype_specs)
     return shard_fns, gather_fns
 
 
@@ -82,30 +78,30 @@ def get_jax_mesh(axis_dims, names):
         &lt;axis_dims&gt;
     where axis_dims is a comma-separated list of dimensions, each dimension being either:
         &lt;name&gt;:&lt;dim&gt;  or  &lt;dim&gt;
-    If there are no names, then the default names 'x', 'y', and 'z' will be used. If there are fewer than three dimensions, then the remaining dimensions will be set to 1. For example:
+    If there are no names, then the default names "x", "y", and "z" will be used. If there are fewer than three dimensions, then the remaining dimensions will be set to 1. For example:
 
     :param axis_dims: Specify the dimensions of the mesh
     :param names: Specify the names of the dimensions in
     :return: A mesh object
     
     """
-    if axis_dims.startswith('!'):
+    if axis_dims.startswith("!"):
         mesh_axis_splitting = True
         axis_dims = axis_dims[1:]
     else:
         mesh_axis_splitting = False
 
-    if ':' in axis_dims:
+    if ":" in axis_dims:
         dims = []
         dim_names = []
-        for axis in axis_dims.split(','):
-            name, dim = axis.split(':')
+        for axis in axis_dims.split(","):
+            name, dim = axis.split(":")
             assert name in names
             dims.append(int(dim))
             dim_names.append(name)
         assert (set(dim_names) == set(names))
     else:
-        dims = [int(x) for x in axis_dims.split(',')]
+        dims = [int(x) for x in axis_dims.split(",")]
         dim_names = names
     assert len(dims) == len(names)
     mesh_shape = np.arange(jax.device_count()).reshape(dims).shape
@@ -131,9 +127,9 @@ def names_in_current_mesh(*names):
 def get_names_from_partition_spec(partition_specs):
     """
     The get_names_from_partition_spec function takes a partition_specs argument, which is either a dictionary or list.
-    If it's a dictionary, the function converts it to a list of values. Then for each item in the partition_specs list:
+    If it"s a dictionary, the function converts it to a list of values. Then for each item in the partition_specs list:
         If the item is None, continue (do nothing) and move on to next iteration of loop.
-        If the item is an instance of str (i.e., if it's just one string), add that string to names set and move on to next iteration of loop.
+        If the item is an instance of str (i.e., if it"s just one string), add that string to names set and move on to next iteration of loop.
         Otherwise (if not None or str), call get_names_from_partition_spec recurs
 
     :param partition_specs: Specify the partitioning of the data
@@ -263,14 +259,14 @@ def match_partition_rules(rules, params):
 
     def get_partition_spec(name, leaf):
         if len(leaf.shape) == 0 or np.prod(leaf.shape) == 1:
-            """ Don't partition scalar values. """
+            """ Don"t partition scalar values. """
             return PS()
         for rule, ps in rules:
             if re.search(rule, name) is not None:
                 return ps
-        raise ValueError(f'Partition rule not found for param: {name}')
+        raise ValueError(f"Partition rule not found for param: {name}")
 
-    return named_tree_map(get_partition_spec, params, sep='/')
+    return named_tree_map(get_partition_spec, params, sep="/")
 
 
 def get_weight_decay_mask(exclusions):
@@ -285,7 +281,7 @@ def get_weight_decay_mask(exclusions):
         return True
 
     def weight_decay_mask(params):
-        return named_tree_map(decay, params, sep='/')
+        return named_tree_map(decay, params, sep="/")
 
     return weight_decay_mask
 

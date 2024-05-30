@@ -13,10 +13,12 @@ nav:
   - Checkpoint:
     - Load: generated-checkpoint-_load.md
     - Streamer: generated-checkpoint-streamer.md
-  - Func:
-    - Func: generated-func-_func.md
-    - Loss Func: generated-func-loss_func.md
+  - Functions:
+    - Func: generated-functions-_func.md
+    - Loss Func: generated-functions-loss_func.md
   - Home: index.md
+  - Linen:
+    - Linen: generated-linen-linen.md
   - Monitor:
     - Tracker: generated-monitor-tracker.md
   - Optimizers:
@@ -28,14 +30,11 @@ nav:
   - Pallas Operations:
     - Efficient Attention:
       - Efficient Attention: generated-pallas_operations-efficient_attention-efficient_attention.md
-    - Flash Attention:
-      - Gpu:
-        - Jax Flash Attn Gpu: generated-pallas_operations-flash_attention-gpu-jax_flash_attn_gpu.md
-      - Tpu:
-        - Jax Flash Attn Tpu: generated-pallas_operations-flash_attention-tpu-jax_flash_attn_tpu.md
     - Layer Norm:
       - Gpu:
         - Layer Norm: generated-pallas_operations-layer_norm-gpu-layer_norm.md
+    - Pallas Flash Attention:
+      - Attention: generated-pallas_operations-pallas_flash_attention-attention.md
     - Ring Attention:
       - Ring Attention: generated-pallas_operations-ring_attention-ring_attention.md
     - Rms Norm:
@@ -49,9 +48,14 @@ nav:
         - Splash Attention Kernel: generated-pallas_operations-splash_attention-tpu-splash_attention_kernel.md
         - Splash Attention Mask: generated-pallas_operations-splash_attention-tpu-splash_attention_mask.md
         - Splash Attention Mask Info: generated-pallas_operations-splash_attention-tpu-splash_attention_mask_info.md
-  - Partition Utils:
-    - Mesh Utils: generated-partition_utils-mesh_utils.md
-    - T5x Partitioning: generated-partition_utils-t5x_partitioning.md
+    - Tpu Flash Attention:
+      - Gpu:
+        - Jax Flash Attn Gpu: generated-pallas_operations-tpu_flash_attention-gpu-jax_flash_attn_gpu.md
+      - Tpu:
+        - Jax Flash Attn Tpu: generated-pallas_operations-tpu_flash_attention-tpu-jax_flash_attn_tpu.md
+  - Sharding:
+    - Sharding: generated-sharding-sharding.md
+    - T5x Partitioning: generated-sharding-t5x_partitioning.md
   - Utils: generated-utils.md
   - Xrapture:
     - Implicit Array: generated-xrapture-implicit_array.md

@@ -1,4 +1,4 @@
-from .mesh_utils import (
+from .sharding import (
     get_jax_mesh,
     names_in_current_mesh,
     get_names_from_partition_spec,

@@ -7,7 +7,7 @@ from .checkpoint import (
     get_dtype as get_dtype,
 )
 
-from .partition_utils import (
+from .sharding import (
     get_jax_mesh as get_jax_mesh,
     names_in_current_mesh as names_in_current_mesh,
     get_names_from_partition_spec as get_names_from_partition_spec,
@@ -32,7 +32,7 @@ from .monitor import (
     initialise_tracking as smi_initialise_tracking
 )
 
-from .func import (
+from .functions import (
     average_metrics as average_metrics,
     global_norm as global_norm,
     transpose as transpose,
@@ -68,7 +68,7 @@ from . import pallas_operations as pallas_operations
 from . import optimizers as optimizers
 from . import linen as linen
 
-__version__ = "0.0.61"
+__version__ = "0.0.62"
 
 __all__ = (
     # Loss and extra function

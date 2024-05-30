@@ -307,7 +307,7 @@ class CheckpointManager(object):
         :param state_target: Specify the target for the train state
         :param state_shard_fns: Specify the sharding function
         :param disallow_state: Prevent loading the entire state
-        :param mismatch_allowed: when ever to allow shard func to be None
+        :param mismatch_allowed: when ever to allow shard functions to be None
         :return: A tuple of two objects, the state and restored_params
         
         """
