@@ -23,7 +23,7 @@ def make_shard_and_gather_fns(partition_specs, mesh, dtype_specs=None):
     :param partition_specs: Specify the sharding of the input tensor
     :param dtype_specs: Specify the dtype of the tensor
     :return: A tuple of functions
-    
+
     """
     float_dtypes = (jnp.bfloat16, jnp.float16, jnp.float32, jnp.float64)
 
@@ -82,7 +82,7 @@ def get_jax_mesh(axis_dims, names):
     :param axis_dims: Specify the dimensions of the mesh
     :param names: Specify the names of the dimensions in
     :return: A mesh object
-    
+
     """
     if axis_dims.startswith("!"):
         mesh_axis_splitting = True
@@ -117,7 +117,7 @@ def names_in_current_mesh(*names):
 
     :param *names: Pass in a list of names to the function
     :return: A boolean indicating whether
-    
+
     """
     mesh_axis_names = pxla.thread_resources.env.physical_mesh.axis_names
     return set(names) <= set(mesh_axis_names)
@@ -133,7 +133,7 @@ def get_names_from_partition_spec(partition_specs):
 
     :param partition_specs: Specify the partitioning of the data
     :return: A list of names
-    
+
     """
     names = set()
     if isinstance(partition_specs, dict):
@@ -183,7 +183,7 @@ def get_metrics(metrics, unreplicate=False, stack=False):
     :param unreplicate: Convert the metrics from a replicated
     :param stack: Stack the metrics in a list
     :return: A dictionary of metrics
-    
+
     """
     if unreplicate:
         metrics = flax.jax_utils.unreplicate(metrics)
@@ -201,7 +201,7 @@ def tree_path_to_string(path, sep=None):
     :param path: Specify the path of the tree
     :param sep: Join the keys with a separator
     :return: A tuple of strings
-    
+
     """
     keys = []
     for key in path:
@@ -231,7 +231,7 @@ def flatten_tree(xs, is_leaf=None, sep=None):
     :param is_leaf: Determine if a node is a leaf
     :param sep: Specify the separator between each key in the path
     :return: A dict of flattened tree paths to values
-    
+
     """
     flattened, _ = jax.tree_util.tree_flatten_with_path(xs, is_leaf=is_leaf)
     output = {}
