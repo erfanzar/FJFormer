@@ -5,21 +5,21 @@ authors = [
 ]
 requires-python = ">=3.8"
 readme = "README.md"
-version = "0.0.64"
+version = "0.0.65"
 
 dependencies = [
-    "jax>=0.4.20",
-    "jaxlib>=0.4.20",
+    "jax>=0.4.23",
+    "jaxlib>=0.4.23",
+    "optax~=0.2.2",
+    "msgpack~=1.0.7",
+    "ipython~=8.17.2",
+    "tqdm~=4.64.1",
     "numpy~=1.26.2",
+    "scipy==1.13.1",
     "typing~=3.7.4.3",
     "flax>=0.8.0",
     "chex>=0.1.7",
-    "ipython~=8.17.2",
-    "datasets~=2.14.7",
     "einops==0.8.0",
-    "msgpack~=1.0.7",
-    "tqdm~=4.64.1",
-    "optax~=0.1.7",
     "ml_collections==0.1.1",
     "plum-dispatch==2.3.2",
     "termcolor"
