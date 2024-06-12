@@ -1,19 +1,18 @@
 import jax
-import jax.numpy as jnp
 import re
 
 from jax.experimental.mesh_utils import create_device_mesh
 from jax.lax import with_sharding_constraint as _with_sharding_constraint
 import numpy as np
-from jax.sharding import PartitionSpec as PS
+from jax.sharding import PartitionSpec, NamedSharding
 from jax.experimental import mesh_utils
 from jax.interpreters import pxla
 import flax
 from jax.sharding import Mesh
-from typing import Sequence
+from typing import Sequence, Optional
 
 
-def make_shard_and_gather_fns(partition_specs, mesh, dtype_specs=None):
+def make_shard_and_gather_fns(partition_specs, mesh: Optional[jax.sharding.Mesh] = None):
     """
     The make_shard_and_gather_fns function takes in a partition_specs and dtype_specs,
     and returns two functions: shard_fns and gather_fns. The shard function is used to
@@ -21,28 +20,23 @@ def make_shard_and_gather_fns(partition_specs, mesh, dtype_specs=None):
     gather all the shards back together into one tensor.
 
     :param partition_specs: Specify the sharding of the input tensor
-    :param dtype_specs: Specify the dtype of the tensor
+    :param mesh: jax.sharding.Mesh to create namedSharding
     :return: A tuple of functions
 
     """
-    float_dtypes = (jnp.bfloat16, jnp.float16, jnp.float32, jnp.float64)
+    if mesh is None:
+        mesh = jax.interpreters.pxla.thread_resources.env.physical_mesh
+        assert not mesh.empty, (
+            "you should pass mesh to `make_shard_and_gather_fns` or"
+            " at least call that under mesh context manager"
+        )
+    named_shardings = jax.tree_map(lambda p: NamedSharding(mesh=mesh, spec=p), partition_specs)
 
-    def make_to_dtype_fn(dtype_spec):
-        def to_dtype(tensor):
-            assert isinstance(tensor, jax.Array)
-            if dtype_specs in float_dtypes and getattr(tensor, "dtype", None) in float_dtypes:
-                return tensor.astype(dtype_specs)
-            elif hasattr(dtype_spec, "dtype") and hasattr(tensor, "dtype"):
-                return tensor.astype(dtype_spec.dtype)
-            return tensor
-
-        return to_dtype
-
-    def make_shard_fn(partition_spec, dtype_spec=None):
+    def make_shard_fn(partition_spec):
         jax_shard_function = jax.jit(
-            make_to_dtype_fn(dtype_spec),
+            lambda x: x,
             in_shardings=None,
-            out_shardings=jax.sharding.NamedSharding(spec=partition_spec, mesh=mesh)
+            out_shardings=partition_spec
         )
 
         def shard_fn(tensor):
@@ -50,11 +44,11 @@ def make_shard_and_gather_fns(partition_specs, mesh, dtype_specs=None):
 
         return shard_fn
 
-    def make_gather_fn(partition_spec, dtype_spec=None):
+    def make_gather_fn(partition_spec):
         jax_gather_fn = jax.jit(
-            make_to_dtype_fn(dtype_spec),
-            in_shardings=jax.sharding.NamedSharding(spec=partition_spec, mesh=mesh),
-            out_shardings=jax.sharding.NamedSharding(spec=jax.sharding.PartitionSpec(), mesh=mesh),
+            lambda x: x,
+            in_shardings=partition_spec,
+            out_shardings=NamedSharding(mesh, PartitionSpec()),
         )
 
         def gather_fn(tensor):
@@ -62,12 +56,8 @@ def make_shard_and_gather_fns(partition_specs, mesh, dtype_specs=None):
 
         return gather_fn
 
-    if dtype_specs is None or dtype_specs in float_dtypes:
-        shard_fns = jax.tree_util.tree_map(make_shard_fn, partition_specs)
-        gather_fns = jax.tree_util.tree_map(make_gather_fn, partition_specs)
-    else:
-        shard_fns = jax.tree_util.tree_map(make_shard_fn, partition_specs, dtype_specs)
-        gather_fns = jax.tree_util.tree_map(make_gather_fn, partition_specs, dtype_specs)
+    shard_fns = jax.tree_util.tree_map(make_shard_fn, named_shardings)
+    gather_fns = jax.tree_util.tree_map(make_gather_fn, named_shardings)
     return shard_fns, gather_fns
 
 
@@ -259,7 +249,7 @@ def match_partition_rules(rules, params):
     def get_partition_spec(name, leaf):
         if len(leaf.shape) == 0 or np.prod(leaf.shape) == 1:
             """ Don"t partition scalar values. """
-            return PS()
+            return PartitionSpec()
         for rule, ps in rules:
             if re.search(rule, name) is not None:
                 return ps

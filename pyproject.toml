@@ -5,7 +5,7 @@ authors = [
 ]
 requires-python = ">=3.8"
 readme = "README.md"
-version = "0.0.65"
+version = "0.0.66"
 
 dependencies = [
     "jax>=0.4.23",
@@ -20,7 +20,7 @@ dependencies = [
     "flax>=0.8.0",
     "chex>=0.1.7",
     "einops==0.8.0",
-    "ml_collections==0.1.1",
+    "ml-collections==0.1.1",
     "plum-dispatch==2.3.2",
     "termcolor"
 ]

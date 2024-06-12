@@ -10,6 +10,6 @@ typing~=3.7.4.3
 flax>=0.8.0
 chex>=0.1.7
 einops==0.8.0
-ml_collections==0.1.1
+ml-collections==0.1.1
 plum-dispatch==2.3.2
 termcolor
