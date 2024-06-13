@@ -3,11 +3,11 @@ name = "fjformer"
 authors = [{ name = "Erfan Zare Chavoshi", email = "Erfanzare810@gmail.com" }]
 requires-python = ">=3.9"
 readme = "README.md"
-version = "0.0.67"
+version = "0.0.68"
 
 dependencies = [
-    "jax>=0.4.29",
-    "jaxlib>=0.4.29",
+    "jax>=0.4.28",
+    "jaxlib>=0.4.28",
     "optax~=0.2.2",
     "msgpack~=1.0.7",
     "ipython~=8.17.2",

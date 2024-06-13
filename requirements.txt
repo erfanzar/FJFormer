@@ -1,5 +1,5 @@
-jax>=0.4.29
-jaxlib>=0.4.29
+jax>=0.4.28
+jaxlib>=0.4.28
 optax~=0.2.2
 msgpack~=1.0.7
 ipython~=8.17.2
