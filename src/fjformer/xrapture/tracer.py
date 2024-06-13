@@ -4,7 +4,7 @@ import jax
 from jax._src.core import Trace
 from jax.core import get_aval, Tracer, full_lower
 
-from .implicit_array import ImplicitArray
+from fjformer.xrapture.implicit_array import ImplicitArray
 
 
 class ImplicitArrayTracer(Tracer):

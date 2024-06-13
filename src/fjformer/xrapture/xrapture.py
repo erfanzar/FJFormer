@@ -7,7 +7,7 @@ from jax import numpy as jnp
 from functools import partial
 import warnings
 
-from .implicit_array import (
+from fjformer.xrapture.implicit_array import (
     ImplicitArray,
     use_implicit_args,
     tree_map_with_implicit,

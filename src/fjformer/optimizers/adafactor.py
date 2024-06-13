@@ -2,7 +2,7 @@ from typing import Optional
 import jax.numpy as jnp
 import chex
 import optax
-from .optimizer_utils import optax_add_scheduled_weight_decay, OptaxScheduledWeightDecayState
+from fjformer.optimizers.optimizer_utils import optax_add_scheduled_weight_decay, OptaxScheduledWeightDecayState
 
 
 def get_adafactor_with_linear_scheduler(

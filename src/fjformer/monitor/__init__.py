@@ -1,4 +1,4 @@
-from .tracker import (
+from fjformer.monitor.tracker import (
     run as run,
     get_memory_information as get_memory_information,
     initialise_tracking as initialise_tracking,

@@ -448,7 +448,7 @@ class LocalChunker:
                 continue
             sharded_mesh_axes.add(mesh_axis)
             if not isinstance(mesh_axis, str):
-                raise NotImplementedError('TODO(jekbradbury)')
+                raise NotImplementedError()
             chunk_id = self.chunk_ids[mesh_axis]
             chunk_size = size // self.num_chunks[mesh_axis]
             local_slice[i] = slice(chunk_id * chunk_size, (chunk_id + 1) * chunk_size)

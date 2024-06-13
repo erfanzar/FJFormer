@@ -6,7 +6,7 @@ import jax
 os.environ['JAX_TRACEBACK_FILTERING'] = 'off'
 from flax.linen.attention import dot_product_attention, make_attention_mask, make_causal_mask, combine_masks
 
-from src.fjformer.pallas_operations import flash_attention
+from src.fjformer.pallas_operations.pallas_attention import flash_attention
 from jax import random, numpy as jnp
 
 batch = 1

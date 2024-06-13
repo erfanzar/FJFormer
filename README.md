@@ -1,7 +1,3 @@
-<p align="center">
-  <img src="logo/light-logo.png" alt="Alt text"/>
-</p>
-
 # FJFormer
 
 Embark on a journey of paralleled/unparalleled computational prowess with FJFormer - an arsenal of custom Jax Flax
@@ -15,16 +11,15 @@ checkpoint savers, partitioning tools, and other helpful functions.
 The goal of FJFormer is to make your life easier when working with Flax and JAX. Whether you are training a new model,
 fine-tuning an existing one, or just exploring the capabilities of these powerful frameworks, FJFormer offers
 
-- FlashAttention on `TPU/GPU` 🧬
-- BITComputations for 8,6,4 BIT Flax Models 🤏
-- Smart Dataset Loading
+- Pallas Kernels for GPU,TPU
+- BITComputations for 8,6,4 BIT Flax Models
 - Built-in functions and Loss functions
-- GPU-Pallas triton like implementation of `Softmax`, `FlashAttention`, `RMSNorm`, `LayerNorm`
 - Distributed and sharding Model Loaders and Checkpoint Savers
 - Monitoring Utils for *TPU/GPU/CPU* memory `foot-print`
+- Optimizers
 - Special Optimizers with schedulers and Easy to Use
 - Partitioning Utils
-- LoRA with `XRapture` 🤠
+- LoRA
 
 and A lot of these features are fully documented so i gusse FJFormer has something
 to offer, and it's not just a Computation BackEnd for [EasyDel](https://github.com/erfanzar/EasyDel).

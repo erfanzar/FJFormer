@@ -3,7 +3,7 @@ import msgpack
 from flax.serialization import from_bytes, to_bytes, to_state_dict
 from flax.traverse_util import flatten_dict
 
-from .streamer import CheckpointManager
+from fjformer.checkpoint.streamer import CheckpointManager
 from jax import numpy as jnp
 
 

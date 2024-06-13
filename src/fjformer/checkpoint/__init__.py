@@ -1,5 +1,5 @@
-from .streamer import CheckpointManager
-from ._load import (
+from fjformer.checkpoint.streamer import CheckpointManager
+from fjformer.checkpoint._load import (
     float_tensor_to_dtype,
     read_ckpt,
     save_ckpt,

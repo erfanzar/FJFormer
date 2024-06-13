@@ -1,5 +1,5 @@
-from ._func import average_metrics, global_norm, transpose, fused_softmax
-from .loss_func import (
+from fjformer.functions._func import average_metrics, global_norm, transpose, fused_softmax
+from fjformer.functions.loss_func import (
     auxiliary_load_balancing_loss_func as auxiliary_load_balancing_loss_func,
     get_loss_normalizing_factor_and_weights as get_loss_normalizing_factor_and_weights,
     convert_special_loss_normalizing_factor_to_enum as convert_special_loss_normalizing_factor_to_enum,

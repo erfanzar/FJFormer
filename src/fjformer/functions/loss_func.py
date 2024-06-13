@@ -5,7 +5,7 @@ import jax.numpy as np
 from flax.training import common_utils
 from jax.scipy.special import logsumexp
 import jax
-from jax import numpy as jnp, Array, lax
+from jax import numpy as jnp, Array
 from typing import Mapping, Optional, Tuple, Union
 from functools import reduce
 from operator import mul

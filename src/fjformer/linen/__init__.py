@@ -1,6 +1,6 @@
 from flax.linen import *
 from flax.linen import Dropout
-from .linen import (
+from fjformer.linen.linen import (
     Dense as Dense,
     Int8Params as Int8Params,
     quantize as quantize,

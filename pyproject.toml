@@ -1,15 +1,13 @@
 [project]
-name = "FJFormer"
-authors = [
-    { name = "Erfan Zare Chavoshi", email = "Erfanzare810@gmail.com" }
-]
-requires-python = ">=3.8"
+name = "fjformer"
+authors = [{ name = "Erfan Zare Chavoshi", email = "Erfanzare810@gmail.com" }]
+requires-python = ">=3.9"
 readme = "README.md"
-version = "0.0.66"
+version = "0.0.67"
 
 dependencies = [
-    "jax>=0.4.23",
-    "jaxlib>=0.4.23",
+    "jax>=0.4.29",
+    "jaxlib>=0.4.29",
     "optax~=0.2.2",
     "msgpack~=1.0.7",
     "ipython~=8.17.2",
@@ -36,18 +34,15 @@ classifiers = [
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
 ]
 description = "Embark on a journey of paralleled/unparalleled computational prowess with FJFormer - an arsenal of custom Jax Flax Functions and Utils that elevate your AI endeavors to new heights!"
-
 license = { text = "Apache-2.0" }
-
-keywords = [
-    "JAX", "Torch", "Deep Learning", "Machine Learning", "Flax", "XLA"
-]
+keywords = ["JAX", "Deep Learning", "Machine Learning", "Flax", "XLA"]
 
 [build-system]
-requires = ["setuptools>=46.4.0", "wheel>=0.34.2"]
-build-backend = "setuptools.build_meta"
+requires = ["flit_core >=3.2,<4"]
+build-backend = "flit_core.buildapi"
 
 [tool.setuptools.packages]
 

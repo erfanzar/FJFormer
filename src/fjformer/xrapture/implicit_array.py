@@ -7,13 +7,14 @@ from dataclasses import (
     fields,
     is_dataclass
 )
+from jax.core import ShapedArray
 from typing import ClassVar, Union
 import warnings
 
 import numpy as np
 from jax.api_util import flatten_fun
 import jax.interpreters.partial_eval as pe
-from jax.core import Shape
+
 from jax.tree_util import register_pytree_with_keys_class
 
 from jax.typing import DTypeLike
@@ -256,10 +257,10 @@ def _aval_discovery_context():
 @dataclass
 class _ImplicitArrayBase(ArrayValue, ABC):
     commute_ops: ClassVar[bool] = True
-    default_shape: ClassVar[Optional[Shape]] = None
+    default_shape: ClassVar[Optional[ShapedArray]] = None
     default_dtype: ClassVar[Optional[DTypeLike]] = None
 
-    shape: Optional[Shape] = aux_field(kw_only=True, default=None)
+    shape: Optional[ShapedArray] = aux_field(kw_only=True, default=None)
     dtype: DTypeLike = aux_field(kw_only=True, default=None)
 
 

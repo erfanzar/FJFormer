@@ -1,12 +1,13 @@
 import chex
 import jax
 from jax import numpy as jnp
+from jax._src.flatten_util import ravel_pytree
 
 
 def global_norm(tree):
     """ Return the global L2 norm of a pytree. """
     squared = jax.tree_util.tree_map(lambda x: jnp.sum(jnp.square(x)), tree)
-    flattened, _ = jax.flatten_util.ravel_pytree(squared)
+    flattened, _ = ravel_pytree(squared)
     return jnp.sqrt(jnp.sum(flattened))
 
 
