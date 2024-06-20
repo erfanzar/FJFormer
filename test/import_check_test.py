@@ -3,7 +3,7 @@ import time
 
 def main():
     start_time = time.time()
-
+    from src import fjformer
     from src.fjformer import checkpoint
     from src.fjformer import functions
     from src.fjformer import linen

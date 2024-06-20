@@ -26,7 +26,7 @@ from fjformer import pallas_operations as pallas_operations
 from fjformer import optimizers as optimizers
 from fjformer import linen as linen
 
-__version__ = "0.0.68"
+__version__ = "0.0.69"
 
 __all__ = (
     "JaxRNG",

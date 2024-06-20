@@ -1,6 +1,7 @@
 import os
 import jax
 import flax
+import safetensors.flax
 import tqdm
 from flax.serialization import (
     from_bytes, to_bytes, to_state_dict, from_state_dict
@@ -10,7 +11,30 @@ import msgpack
 from jax import numpy as jnp
 
 from flax import struct
-from typing import Callable, Literal, Union
+from typing import Callable, Literal, Union, Optional, Tuple
+
+
+def load_file(filename) -> Tuple[dict, dict]:
+    result = {}
+    with safetensors.safe_open(filename, framework="flax") as f:
+        metadata = f.metadata()
+        for k in f.keys():
+            result[k] = f.get_tensor(k)
+    return result, metadata
+
+
+def is_flatten(pytree: Union[dict, struct.PyTreeNode]):
+    """The is_flatten function checks if the pytree is flattened.
+        If it is, then the first key in the dictionary will be a tuple of (mpl, mpl_id).
+        Otherwise, it will be an integer representing mpl_id.
+
+    Args:
+        pytree: dict: Pass the pytree to the function
+
+    Returns:
+        True if the pytree is a flattened tree, and false otherwise
+    """
+    return True if isinstance([k for k in pytree.keys()][0], tuple) else False
 
 
 def get_dtype(tensor, dtype):
@@ -68,6 +92,100 @@ class CheckpointManager(object):
             path = "/dev/null"
         self.save_state_to_file(
             state, path, gather_fns, self.float_dtype, mismatch_allowed=mismatch_allowed
+        )
+
+    @staticmethod
+    def load_checkpoint_safe(
+            path: Union[str, os.PathLike],
+            target=None,
+            shard_fns: dict[Callable] = None,
+            verbose: bool = False,
+            mismatch_allowed: bool = True
+    ):
+        shard_functions_mismatch = 0
+        state, metadata = load_file(path)
+        state = flax.traverse_util.unflatten_dict(state, sep=".")
+        state = flax.traverse_util.flatten_dict(state)
+        if shard_fns is not None:
+
+            pbar_sharding = tqdm.tqdm(list(state.keys()), desc="Sharding State", disable=not verbose)
+            if not is_flatten(shard_fns):
+                shard_fns = flatten_dict(shard_fns)
+            for key in list(state.keys()):
+                try:
+                    callable_func = shard_fns[key]
+                    if callable_func is None and not mismatch_allowed:
+                        raise KeyError(f"Shard Function {key} is None and NoneType OBJ is not callable.")
+
+                    if callable_func is None:
+                        shard_functions_mismatch += 1
+                    else:
+                        state[key] = callable_func(state[key])
+                except KeyError as k_err:
+                    if mismatch_allowed:
+                        shard_functions_mismatch += 1
+                    else:
+                        raise KeyError(k_err)
+                pbar_sharding.set_postfix(sharding_mismatch=shard_functions_mismatch)
+                pbar_sharding.update(1)
+        if target is not None:  # noqa
+            flattened_target = flatten_dict(
+                to_state_dict(target), keep_empty_nodes=True
+            )
+            for key, value in flattened_target.items():
+                if key not in state and value == empty_node:
+                    state[key] = value
+
+        state = unflatten_dict(state)
+        if target is None:
+            return state, metadata
+
+        return from_state_dict(target, state), metadata
+
+    @staticmethod
+    def save_checkpoint_safe(
+            state: struct.PyTreeNode,
+            path: Union[str, os.PathLike],
+            gather_fns: dict[Callable] = None,
+            float_dtype=None,
+            verbose: bool = True,
+            mismatch_allowed: bool = True,
+            metadata: Optional[dict[str, str]] = None
+    ):
+        state = to_state_dict(state)
+        gather_functions_mismatch = 0
+        if is_flatten(state):
+            state = unflatten_dict(state)
+        if gather_fns is not None:
+            if not is_flatten(gather_fns):
+                gather_fns = flatten_dict(gather_fns)
+            state = flatten_dict(state)
+            pbar_gather = tqdm.tqdm(list(state.keys()), desc="Gathering State", disable=not verbose)
+            for key in pbar_gather:
+                try:
+                    callable_func = gather_fns[key]
+                    if callable_func is None and not mismatch_allowed:
+                        raise KeyError(f"Gather Function {key} is None and NoneType OBJ is not callable.")
+                    if callable_func is None:
+                        gather_functions_mismatch += 1
+                    else:
+                        state[key] = callable_func(state[key])
+                except KeyError as e:
+                    if mismatch_allowed:
+                        pbar_gather.set_postfix(gather_mismatch=gather_functions_mismatch)
+                    else:
+                        raise KeyError(e)
+                pbar_gather.update(1)
+        state = flax.traverse_util.flatten_dict(state, sep=".")
+        for key in list(state.keys()):
+            if not isinstance(state[key], jax.Array):
+                state[key] = jnp.array(state[key])
+            state[key] = get_dtype(state[key], float_dtype)
+
+        safetensors.flax.save_file(
+            tensors=state,
+            filename=path,
+            metadata=metadata
         )
 
     @staticmethod
