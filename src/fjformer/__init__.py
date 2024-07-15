@@ -1,6 +1,4 @@
-from fjformer.checkpoint import (
-    CheckpointManager as CheckpointManager
-)
+from fjformer.checkpoint import CheckpointManager as CheckpointManager
 
 from fjformer.sharding import (
     get_jax_mesh as get_jax_mesh,
@@ -14,19 +12,20 @@ from fjformer.sharding import (
     tree_path_to_string as tree_path_to_string,
     make_shard_and_gather_fns as make_shard_and_gather_fns,
     with_sharding_constraint as with_sharding_constraint,
-    create_mesh as create_mesh
+    create_mesh as create_mesh,
 )
 
 from fjformer.utils import (
     JaxRNG as JaxRNG,
     GenerateRNG as GenerateRNG,
 )
-from fjformer import monitor
+from fjformer import monitor as monitor
+from fjformer import core as core
 from fjformer import pallas_operations as pallas_operations
 from fjformer import optimizers as optimizers
 from fjformer import linen as linen
 
-__version__ = "0.0.69"
+__version__ = "0.0.70"
 
 __all__ = (
     "JaxRNG",
@@ -46,5 +45,6 @@ __all__ = (
     "CheckpointManager",
     "pallas_operations",
     "optimizers",
-    "linen"
+    "linen",
+    "core",
 )
