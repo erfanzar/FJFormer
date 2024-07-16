@@ -21,10 +21,10 @@ fine-tuning an existing one, or just exploring the capabilities of these powerfu
 - Partitioning Utils
 - LoRA
 
-and A lot of these features are fully documented so i gusse FJFormer has something
+And a lot of these features are fully documented so FJFormer has something
 to offer, and it's not just a Computation BackEnd for [EasyDel](https://github.com/erfanzar/EasyDel).
 
-checkout for documentations [here](https://erfanzar.github.io/FJFormer/).
+checkout for documentation [here](https://fjformer.readthedocs.io/en/latest/).
 
 ## Contributing
 
