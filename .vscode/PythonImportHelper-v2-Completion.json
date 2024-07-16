@@ -2958,7 +2958,7 @@
         "kind": 5,
         "importPath": "docs.conf",
         "description": "docs.conf",
-        "peekOfCode": "extensions = [\n    \"sphinx.ext.autodoc\",\n    \"sphinx.ext.autosummary\",\n    \"sphinx.ext.autosectionlabel\",\n    \"sphinx.ext.doctest\",\n    \"sphinx.ext.intersphinx\",\n    \"sphinx.ext.mathjax\",\n    \"sphinx.ext.napoleon\",\n    \"sphinx.ext.viewcode\",\n    \"myst_parser\",",
+        "peekOfCode": "extensions = [\n    \"sphinx.ext.autodoc\",\n    \"sphinx.ext.autosummary\",\n    \"sphinx.ext.autosectionlabel\",\n    \"sphinx.ext.doctest\",\n    \"sphinx.ext.intersphinx\",\n    \"sphinx.ext.mathjax\",\n    \"sphinx.ext.napoleon\",\n    \"sphinx.ext.viewcode\",\n    \"myst_nb\",",
         "detail": "docs.conf",
         "documentation": {}
     },
