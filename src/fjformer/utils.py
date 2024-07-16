@@ -1,154 +1,196 @@
+"""Utility functions for JAX."""
+import logging
 import importlib.util
-import jax
+from typing import Union, Tuple
+
 import flax
+import jax
+from jax import random as jrandom
 
 
-def is_torch_available():
+def is_torch_available() -> bool:
+    """Checks if PyTorch is installed.
+
+    Returns:
+        True if the torch module is installed, False otherwise.
     """
-    The is_torch_available function checks if PyTorch is installed.
+    return importlib.util.find_spec("torch") is not None
 
-    :return: True if the torch module is installed
-    
+
+def count_num_params(params: flax.core.frozen_dict.FrozenDict) -> int:
+    """Counts the number of parameters in a model.
+
+    Args:
+        params: A Flax FrozenDict containing the model parameters.
+
+    Returns:
+        The total number of parameters in the model.
     """
-    return True if importlib.util.find_spec('torch') is not None else False
+    return sum(
+        i.size for i in jax.tree_util.tree_flatten(flax.core.unfreeze(params))[0]
+    )
 
 
-def count_num_params(_p):
+def count_params(params: flax.core.frozen_dict.FrozenDict) -> None:
+    """Prints the number of parameters in a Flax model.
+
+    Args:
+        params: A Flax FrozenDict containing the model parameters.
     """
-    The count_num_params function is a helper function that counts the number of parameters in a model.
-    It takes as input an unfrozen parameter dictionary, and returns the total number of parameters.
+    print(
+        f"\033[1;31mModel Contains : {count_num_params(params) / 1e9:.2f} Billion Parameters"
+    )
 
 
-    :param _p: Count the number of parameters in a model
-    :return: The number of parameters in the model
-    
-    """
-    return sum(i.size for i in jax.tree_util.tree_flatten(flax.core.unfreeze(_p))[0])
+class JaxRNG:
+    """A wrapper around JAX's PRNGKey that simplifies key splitting."""
 
+    def __init__(self, rng: jrandom.PRNGKey):
+        """Initializes the JaxRNG with a PRNGKey.
 
-def count_params(_p):
-    """
-    The count_params function takes in a Flax model and prints out the number of parameters it contains.
         Args:
-            _p (Flax Params]): A Flax model to count the number of parameters for.
-
-    :param _p: Count the number of parameters in a model
-    :return: The number of parameters in a model
-    
-    """
-    print('\033[1;31mModel Contain : ', count_num_params(_p) / 1e9, ' Billion Parameters')
-
-
-class JaxRNG(object):
-    @classmethod
-    def from_seed(cls, seed):
-        """
-            The from_seed function is a class method that takes a seed and returns an instance of the class.
-            This allows us to create multiple instances of the same random number generator with different seeds,
-            which can be useful for debugging or reproducibility.
-
-            :param cls: Pass the class of the object that is being created
-            :param seed: Initialize the random number generator
-            :return: An instance of the class
-            
-            """
-
-        return cls(jax.random.PRNGKey(seed))
-
-    def __init__(self, rng):
-        """
-        The __init__ function is called when the class is instantiated.
-        It sets up the random number generator, which will be used to generate
-        random numbers for initializing weights and biases.
-
-        :param self: Represent the instance of the class
-        :param rng: Generate random numbers
-        :return: The object itself
-        
+            rng: A JAX PRNGKey.
         """
         self.rng = rng
 
-    def __call__(self, keys=None):
-        """
-        The __call__ function is a special function in Python that allows an object to be called like a function.
+    @classmethod
+    def from_seed(cls, seed: int) -> "JaxRNG":
+        """Creates a JaxRNG instance from a seed.
 
-        :param self: Refer to the object itself
-        :param keys: Split the random number generator into multiple parts
-        :return: A random number generator
-        
+        Args:
+            seed: The seed to use for the random number generator.
+
+        Returns:
+            A JaxRNG instance.
+        """
+        return cls(jrandom.PRNGKey(seed))
+
+    def __call__(
+        self, keys: Union[int, Tuple[str, ...]] = None
+    ) -> Union[jrandom.PRNGKey, Tuple[jrandom.PRNGKey, ...], dict]:
+        """Splits the internal PRNGKey and returns new keys.
+
+        Args:
+            keys:  If None, returns a single split key and updates the internal RNG.
+                   If an int, splits the key into `keys + 1` parts, updates the internal RNG,
+                   and returns the last `keys` parts as a tuple.
+                   If a tuple of strings, splits the key into `len(keys) + 1` parts,
+                   updates the internal RNG, and returns a dictionary mapping the strings
+                   to their corresponding key parts.
+
+        Returns:
+            The split PRNGKey(s) based on the `keys` argument.
         """
         if keys is None:
-            self.rng, split_rng = jax.random.split(self.rng)
+            self.rng, split_rng = jrandom.split(self.rng)
             return split_rng
         elif isinstance(keys, int):
-            split_rngs = jax.random.split(self.rng, num=keys + 1)
+            split_rngs = jrandom.split(self.rng, num=keys + 1)
             self.rng = split_rngs[0]
             return tuple(split_rngs[1:])
         else:
-            split_rngs = jax.random.split(self.rng, num=len(keys) + 1)
+            split_rngs = jrandom.split(self.rng, num=len(keys) + 1)
             self.rng = split_rngs[0]
             return {key: val for key, val in zip(keys, split_rngs[1:])}
 
 
-def init_rng(seed):
-    """
-    The init_rng function initializes the global random number generator.
+# Global JaxRNG instance
+jax_utils_rng = None
 
-    :param seed: Initialize the random number generator
-    :return: A random number generator
-    
+
+def init_rng(seed: int) -> None:
+    """Initializes the global JaxRNG with a seed.
+
+    Args:
+        seed: The seed to use for the random number generator.
     """
     global jax_utils_rng
     jax_utils_rng = JaxRNG.from_seed(seed)
 
 
-def next_rng(*args, **kwargs):
-    """
-    The next_rng function is a wrapper around jax.random.PRNGKey, which
-    is used to generate random numbers in JAX. The next_rng function
-    generates a new PRNGKey from the previous one, and updates the global
-    variable jax_utils_rng with this new key.
+def next_rng(
+    *args, **kwargs
+) -> Union[jrandom.PRNGKey, Tuple[jrandom.PRNGKey, ...], dict]:
+    """Provides access to the global JaxRNG and splits the key based on arguments.
 
-    :param *args: Pass a variable number of arguments to the function
-    :param **kwargs: Pass in a dictionary of parameters
-    :return: A random number generator
-    
+    This function wraps the global `jax_utils_rng` instance and calls its `__call__` method,
+    passing through any arguments provided. This provides a convenient way to access and
+    split the global random number generator key.
+
+    Args:
+        *args: Positional arguments passed to the `jax_utils_rng` instance's `__call__` method.
+        **kwargs: Keyword arguments passed to the `jax_utils_rng` instance's `__call__` method.
+
+    Returns:
+        The split PRNGKey(s) from the global `jax_utils_rng` instance.
     """
     global jax_utils_rng
     return jax_utils_rng(*args, **kwargs)
 
 
 class GenerateRNG:
-    def __init__(self, seed: int = 0):
-        """
-        The __init__ function is called when the class is instantiated.
-        It sets up the initial state of the object, which in this case includes a seed and a random number generator.
-        The seed can be set by passing an argument to __init__, but if no argument is passed it defaults to 0.
+    """An infinite generator of JAX PRNGKeys, useful for iterating over seeds."""
 
-        :param self: Represent the instance of the class
-        :param seed: int: Set the seed for the random number generator
-        :return: The object itself
-        
+    def __init__(self, seed: int = 0):
+        """Initializes the generator with a starting seed.
+
+        Args:
+            seed: The seed to use for the initial PRNGKey.
         """
         self.seed = seed
-        self._rng = jax.random.PRNGKey(seed)
+        self._rng = jrandom.PRNGKey(seed)
 
-    def __next__(self):
-        """
-        The __next__ function is called by the for loop to get the next value.
-        It uses a while True loop so that it can return an infinite number of values.
-        The function splits the random number generator into two parts, one part
-        is used to generate a key and then returned, and the other part becomes
-        the new random number generator.
+    def __next__(self) -> jrandom.PRNGKey:
+        """Generates and returns the next PRNGKey in the sequence.
 
-        :param self: Represent the instance of the class
-        :return: A random number
-        
+        Returns:
+            The next PRNGKey derived from the internal state.
         """
-        while True:
-            self._rng, ke = jax.random.split(self._rng, 2)
-            return ke
+        self._rng, key = jrandom.split(self._rng)
+        return key
 
     @property
-    def rng(self):
+    def rng(self) -> jrandom.PRNGKey:
+        """Provides access to the next PRNGKey without advancing the generator.
+
+        Returns:
+            The next PRNGKey in the sequence.
+        """
         return next(self)
+
+
+def get_logger(name, level: int = logging.INFO) -> logging.Logger:
+    """
+    Function to create and configure a logger.
+    Args:
+        name: str: The name of the logger.
+        level: int: The logging level. Defaults to logging.INFO.
+    Returns:
+        logging.Logger: The configured logger instance.
+    """
+    logger = logging.getLogger(name)
+    logger.propagate = False
+
+    # Set the logging level
+    logger.setLevel(level)
+
+    # Create a console handler
+    console_handler = logging.StreamHandler()
+    console_handler.setLevel(level)
+
+    formatter = logging.Formatter("%(asctime)s %(levelname)-8s [%(name)s] %(message)s")
+    console_handler.setFormatter(formatter)
+    logger.addHandler(console_handler)
+    return logger
+
+
+def set_loggers_level(level: int = logging.WARNING):
+    """Function to set the logging level of all loggers to the specified level.
+
+    Args:
+        level: int: The logging level to set. Defaults to
+            logging.WARNING.
+    """
+    logging.root.setLevel(level)
+    for handler in logging.root.handlers:
+        handler.setLevel(level)

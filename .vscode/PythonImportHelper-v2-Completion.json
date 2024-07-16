@@ -43,30 +43,6 @@
         "documentation": {}
     },
     {
-        "label": "abstractmethod",
-        "importPath": "abc",
-        "description": "abc",
-        "isExtraImport": true,
-        "detail": "abc",
-        "documentation": {}
-    },
-    {
-        "label": "ABCMeta",
-        "importPath": "abc",
-        "description": "abc",
-        "isExtraImport": true,
-        "detail": "abc",
-        "documentation": {}
-    },
-    {
-        "label": "ABC",
-        "importPath": "abc",
-        "description": "abc",
-        "isExtraImport": true,
-        "detail": "abc",
-        "documentation": {}
-    },
-    {
         "label": "typing",
         "kind": 6,
         "isExtraImport": true,
@@ -252,7 +228,7 @@
         "documentation": {}
     },
     {
-        "label": "Any",
+        "label": "Callable",
         "importPath": "typing",
         "description": "typing",
         "isExtraImport": true,
@@ -260,7 +236,7 @@
         "documentation": {}
     },
     {
-        "label": "Optional",
+        "label": "Any",
         "importPath": "typing",
         "description": "typing",
         "isExtraImport": true,
@@ -293,6 +269,102 @@
     },
     {
         "label": "Tuple",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "Any",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "Optional",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "Tuple",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "Type",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "TypeVar",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "Any",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "Callable",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "Dict",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "List",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "Set",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "Tuple",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "Union",
         "importPath": "typing",
         "description": "typing",
         "isExtraImport": true,
@@ -437,6 +509,94 @@
     },
     {
         "label": "Generic",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "Any",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "Tuple",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "Union",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "Any",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "Callable",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "Optional",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "List",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "Union",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "Any",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "Dict",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "Optional",
         "importPath": "typing",
         "description": "typing",
         "isExtraImport": true,
@@ -876,31 +1036,7 @@
         "documentation": {}
     },
     {
-        "label": "ClassVar",
-        "importPath": "typing",
-        "description": "typing",
-        "isExtraImport": true,
-        "detail": "typing",
-        "documentation": {}
-    },
-    {
         "label": "Union",
-        "importPath": "typing",
-        "description": "typing",
-        "isExtraImport": true,
-        "detail": "typing",
-        "documentation": {}
-    },
-    {
-        "label": "Any",
-        "importPath": "typing",
-        "description": "typing",
-        "isExtraImport": true,
-        "detail": "typing",
-        "documentation": {}
-    },
-    {
-        "label": "Optional",
         "importPath": "typing",
         "description": "typing",
         "isExtraImport": true,
@@ -916,31 +1052,7 @@
         "documentation": {}
     },
     {
-        "label": "Any",
-        "importPath": "typing",
-        "description": "typing",
-        "isExtraImport": true,
-        "detail": "typing",
-        "documentation": {}
-    },
-    {
-        "label": "Callable",
-        "importPath": "typing",
-        "description": "typing",
-        "isExtraImport": true,
-        "detail": "typing",
-        "documentation": {}
-    },
-    {
-        "label": "Optional",
-        "importPath": "typing",
-        "description": "typing",
-        "isExtraImport": true,
-        "detail": "typing",
-        "documentation": {}
-    },
-    {
-        "label": "Union",
+        "label": "Tuple",
         "importPath": "typing",
         "description": "typing",
         "isExtraImport": true,
@@ -1023,23 +1135,7 @@
         "documentation": {}
     },
     {
-        "label": "field",
-        "importPath": "dataclasses",
-        "description": "dataclasses",
-        "isExtraImport": true,
-        "detail": "dataclasses",
-        "documentation": {}
-    },
-    {
-        "label": "fields",
-        "importPath": "dataclasses",
-        "description": "dataclasses",
-        "isExtraImport": true,
-        "detail": "dataclasses",
-        "documentation": {}
-    },
-    {
-        "label": "is_dataclass",
+        "label": "dataclass",
         "importPath": "dataclasses",
         "description": "dataclasses",
         "isExtraImport": true,
@@ -1240,6 +1336,22 @@
         "documentation": {}
     },
     {
+        "label": "lax",
+        "importPath": "jax",
+        "description": "jax",
+        "isExtraImport": true,
+        "detail": "jax",
+        "documentation": {}
+    },
+    {
+        "label": "numpy",
+        "importPath": "jax",
+        "description": "jax",
+        "isExtraImport": true,
+        "detail": "jax",
+        "documentation": {}
+    },
+    {
         "label": "tree_util",
         "importPath": "jax",
         "description": "jax",
@@ -1281,6 +1393,14 @@
     },
     {
         "label": "lax",
+        "importPath": "jax",
+        "description": "jax",
+        "isExtraImport": true,
+        "detail": "jax",
+        "documentation": {}
+    },
+    {
+        "label": "numpy",
         "importPath": "jax",
         "description": "jax",
         "isExtraImport": true,
@@ -1392,23 +1512,7 @@
         "documentation": {}
     },
     {
-        "label": "core",
-        "importPath": "jax",
-        "description": "jax",
-        "isExtraImport": true,
-        "detail": "jax",
-        "documentation": {}
-    },
-    {
-        "label": "tree_util",
-        "importPath": "jax",
-        "description": "jax",
-        "isExtraImport": true,
-        "detail": "jax",
-        "documentation": {}
-    },
-    {
-        "label": "numpy",
+        "label": "random",
         "importPath": "jax",
         "description": "jax",
         "isExtraImport": true,
@@ -1441,6 +1545,14 @@
     },
     {
         "label": "numpy",
+        "importPath": "jax",
+        "description": "jax",
+        "isExtraImport": true,
+        "detail": "jax",
+        "documentation": {}
+    },
+    {
+        "label": "Array",
         "importPath": "jax",
         "description": "jax",
         "isExtraImport": true,
@@ -1498,22 +1610,6 @@
     },
     {
         "label": "partial",
-        "importPath": "functools",
-        "description": "functools",
-        "isExtraImport": true,
-        "detail": "functools",
-        "documentation": {}
-    },
-    {
-        "label": "partial",
-        "importPath": "functools",
-        "description": "functools",
-        "isExtraImport": true,
-        "detail": "functools",
-        "documentation": {}
-    },
-    {
-        "label": "wraps",
         "importPath": "functools",
         "description": "functools",
         "isExtraImport": true,
@@ -1787,22 +1883,6 @@
         "documentation": {}
     },
     {
-        "label": "contextmanager",
-        "importPath": "contextlib",
-        "description": "contextlib",
-        "isExtraImport": true,
-        "detail": "contextlib",
-        "documentation": {}
-    },
-    {
-        "label": "ContextVar",
-        "importPath": "contextvars",
-        "description": "contextvars",
-        "isExtraImport": true,
-        "detail": "contextvars",
-        "documentation": {}
-    },
-    {
         "label": "ContextVar",
         "importPath": "contextvars",
         "description": "contextvars",
@@ -1827,19 +1907,43 @@
         "documentation": {}
     },
     {
-        "label": "count",
-        "importPath": "itertools",
-        "description": "itertools",
+        "label": "UninitializedAval",
+        "importPath": "fjformer.core.errors",
+        "description": "fjformer.core.errors",
         "isExtraImport": true,
-        "detail": "itertools",
+        "detail": "fjformer.core.errors",
         "documentation": {}
     },
     {
-        "label": "chain",
-        "importPath": "itertools",
-        "description": "itertools",
+        "label": "MaterializationError",
+        "importPath": "fjformer.core.errors",
+        "description": "fjformer.core.errors",
         "isExtraImport": true,
-        "detail": "itertools",
+        "detail": "fjformer.core.errors",
+        "documentation": {}
+    },
+    {
+        "label": "OperationError",
+        "importPath": "fjformer.core.errors",
+        "description": "fjformer.core.errors",
+        "isExtraImport": true,
+        "detail": "fjformer.core.errors",
+        "documentation": {}
+    },
+    {
+        "label": "ShapeDtypeError",
+        "importPath": "fjformer.core.errors",
+        "description": "fjformer.core.errors",
+        "isExtraImport": true,
+        "detail": "fjformer.core.errors",
+        "documentation": {}
+    },
+    {
+        "label": "UnsupportedPrimitiveError",
+        "importPath": "fjformer.core.errors",
+        "description": "fjformer.core.errors",
+        "isExtraImport": true,
+        "detail": "fjformer.core.errors",
         "documentation": {}
     },
     {
@@ -1893,22 +1997,6 @@
         "documentation": {}
     },
     {
-        "label": "flatten_fun",
-        "importPath": "jax.api_util",
-        "description": "jax.api_util",
-        "isExtraImport": true,
-        "detail": "jax.api_util",
-        "documentation": {}
-    },
-    {
-        "label": "flatten_fun_nokwargs",
-        "importPath": "jax.api_util",
-        "description": "jax.api_util",
-        "isExtraImport": true,
-        "detail": "jax.api_util",
-        "documentation": {}
-    },
-    {
         "label": "jax.tree_util",
         "kind": 6,
         "isExtraImport": true,
@@ -1926,14 +2014,6 @@
         "documentation": {}
     },
     {
-        "label": "register_pytree_with_keys_class",
-        "importPath": "jax.tree_util",
-        "description": "jax.tree_util",
-        "isExtraImport": true,
-        "detail": "jax.tree_util",
-        "documentation": {}
-    },
-    {
         "label": "Dispatcher",
         "importPath": "plum",
         "description": "plum",
@@ -1959,38 +2039,6 @@
     },
     {
         "label": "parametric",
-        "importPath": "plum",
-        "description": "plum",
-        "isExtraImport": true,
-        "detail": "plum",
-        "documentation": {}
-    },
-    {
-        "label": "dispatch",
-        "importPath": "plum",
-        "description": "plum",
-        "isExtraImport": true,
-        "detail": "plum",
-        "documentation": {}
-    },
-    {
-        "label": "parametric",
-        "importPath": "plum",
-        "description": "plum",
-        "isExtraImport": true,
-        "detail": "plum",
-        "documentation": {}
-    },
-    {
-        "label": "Dispatcher",
-        "importPath": "plum",
-        "description": "plum",
-        "isExtraImport": true,
-        "detail": "plum",
-        "documentation": {}
-    },
-    {
-        "label": "Function",
         "importPath": "plum",
         "description": "plum",
         "isExtraImport": true,
@@ -2078,22 +2126,6 @@
         "documentation": {}
     },
     {
-        "label": "float0",
-        "importPath": "jax.dtypes",
-        "description": "jax.dtypes",
-        "isExtraImport": true,
-        "detail": "jax.dtypes",
-        "documentation": {}
-    },
-    {
-        "label": "float0",
-        "importPath": "jax.dtypes",
-        "description": "jax.dtypes",
-        "isExtraImport": true,
-        "detail": "jax.dtypes",
-        "documentation": {}
-    },
-    {
         "label": "optax",
         "kind": 6,
         "isExtraImport": true,
@@ -2108,6 +2140,14 @@
         "description": "optax",
         "isExtraImport": true,
         "detail": "optax",
+        "documentation": {}
+    },
+    {
+        "label": "float0",
+        "importPath": "jax.dtypes",
+        "description": "jax.dtypes",
+        "isExtraImport": true,
+        "detail": "jax.dtypes",
         "documentation": {}
     },
     {
@@ -2218,35 +2258,107 @@
         "documentation": {}
     },
     {
-        "label": "ShapedArray",
-        "importPath": "jax.core",
-        "description": "jax.core",
+        "label": "core",
+        "importPath": "fjformer",
+        "description": "fjformer",
         "isExtraImport": true,
-        "detail": "jax.core",
+        "detail": "fjformer",
         "documentation": {}
     },
     {
-        "label": "get_aval",
-        "importPath": "jax.core",
-        "description": "jax.core",
+        "label": "EmptyNode",
+        "importPath": "fjformer.core",
+        "description": "fjformer.core",
         "isExtraImport": true,
-        "detail": "jax.core",
+        "detail": "fjformer.core",
         "documentation": {}
     },
     {
-        "label": "Tracer",
-        "importPath": "jax.core",
-        "description": "jax.core",
+        "label": "materialize_nested",
+        "importPath": "fjformer.core",
+        "description": "fjformer.core",
         "isExtraImport": true,
-        "detail": "jax.core",
+        "detail": "fjformer.core",
         "documentation": {}
     },
     {
-        "label": "full_lower",
-        "importPath": "jax.core",
-        "description": "jax.core",
+        "label": "tree_map_with_implicit",
+        "importPath": "fjformer.core",
+        "description": "fjformer.core",
         "isExtraImport": true,
-        "detail": "jax.core",
+        "detail": "fjformer.core",
+        "documentation": {}
+    },
+    {
+        "label": "use_implicit_args",
+        "importPath": "fjformer.core",
+        "description": "fjformer.core",
+        "isExtraImport": true,
+        "detail": "fjformer.core",
+        "documentation": {}
+    },
+    {
+        "label": "ImplicitArray",
+        "importPath": "fjformer.core",
+        "description": "fjformer.core",
+        "isExtraImport": true,
+        "detail": "fjformer.core",
+        "documentation": {}
+    },
+    {
+        "label": "primitive_handler",
+        "importPath": "fjformer.core",
+        "description": "fjformer.core",
+        "isExtraImport": true,
+        "detail": "fjformer.core",
+        "documentation": {}
+    },
+    {
+        "label": "use_implicit_args",
+        "importPath": "fjformer.core",
+        "description": "fjformer.core",
+        "isExtraImport": true,
+        "detail": "fjformer.core",
+        "documentation": {}
+    },
+    {
+        "label": "ArrayValue",
+        "importPath": "fjformer.core",
+        "description": "fjformer.core",
+        "isExtraImport": true,
+        "detail": "fjformer.core",
+        "documentation": {}
+    },
+    {
+        "label": "freeze_subtrees",
+        "importPath": "fjformer.core.utilities",
+        "description": "fjformer.core.utilities",
+        "isExtraImport": true,
+        "detail": "fjformer.core.utilities",
+        "documentation": {}
+    },
+    {
+        "label": "freeze_keys",
+        "importPath": "fjformer.core.utilities",
+        "description": "fjformer.core.utilities",
+        "isExtraImport": true,
+        "detail": "fjformer.core.utilities",
+        "documentation": {}
+    },
+    {
+        "label": "LoraWeight",
+        "importPath": "fjformer.lora.lora_core",
+        "description": "fjformer.lora.lora_core",
+        "isExtraImport": true,
+        "detail": "fjformer.lora.lora_core",
+        "documentation": {}
+    },
+    {
+        "label": "get_logger",
+        "importPath": "fjformer.utils",
+        "description": "fjformer.utils",
+        "isExtraImport": true,
+        "detail": "fjformer.utils",
         "documentation": {}
     },
     {
@@ -2277,6 +2389,15 @@
         "documentation": {}
     },
     {
+        "label": "threading",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "threading",
+        "description": "threading",
+        "detail": "threading",
+        "documentation": {}
+    },
+    {
         "label": "time",
         "kind": 6,
         "isExtraImport": true,
@@ -2295,12 +2416,12 @@
         "documentation": {}
     },
     {
-        "label": "threading",
+        "label": "jax.profiler",
         "kind": 6,
         "isExtraImport": true,
-        "importPath": "threading",
-        "description": "threading",
-        "detail": "threading",
+        "importPath": "jax.profiler",
+        "description": "jax.profiler",
+        "detail": "jax.profiler",
         "documentation": {}
     },
     {
@@ -2675,124 +2796,12 @@
         "documentation": {}
     },
     {
-        "label": "DTypeLike",
-        "importPath": "jax.typing",
-        "description": "jax.typing",
-        "isExtraImport": true,
-        "detail": "jax.typing",
-        "documentation": {}
-    },
-    {
-        "label": "Trace",
-        "importPath": "jax._src.core",
-        "description": "jax._src.core",
-        "isExtraImport": true,
-        "detail": "jax._src.core",
-        "documentation": {}
-    },
-    {
-        "label": "ImplicitArray",
-        "importPath": "fjformer.xrapture.implicit_array",
-        "description": "fjformer.xrapture.implicit_array",
-        "isExtraImport": true,
-        "detail": "fjformer.xrapture.implicit_array",
-        "documentation": {}
-    },
-    {
-        "label": "ArrayValue",
-        "importPath": "fjformer.xrapture.implicit_array",
-        "description": "fjformer.xrapture.implicit_array",
-        "isExtraImport": true,
-        "detail": "fjformer.xrapture.implicit_array",
-        "documentation": {}
-    },
-    {
-        "label": "EmptyNode",
-        "importPath": "fjformer.xrapture.implicit_array",
-        "description": "fjformer.xrapture.implicit_array",
-        "isExtraImport": true,
-        "detail": "fjformer.xrapture.implicit_array",
-        "documentation": {}
-    },
-    {
-        "label": "ImplicitArray",
-        "importPath": "fjformer.xrapture.implicit_array",
-        "description": "fjformer.xrapture.implicit_array",
-        "isExtraImport": true,
-        "detail": "fjformer.xrapture.implicit_array",
-        "documentation": {}
-    },
-    {
-        "label": "aux_field",
-        "importPath": "fjformer.xrapture.implicit_array",
-        "description": "fjformer.xrapture.implicit_array",
-        "isExtraImport": true,
-        "detail": "fjformer.xrapture.implicit_array",
-        "documentation": {}
-    },
-    {
-        "label": "default_handler",
-        "importPath": "fjformer.xrapture.implicit_array",
-        "description": "fjformer.xrapture.implicit_array",
-        "isExtraImport": true,
-        "detail": "fjformer.xrapture.implicit_array",
-        "documentation": {}
-    },
-    {
-        "label": "freeze_keys",
-        "importPath": "fjformer.xrapture.implicit_array",
-        "description": "fjformer.xrapture.implicit_array",
-        "isExtraImport": true,
-        "detail": "fjformer.xrapture.implicit_array",
-        "documentation": {}
-    },
-    {
-        "label": "freeze_subtrees",
-        "importPath": "fjformer.xrapture.implicit_array",
-        "description": "fjformer.xrapture.implicit_array",
-        "isExtraImport": true,
-        "detail": "fjformer.xrapture.implicit_array",
-        "documentation": {}
-    },
-    {
-        "label": "materialize_nested",
-        "importPath": "fjformer.xrapture.implicit_array",
-        "description": "fjformer.xrapture.implicit_array",
-        "isExtraImport": true,
-        "detail": "fjformer.xrapture.implicit_array",
-        "documentation": {}
-    },
-    {
-        "label": "primitive_handler",
-        "importPath": "fjformer.xrapture.implicit_array",
-        "description": "fjformer.xrapture.implicit_array",
-        "isExtraImport": true,
-        "detail": "fjformer.xrapture.implicit_array",
-        "documentation": {}
-    },
-    {
-        "label": "tree_map_with_implicit",
-        "importPath": "fjformer.xrapture.implicit_array",
-        "description": "fjformer.xrapture.implicit_array",
-        "isExtraImport": true,
-        "detail": "fjformer.xrapture.implicit_array",
-        "documentation": {}
-    },
-    {
-        "label": "use_implicit_args",
-        "importPath": "fjformer.xrapture.implicit_array",
-        "description": "fjformer.xrapture.implicit_array",
-        "isExtraImport": true,
-        "detail": "fjformer.xrapture.implicit_array",
-        "documentation": {}
-    },
-    {
-        "label": "termcolor",
+        "label": "logging",
         "kind": 6,
         "isExtraImport": true,
-        "importPath": "termcolor",
-        "description": "termcolor",
-        "detail": "termcolor",
+        "importPath": "logging",
+        "description": "logging",
+        "detail": "logging",
         "documentation": {}
     },
     {
@@ -2916,14 +2925,6 @@
         "description": "fjformer.functions.loss_functions",
         "isExtraImport": true,
         "detail": "fjformer.functions.loss_functions",
-        "documentation": {}
-    },
-    {
-        "label": "implicit_array",
-        "importPath": "fjformer.xrapture",
-        "description": "fjformer.xrapture",
-        "isExtraImport": true,
-        "detail": "fjformer.xrapture",
         "documentation": {}
     },
     {
@@ -3449,6 +3450,69 @@
         "documentation": {}
     },
     {
+        "label": "SymbolicConstantError",
+        "kind": 6,
+        "importPath": "src.fjformer.core.errors",
+        "description": "src.fjformer.core.errors",
+        "peekOfCode": "class SymbolicConstantError(Exception):\n    \"\"\"Base exception class for SymbolicConstant-related errors.\"\"\"\n    pass\nclass ShapeDtypeError(SymbolicConstantError):\n    \"\"\"Exception raised for errors in shape or dtype determination.\"\"\"\n    pass\nclass OperationError(SymbolicConstantError):\n    \"\"\"Exception raised when an operation on SymbolicConstant fails.\"\"\"\n    pass\nclass MaterializationError(SymbolicConstantError):",
+        "detail": "src.fjformer.core.errors",
+        "documentation": {}
+    },
+    {
+        "label": "ShapeDtypeError",
+        "kind": 6,
+        "importPath": "src.fjformer.core.errors",
+        "description": "src.fjformer.core.errors",
+        "peekOfCode": "class ShapeDtypeError(SymbolicConstantError):\n    \"\"\"Exception raised for errors in shape or dtype determination.\"\"\"\n    pass\nclass OperationError(SymbolicConstantError):\n    \"\"\"Exception raised when an operation on SymbolicConstant fails.\"\"\"\n    pass\nclass MaterializationError(SymbolicConstantError):\n    \"\"\"Exception raised when materialization of a SymbolicConstant fails.\"\"\"\n    pass\nclass UnsupportedPrimitiveError(SymbolicConstantError):",
+        "detail": "src.fjformer.core.errors",
+        "documentation": {}
+    },
+    {
+        "label": "OperationError",
+        "kind": 6,
+        "importPath": "src.fjformer.core.errors",
+        "description": "src.fjformer.core.errors",
+        "peekOfCode": "class OperationError(SymbolicConstantError):\n    \"\"\"Exception raised when an operation on SymbolicConstant fails.\"\"\"\n    pass\nclass MaterializationError(SymbolicConstantError):\n    \"\"\"Exception raised when materialization of a SymbolicConstant fails.\"\"\"\n    pass\nclass UnsupportedPrimitiveError(SymbolicConstantError):\n    \"\"\"Exception raised when an unsupported JAX primitive is encountered.\"\"\"\n    pass\nclass UninitializedAval(Exception):",
+        "detail": "src.fjformer.core.errors",
+        "documentation": {}
+    },
+    {
+        "label": "MaterializationError",
+        "kind": 6,
+        "importPath": "src.fjformer.core.errors",
+        "description": "src.fjformer.core.errors",
+        "peekOfCode": "class MaterializationError(SymbolicConstantError):\n    \"\"\"Exception raised when materialization of a SymbolicConstant fails.\"\"\"\n    pass\nclass UnsupportedPrimitiveError(SymbolicConstantError):\n    \"\"\"Exception raised when an unsupported JAX primitive is encountered.\"\"\"\n    pass\nclass UninitializedAval(Exception):\n    \"\"\"Exception raised when an aval is accessed before initialization.\"\"\"\n    def __init__(self, kind):\n        super().__init__(",
+        "detail": "src.fjformer.core.errors",
+        "documentation": {}
+    },
+    {
+        "label": "UnsupportedPrimitiveError",
+        "kind": 6,
+        "importPath": "src.fjformer.core.errors",
+        "description": "src.fjformer.core.errors",
+        "peekOfCode": "class UnsupportedPrimitiveError(SymbolicConstantError):\n    \"\"\"Exception raised when an unsupported JAX primitive is encountered.\"\"\"\n    pass\nclass UninitializedAval(Exception):\n    \"\"\"Exception raised when an aval is accessed before initialization.\"\"\"\n    def __init__(self, kind):\n        super().__init__(\n            (\n                f\"{kind} was not set during initialization. Shape and dtype may be set by:\"\n                \"\\n\\t1. Directly passing them as keyword arguments to ImplicitArray instances\"",
+        "detail": "src.fjformer.core.errors",
+        "documentation": {}
+    },
+    {
+        "label": "UninitializedAval",
+        "kind": 6,
+        "importPath": "src.fjformer.core.errors",
+        "description": "src.fjformer.core.errors",
+        "peekOfCode": "class UninitializedAval(Exception):\n    \"\"\"Exception raised when an aval is accessed before initialization.\"\"\"\n    def __init__(self, kind):\n        super().__init__(\n            (\n                f\"{kind} was not set during initialization. Shape and dtype may be set by:\"\n                \"\\n\\t1. Directly passing them as keyword arguments to ImplicitArray instances\"\n                \"\\n\\t2. Overriding the default_shape/default_dtype class attributes\"\n                \"\\n\\t3. Overriding the compute_shape/compute_dtype methods\"\n                \"\\n\\t4. Overriding __post_init__ and setting their values there\"",
+        "detail": "src.fjformer.core.errors",
+        "documentation": {}
+    },
+    {
+        "label": "ImplicitArrayError",
+        "kind": 6,
+        "importPath": "src.fjformer.core.errors",
+        "description": "src.fjformer.core.errors",
+        "peekOfCode": "class ImplicitArrayError(Exception):\n    \"\"\"Base exception for ImplicitArray-related errors.\"\"\"\n    pass",
+        "detail": "src.fjformer.core.errors",
+        "documentation": {}
+    },
+    {
         "label": "ArrayValue",
         "kind": 6,
         "importPath": "src.fjformer.core.implicit_array",
@@ -3467,20 +3531,11 @@
         "documentation": {}
     },
     {
-        "label": "UninitializedAval",
-        "kind": 6,
-        "importPath": "src.fjformer.core.implicit_array",
-        "description": "src.fjformer.core.implicit_array",
-        "peekOfCode": "class UninitializedAval(Exception):\n    \"\"\"Exception raised when an aval is accessed before initialization.\"\"\"\n    def __init__(self, kind):\n        super().__init__(_AVAL_ERROR_MESSAGE.format(kind))\nclass _AvalDescriptor:\n    \"\"\"Descriptor for lazy initialization of shape and dtype.\"\"\"\n    def __set_name__(self, owner, name):\n        self._name = f\"_{name}\"\n    def __get__(self, obj, owner=None):\n        if obj is None:",
-        "detail": "src.fjformer.core.implicit_array",
-        "documentation": {}
-    },
-    {
         "label": "_AvalDescriptor",
         "kind": 6,
         "importPath": "src.fjformer.core.implicit_array",
         "description": "src.fjformer.core.implicit_array",
-        "peekOfCode": "class _AvalDescriptor:\n    \"\"\"Descriptor for lazy initialization of shape and dtype.\"\"\"\n    def __set_name__(self, owner, name):\n        self._name = f\"_{name}\"\n    def __get__(self, obj, owner=None):\n        if obj is None:\n            return None\n        result = getattr(obj, self._name, None)\n        if result is None:\n            raise UninitializedAval(kind=self._name[1:])",
+        "peekOfCode": "class _AvalDescriptor:\n    \"\"\"Descriptor for lazy initialization of shape and dtype.\"\"\"\n    def __set_name__(self, owner: Any, name: str) -> None:\n        self._name = f\"_{name}\"\n    def __get__(self, obj: Any, owner: Any = None) -> Any:\n        if obj is None:\n            return None\n        result = getattr(obj, self._name, None)\n        if result is None:\n            raise UninitializedAval(kind=self._name[1:])",
         "detail": "src.fjformer.core.implicit_array",
         "documentation": {}
     },
@@ -3489,7 +3544,7 @@
         "kind": 6,
         "importPath": "src.fjformer.core.implicit_array",
         "description": "src.fjformer.core.implicit_array",
-        "peekOfCode": "class _ImplicitArrayBase(ArrayValue, ABC):\n    \"\"\"Base class for ImplicitArray with common attributes.\"\"\"\n    commute_ops: ClassVar[bool] = True\n    warn_on_materialize: ClassVar[bool] = True\n    default_shape: ClassVar[Optional[Shape]] = None\n    default_dtype: ClassVar[Optional[DTypeLike]] = None\n    shape: Optional[Shape] = aux_field(kw_only=True, default=None)\n    dtype: DTypeLike = aux_field(kw_only=True, default=None)\n@dataclass\nclass ImplicitArray(_ImplicitArrayBase):",
+        "peekOfCode": "class _ImplicitArrayBase(ArrayValue, ABC):\n    \"\"\"Base class for ImplicitArray with common attributes.\"\"\"\n    commute_ops: ClassVar[bool] = True\n    warn_on_materialize: ClassVar[bool] = True\n    default_shape: ClassVar[Optional[Tuple[int, ...]]] = None\n    default_dtype: ClassVar[Optional[Any]] = None\n    shape: Optional[Tuple[int, ...]] = aux_field(kw_only=True, default=None)\n    dtype: Any = aux_field(kw_only=True, default=None)\n@dataclass\nclass ImplicitArray(_ImplicitArrayBase):",
         "detail": "src.fjformer.core.implicit_array",
         "documentation": {}
     },
@@ -3606,7 +3661,7 @@
         "kind": 2,
         "importPath": "src.fjformer.core.implicit_array",
         "description": "src.fjformer.core.implicit_array",
-        "peekOfCode": "def use_implicit_args(f):\n    \"\"\"\n    Decorator which allows a function to accept arguments which subclass ImplicitArray, possibly\n    including further ImplicitArray instances as children.\n    Any number of arguments (including 0) may be ImplicitArrays.\n    \"\"\"\n    @wraps(f)\n    def implicit_f(*args, **kwargs):\n        flat_args, in_tree = tree_flatten_with_implicit((args, kwargs))\n        f_flat, out_tree = flatten_fun(lu.wrap_init(f), in_tree)",
+        "peekOfCode": "def use_implicit_args(f: Callable) -> Callable:\n    \"\"\"\n    Decorator which allows a function to accept arguments which subclass ImplicitArray, possibly\n    including further ImplicitArray instances as children.\n    Any number of arguments (including 0) may be ImplicitArrays.\n    Args:\n        f: The function to be decorated.\n    Returns:\n        A wrapped function that can handle ImplicitArray arguments.\n    \"\"\"",
         "detail": "src.fjformer.core.implicit_array",
         "documentation": {}
     },
@@ -3615,7 +3670,7 @@
         "kind": 2,
         "importPath": "src.fjformer.core.implicit_array",
         "description": "src.fjformer.core.implicit_array",
-        "peekOfCode": "def default_handler(primitive, *args, **params):\n    \"\"\"Default handler for primitives.\"\"\"\n    subfuns, bind_params = primitive.get_bind_params(params)\n    return primitive.bind(*subfuns, *args, **bind_params)\ndef aux_field(metadata=None, **kwargs):\n    \"\"\"Create an auxiliary field for ImplicitArray subclasses.\"\"\"\n    metadata = dict(metadata) if metadata else {}\n    metadata[\"implicit_array_aux\"] = True\n    return field(metadata=metadata, **kwargs)\nclass UninitializedAval(Exception):",
+        "peekOfCode": "def default_handler(primitive: Any, *args: Any, **params: Any) -> Any:\n    \"\"\"Default handler for primitives.\"\"\"\n    subfuns, bind_params = primitive.get_bind_params(params)\n    return primitive.bind(*subfuns, *args, **bind_params)\ndef aux_field(metadata: Optional[dict] = None, **kwargs: Any) -> Any:\n    \"\"\"Create an auxiliary field for ImplicitArray subclasses.\"\"\"\n    metadata = dict(metadata) if metadata else {}\n    metadata[\"implicit_array_aux\"] = True\n    return field(metadata=metadata, **kwargs)\nclass _AvalDescriptor:",
         "detail": "src.fjformer.core.implicit_array",
         "documentation": {}
     },
@@ -3624,7 +3679,7 @@
         "kind": 2,
         "importPath": "src.fjformer.core.implicit_array",
         "description": "src.fjformer.core.implicit_array",
-        "peekOfCode": "def aux_field(metadata=None, **kwargs):\n    \"\"\"Create an auxiliary field for ImplicitArray subclasses.\"\"\"\n    metadata = dict(metadata) if metadata else {}\n    metadata[\"implicit_array_aux\"] = True\n    return field(metadata=metadata, **kwargs)\nclass UninitializedAval(Exception):\n    \"\"\"Exception raised when an aval is accessed before initialization.\"\"\"\n    def __init__(self, kind):\n        super().__init__(_AVAL_ERROR_MESSAGE.format(kind))\nclass _AvalDescriptor:",
+        "peekOfCode": "def aux_field(metadata: Optional[dict] = None, **kwargs: Any) -> Any:\n    \"\"\"Create an auxiliary field for ImplicitArray subclasses.\"\"\"\n    metadata = dict(metadata) if metadata else {}\n    metadata[\"implicit_array_aux\"] = True\n    return field(metadata=metadata, **kwargs)\nclass _AvalDescriptor:\n    \"\"\"Descriptor for lazy initialization of shape and dtype.\"\"\"\n    def __set_name__(self, owner: Any, name: str) -> None:\n        self._name = f\"_{name}\"\n    def __get__(self, obj: Any, owner: Any = None) -> Any:",
         "detail": "src.fjformer.core.implicit_array",
         "documentation": {}
     },
@@ -3791,20 +3846,11 @@
         "documentation": {}
     },
     {
-        "label": "_AVAL_ERROR_MESSAGE",
-        "kind": 5,
-        "importPath": "src.fjformer.core.implicit_array",
-        "description": "src.fjformer.core.implicit_array",
-        "peekOfCode": "_AVAL_ERROR_MESSAGE = (\n    \"{} was not set during initialization. Shape and dtype may be set by:\"\n    \"\\n\\t1. Directly passing them as keyword arguments to ImplicitArray instances\"\n    \"\\n\\t2. Overriding the default_shape/default_dtype class attributes\"\n    \"\\n\\t3. Overriding the compute_shape/compute_dtype methods\"\n    \"\\n\\t4. Overriding __post_init__ and setting their values there\"\n    \"\\n\\t5. None of the above, in which case `materialize()` will be called in an attempt to infer them.\"\n    \" If their values are required in order to compute the materialization this will be unsuccessful.\"\n)",
-        "detail": "src.fjformer.core.implicit_array",
-        "documentation": {}
-    },
-    {
         "label": "SymbolicConstant",
         "kind": 6,
         "importPath": "src.fjformer.core.symbols",
         "description": "src.fjformer.core.symbols",
-        "peekOfCode": "class SymbolicConstant(ImplicitArray):\n    \"\"\"\n    Represents a constant array symbolically, allowing for efficient operations at compile time.\n    \"\"\"\n    value: Any = aux_field()\n    weak_type: bool = aux_field(default=False)\n    def __post_init__(self):\n        super().__post_init__()\n        with jax.ensure_compile_time_eval():\n            self.value = jnp.asarray(self.value, dtype=self.dtype)",
+        "peekOfCode": "class SymbolicConstant(ImplicitArray):\n    \"\"\"\n    Represents a constant array symbolically, allowing for efficient operations at compile time.\n    Attributes:\n        value (Any): The constant value of the array\n        weak_type (bool): Whether the constant has a weak type\n    \"\"\"\n    value: Any = aux_field()\n    weak_type: bool = aux_field(default=False)\n    def __post_init__(self):",
         "detail": "src.fjformer.core.symbols",
         "documentation": {}
     },
@@ -3813,7 +3859,7 @@
         "kind": 2,
         "importPath": "src.fjformer.core.symbols",
         "description": "src.fjformer.core.symbols",
-        "peekOfCode": "def symbolic_zero_like(\n    x: Any,\n    shape: Optional[Tuple[int, ...]] = None,\n    dtype: Optional[Any] = None,\n) -> \"SymbolicConstant\":\n    \"\"\"\n    Create a SymbolicConstant filled with zeros, similar to the input.\n    Args:\n        x: Input to base the result on\n        shape: Optional shape for the result",
+        "peekOfCode": "def symbolic_zero_like(\n    x: Any, shape: Optional[Tuple[int, ...]] = None, dtype: Optional[Any] = None\n) -> \"SymbolicConstant\":\n    \"\"\"\n    Create a SymbolicConstant filled with zeros, similar to the input.\n    Args:\n        x: Input to base the result on\n        shape: Optional shape for the result\n        dtype: Optional dtype for the result\n    Returns:",
         "detail": "src.fjformer.core.symbols",
         "documentation": {}
     },
@@ -3876,7 +3922,7 @@
         "kind": 2,
         "importPath": "src.fjformer.core.symbols",
         "description": "src.fjformer.core.symbols",
-        "peekOfCode": "def handle_unop(primitive, sym: SymbolicConstant, **kwargs):\n    \"\"\"\n    Handle unary operations on SymbolicConstants.\n    \"\"\"\n    print(f\"Handling {primitive} with {sym}\")\n    new_val = eval_default_handler(primitive, sym.value, **kwargs)\n    return symbolic_full_like(sym, new_val)\n@primitive_handler(ELEMENTWISE_BINOPS, precedence=_GENERAL)\ndef handle_binop(\n    primitive,",
+        "peekOfCode": "def handle_unop(primitive, sym: SymbolicConstant, **kwargs):\n    \"\"\"\n    Handle unary operations on SymbolicConstants.\n    Args:\n        primitive: The JAX primitive to handle\n        sym: The SymbolicConstant to operate on\n        **kwargs: Additional keyword arguments\n    Returns:\n        SymbolicConstant: The result of the unary operation\n    Raises:",
         "detail": "src.fjformer.core.symbols",
         "documentation": {}
     },
@@ -3908,11 +3954,29 @@
         "documentation": {}
     },
     {
+        "label": "INFINITY",
+        "kind": 5,
+        "importPath": "src.fjformer.core.symbols",
+        "description": "src.fjformer.core.symbols",
+        "peekOfCode": "INFINITY = float(\"inf\")\nNEGATIVE_INFINITY = float(\"-inf\")\n_GENERAL = -2\n_SPECIALIZED = -1\ndef _get_shape_dtype(\n    x: Any, shape: Optional[Tuple[int, ...]] = None, dtype: Optional[Any] = None\n) -> Tuple[Tuple[int, ...], Any]:\n    \"\"\"\n    Determine the shape and dtype for a given input.\n    Args:",
+        "detail": "src.fjformer.core.symbols",
+        "documentation": {}
+    },
+    {
+        "label": "NEGATIVE_INFINITY",
+        "kind": 5,
+        "importPath": "src.fjformer.core.symbols",
+        "description": "src.fjformer.core.symbols",
+        "peekOfCode": "NEGATIVE_INFINITY = float(\"-inf\")\n_GENERAL = -2\n_SPECIALIZED = -1\ndef _get_shape_dtype(\n    x: Any, shape: Optional[Tuple[int, ...]] = None, dtype: Optional[Any] = None\n) -> Tuple[Tuple[int, ...], Any]:\n    \"\"\"\n    Determine the shape and dtype for a given input.\n    Args:\n        x: Input array or value",
+        "detail": "src.fjformer.core.symbols",
+        "documentation": {}
+    },
+    {
         "label": "_GENERAL",
         "kind": 5,
         "importPath": "src.fjformer.core.symbols",
         "description": "src.fjformer.core.symbols",
-        "peekOfCode": "_GENERAL = -2\n_SPECIALIZED = -1\ndef _get_shape_dtype(\n    x: Any,\n    shape: Optional[Tuple[int, ...]],\n    dtype: Optional[Any],\n) -> Tuple[Tuple[int, ...], Any]:\n    \"\"\"\n    Determine the shape and dtype for a given input.\n    Args:",
+        "peekOfCode": "_GENERAL = -2\n_SPECIALIZED = -1\ndef _get_shape_dtype(\n    x: Any, shape: Optional[Tuple[int, ...]] = None, dtype: Optional[Any] = None\n) -> Tuple[Tuple[int, ...], Any]:\n    \"\"\"\n    Determine the shape and dtype for a given input.\n    Args:\n        x: Input array or value\n        shape: Optional shape to use",
         "detail": "src.fjformer.core.symbols",
         "documentation": {}
     },
@@ -3921,8 +3985,26 @@
         "kind": 5,
         "importPath": "src.fjformer.core.symbols",
         "description": "src.fjformer.core.symbols",
-        "peekOfCode": "_SPECIALIZED = -1\ndef _get_shape_dtype(\n    x: Any,\n    shape: Optional[Tuple[int, ...]],\n    dtype: Optional[Any],\n) -> Tuple[Tuple[int, ...], Any]:\n    \"\"\"\n    Determine the shape and dtype for a given input.\n    Args:\n        x: Input array or value",
+        "peekOfCode": "_SPECIALIZED = -1\ndef _get_shape_dtype(\n    x: Any, shape: Optional[Tuple[int, ...]] = None, dtype: Optional[Any] = None\n) -> Tuple[Tuple[int, ...], Any]:\n    \"\"\"\n    Determine the shape and dtype for a given input.\n    Args:\n        x: Input array or value\n        shape: Optional shape to use\n        dtype: Optional dtype to use",
         "detail": "src.fjformer.core.symbols",
+        "documentation": {}
+    },
+    {
+        "label": "ComplementError",
+        "kind": 6,
+        "importPath": "src.fjformer.core.types",
+        "description": "src.fjformer.core.types",
+        "peekOfCode": "class ComplementError(Exception):\n    \"\"\"Base exception class for Complement-related errors.\"\"\"\n    pass\nclass TypeParameterError(ComplementError):\n    \"\"\"Exception raised for errors in type parameter initialization or comparison.\"\"\"\n    pass\n# Type variables for better type hinting\nA = TypeVar(\"A\")\nB = TypeVar(\"B\")\nclass _ComplementMeta(type):",
+        "detail": "src.fjformer.core.types",
+        "documentation": {}
+    },
+    {
+        "label": "TypeParameterError",
+        "kind": 6,
+        "importPath": "src.fjformer.core.types",
+        "description": "src.fjformer.core.types",
+        "peekOfCode": "class TypeParameterError(ComplementError):\n    \"\"\"Exception raised for errors in type parameter initialization or comparison.\"\"\"\n    pass\n# Type variables for better type hinting\nA = TypeVar(\"A\")\nB = TypeVar(\"B\")\nclass _ComplementMeta(type):\n    def __instancecheck__(self, x: Any) -> bool:\n        \"\"\"\n        Check if an object is an instance of the Complement type.",
+        "detail": "src.fjformer.core.types",
         "documentation": {}
     },
     {
@@ -3930,7 +4012,7 @@
         "kind": 6,
         "importPath": "src.fjformer.core.types",
         "description": "src.fjformer.core.types",
-        "peekOfCode": "class _ComplementMeta(type):\n    def __instancecheck__(self, x):\n        a, b = self.type_parameter\n        return a is None or (isinstance(x, a) and not isinstance(x, b))\n@parametric\nclass Complement(metaclass=_ComplementMeta):\n    \"\"\"\n    Relative complement\n    I.e. Complement[A, B] = A - B\n    \"\"\"",
+        "peekOfCode": "class _ComplementMeta(type):\n    def __instancecheck__(self, x: Any) -> bool:\n        \"\"\"\n        Check if an object is an instance of the Complement type.\n        Args:\n            x: The object to check.\n        Returns:\n            bool: True if x is an instance of Complement, False otherwise.\n        \"\"\"\n        try:",
         "detail": "src.fjformer.core.types",
         "documentation": {}
     },
@@ -3939,8 +4021,62 @@
         "kind": 6,
         "importPath": "src.fjformer.core.types",
         "description": "src.fjformer.core.types",
-        "peekOfCode": "class Complement(metaclass=_ComplementMeta):\n    \"\"\"\n    Relative complement\n    I.e. Complement[A, B] = A - B\n    \"\"\"\n    @classmethod\n    @dispatch\n    def __init_type_parameter__(\n        cls,\n        a: Optional[Any],",
+        "peekOfCode": "class Complement(metaclass=_ComplementMeta):\n    \"\"\"\n    Represents the relative complement of two types.\n    The Complement[A, B] represents all elements in A that are not in B (A - B).\n    Attributes:\n        type_parameter (Tuple[Optional[Type], Optional[Type]]): A tuple containing the two types A and B.\n    \"\"\"\n    @classmethod\n    @dispatch\n    def __init_type_parameter__(",
         "detail": "src.fjformer.core.types",
+        "documentation": {}
+    },
+    {
+        "label": "A",
+        "kind": 5,
+        "importPath": "src.fjformer.core.types",
+        "description": "src.fjformer.core.types",
+        "peekOfCode": "A = TypeVar(\"A\")\nB = TypeVar(\"B\")\nclass _ComplementMeta(type):\n    def __instancecheck__(self, x: Any) -> bool:\n        \"\"\"\n        Check if an object is an instance of the Complement type.\n        Args:\n            x: The object to check.\n        Returns:\n            bool: True if x is an instance of Complement, False otherwise.",
+        "detail": "src.fjformer.core.types",
+        "documentation": {}
+    },
+    {
+        "label": "B",
+        "kind": 5,
+        "importPath": "src.fjformer.core.types",
+        "description": "src.fjformer.core.types",
+        "peekOfCode": "B = TypeVar(\"B\")\nclass _ComplementMeta(type):\n    def __instancecheck__(self, x: Any) -> bool:\n        \"\"\"\n        Check if an object is an instance of the Complement type.\n        Args:\n            x: The object to check.\n        Returns:\n            bool: True if x is an instance of Complement, False otherwise.\n        \"\"\"",
+        "detail": "src.fjformer.core.types",
+        "documentation": {}
+    },
+    {
+        "label": "OptimizerError",
+        "kind": 6,
+        "importPath": "src.fjformer.core.utilities",
+        "description": "src.fjformer.core.utilities",
+        "peekOfCode": "class OptimizerError(Exception):\n    \"\"\"Base exception class for optimizer-related errors.\"\"\"\n    pass\nclass AxisError(OptimizerError):\n    \"\"\"Exception raised for errors related to axis operations.\"\"\"\n    pass\nclass FreezingError(OptimizerError):\n    \"\"\"Exception raised for errors during parameter freezing.\"\"\"\n    pass\nclass UpdateError(OptimizerError):",
+        "detail": "src.fjformer.core.utilities",
+        "documentation": {}
+    },
+    {
+        "label": "AxisError",
+        "kind": 6,
+        "importPath": "src.fjformer.core.utilities",
+        "description": "src.fjformer.core.utilities",
+        "peekOfCode": "class AxisError(OptimizerError):\n    \"\"\"Exception raised for errors related to axis operations.\"\"\"\n    pass\nclass FreezingError(OptimizerError):\n    \"\"\"Exception raised for errors during parameter freezing.\"\"\"\n    pass\nclass UpdateError(OptimizerError):\n    \"\"\"Exception raised for errors during parameter updates.\"\"\"\n    pass\ndef vmap_all_but_one(f: Callable, axis: int, out_ndim: int = 0) -> Callable:",
+        "detail": "src.fjformer.core.utilities",
+        "documentation": {}
+    },
+    {
+        "label": "FreezingError",
+        "kind": 6,
+        "importPath": "src.fjformer.core.utilities",
+        "description": "src.fjformer.core.utilities",
+        "peekOfCode": "class FreezingError(OptimizerError):\n    \"\"\"Exception raised for errors during parameter freezing.\"\"\"\n    pass\nclass UpdateError(OptimizerError):\n    \"\"\"Exception raised for errors during parameter updates.\"\"\"\n    pass\ndef vmap_all_but_one(f: Callable, axis: int, out_ndim: int = 0) -> Callable:\n    \"\"\"\n    Repeatedly calls vmap to map over all axes except for `axis`.\n    All args will be mapped on the same dimensions.",
+        "detail": "src.fjformer.core.utilities",
+        "documentation": {}
+    },
+    {
+        "label": "UpdateError",
+        "kind": 6,
+        "importPath": "src.fjformer.core.utilities",
+        "description": "src.fjformer.core.utilities",
+        "peekOfCode": "class UpdateError(OptimizerError):\n    \"\"\"Exception raised for errors during parameter updates.\"\"\"\n    pass\ndef vmap_all_but_one(f: Callable, axis: int, out_ndim: int = 0) -> Callable:\n    \"\"\"\n    Repeatedly calls vmap to map over all axes except for `axis`.\n    All args will be mapped on the same dimensions.\n    Args:\n        f: The function to be mapped.\n        axis: The axis to exclude from mapping.",
+        "detail": "src.fjformer.core.utilities",
         "documentation": {}
     },
     {
@@ -3948,7 +4084,7 @@
         "kind": 2,
         "importPath": "src.fjformer.core.utilities",
         "description": "src.fjformer.core.utilities",
-        "peekOfCode": "def vmap_all_but_one(f, axis, out_ndim=0):\n    \"\"\"\n    Repeatedly calls vmap to map over all axes except for `axis.`\n    All args will be mapped on the same dimensions.\n    \"\"\"\n    @wraps(f)\n    def inner(*args):\n        n_dim = args[0].ndim\n        if axis >= n_dim:\n            raise ValueError(",
+        "peekOfCode": "def vmap_all_but_one(f: Callable, axis: int, out_ndim: int = 0) -> Callable:\n    \"\"\"\n    Repeatedly calls vmap to map over all axes except for `axis`.\n    All args will be mapped on the same dimensions.\n    Args:\n        f: The function to be mapped.\n        axis: The axis to exclude from mapping.\n        out_ndim: The number of dimensions in the output.\n    Returns:\n        A wrapped function that applies vmap to all axes except the specified one.",
         "detail": "src.fjformer.core.utilities",
         "documentation": {}
     },
@@ -3957,7 +4093,7 @@
         "kind": 2,
         "importPath": "src.fjformer.core.utilities",
         "description": "src.fjformer.core.utilities",
-        "peekOfCode": "def freeze_subtrees(\n    optimizer: optax.GradientTransformation, label_fn, use_scalar_zeros=False\n):\n    \"\"\"\n    Utility which wraps an optimizer such that subtrees specified by\n    label_fn will receive zeros as updates.\n    Subtrees to be frozen should be labeled with \"freeze\"\n    and all other subtrees should be labeled with \"train\"\n    \"\"\"\n    multi_transformed_optimizer = optax.multi_transform(",
+        "peekOfCode": "def freeze_subtrees(\n    optimizer: optax.GradientTransformation,\n    label_fn: Callable[[Any], Dict[str, Any]],\n    use_scalar_zeros: bool = False,\n) -> optax.GradientTransformation:\n    \"\"\"\n    Wraps an optimizer such that subtrees specified by label_fn will receive zeros as updates.\n    Args:\n        optimizer: The original optimizer to be wrapped.\n        label_fn: A function that labels subtrees as \"freeze\" or \"train\".",
         "detail": "src.fjformer.core.utilities",
         "documentation": {}
     },
@@ -3966,7 +4102,7 @@
         "kind": 2,
         "importPath": "src.fjformer.core.utilities",
         "description": "src.fjformer.core.utilities",
-        "peekOfCode": "def freeze_keys(\n    optimizer: optax.GradientTransformation, arr_type, keys, use_scalar_zeros=False\n) -> optax.GradientTransformation:\n    keys = set(keys)\n    def label_leaf(leaf):\n        if not isinstance(leaf, arr_type):\n            return \"train\"\n        children, aux_data = leaf.tree_flatten_with_keys()\n        labels = [\"freeze\" if key in keys else \"train\" for key, _ in children]\n        struct = leaf.tree_unflatten(aux_data, labels)",
+        "peekOfCode": "def freeze_keys(\n    optimizer: optax.GradientTransformation,\n    arr_type: type,\n    keys: Union[List[str], Set[str]],\n    use_scalar_zeros: bool = False,\n) -> optax.GradientTransformation:\n    \"\"\"\n    Freezes specific keys in the optimizer.\n    Args:\n        optimizer: The original optimizer to be wrapped.",
         "detail": "src.fjformer.core.utilities",
         "documentation": {}
     },
@@ -3975,7 +4111,7 @@
         "kind": 2,
         "importPath": "src.fjformer.core.utilities",
         "description": "src.fjformer.core.utilities",
-        "peekOfCode": "def apply_updates(params: optax.Params, updates: optax.Updates) -> optax.Params:\n    \"\"\"\n    Like optax.apply_updates, but updates can be SymbolicConstant instances\n    \"\"\"\n    updates_flat, update_struct = tree_util.tree_flatten(\n        updates, is_leaf=lambda x: isinstance(x, SymbolicConstant)\n    )\n    semi_flat_params = update_struct.flatten_up_to(params)\n    updated_flat = use_implicit_args(optax.apply_updates)(\n        semi_flat_params, updates_flat",
+        "peekOfCode": "def apply_updates(params: optax.Params, updates: optax.Updates) -> optax.Params:\n    \"\"\"\n    Applies updates to parameters, supporting SymbolicConstant instances.\n    Args:\n        params: The current parameters.\n        updates: The updates to be applied.\n    Returns:\n        The updated parameters.\n    Raises:\n        UpdateError: If there's an error during the update process.",
         "detail": "src.fjformer.core.utilities",
         "documentation": {}
     },
@@ -3984,7 +4120,7 @@
         "kind": 2,
         "importPath": "src.fjformer.core.utilities",
         "description": "src.fjformer.core.utilities",
-        "peekOfCode": "def set_to_zero_scalar() -> optax.GradientTransformation:\n    \"\"\"\n    Returns a gradient transformation that sets all gradients to 0 in order to\n    make downstream constant folding cheaper.\n    \"\"\"\n    def init_fn(params):\n        del params\n        return optax.EmptyState()\n    def update_fn(updates, state, params=None):\n        return jax.tree_map(lambda x: jnp.zeros((), x.dtype), updates), state",
+        "peekOfCode": "def set_to_zero_scalar() -> optax.GradientTransformation:\n    \"\"\"\n    Returns a gradient transformation that sets all gradients to 0 to make downstream constant folding cheaper.\n    Returns:\n        A gradient transformation that sets all gradients to scalar zeros.\n    Raises:\n        OptimizerError: If there's an error during the transformation process.\n    \"\"\"\n    try:\n        def init_fn(params: Any) -> optax.EmptyState:",
         "detail": "src.fjformer.core.utilities",
         "documentation": {}
     },
@@ -4772,11 +4908,164 @@
         "documentation": {}
     },
     {
+        "label": "LoraError",
+        "kind": 6,
+        "importPath": "src.fjformer.lora.lora_core",
+        "description": "src.fjformer.lora.lora_core",
+        "peekOfCode": "class LoraError(Exception):\n    \"\"\"Base exception for LoRA-related errors.\"\"\"\n    pass\nclass UnsupportedOperationError(LoraError):\n    \"\"\"Raised when an unsupported operation is encountered.\"\"\"\n    pass\ndef lora(f: Any) -> Any:\n    \"\"\"Decorator for LoRA-compatible functions.\"\"\"\n    return cr.use_implicit_args(f)\n@dataclass",
+        "detail": "src.fjformer.lora.lora_core",
+        "documentation": {}
+    },
+    {
+        "label": "UnsupportedOperationError",
+        "kind": 6,
+        "importPath": "src.fjformer.lora.lora_core",
+        "description": "src.fjformer.lora.lora_core",
+        "peekOfCode": "class UnsupportedOperationError(LoraError):\n    \"\"\"Raised when an unsupported operation is encountered.\"\"\"\n    pass\ndef lora(f: Any) -> Any:\n    \"\"\"Decorator for LoRA-compatible functions.\"\"\"\n    return cr.use_implicit_args(f)\n@dataclass\nclass LoraWeight(cr.ImplicitArray):\n    \"\"\"Represents a LoRA (Low-Rank Adaptation) weight.\"\"\"\n    w: cr.ArrayValue  # M x N (2D)",
+        "detail": "src.fjformer.lora.lora_core",
+        "documentation": {}
+    },
+    {
+        "label": "LoraWeight",
+        "kind": 6,
+        "importPath": "src.fjformer.lora.lora_core",
+        "description": "src.fjformer.lora.lora_core",
+        "peekOfCode": "class LoraWeight(cr.ImplicitArray):\n    \"\"\"Represents a LoRA (Low-Rank Adaptation) weight.\"\"\"\n    w: cr.ArrayValue  # M x N (2D)\n    a: cr.ArrayValue  # k x N (2D)\n    b: cr.ArrayValue  # M x k (2D)\n    alpha: float = cr.aux_field(default=1.00)\n    def __post_init__(self) -> None:\n        super().__post_init__()\n        if not (\n            self.a.shape[-2] == self.b.shape[-1]",
+        "detail": "src.fjformer.lora.lora_core",
+        "documentation": {}
+    },
+    {
+        "label": "lora",
+        "kind": 2,
+        "importPath": "src.fjformer.lora.lora_core",
+        "description": "src.fjformer.lora.lora_core",
+        "peekOfCode": "def lora(f: Any) -> Any:\n    \"\"\"Decorator for LoRA-compatible functions.\"\"\"\n    return cr.use_implicit_args(f)\n@dataclass\nclass LoraWeight(cr.ImplicitArray):\n    \"\"\"Represents a LoRA (Low-Rank Adaptation) weight.\"\"\"\n    w: cr.ArrayValue  # M x N (2D)\n    a: cr.ArrayValue  # k x N (2D)\n    b: cr.ArrayValue  # M x k (2D)\n    alpha: float = cr.aux_field(default=1.00)",
+        "detail": "src.fjformer.lora.lora_core",
+        "documentation": {}
+    },
+    {
+        "label": "handle_dot_lhs",
+        "kind": 2,
+        "importPath": "src.fjformer.lora.lora_core",
+        "description": "src.fjformer.lora.lora_core",
+        "peekOfCode": "def handle_dot_lhs(\n    primitive: Any,\n    lora: LoraWeight,\n    rhs: cr.ArrayValue,\n    *,\n    dimension_numbers: Any,\n    **kwargs: Any,\n) -> Union[jnp.ndarray, Any]:\n    \"\"\"Handle dot product when LoraWeight is on the left-hand side.\"\"\"\n    if not _check_dot_dimension_numbers(dimension_numbers):",
+        "detail": "src.fjformer.lora.lora_core",
+        "documentation": {}
+    },
+    {
+        "label": "handle_dot_rhs",
+        "kind": 2,
+        "importPath": "src.fjformer.lora.lora_core",
+        "description": "src.fjformer.lora.lora_core",
+        "peekOfCode": "def handle_dot_rhs(\n    primitive: Any,\n    lhs: jax.Array,\n    lora: LoraWeight,\n    *,\n    dimension_numbers: Any,\n    **kwargs: Any,\n) -> Union[jnp.ndarray, Any]:\n    \"\"\"Handle dot product when LoraWeight is on the right-hand side.\"\"\"\n    if not _check_dot_dimension_numbers(dimension_numbers):",
+        "detail": "src.fjformer.lora.lora_core",
+        "documentation": {}
+    },
+    {
+        "label": "handle_conv",
+        "kind": 2,
+        "importPath": "src.fjformer.lora.lora_core",
+        "description": "src.fjformer.lora.lora_core",
+        "peekOfCode": "def handle_conv(\n    primitive: Any,\n    inp: cr.ArrayValue,\n    lora: LoraWeight,\n    *,\n    dimension_numbers: Any,\n    **params: Any,\n) -> jnp.ndarray:\n    \"\"\"Handle convolution with LoraWeight.\"\"\"\n    if isinstance(inp, LoraWeight):",
+        "detail": "src.fjformer.lora.lora_core",
+        "documentation": {}
+    },
+    {
+        "label": "handle_gather",
+        "kind": 2,
+        "importPath": "src.fjformer.lora.lora_core",
+        "description": "src.fjformer.lora.lora_core",
+        "peekOfCode": "def handle_gather(\n    primitive: Any,\n    lora: LoraWeight,\n    indices: jax.Array,\n    *,\n    dimension_numbers: Any,\n    slice_sizes: Tuple[int, ...],\n    **params: Any,\n) -> Union[jnp.ndarray, Any]:\n    \"\"\"Handle gather operation with LoraWeight.\"\"\"",
+        "detail": "src.fjformer.lora.lora_core",
+        "documentation": {}
+    },
+    {
+        "label": "eval_lora_transpose",
+        "kind": 2,
+        "importPath": "src.fjformer.lora.lora_core",
+        "description": "src.fjformer.lora.lora_core",
+        "peekOfCode": "def eval_lora_transpose(\n    primitive: Any, arg: LoraWeight, *, permutation: Tuple[int, ...]\n) -> Union[LoraWeight, Any]:\n    \"\"\"Handle transpose operation for LoraWeight.\"\"\"\n    if not (len(arg.shape) == 2 and permutation == (1, 0)):\n        return NotImplemented\n    return LoraWeight(\n        w=arg.w.T,\n        a=arg.b.T,\n        b=arg.a.T,",
+        "detail": "src.fjformer.lora.lora_core",
+        "documentation": {}
+    },
+    {
+        "label": "eval_lora_convert_element_type",
+        "kind": 2,
+        "importPath": "src.fjformer.lora.lora_core",
+        "description": "src.fjformer.lora.lora_core",
+        "peekOfCode": "def eval_lora_convert_element_type(\n    primitive: Any, arg: LoraWeight, **params: Any\n) -> LoraWeight:\n    \"\"\"Handle element type conversion for LoraWeight.\"\"\"\n    result = jax.tree_map(partial(cr.default_handler, primitive, **params), arg)\n    result.dtype = params[\"new_dtype\"]\n    return result",
+        "detail": "src.fjformer.lora.lora_core",
+        "documentation": {}
+    },
+    {
+        "label": "RaptureConfig",
+        "kind": 6,
+        "importPath": "src.fjformer.lora.rapture",
+        "description": "src.fjformer.lora.rapture",
+        "peekOfCode": "class RaptureConfig:\n    \"\"\"Configuration for the RaptureConfig fine-tuning method.\n    Attributes:\n        lora_dim: Dimensionality of LoRA adapters.\n        fully_fine_tune_parameters: Optional list of parameter names to be fully fine-tuned.\n        lora_fine_tune_parameters: Optional list of parameter names to be fine-tuned with LoRA.\n        tune_vectors: Whether to tune vector parameters (length 1).\n        verbose: If True, logs information about parameter tuning decisions.\n        dtype: The dtype of the LoRA parameters.\n    \"\"\"",
+        "detail": "src.fjformer.lora.rapture",
+        "documentation": {}
+    },
+    {
+        "label": "RaptureModule",
+        "kind": 6,
+        "importPath": "src.fjformer.lora.rapture",
+        "description": "src.fjformer.lora.rapture",
+        "peekOfCode": "class RaptureModule:\n    \"\"\"Container for data related to a Flax module adapted with RaptureConfig.\n    Attributes:\n        lora_opt_state: The optimizer state for the LoRA parameters.\n        lora_parameters: The PyTree of LoRA parameters.\n        lora_module: The original Flax module adapted for use with LoRA parameters.\n        lora_specs: A PyTree mirroring the parameter structure, indicating the tuning strategy for each parameter.\n        lora_tx: The Optax gradient transformation wrapped for LoRA.\n    \"\"\"\n    lora_opt_state: Union[jax.tree_util.PyTreeDef, dict]",
+        "detail": "src.fjformer.lora.rapture",
+        "documentation": {}
+    },
+    {
+        "label": "LoraRapture",
+        "kind": 6,
+        "importPath": "src.fjformer.lora.rapture",
+        "description": "src.fjformer.lora.rapture",
+        "peekOfCode": "class LoraRapture:\n    \"\"\"Implements the RaptureConfig fine-tuning method.\n    RaptureConfig combines LoRA (Low-Rank Adaptation) with full fine-tuning,\n    allowing for efficient adaptation of large language models.\n    \"\"\"\n    def __init__(self, config: RaptureConfig):\n        \"\"\"Initializes RaptureConfig with the provided configuration.\n        Args:\n            config: An `RaptureConfig` object specifying the fine-tuning setup.\n        \"\"\"",
+        "detail": "src.fjformer.lora.rapture",
+        "documentation": {}
+    },
+    {
+        "label": "split_lora_params",
+        "kind": 2,
+        "importPath": "src.fjformer.lora.rapture",
+        "description": "src.fjformer.lora.rapture",
+        "peekOfCode": "def split_lora_params(\n    params: Union[dict, jax.tree_util.PyTreeDef],\n    lora_spec: Union[dict, jax.tree_util.PyTreeDef],\n) -> Union[dict, jax.tree_util.PyTreeDef]:\n    \"\"\"Replaces specific parameters in a PyTree with `EmptyNode`.\n    This function processes a PyTree of parameters, replacing `LoraWeight.w`\n    values and parameters marked with `LORA_FREEZE` in the `lora_spec` with\n    `EmptyNode` instances. This is particularly useful for checkpointing,\n    allowing the saving of only trainable parameters.\n    Args:",
+        "detail": "src.fjformer.lora.rapture",
+        "documentation": {}
+    },
+    {
+        "label": "LORA_FREEZE",
+        "kind": 5,
+        "importPath": "src.fjformer.lora.rapture",
+        "description": "src.fjformer.lora.rapture",
+        "peekOfCode": "LORA_FREEZE = 0\nLORA_FULL = -1\nlogger = get_logger(__name__)\ndef split_lora_params(\n    params: Union[dict, jax.tree_util.PyTreeDef],\n    lora_spec: Union[dict, jax.tree_util.PyTreeDef],\n) -> Union[dict, jax.tree_util.PyTreeDef]:\n    \"\"\"Replaces specific parameters in a PyTree with `EmptyNode`.\n    This function processes a PyTree of parameters, replacing `LoraWeight.w`\n    values and parameters marked with `LORA_FREEZE` in the `lora_spec` with",
+        "detail": "src.fjformer.lora.rapture",
+        "documentation": {}
+    },
+    {
+        "label": "LORA_FULL",
+        "kind": 5,
+        "importPath": "src.fjformer.lora.rapture",
+        "description": "src.fjformer.lora.rapture",
+        "peekOfCode": "LORA_FULL = -1\nlogger = get_logger(__name__)\ndef split_lora_params(\n    params: Union[dict, jax.tree_util.PyTreeDef],\n    lora_spec: Union[dict, jax.tree_util.PyTreeDef],\n) -> Union[dict, jax.tree_util.PyTreeDef]:\n    \"\"\"Replaces specific parameters in a PyTree with `EmptyNode`.\n    This function processes a PyTree of parameters, replacing `LoraWeight.w`\n    values and parameters marked with `LORA_FREEZE` in the `lora_spec` with\n    `EmptyNode` instances. This is particularly useful for checkpointing,",
+        "detail": "src.fjformer.lora.rapture",
+        "documentation": {}
+    },
+    {
+        "label": "logger",
+        "kind": 5,
+        "importPath": "src.fjformer.lora.rapture",
+        "description": "src.fjformer.lora.rapture",
+        "peekOfCode": "logger = get_logger(__name__)\ndef split_lora_params(\n    params: Union[dict, jax.tree_util.PyTreeDef],\n    lora_spec: Union[dict, jax.tree_util.PyTreeDef],\n) -> Union[dict, jax.tree_util.PyTreeDef]:\n    \"\"\"Replaces specific parameters in a PyTree with `EmptyNode`.\n    This function processes a PyTree of parameters, replacing `LoraWeight.w`\n    values and parameters marked with `LORA_FREEZE` in the `lora_spec` with\n    `EmptyNode` instances. This is particularly useful for checkpointing,\n    allowing the saving of only trainable parameters.",
+        "detail": "src.fjformer.lora.rapture",
+        "documentation": {}
+    },
+    {
         "label": "is_notebook",
         "kind": 2,
         "importPath": "src.fjformer.monitor.tracker",
         "description": "src.fjformer.monitor.tracker",
-        "peekOfCode": "def is_notebook():\n    \"\"\"Returns True if the code is being run in a notebook, False otherwise.\"\"\"\n    return os.environ.get(\"IPYTHON\") is not None\n# Edited version of Jax-SMI from https://github.com/ayaka14732/jax-smi/\ndef run(note_book=None, interval: float = 1, dir_prefix: str = \"/dev/shm\", dpr=True):\n    \"\"\"\n    The run function is a simple wrapper around the go tool pprof command.\n    It runs the command every interval seconds and prints out its output to stdout.\n    If you are running this in a Jupyter notebook, it will print to an IPython display object instead of stdout.\n    :param note_book: Determine whether the program is running in a notebook or not",
+        "peekOfCode": "def is_notebook() -> bool:\n    \"\"\"Returns True if the code is being run in a notebook, False otherwise.\"\"\"\n    return os.environ.get(\"IPYTHON\") is not None\ndef run(\n    note_book: Optional[bool] = None,\n    interval: float = 1,\n    dir_prefix: str = \"/dev/shm\",\n    display_output: bool = True,\n) -> None:\n    \"\"\"Periodically prints JAX memory usage information.",
         "detail": "src.fjformer.monitor.tracker",
         "documentation": {}
     },
@@ -4785,7 +5074,7 @@
         "kind": 2,
         "importPath": "src.fjformer.monitor.tracker",
         "description": "src.fjformer.monitor.tracker",
-        "peekOfCode": "def run(note_book=None, interval: float = 1, dir_prefix: str = \"/dev/shm\", dpr=True):\n    \"\"\"\n    The run function is a simple wrapper around the go tool pprof command.\n    It runs the command every interval seconds and prints out its output to stdout.\n    If you are running this in a Jupyter notebook, it will print to an IPython display object instead of stdout.\n    :param note_book: Determine whether the program is running in a notebook or not\n    :param interval: float: Specify the interval between each refresh\n    :param dir_prefix: str: Specify the directory where the memory\n    :param dpr: Determine whether to display the output in a notebook or not\n    :return: The output of the pprof command",
+        "peekOfCode": "def run(\n    note_book: Optional[bool] = None,\n    interval: float = 1,\n    dir_prefix: str = \"/dev/shm\",\n    display_output: bool = True,\n) -> None:\n    \"\"\"Periodically prints JAX memory usage information.\n    Runs the `go tool pprof` command in a loop, capturing its output and either\n    printing it to stdout or displaying it in a Jupyter notebook cell.\n    Args:",
         "detail": "src.fjformer.monitor.tracker",
         "documentation": {}
     },
@@ -4794,7 +5083,7 @@
         "kind": 2,
         "importPath": "src.fjformer.monitor.tracker",
         "description": "src.fjformer.monitor.tracker",
-        "peekOfCode": "def get_memory_information(dir_prefix: str = \"/dev/shm\") -> str:\n    \"\"\"\n    The get_memory_information function is a wrapper around the go tool pprof command.\n    It takes in an optional argument, dir_prefix, which defaults to /dev/shm.\n    The function then runs the go tool pprof command with arguments -tags and {dir_prefix}/memory.prof.\n    The output of this command is captured and returned as a string.\n    :param dir_prefix: str: Specify the directory prefix for\n    :return: A string that contains the memory profile\n    \"\"\"\n    return subprocess.run(",
+        "peekOfCode": "def get_memory_information(dir_prefix: str = \"/dev/shm\") -> str:\n    \"\"\"Retrieves JAX memory usage information using `go tool pprof`.\n    Args:\n        dir_prefix: The directory where the memory profile is stored.\n    Returns:\n        The output of the `go tool pprof` command as a string.\n    \"\"\"\n    return subprocess.run(\n        args=[\"go\", \"tool\", \"pprof\", \"-tags\", f\"{dir_prefix}/memory.prof\"],\n        stdout=subprocess.PIPE,",
         "detail": "src.fjformer.monitor.tracker",
         "documentation": {}
     },
@@ -4803,7 +5092,7 @@
         "kind": 2,
         "importPath": "src.fjformer.monitor.tracker",
         "description": "src.fjformer.monitor.tracker",
-        "peekOfCode": "def initialise_tracking(interval: float = 1., dir_prefix: str = \"/dev/shm\") -> None:\n    \"\"\"\n    The initialise_tracking function starts a daemon thread that periodically saves the memory profile to disk.\n    The outer function starts the daemon thread and returns a context manager that stops it when\n    the context exits.  The inner function uses posix.rename() to atomically replace an existing file,\n    so we can be sure that any given memory profile was taken at some point during the lifetime of its\n    context.\n    :param interval: float: Set the time interval between each memory profile\n    :param dir_prefix: str: Specify the directory where the memory profile will be saved\n    :return: A thread object",
+        "peekOfCode": "def initialise_tracking(interval: float = 1.0, dir_prefix: str = \"/dev/shm\") -> None:\n    \"\"\"Starts a daemon thread to periodically save the memory profile to disk.\n    This function starts a background thread that continuously saves the JAX\n    memory profile to a file. It ensures atomicity of the file update using\n    `posix.rename` if available, otherwise falls back to a simple rename.\n    Args:\n        interval: The time interval (in seconds) between memory profile saves.\n        dir_prefix: The directory to store the memory profile.\n    \"\"\"\n    def _save_profile():",
         "detail": "src.fjformer.monitor.tracker",
         "documentation": {}
     },
@@ -4812,7 +5101,7 @@
         "kind": 2,
         "importPath": "src.fjformer.monitor.tracker",
         "description": "src.fjformer.monitor.tracker",
-        "peekOfCode": "def threaded_log(interval: float = 1., dir_prefix: str = \"/dev/shm\", save_mem_json: bool = False) -> threading.Thread:\n    \"\"\"\n    The threaded_log function is a wrapper around the get_memory_information function.\n    It allows you to monitor your memory usage in real time, and optionally save it to a JSON file.\n    The threaded_log function returns a threading.Thread object that can be started with .start() and stopped with .join().\n    :param interval: float: Set the time interval between each memory log\n    :param dir_prefix: str: Specify the directory to save the memory\n    :param save_mem_json: bool: Save the memory information to a json file\n    :return: A threading\n    \"\"\"",
+        "peekOfCode": "def threaded_log(\n    interval: float = 1.0, dir_prefix: str = \"/dev/shm\", save_mem_json: bool = False\n) -> threading.Thread:\n    \"\"\"Starts a thread to periodically log memory information.\n    This function launches a background thread that continuously monitors and\n    either prints or displays the JAX memory usage information. Optionally,\n    it can also save the memory information to a JSON file.\n    Args:\n        interval: The time interval (in seconds) between memory logs.\n        dir_prefix: The directory to save the memory information JSON file.",
         "detail": "src.fjformer.monitor.tracker",
         "documentation": {}
     },
@@ -4821,7 +5110,7 @@
         "kind": 2,
         "importPath": "src.fjformer.monitor.tracker",
         "description": "src.fjformer.monitor.tracker",
-        "peekOfCode": "def get_capacity_matrix(dir_prefix: str = \"/dev/shm\") -> dict:\n    pattern = r\"(\\d+\\.\\d+\\wB) \\((\\d+\\.\\d+%)\\): (\\w+)(\\(.*?\\))?\"\n    def calculate_full_size(size, percent):\n        size_in_gb = float(re.search(r\"(\\d+\\.\\d+)GB\", size).group(1))\n        percent_value = 100 / float(re.search(r\"(\\d+\\.\\d+)%\", percent).group(1))\n        full_size = size_in_gb * percent_value\n        return full_size\n    matches = re.findall(pattern, get_memory_information(dir_prefix=dir_prefix))\n    information = {}\n    try:",
+        "peekOfCode": "def get_capacity_matrix(dir_prefix: str = \"/dev/shm\") -> Dict[str, Dict[str, Any]]:\n    \"\"\"Parses memory information and returns a dictionary with capacity details.\n    This function extracts memory usage information from the output of the\n    `go tool pprof` command and structures it into a dictionary. The dictionary\n    maps memory pool names to their usage details, including used memory,\n    usage percentage, process information, and full capacity.\n    Args:\n        dir_prefix: The directory where the memory profile is stored.\n    Returns:\n        A dictionary containing memory capacity information.",
         "detail": "src.fjformer.monitor.tracker",
         "documentation": {}
     },
@@ -4979,11 +5268,11 @@
         "documentation": {}
     },
     {
-        "label": "get_rmsprop_with_warm_up_cosine_scheduler",
+        "label": "get_rmsprop_with_warmup_cosine_scheduler",
         "kind": 2,
         "importPath": "src.fjformer.optimizers.rmsprop",
         "description": "src.fjformer.optimizers.rmsprop",
-        "peekOfCode": "def get_rmsprop_with_warm_up_cosine_scheduler(\n    steps: int,\n    learning_rate: float = 5e-5,\n    learning_rate_end: float = 1e-5,\n    decay: float = 0.9,\n    initial_scale: float = 0.0,\n    momentum: Optional[float] = None,\n    nesterov: bool = False,\n    eps: float = 1e-8,\n    weight_decay: float = 1e-1,",
+        "peekOfCode": "def get_rmsprop_with_warmup_cosine_scheduler(\n    steps: int,\n    learning_rate: float = 5e-5,\n    learning_rate_end: float = 1e-5,\n    decay: float = 0.9,\n    initial_scale: float = 0.0,\n    momentum: Optional[float] = None,\n    nesterov: bool = False,\n    eps: float = 1e-8,\n    weight_decay: float = 1e-1,",
         "detail": "src.fjformer.optimizers.rmsprop",
         "documentation": {}
     },
@@ -6293,686 +6582,11 @@
         "documentation": {}
     },
     {
-        "label": "ArrayValue",
-        "kind": 6,
-        "importPath": "src.fjformer.xrapture.implicit_array",
-        "description": "src.fjformer.xrapture.implicit_array",
-        "peekOfCode": "class ArrayValue(metaclass=ABCMeta):\n    \"\"\"Helper class that provides a standard way to create an ABC using\n    inheritance.\n    \"\"\"\n    __slots__ = ()\n    shape = None\n    e_num_val = None\n    is_registered_by_pJit = False\nArrayValue.register(jax.Array)\n_dispatch = Dispatcher()",
-        "detail": "src.fjformer.xrapture.implicit_array",
-        "documentation": {}
-    },
-    {
-        "label": "UninitializedAval",
-        "kind": 6,
-        "importPath": "src.fjformer.xrapture.implicit_array",
-        "description": "src.fjformer.xrapture.implicit_array",
-        "peekOfCode": "class UninitializedAval(Exception):\n    def __init__(self, kind):\n        super().__init__(_AVAL_ERROR_MESSAGE.format(kind))\nclass _AvalDescriptor:\n    def __set_name__(self, owner, name):\n        self._name = f\"_{name}\"\n    def __get__(self, obj, owner=None):\n        if obj is None:\n            return None\n        result = getattr(obj, self._name, None)",
-        "detail": "src.fjformer.xrapture.implicit_array",
-        "documentation": {}
-    },
-    {
-        "label": "_AvalDescriptor",
-        "kind": 6,
-        "importPath": "src.fjformer.xrapture.implicit_array",
-        "description": "src.fjformer.xrapture.implicit_array",
-        "peekOfCode": "class _AvalDescriptor:\n    def __set_name__(self, owner, name):\n        self._name = f\"_{name}\"\n    def __get__(self, obj, owner=None):\n        if obj is None:\n            return None\n        result = getattr(obj, self._name, None)\n        if result is None:\n            raise UninitializedAval(kind=self._name[1:])\n        return result",
-        "detail": "src.fjformer.xrapture.implicit_array",
-        "documentation": {}
-    },
-    {
-        "label": "_ImplicitArrayBase",
-        "kind": 6,
-        "importPath": "src.fjformer.xrapture.implicit_array",
-        "description": "src.fjformer.xrapture.implicit_array",
-        "peekOfCode": "class _ImplicitArrayBase(ArrayValue, ABC):\n    commute_ops: ClassVar[bool] = True\n    default_shape: ClassVar[Optional[ShapedArray]] = None\n    default_dtype: ClassVar[Optional[DTypeLike]] = None\n    shape: Optional[ShapedArray] = aux_field(kw_only=True, default=None)\n    dtype: DTypeLike = aux_field(kw_only=True, default=None)\n@dataclass\nclass ImplicitArray(_ImplicitArrayBase):\n    \"\"\"\n    Abstract class for representing an abstract array of a given shape/dtype without actually instantiating it.",
-        "detail": "src.fjformer.xrapture.implicit_array",
-        "documentation": {}
-    },
-    {
-        "label": "ImplicitArray",
-        "kind": 6,
-        "importPath": "src.fjformer.xrapture.implicit_array",
-        "description": "src.fjformer.xrapture.implicit_array",
-        "peekOfCode": "class ImplicitArray(_ImplicitArrayBase):\n    \"\"\"\n    Abstract class for representing an abstract array of a given shape/dtype without actually instantiating it.\n    Subclasses must implement the materialize method, which defines the relationship between the implicit array\n    and the value it represents. Subclasses are valid arguments to functions decorated with qax.use_implicit_args.\n    All subclasses are automatically registered as pytrees using jax.tree_util.register_pytree_with_keys_class.\n    Any dataclass attributes added will be included as children, unless they are decorated with qax.aux_field\n    in which case they are passed as auxiliary data during flattening.\n    The represented shape and dtype may be defined in any of the following ways:\n        - Explicitly passing shape/dtype keyword arguments at initialization",
-        "detail": "src.fjformer.xrapture.implicit_array",
-        "documentation": {}
-    },
-    {
-        "label": "ImplicitArrayTracer",
-        "kind": 6,
-        "importPath": "src.fjformer.xrapture.implicit_array",
-        "description": "src.fjformer.xrapture.implicit_array",
-        "peekOfCode": "class ImplicitArrayTracer(core.Tracer):\n    def __init__(self, trace, value):\n        super().__init__(trace)\n        self.value = value\n    @property\n    def aval(self):\n        if isinstance(self.value, ImplicitArray):\n            return self.value.aval\n        return core.get_aval(self.value)\n    def full_lower(self):",
-        "detail": "src.fjformer.xrapture.implicit_array",
-        "documentation": {}
-    },
-    {
-        "label": "ImplicitArrayTrace",
-        "kind": 6,
-        "importPath": "src.fjformer.xrapture.implicit_array",
-        "description": "src.fjformer.xrapture.implicit_array",
-        "peekOfCode": "class ImplicitArrayTrace(core.Trace):\n    pure = lift = lambda self, val: ImplicitArrayTracer(self, val)\n    def process_primitive(self, primitive, tracers, params):\n        outs = NotImplemented\n        vals = [t.value for t in tracers]\n        implicit_idx = next(i for i, v in enumerate(vals) if isinstance(v, ImplicitArray))\n        # First try to handle the primitive using custom handlers\n        outs = vals[implicit_idx].handle_primitive(primitive, *vals, params=params)\n        if outs is NotImplemented:\n            # For higher order primitives most users won\"t implement custom",
-        "detail": "src.fjformer.xrapture.implicit_array",
-        "documentation": {}
-    },
-    {
-        "label": "_EmptyNodeCls",
-        "kind": 6,
-        "importPath": "src.fjformer.xrapture.implicit_array",
-        "description": "src.fjformer.xrapture.implicit_array",
-        "peekOfCode": "class _EmptyNodeCls:\n    _instance = None\n    def __new__(cls):\n        if cls._instance is None:\n            cls._instance = super().__new__(cls)\n        return cls._instance\nEmptyNode = _EmptyNodeCls()\ntree_util.register_pytree_node(\n    _EmptyNodeCls,\n    lambda node: ((), None),",
-        "detail": "src.fjformer.xrapture.implicit_array",
-        "documentation": {}
-    },
-    {
-        "label": "_ComplementMeta",
-        "kind": 6,
-        "importPath": "src.fjformer.xrapture.implicit_array",
-        "description": "src.fjformer.xrapture.implicit_array",
-        "peekOfCode": "class _ComplementMeta(type):\n    def __instancecheck__(self, x):\n        a, b = self.type_parameter\n        return (\n                a is None or (\n                isinstance(x, a) and not isinstance(x, b)\n        )\n        )\n@parametric\nclass Complement(metaclass=_ComplementMeta):",
-        "detail": "src.fjformer.xrapture.implicit_array",
-        "documentation": {}
-    },
-    {
-        "label": "Complement",
-        "kind": 6,
-        "importPath": "src.fjformer.xrapture.implicit_array",
-        "description": "src.fjformer.xrapture.implicit_array",
-        "peekOfCode": "class Complement(metaclass=_ComplementMeta):\n    \"\"\"\n    Relative complement\n    I.e. Complement[A, B] = A - B\n    \"\"\"\n    @classmethod\n    @dispatch\n    def __init_type_parameter__(\n            cls,\n            a: Optional[Any],",
-        "detail": "src.fjformer.xrapture.implicit_array",
-        "documentation": {}
-    },
-    {
-        "label": "SymbolicConstant",
-        "kind": 6,
-        "importPath": "src.fjformer.xrapture.implicit_array",
-        "description": "src.fjformer.xrapture.implicit_array",
-        "peekOfCode": "class SymbolicConstant(ImplicitArray):\n    value: Any = aux_field()\n    weak_type: bool = aux_field(default=False)\n    # commute_ops: ClassVar[bool] = True\n    # default_shape: ClassVar[Optional[Shape]] = None\n    # default_dtype: ClassVar[Optional[DTypeLike]] = None\n    # shape: Optional[Shape] = aux_field(kw_only=True, default=None)\n    # dtype: DTypeLike = aux_field(kw_only=True, default=None)\n    def __post_init__(self):\n        super().__post_init__()",
-        "detail": "src.fjformer.xrapture.implicit_array",
-        "documentation": {}
-    },
-    {
-        "label": "use_implicit_args",
-        "kind": 2,
-        "importPath": "src.fjformer.xrapture.implicit_array",
-        "description": "src.fjformer.xrapture.implicit_array",
-        "peekOfCode": "def use_implicit_args(f):\n    \"\"\"\n    Decorator which allows a function to accept arguments which subclass ImplicitArray, possibly\n    including further ImplicitArray instances as children.\n    Any number of arguments (including 0) may be ImplicitArrays.\n    \"\"\"\n    @wraps(f)\n    def implicit_f(*args, **kwargs):\n        flat_args, in_tree = tree_flatten_with_implicit((args, kwargs))\n        f_flat, out_tree = flatten_fun(lu.wrap_init(f), in_tree)",
-        "detail": "src.fjformer.xrapture.implicit_array",
-        "documentation": {}
-    },
-    {
-        "label": "aux_field",
-        "kind": 2,
-        "importPath": "src.fjformer.xrapture.implicit_array",
-        "description": "src.fjformer.xrapture.implicit_array",
-        "peekOfCode": "def aux_field(metadata: Optional[Union[dict, Any]] = None, **kwargs):\n    metadata = dict(metadata) if metadata else {}\n    metadata[\"implicit_array_aux\"] = True\n    return field(metadata=metadata, **kwargs)\nclass UninitializedAval(Exception):\n    def __init__(self, kind):\n        super().__init__(_AVAL_ERROR_MESSAGE.format(kind))\nclass _AvalDescriptor:\n    def __set_name__(self, owner, name):\n        self._name = f\"_{name}\"",
-        "detail": "src.fjformer.xrapture.implicit_array",
-        "documentation": {}
-    },
-    {
-        "label": "wrap_jaxpr",
-        "kind": 2,
-        "importPath": "src.fjformer.xrapture.implicit_array",
-        "description": "src.fjformer.xrapture.implicit_array",
-        "peekOfCode": "def wrap_jaxpr(jaxpr, vals_with_implicits, return_closed=True):\n    if isinstance(jaxpr, jax.core.ClosedJaxpr):\n        literals = jaxpr.literals\n        jaxpr = jaxpr.jaxpr\n    else:\n        literals = []\n    wrapped_fn = lu.wrap_init(use_implicit_args(partial(core.eval_jaxpr, jaxpr)))\n    flat_args, in_tree = jax.tree_util.tree_flatten((literals, *vals_with_implicits))\n    flat_fn, out_tree = flatten_fun_nokwargs(wrapped_fn, in_tree)\n    new_jaxpr, _, consts = pe.trace_to_jaxpr_dynamic(flat_fn, [core.get_aval(v) for v in flat_args])",
-        "detail": "src.fjformer.xrapture.implicit_array",
-        "documentation": {}
-    },
-    {
-        "label": "materialize_handler",
-        "kind": 2,
-        "importPath": "src.fjformer.xrapture.implicit_array",
-        "description": "src.fjformer.xrapture.implicit_array",
-        "peekOfCode": "def materialize_handler(primitive, *vals, params):\n    vals = _materialize_all(vals)\n    subfuns, bind_params = primitive.get_bind_params(params)\n    result = use_implicit_args(primitive.bind)(*subfuns, *vals, **bind_params)\n    return result\ndef _broadcast_tuple(t, trees):\n    if isinstance(trees, jax.tree_util.PyTreeDef):\n        trees = jax.tree_util.tree_unflatten(trees, range(trees.num_leaves))\n    assert len(t) == len(trees)\n    return tuple(chain.from_iterable(",
-        "detail": "src.fjformer.xrapture.implicit_array",
-        "documentation": {}
-    },
-    {
-        "label": "combine_leaf_predicate",
-        "kind": 2,
-        "importPath": "src.fjformer.xrapture.implicit_array",
-        "description": "src.fjformer.xrapture.implicit_array",
-        "peekOfCode": "def combine_leaf_predicate(base_fn, is_leaf):\n    @wraps(base_fn)\n    def new_fn(*args, new_is_leaf=None):\n        if new_is_leaf is None:\n            combined_is_leaf = is_leaf\n        else:\n            def combined_is_leaf(arg):\n                return is_leaf(arg) or new_is_leaf(arg)\n        return base_fn(*args, is_leaf=combined_is_leaf)\n    return new_fn",
-        "detail": "src.fjformer.xrapture.implicit_array",
-        "documentation": {}
-    },
-    {
-        "label": "leaf_predicate",
-        "kind": 2,
-        "importPath": "src.fjformer.xrapture.implicit_array",
-        "description": "src.fjformer.xrapture.implicit_array",
-        "peekOfCode": "def leaf_predicate(x):\n    return isinstance(x, (ImplicitArray, _EmptyNodeCls))\ntree_map_with_implicit = combine_leaf_predicate(jax.tree_map, leaf_predicate)\ntree_map_with_path_with_implicit = combine_leaf_predicate(tree_util.tree_map_with_path, leaf_predicate)\ntree_flatten_with_implicit = combine_leaf_predicate(tree_util.tree_flatten, leaf_predicate)\ntree_flatten_with_path_with_implicit = combine_leaf_predicate(tree_util.tree_flatten_with_path, leaf_predicate)\ntree_leaves_with_implicit = combine_leaf_predicate(tree_util.tree_leaves, leaf_predicate)\ntree_structure_with_implicit = combine_leaf_predicate(tree_util.tree_structure, leaf_predicate)\ndef flatten_one_implicit_layer(tree):\n    def is_leaf_below_node(node, x):",
-        "detail": "src.fjformer.xrapture.implicit_array",
-        "documentation": {}
-    },
-    {
-        "label": "flatten_one_implicit_layer",
-        "kind": 2,
-        "importPath": "src.fjformer.xrapture.implicit_array",
-        "description": "src.fjformer.xrapture.implicit_array",
-        "peekOfCode": "def flatten_one_implicit_layer(tree):\n    def is_leaf_below_node(node, x):\n        return isinstance(x, ImplicitArray) and x is not node\n    def replace_subtree_implicits(node):\n        return tree_util.tree_map(lambda _: 1, node, is_leaf=partial(is_leaf_below_node, node))\n    prototype = tree_map_with_implicit(replace_subtree_implicits, tree)\n    struct = tree_util.tree_structure(prototype)\n    leaves = tree_leaves_with_implicit(tree)\n    leaves = list(chain.from_iterable(\n        tree_util.tree_leaves(leaf, is_leaf=partial(is_leaf_below_node, leaf))",
-        "detail": "src.fjformer.xrapture.implicit_array",
-        "documentation": {}
-    },
-    {
-        "label": "implicit_depth",
-        "kind": 2,
-        "importPath": "src.fjformer.xrapture.implicit_array",
-        "description": "src.fjformer.xrapture.implicit_array",
-        "peekOfCode": "def implicit_depth(tree):\n    leaves = tree_leaves_with_implicit(tree)\n    depth = 0\n    while True:\n        next_leaves = []\n        any_implicit = False\n        for leaf in leaves:\n            if not isinstance(leaf, ImplicitArray):\n                continue\n            any_implicit = True",
-        "detail": "src.fjformer.xrapture.implicit_array",
-        "documentation": {}
-    },
-    {
-        "label": "get_common_prefix_transforms",
-        "kind": 2,
-        "importPath": "src.fjformer.xrapture.implicit_array",
-        "description": "src.fjformer.xrapture.implicit_array",
-        "peekOfCode": "def get_common_prefix_transforms(trees):\n    \"\"\"\n    Given an iterable of pytrees which have the same structure after all\n    ImplicitArray instances are materialized, return a list of callables\n    which will transform each tree into the largest common structure\n    obtainable via materialization of ImplicitArrays.\n    \"\"\"\n    if len(trees) <= 1:\n        return [lambda x: x for _ in trees]\n    all_leaves, structures = zip(*(tree_flatten_with_implicit(tree) for tree in trees))",
-        "detail": "src.fjformer.xrapture.implicit_array",
-        "documentation": {}
-    },
-    {
-        "label": "materialize_nested",
-        "kind": 2,
-        "importPath": "src.fjformer.xrapture.implicit_array",
-        "description": "src.fjformer.xrapture.implicit_array",
-        "peekOfCode": "def materialize_nested(implicit_arr, full=False):\n    \"\"\"\n    Materialize an ImplicitArray instance, handling the case where implicit_arr.materialize()\n    involves further ImplicitArray instances.\n    Arguments:\n        implicit_arr: An ImplicitArray instance\n        full: If True, repeatedly materialize until the result is a concrete array\n    Returns:\n        The materialized array\n    \"\"\"",
-        "detail": "src.fjformer.xrapture.implicit_array",
-        "documentation": {}
-    },
-    {
-        "label": "get_lax_primitive_by_name",
-        "kind": 2,
-        "importPath": "src.fjformer.xrapture.implicit_array",
-        "description": "src.fjformer.xrapture.implicit_array",
-        "peekOfCode": "def get_lax_primitive_by_name(name):\n    return getattr(jax.lax, f\"{name}_p\")\ndef get_primitive_handler(primitive):\n    if isinstance(primitive, str):\n        primitive = get_lax_primitive_by_name(primitive)\n    handler = _dispatch.functions.get(primitive)\n    if handler is None:\n        def _not_impl_handler(primitive: jax.core.Primitive, *args, **kwargs):\n            return NotImplemented\n        _not_impl_handler.__doc__ = \"Default handler for {primitive.name}\"",
-        "detail": "src.fjformer.xrapture.implicit_array",
-        "documentation": {}
-    },
-    {
-        "label": "get_primitive_handler",
-        "kind": 2,
-        "importPath": "src.fjformer.xrapture.implicit_array",
-        "description": "src.fjformer.xrapture.implicit_array",
-        "peekOfCode": "def get_primitive_handler(primitive):\n    if isinstance(primitive, str):\n        primitive = get_lax_primitive_by_name(primitive)\n    handler = _dispatch.functions.get(primitive)\n    if handler is None:\n        def _not_impl_handler(primitive: jax.core.Primitive, *args, **kwargs):\n            return NotImplemented\n        _not_impl_handler.__doc__ = \"Default handler for {primitive.name}\"\n        handler = Function(_not_impl_handler)\n        handler.register(_not_impl_handler, precedence=-1e9)",
-        "detail": "src.fjformer.xrapture.implicit_array",
-        "documentation": {}
-    },
-    {
-        "label": "primitive_handler",
-        "kind": 2,
-        "importPath": "src.fjformer.xrapture.implicit_array",
-        "description": "src.fjformer.xrapture.implicit_array",
-        "peekOfCode": "def primitive_handler(primitives, precedence=0):\n    if isinstance(primitives, (str, jax.core.Primitive)):\n        primitives = [primitives]\n    def decorator(fn):\n        for primitive in primitives:\n            handler = get_primitive_handler(primitive)\n            handler.register(fn, precedence=precedence)\n    return decorator\ndef default_handler(primitive, *args, **params):\n    subfuns, bind_params = primitive.get_bind_params(params)",
-        "detail": "src.fjformer.xrapture.implicit_array",
-        "documentation": {}
-    },
-    {
-        "label": "default_handler",
-        "kind": 2,
-        "importPath": "src.fjformer.xrapture.implicit_array",
-        "description": "src.fjformer.xrapture.implicit_array",
-        "peekOfCode": "def default_handler(primitive, *args, **params):\n    subfuns, bind_params = primitive.get_bind_params(params)\n    return primitive.bind(*subfuns, *args, **bind_params)\nclass _ComplementMeta(type):\n    def __instancecheck__(self, x):\n        a, b = self.type_parameter\n        return (\n                a is None or (\n                isinstance(x, a) and not isinstance(x, b)\n        )",
-        "detail": "src.fjformer.xrapture.implicit_array",
-        "documentation": {}
-    },
-    {
-        "label": "vmap_all_but_one",
-        "kind": 2,
-        "importPath": "src.fjformer.xrapture.implicit_array",
-        "description": "src.fjformer.xrapture.implicit_array",
-        "peekOfCode": "def vmap_all_but_one(f, axis, out_ndim=0):\n    \"\"\"\n    Repeatedly calls vmap to map over all axes except for `axis.`\n    All args will be mapped on the same dimensions.\n    \"\"\"\n    @wraps(f)\n    def inner(*args):\n        n_dim = args[0].ndim\n        if axis >= n_dim:\n            raise ValueError(f'Axis {axis} is out of bounds for array of dimension {n_dim}')",
-        "detail": "src.fjformer.xrapture.implicit_array",
-        "documentation": {}
-    },
-    {
-        "label": "freeze_subtrees",
-        "kind": 2,
-        "importPath": "src.fjformer.xrapture.implicit_array",
-        "description": "src.fjformer.xrapture.implicit_array",
-        "peekOfCode": "def freeze_subtrees(optimizer: optax.GradientTransformation, label_fn, use_scalar_zeros=False):\n    \"\"\"\n    Utility which wraps an optimizer such that subtrees specified by\n    label_fn will receive zeros as updates.\n    Subtrees to be frozen should be labeled with \"freeze\"\n    and all other subtrees should be labeled with \"train\"\n    \"\"\"\n    multi_transformed_optimizer = optax.multi_transform(\n        {\n            'freeze': set_to_zero_scalar() if use_scalar_zeros else optax.set_to_zero(),",
-        "detail": "src.fjformer.xrapture.implicit_array",
-        "documentation": {}
-    },
-    {
-        "label": "freeze_keys",
-        "kind": 2,
-        "importPath": "src.fjformer.xrapture.implicit_array",
-        "description": "src.fjformer.xrapture.implicit_array",
-        "peekOfCode": "def freeze_keys(optimizer: optax.GradientTransformation, arr_type, keys,\n                use_scalar_zeros=False) -> optax.GradientTransformation:\n    keys = set(keys)\n    def label_leaf(leaf):\n        if not isinstance(leaf, arr_type):\n            return 'train'\n        children, aux_data = leaf.tree_flatten_with_keys()\n        labels = ['freeze' if key in keys else 'train' for key, _ in children]\n        struct = leaf.tree_unflatten(aux_data, labels)\n        return struct",
-        "detail": "src.fjformer.xrapture.implicit_array",
-        "documentation": {}
-    },
-    {
-        "label": "apply_updates",
-        "kind": 2,
-        "importPath": "src.fjformer.xrapture.implicit_array",
-        "description": "src.fjformer.xrapture.implicit_array",
-        "peekOfCode": "def apply_updates(params: optax.Params, updates: optax.Updates) -> optax.Params:\n    \"\"\"\n    Like optax.apply_updates, but updates can be SymbolicConstant instances\n    \"\"\"\n    updates_flat, update_struct = tree_util.tree_flatten(updates, is_leaf=lambda x: isinstance(x, SymbolicConstant))\n    semi_flat_params = update_struct.flatten_up_to(params)\n    updated_flat = use_implicit_args(optax.apply_updates)(semi_flat_params, updates_flat)\n    updated = update_struct.unflatten(updated_flat)\n    return updated\ndef set_to_zero_scalar() -> optax.GradientTransformation:",
-        "detail": "src.fjformer.xrapture.implicit_array",
-        "documentation": {}
-    },
-    {
-        "label": "set_to_zero_scalar",
-        "kind": 2,
-        "importPath": "src.fjformer.xrapture.implicit_array",
-        "description": "src.fjformer.xrapture.implicit_array",
-        "peekOfCode": "def set_to_zero_scalar() -> optax.GradientTransformation:\n    \"\"\"\n    Returns a gradient transformation that sets all gradients to 0 in order to\n    make downstream constant folding cheaper.\n    \"\"\"\n    def init_fn(params):\n        del params\n        return optax.EmptyState()\n    def update_fn(updates, state, params=None):\n        return jax.tree_map(lambda x: jnp.zeros((), x.dtype), updates), state",
-        "detail": "src.fjformer.xrapture.implicit_array",
-        "documentation": {}
-    },
-    {
-        "label": "symbolic_zero_like",
-        "kind": 2,
-        "importPath": "src.fjformer.xrapture.implicit_array",
-        "description": "src.fjformer.xrapture.implicit_array",
-        "peekOfCode": "def symbolic_zero_like(x, shape=None, dtype=None):\n    dtype = jax.lax.dtype(x) if dtype is None else dtype\n    return symbolic_full_like(x, 0, shape=shape, dtype=dtype)\ndef symbolic_full_like(x, fill_value, shape=None, dtype=None):\n    shape, _ = _get_shape_dtype(x, shape, None)\n    if dtype is None:\n        dtype = jax.lax.dtype(fill_value)\n    return SymbolicConstant(fill_value, shape=shape, dtype=dtype)\n@dataclass\nclass SymbolicConstant(ImplicitArray):",
-        "detail": "src.fjformer.xrapture.implicit_array",
-        "documentation": {}
-    },
-    {
-        "label": "symbolic_full_like",
-        "kind": 2,
-        "importPath": "src.fjformer.xrapture.implicit_array",
-        "description": "src.fjformer.xrapture.implicit_array",
-        "peekOfCode": "def symbolic_full_like(x, fill_value, shape=None, dtype=None):\n    shape, _ = _get_shape_dtype(x, shape, None)\n    if dtype is None:\n        dtype = jax.lax.dtype(fill_value)\n    return SymbolicConstant(fill_value, shape=shape, dtype=dtype)\n@dataclass\nclass SymbolicConstant(ImplicitArray):\n    value: Any = aux_field()\n    weak_type: bool = aux_field(default=False)\n    # commute_ops: ClassVar[bool] = True",
-        "detail": "src.fjformer.xrapture.implicit_array",
-        "documentation": {}
-    },
-    {
-        "label": "broadcast_to",
-        "kind": 2,
-        "importPath": "src.fjformer.xrapture.implicit_array",
-        "description": "src.fjformer.xrapture.implicit_array",
-        "peekOfCode": "def broadcast_to(val, shape):\n    return jnp.broadcast_to(val, shape)\n@use_implicit_args\ndef astype(val, dtype):\n    return val.astype(dtype)\n@primitive_handler([\n    \"reshape\",\n    \"broadcast_in_dim\",\n    \"reduce_min\",\n    \"reduce_max\",",
-        "detail": "src.fjformer.xrapture.implicit_array",
-        "documentation": {}
-    },
-    {
-        "label": "astype",
-        "kind": 2,
-        "importPath": "src.fjformer.xrapture.implicit_array",
-        "description": "src.fjformer.xrapture.implicit_array",
-        "peekOfCode": "def astype(val, dtype):\n    return val.astype(dtype)\n@primitive_handler([\n    \"reshape\",\n    \"broadcast_in_dim\",\n    \"reduce_min\",\n    \"reduce_max\",\n    \"reduce_or\",\n    \"reduce_and\"\n])",
-        "detail": "src.fjformer.xrapture.implicit_array",
-        "documentation": {}
-    },
-    {
-        "label": "unchanged_value_op",
-        "kind": 2,
-        "importPath": "src.fjformer.xrapture.implicit_array",
-        "description": "src.fjformer.xrapture.implicit_array",
-        "peekOfCode": "def unchanged_value_op(primitive, sym: SymbolicConstant, **kwargs):\n    out_shape, out_dtype = _out_shape_dtype(primitive, sym, **kwargs)\n    return SymbolicConstant(sym.value, shape=out_shape, dtype=out_dtype)\ndef _op_and_reshape(primitive, lhs, rhs, flip=False):\n    \"\"\"\n    Close over one arg so we can do math at tracing time, but let the other one get traced\n    \"\"\"\n    if flip:\n        lhs, rhs = (rhs, lhs)\n    @use_implicit_args",
-        "detail": "src.fjformer.xrapture.implicit_array",
-        "documentation": {}
-    },
-    {
-        "label": "special_case_binop",
-        "kind": 2,
-        "importPath": "src.fjformer.xrapture.implicit_array",
-        "description": "src.fjformer.xrapture.implicit_array",
-        "peekOfCode": "def special_case_binop(name, identity=None, annihilator=None, flip=False):\n    lhs_type = SymbolicConstant\n    rhs_type = Complement[ArrayValue, SymbolicConstant]\n    if flip:\n        lhs_type, rhs_type = rhs_type, lhs_type\n    @primitive_handler(name, precedence=_SPECIALIZED)\n    def handler(primitive, lhs: lhs_type, rhs: rhs_type, **kwargs):\n        out_shape, out_dtype = _out_shape_dtype(primitive, lhs, rhs, **kwargs)\n        with jax.ensure_compile_time_eval():\n            if lhs.value == identity:",
-        "detail": "src.fjformer.xrapture.implicit_array",
-        "documentation": {}
-    },
-    {
-        "label": "eval_default_handler",
-        "kind": 2,
-        "importPath": "src.fjformer.xrapture.implicit_array",
-        "description": "src.fjformer.xrapture.implicit_array",
-        "peekOfCode": "def eval_default_handler(primitive, *args, **kwargs):\n    with jax.ensure_compile_time_eval():\n        result = primitive.bind(*args, **kwargs)\n    return result\n@primitive_handler(ELEMENTWISE_UNOPS, precedence=_GENERAL)\ndef handle_unop(primitive, sym: SymbolicConstant, **kwargs):\n    print(f\"Handling {primitive} with {sym}\")\n    new_val = eval_default_handler(primitive, sym.value, **kwargs)\n    return symbolic_full_like(sym, new_val)\n@primitive_handler(ELEMENTWISE_BINOPS, precedence=_GENERAL)",
-        "detail": "src.fjformer.xrapture.implicit_array",
-        "documentation": {}
-    },
-    {
-        "label": "handle_unop",
-        "kind": 2,
-        "importPath": "src.fjformer.xrapture.implicit_array",
-        "description": "src.fjformer.xrapture.implicit_array",
-        "peekOfCode": "def handle_unop(primitive, sym: SymbolicConstant, **kwargs):\n    print(f\"Handling {primitive} with {sym}\")\n    new_val = eval_default_handler(primitive, sym.value, **kwargs)\n    return symbolic_full_like(sym, new_val)\n@primitive_handler(ELEMENTWISE_BINOPS, precedence=_GENERAL)\ndef handle_binop(primitive, lhs: SymbolicConstant, rhs: SymbolicConstant, **kwargs):\n    out_shape, out_dtype = _out_shape_dtype(primitive, lhs, rhs, **kwargs)\n    new_val = eval_default_handler(primitive, lhs.value, rhs.value, **kwargs)\n    return symbolic_full_like(lhs, new_val, shape=out_shape, dtype=out_dtype)\n@primitive_handler([\"reduce_sum\", \"reduce_prod\"])",
-        "detail": "src.fjformer.xrapture.implicit_array",
-        "documentation": {}
-    },
-    {
-        "label": "handle_binop",
-        "kind": 2,
-        "importPath": "src.fjformer.xrapture.implicit_array",
-        "description": "src.fjformer.xrapture.implicit_array",
-        "peekOfCode": "def handle_binop(primitive, lhs: SymbolicConstant, rhs: SymbolicConstant, **kwargs):\n    out_shape, out_dtype = _out_shape_dtype(primitive, lhs, rhs, **kwargs)\n    new_val = eval_default_handler(primitive, lhs.value, rhs.value, **kwargs)\n    return symbolic_full_like(lhs, new_val, shape=out_shape, dtype=out_dtype)\n@primitive_handler([\"reduce_sum\", \"reduce_prod\"])\ndef reduce_sum(primitive, sym: SymbolicConstant, *, axes):\n    out_shape, out_dtype = _out_shape_dtype(primitive, sym, axes=axes)\n    with jax.ensure_compile_time_eval():\n        if sym.value == 0:\n            return SymbolicConstant(0, shape=out_shape, dtype=out_dtype)",
-        "detail": "src.fjformer.xrapture.implicit_array",
-        "documentation": {}
-    },
-    {
-        "label": "reduce_sum",
-        "kind": 2,
-        "importPath": "src.fjformer.xrapture.implicit_array",
-        "description": "src.fjformer.xrapture.implicit_array",
-        "peekOfCode": "def reduce_sum(primitive, sym: SymbolicConstant, *, axes):\n    out_shape, out_dtype = _out_shape_dtype(primitive, sym, axes=axes)\n    with jax.ensure_compile_time_eval():\n        if sym.value == 0:\n            return SymbolicConstant(0, shape=out_shape, dtype=out_dtype)\n        orig_size = np.prod(sym.shape)\n        new_size = np.prod(out_shape)\n        n_combined = orig_size // new_size\n        new_val = sym.value\n        if primitive.name == \"reduce_sum\":",
-        "detail": "src.fjformer.xrapture.implicit_array",
-        "documentation": {}
-    },
-    {
-        "label": "handle_select_n",
-        "kind": 2,
-        "importPath": "src.fjformer.xrapture.implicit_array",
-        "description": "src.fjformer.xrapture.implicit_array",
-        "peekOfCode": "def handle_select_n(primitive, cond_val, *arg_vals: SymbolicConstant):\n    if len(set(val.value.item() for val in arg_vals)) != 1:\n        return NotImplemented\n    out_shape, out_dtype = _out_shape_dtype(primitive, cond_val, *arg_vals)\n    return SymbolicConstant(arg_vals[0].value, shape=out_shape, dtype=out_dtype)",
-        "detail": "src.fjformer.xrapture.implicit_array",
-        "documentation": {}
-    },
-    {
-        "label": "_dispatch",
-        "kind": 5,
-        "importPath": "src.fjformer.xrapture.implicit_array",
-        "description": "src.fjformer.xrapture.implicit_array",
-        "peekOfCode": "_dispatch = Dispatcher()\n_primitive_ids = count()\nCOMMUTATIVE_OPS = frozenset([\n    \"add\",\n    \"bitwise_and\",\n    \"bitwise_or\",\n    \"bitwise_xor\",\n    \"eq\",\n    \"max\",\n    \"min\",",
-        "detail": "src.fjformer.xrapture.implicit_array",
-        "documentation": {}
-    },
-    {
-        "label": "_primitive_ids",
-        "kind": 5,
-        "importPath": "src.fjformer.xrapture.implicit_array",
-        "description": "src.fjformer.xrapture.implicit_array",
-        "peekOfCode": "_primitive_ids = count()\nCOMMUTATIVE_OPS = frozenset([\n    \"add\",\n    \"bitwise_and\",\n    \"bitwise_or\",\n    \"bitwise_xor\",\n    \"eq\",\n    \"max\",\n    \"min\",\n    \"mul\",",
-        "detail": "src.fjformer.xrapture.implicit_array",
-        "documentation": {}
-    },
-    {
-        "label": "COMMUTATIVE_OPS",
-        "kind": 5,
-        "importPath": "src.fjformer.xrapture.implicit_array",
-        "description": "src.fjformer.xrapture.implicit_array",
-        "peekOfCode": "COMMUTATIVE_OPS = frozenset([\n    \"add\",\n    \"bitwise_and\",\n    \"bitwise_or\",\n    \"bitwise_xor\",\n    \"eq\",\n    \"max\",\n    \"min\",\n    \"mul\",\n    \"ne\",",
-        "detail": "src.fjformer.xrapture.implicit_array",
-        "documentation": {}
-    },
-    {
-        "label": "ELEMENTWISE_UNOPS",
-        "kind": 5,
-        "importPath": "src.fjformer.xrapture.implicit_array",
-        "description": "src.fjformer.xrapture.implicit_array",
-        "peekOfCode": "ELEMENTWISE_UNOPS = frozenset([\n    \"abs\",\n    \"acos\",\n    \"acosh\",\n    \"asin\",\n    \"asinh\",\n    \"atan\",\n    \"atanh\",\n    \"bessel_i0e\",\n    \"bessel_i1e\",",
-        "detail": "src.fjformer.xrapture.implicit_array",
-        "documentation": {}
-    },
-    {
-        "label": "ELEMENTWISE_BINOPS",
-        "kind": 5,
-        "importPath": "src.fjformer.xrapture.implicit_array",
-        "description": "src.fjformer.xrapture.implicit_array",
-        "peekOfCode": "ELEMENTWISE_BINOPS = frozenset([\n    \"add\",\n    \"and\",\n    \"atan2\",\n    \"complex\",\n    \"div\",\n    \"eq\",\n    \"ge\",\n    \"gt\",\n    \"igamma_grad_a\",",
-        "detail": "src.fjformer.xrapture.implicit_array",
-        "documentation": {}
-    },
-    {
-        "label": "REDUCTION_OPS",
-        "kind": 5,
-        "importPath": "src.fjformer.xrapture.implicit_array",
-        "description": "src.fjformer.xrapture.implicit_array",
-        "peekOfCode": "REDUCTION_OPS = frozenset([\n    \"argmax\",\n    \"argmin\",\n    \"reduce_and\",\n    \"reduce_max\",\n    \"reduce_min\",\n    \"reduce_or\",\n    \"reduce_prod\",\n    \"reduce_sum\",\n    \"reduce_xor\",",
-        "detail": "src.fjformer.xrapture.implicit_array",
-        "documentation": {}
-    },
-    {
-        "label": "CUMULATIVE_REDUCTION_OPS",
-        "kind": 5,
-        "importPath": "src.fjformer.xrapture.implicit_array",
-        "description": "src.fjformer.xrapture.implicit_array",
-        "peekOfCode": "CUMULATIVE_REDUCTION_OPS = frozenset([\n    \"cumlogsumexp\",\n    \"cummax\",\n    \"cummin\",\n    \"cumprod\",\n    \"cumsum\",\n])\n_GENERAL = -2\n_SPECIALIZED = -1\ndef _with_implicit_flat(fun: lu.WrappedFun) -> lu.WrappedFun:",
-        "detail": "src.fjformer.xrapture.implicit_array",
-        "documentation": {}
-    },
-    {
-        "label": "_GENERAL",
-        "kind": 5,
-        "importPath": "src.fjformer.xrapture.implicit_array",
-        "description": "src.fjformer.xrapture.implicit_array",
-        "peekOfCode": "_GENERAL = -2\n_SPECIALIZED = -1\ndef _with_implicit_flat(fun: lu.WrappedFun) -> lu.WrappedFun:\n    return _implicit_outer(_implicit_inner(fun))\n@lu.transformation\ndef _implicit_outer(*in_vals):\n    with core.new_main(ImplicitArrayTrace) as main:\n        outs = yield (main, *in_vals), {}\n        del main\n    yield outs",
-        "detail": "src.fjformer.xrapture.implicit_array",
-        "documentation": {}
-    },
-    {
-        "label": "_SPECIALIZED",
-        "kind": 5,
-        "importPath": "src.fjformer.xrapture.implicit_array",
-        "description": "src.fjformer.xrapture.implicit_array",
-        "peekOfCode": "_SPECIALIZED = -1\ndef _with_implicit_flat(fun: lu.WrappedFun) -> lu.WrappedFun:\n    return _implicit_outer(_implicit_inner(fun))\n@lu.transformation\ndef _implicit_outer(*in_vals):\n    with core.new_main(ImplicitArrayTrace) as main:\n        outs = yield (main, *in_vals), {}\n        del main\n    yield outs\n@lu.transformation",
-        "detail": "src.fjformer.xrapture.implicit_array",
-        "documentation": {}
-    },
-    {
-        "label": "_aval_discovery",
-        "kind": 5,
-        "importPath": "src.fjformer.xrapture.implicit_array",
-        "description": "src.fjformer.xrapture.implicit_array",
-        "peekOfCode": "_aval_discovery = ContextVar(\"aval_discovery\", default=False)\n@contextmanager\ndef _aval_discovery_context():\n    token = _aval_discovery.set(True)\n    try:\n        yield\n    finally:\n        _aval_discovery.reset(token)\n@dataclass\nclass _ImplicitArrayBase(ArrayValue, ABC):",
-        "detail": "src.fjformer.xrapture.implicit_array",
-        "documentation": {}
-    },
-    {
-        "label": "_default_handlers",
-        "kind": 5,
-        "importPath": "src.fjformer.xrapture.implicit_array",
-        "description": "src.fjformer.xrapture.implicit_array",
-        "peekOfCode": "_default_handlers = {\n    \"cond\": _handle_cond,\n    \"remat2\": _handle_remat2,\n    \"pjit\": _handle_pjit,\n}\ndef materialize_handler(primitive, *vals, params):\n    vals = _materialize_all(vals)\n    subfuns, bind_params = primitive.get_bind_params(params)\n    result = use_implicit_args(primitive.bind)(*subfuns, *vals, **bind_params)\n    return result",
-        "detail": "src.fjformer.xrapture.implicit_array",
-        "documentation": {}
-    },
-    {
-        "label": "_AVAL_ERROR_MESSAGE",
-        "kind": 5,
-        "importPath": "src.fjformer.xrapture.implicit_array",
-        "description": "src.fjformer.xrapture.implicit_array",
-        "peekOfCode": "_AVAL_ERROR_MESSAGE = (\n    \"{} was not set during initialization. Shape and dtype may be set by:\"\n    \"\\n\\t1. Directly passing them as keyword arguments to ImplicitArray instances\"\n    \"\\n\\t2. Overriding the default_shape/default_dtype class attributes\"\n    \"\\n\\t3. Overriding the compute_shape/compute_dtype methods\"\n    \"\\n\\t4. Overriding __post_init__ and setting their values there\"\n    \"\\n\\t5. None of the above, in which case `materialize()` will be called in an attempt to infer them.\"\n    \" If their values are required in order to compute the materialization this will be unsuccessful.\"\n)\nclass _EmptyNodeCls:",
-        "detail": "src.fjformer.xrapture.implicit_array",
-        "documentation": {}
-    },
-    {
-        "label": "EmptyNode",
-        "kind": 5,
-        "importPath": "src.fjformer.xrapture.implicit_array",
-        "description": "src.fjformer.xrapture.implicit_array",
-        "peekOfCode": "EmptyNode = _EmptyNodeCls()\ntree_util.register_pytree_node(\n    _EmptyNodeCls,\n    lambda node: ((), None),\n    lambda _, __: EmptyNode\n)\ndef combine_leaf_predicate(base_fn, is_leaf):\n    @wraps(base_fn)\n    def new_fn(*args, new_is_leaf=None):\n        if new_is_leaf is None:",
-        "detail": "src.fjformer.xrapture.implicit_array",
-        "documentation": {}
-    },
-    {
-        "label": "tree_map_with_implicit",
-        "kind": 5,
-        "importPath": "src.fjformer.xrapture.implicit_array",
-        "description": "src.fjformer.xrapture.implicit_array",
-        "peekOfCode": "tree_map_with_implicit = combine_leaf_predicate(jax.tree_map, leaf_predicate)\ntree_map_with_path_with_implicit = combine_leaf_predicate(tree_util.tree_map_with_path, leaf_predicate)\ntree_flatten_with_implicit = combine_leaf_predicate(tree_util.tree_flatten, leaf_predicate)\ntree_flatten_with_path_with_implicit = combine_leaf_predicate(tree_util.tree_flatten_with_path, leaf_predicate)\ntree_leaves_with_implicit = combine_leaf_predicate(tree_util.tree_leaves, leaf_predicate)\ntree_structure_with_implicit = combine_leaf_predicate(tree_util.tree_structure, leaf_predicate)\ndef flatten_one_implicit_layer(tree):\n    def is_leaf_below_node(node, x):\n        return isinstance(x, ImplicitArray) and x is not node\n    def replace_subtree_implicits(node):",
-        "detail": "src.fjformer.xrapture.implicit_array",
-        "documentation": {}
-    },
-    {
-        "label": "tree_map_with_path_with_implicit",
-        "kind": 5,
-        "importPath": "src.fjformer.xrapture.implicit_array",
-        "description": "src.fjformer.xrapture.implicit_array",
-        "peekOfCode": "tree_map_with_path_with_implicit = combine_leaf_predicate(tree_util.tree_map_with_path, leaf_predicate)\ntree_flatten_with_implicit = combine_leaf_predicate(tree_util.tree_flatten, leaf_predicate)\ntree_flatten_with_path_with_implicit = combine_leaf_predicate(tree_util.tree_flatten_with_path, leaf_predicate)\ntree_leaves_with_implicit = combine_leaf_predicate(tree_util.tree_leaves, leaf_predicate)\ntree_structure_with_implicit = combine_leaf_predicate(tree_util.tree_structure, leaf_predicate)\ndef flatten_one_implicit_layer(tree):\n    def is_leaf_below_node(node, x):\n        return isinstance(x, ImplicitArray) and x is not node\n    def replace_subtree_implicits(node):\n        return tree_util.tree_map(lambda _: 1, node, is_leaf=partial(is_leaf_below_node, node))",
-        "detail": "src.fjformer.xrapture.implicit_array",
-        "documentation": {}
-    },
-    {
-        "label": "tree_flatten_with_implicit",
-        "kind": 5,
-        "importPath": "src.fjformer.xrapture.implicit_array",
-        "description": "src.fjformer.xrapture.implicit_array",
-        "peekOfCode": "tree_flatten_with_implicit = combine_leaf_predicate(tree_util.tree_flatten, leaf_predicate)\ntree_flatten_with_path_with_implicit = combine_leaf_predicate(tree_util.tree_flatten_with_path, leaf_predicate)\ntree_leaves_with_implicit = combine_leaf_predicate(tree_util.tree_leaves, leaf_predicate)\ntree_structure_with_implicit = combine_leaf_predicate(tree_util.tree_structure, leaf_predicate)\ndef flatten_one_implicit_layer(tree):\n    def is_leaf_below_node(node, x):\n        return isinstance(x, ImplicitArray) and x is not node\n    def replace_subtree_implicits(node):\n        return tree_util.tree_map(lambda _: 1, node, is_leaf=partial(is_leaf_below_node, node))\n    prototype = tree_map_with_implicit(replace_subtree_implicits, tree)",
-        "detail": "src.fjformer.xrapture.implicit_array",
-        "documentation": {}
-    },
-    {
-        "label": "tree_flatten_with_path_with_implicit",
-        "kind": 5,
-        "importPath": "src.fjformer.xrapture.implicit_array",
-        "description": "src.fjformer.xrapture.implicit_array",
-        "peekOfCode": "tree_flatten_with_path_with_implicit = combine_leaf_predicate(tree_util.tree_flatten_with_path, leaf_predicate)\ntree_leaves_with_implicit = combine_leaf_predicate(tree_util.tree_leaves, leaf_predicate)\ntree_structure_with_implicit = combine_leaf_predicate(tree_util.tree_structure, leaf_predicate)\ndef flatten_one_implicit_layer(tree):\n    def is_leaf_below_node(node, x):\n        return isinstance(x, ImplicitArray) and x is not node\n    def replace_subtree_implicits(node):\n        return tree_util.tree_map(lambda _: 1, node, is_leaf=partial(is_leaf_below_node, node))\n    prototype = tree_map_with_implicit(replace_subtree_implicits, tree)\n    struct = tree_util.tree_structure(prototype)",
-        "detail": "src.fjformer.xrapture.implicit_array",
-        "documentation": {}
-    },
-    {
-        "label": "tree_leaves_with_implicit",
-        "kind": 5,
-        "importPath": "src.fjformer.xrapture.implicit_array",
-        "description": "src.fjformer.xrapture.implicit_array",
-        "peekOfCode": "tree_leaves_with_implicit = combine_leaf_predicate(tree_util.tree_leaves, leaf_predicate)\ntree_structure_with_implicit = combine_leaf_predicate(tree_util.tree_structure, leaf_predicate)\ndef flatten_one_implicit_layer(tree):\n    def is_leaf_below_node(node, x):\n        return isinstance(x, ImplicitArray) and x is not node\n    def replace_subtree_implicits(node):\n        return tree_util.tree_map(lambda _: 1, node, is_leaf=partial(is_leaf_below_node, node))\n    prototype = tree_map_with_implicit(replace_subtree_implicits, tree)\n    struct = tree_util.tree_structure(prototype)\n    leaves = tree_leaves_with_implicit(tree)",
-        "detail": "src.fjformer.xrapture.implicit_array",
-        "documentation": {}
-    },
-    {
-        "label": "tree_structure_with_implicit",
-        "kind": 5,
-        "importPath": "src.fjformer.xrapture.implicit_array",
-        "description": "src.fjformer.xrapture.implicit_array",
-        "peekOfCode": "tree_structure_with_implicit = combine_leaf_predicate(tree_util.tree_structure, leaf_predicate)\ndef flatten_one_implicit_layer(tree):\n    def is_leaf_below_node(node, x):\n        return isinstance(x, ImplicitArray) and x is not node\n    def replace_subtree_implicits(node):\n        return tree_util.tree_map(lambda _: 1, node, is_leaf=partial(is_leaf_below_node, node))\n    prototype = tree_map_with_implicit(replace_subtree_implicits, tree)\n    struct = tree_util.tree_structure(prototype)\n    leaves = tree_leaves_with_implicit(tree)\n    leaves = list(chain.from_iterable(",
-        "detail": "src.fjformer.xrapture.implicit_array",
-        "documentation": {}
-    },
-    {
-        "label": "ImplicitArrayTracer",
-        "kind": 6,
-        "importPath": "src.fjformer.xrapture.tracer",
-        "description": "src.fjformer.xrapture.tracer",
-        "peekOfCode": "class ImplicitArrayTracer(Tracer):\n    def __init__(self, trace, value):\n        \"\"\"\n        The __init__ function is called when the class is instantiated.\n        It sets up the object with all of its properties and methods.\n        The self parameter refers to the instance of the object itself.\n        :param self: Refer to the instance of the class\n        :param trace: Store the traceback object, which is used to print out a stack trace\n        :param value: Store the value of the exception\n        :return: The value of the class",
-        "detail": "src.fjformer.xrapture.tracer",
-        "documentation": {}
-    },
-    {
-        "label": "ImplicitArrayTrace",
-        "kind": 6,
-        "importPath": "src.fjformer.xrapture.tracer",
-        "description": "src.fjformer.xrapture.tracer",
-        "peekOfCode": "class ImplicitArrayTrace(Trace):\n    pure = lift = lambda self, val: ImplicitArrayTracer(self, val)\n    def process_primitive(self, primitive, tracers, params):\n        \"\"\"\n        The process_primitive function is called by the tracer when it encounters a primitive.\n        The function should return a list of Tracers, which will be used to replace the original\n        Tracers in the trace. The process_primitive function can also modify params, which are\n        the parameters passed to the primitive.\n        :param self: Access the class attributes\n        :param primitive: Identify the primitive operation",
-        "detail": "src.fjformer.xrapture.tracer",
-        "documentation": {}
-    },
-    {
-        "label": "LoraWeight",
-        "kind": 6,
-        "importPath": "src.fjformer.xrapture.xrapture",
-        "description": "src.fjformer.xrapture.xrapture",
-        "peekOfCode": "class LoraWeight(ImplicitArray):\n    w: ArrayValue  # M x N\n    a: ArrayValue  # k x N\n    b: ArrayValue  # M x k\n    alpha: float = aux_field(default=1.0)\n    def __post_init__(self):\n        \"\"\"\n        The __post_init__ function is called after the __init__ function.\n        It allows us to check that the shapes of our parameters are correct, and if not, raise an error.\n        :param self: Represent the instance of the class",
-        "detail": "src.fjformer.xrapture.xrapture",
-        "documentation": {}
-    },
-    {
-        "label": "XRapTureConfig",
-        "kind": 6,
-        "importPath": "src.fjformer.xrapture.xrapture",
-        "description": "src.fjformer.xrapture.xrapture",
-        "peekOfCode": "class XRapTureConfig:\n    lora_dim: int\n    fully_fine_tune_parameters: Optional[list[str]] = None\n    lora_fine_tune_parameters: Optional[list[str]] = None\n    tune_vectors: bool = True\n    verbose: bool = True\n    dtype: jnp.dtype = jnp.float32\n@dataclass\nclass XRapTureModule:\n    lora_opt_state: Union[jax.tree_util.PyTreeDef, dict]",
-        "detail": "src.fjformer.xrapture.xrapture",
-        "documentation": {}
-    },
-    {
-        "label": "XRapTureModule",
-        "kind": 6,
-        "importPath": "src.fjformer.xrapture.xrapture",
-        "description": "src.fjformer.xrapture.xrapture",
-        "peekOfCode": "class XRapTureModule:\n    lora_opt_state: Union[jax.tree_util.PyTreeDef, dict]\n    lora_parameters: Union[jax.tree_util.PyTreeDef, dict]\n    lora_module: Union[Any, flax.linen.Module]\n    lora_specs: Union[jax.tree_util.PyTreeDef, dict]\n    lora_tx: optax.GradientTransformation\nclass XRapTure:\n    def __init__(self, config: XRapTureConfig):\n        self.config = config\n    @staticmethod",
-        "detail": "src.fjformer.xrapture.xrapture",
-        "documentation": {}
-    },
-    {
-        "label": "XRapTure",
-        "kind": 6,
-        "importPath": "src.fjformer.xrapture.xrapture",
-        "description": "src.fjformer.xrapture.xrapture",
-        "peekOfCode": "class XRapTure:\n    def __init__(self, config: XRapTureConfig):\n        self.config = config\n    @staticmethod\n    def merge_parameters(\n        lora_parameters,\n        destructive=True,\n    ):\n        \"\"\"\n        The merge_parameters function is used to convert a LoraWeight into an array.",
-        "detail": "src.fjformer.xrapture.xrapture",
-        "documentation": {}
-    },
-    {
-        "label": "handle_dot_lhs",
-        "kind": 2,
-        "importPath": "src.fjformer.xrapture.xrapture",
-        "description": "src.fjformer.xrapture.xrapture",
-        "peekOfCode": "def handle_dot_lhs(\n    primitive, lora: LoraWeight, rhs: ArrayValue, *, dimension_numbers, **kwargs\n):\n    \"\"\"\n    The handle_dot_lhs function is a JAX primitive that allows us to perform\n    matrix multiplication on LoraWeights. It does this by first performing the matrix\n    multiplication on the underlying weight tensor, and then adding in a second term\n    that accounts for the fact that we are multiplying two low-rank matrices together.\n    :param primitive: Determine which function to use\n    :param lora: LoraWeight: Pass the loraweight object to the function",
-        "detail": "src.fjformer.xrapture.xrapture",
-        "documentation": {}
-    },
-    {
-        "label": "handle_dot_rhs",
-        "kind": 2,
-        "importPath": "src.fjformer.xrapture.xrapture",
-        "description": "src.fjformer.xrapture.xrapture",
-        "peekOfCode": "def handle_dot_rhs(\n    primitive, lhs: jax.Array, lora: LoraWeight, *, dimension_numbers, **kwargs\n):\n    \"\"\"\n    The handle_dot_rhs function is a partial application of the jax.lax.dot_general function,\n    which takes in two arrays and returns their dot product (or matrix multiplication). The\n    handle_dot_rhs function is used to handle the case where a LoraWeight object appears on the right-hand side of an equation.\n    The handle_dot_rhs function takes in three arguments: primitive, lhs, and lora (the LoraWeight object). It then checks that\n    the dimension numbers are correct for this operation using _check_dimension numbers(). If they are not correct it will return NotIm\n    :param primitive: Identify the function that is being called",
-        "detail": "src.fjformer.xrapture.xrapture",
-        "documentation": {}
-    },
-    {
-        "label": "handle_conv",
-        "kind": 2,
-        "importPath": "src.fjformer.xrapture.xrapture",
-        "description": "src.fjformer.xrapture.xrapture",
-        "peekOfCode": "def handle_conv(\n    primitive, inp: ArrayValue, lora: LoraWeight, *, dimension_numbers, **params\n):\n    \"\"\"\n    The handle_conv function is a helper function that allows us to use LoraWeight objects as inputs to convolutions.\n    :param primitive: Identify the function that is being called\n    :param inp: ArrayValue: Specify the input to the convolution\n    :param lora: LoraWeight: Pass the loraweight object into the function\n    :param *: Pass in the dimension_numbers parameter\n    :param dimension_numbers: Specify the convolution",
-        "detail": "src.fjformer.xrapture.xrapture",
-        "documentation": {}
-    },
-    {
-        "label": "handle_gather",
-        "kind": 2,
-        "importPath": "src.fjformer.xrapture.xrapture",
-        "description": "src.fjformer.xrapture.xrapture",
-        "peekOfCode": "def handle_gather(\n    primitive,\n    lora: LoraWeight,\n    indices: jax.Array,\n    *,\n    dimension_numbers,\n    slice_sizes,\n    **params,\n):\n    \"\"\"",
-        "detail": "src.fjformer.xrapture.xrapture",
-        "documentation": {}
-    },
-    {
-        "label": "eval_lora_transpose",
-        "kind": 2,
-        "importPath": "src.fjformer.xrapture.xrapture",
-        "description": "src.fjformer.xrapture.xrapture",
-        "peekOfCode": "def eval_lora_transpose(primitive, arg: LoraWeight, *, permutation):\n    \"\"\"\n    The eval_lora_transpose function is used to transpose a LoraWeight object.\n    :param primitive: Determine which function to use\n    :param arg: LoraWeight: Specify the type of input that is expected\n    :param *: Indicate that the permutation parameter is a keyword-only argument\n    :param permutation: Specify the permutation of the weights\n    :return: A loraweight object with the same\n    \"\"\"\n    if not len(arg.shape) == 2 and permutation == (1, 0):",
-        "detail": "src.fjformer.xrapture.xrapture",
-        "documentation": {}
-    },
-    {
-        "label": "eval_lora_convert_element_type",
-        "kind": 2,
-        "importPath": "src.fjformer.xrapture.xrapture",
-        "description": "src.fjformer.xrapture.xrapture",
-        "peekOfCode": "def eval_lora_convert_element_type(primitive, arg: LoraWeight, **params):\n    result = jax.tree_map(partial(default_handler, primitive, **params), arg)\n    result.dtype = params[\"new_dtype\"]\n    return result\ndef split_lora_params(params, lora_spec):\n    \"\"\"\n    Map params to a pytree in which all `LoraWeight.w` values and all params marked with\n    LORA_FREEZE are replaced with EmptyNode. This is useful for checkpointing just\n    the trainable params.\n    \"\"\"",
-        "detail": "src.fjformer.xrapture.xrapture",
-        "documentation": {}
-    },
-    {
-        "label": "split_lora_params",
-        "kind": 2,
-        "importPath": "src.fjformer.xrapture.xrapture",
-        "description": "src.fjformer.xrapture.xrapture",
-        "peekOfCode": "def split_lora_params(params, lora_spec):\n    \"\"\"\n    Map params to a pytree in which all `LoraWeight.w` values and all params marked with\n    LORA_FREEZE are replaced with EmptyNode. This is useful for checkpointing just\n    the trainable params.\n    \"\"\"\n    def node_mapper(node, spec_val):\n        if not isinstance(node, LoraWeight):\n            return node if spec_val != LORA_FREEZE else EmptyNode\n        children, aux = node.tree_flatten_with_keys()",
-        "detail": "src.fjformer.xrapture.xrapture",
-        "documentation": {}
-    },
-    {
-        "label": "LORA_FREEZE",
-        "kind": 5,
-        "importPath": "src.fjformer.xrapture.xrapture",
-        "description": "src.fjformer.xrapture.xrapture",
-        "peekOfCode": "LORA_FREEZE = 0\nLORA_FULL = -1\n@dataclass\nclass LoraWeight(ImplicitArray):\n    w: ArrayValue  # M x N\n    a: ArrayValue  # k x N\n    b: ArrayValue  # M x k\n    alpha: float = aux_field(default=1.0)\n    def __post_init__(self):\n        \"\"\"",
-        "detail": "src.fjformer.xrapture.xrapture",
-        "documentation": {}
-    },
-    {
-        "label": "LORA_FULL",
-        "kind": 5,
-        "importPath": "src.fjformer.xrapture.xrapture",
-        "description": "src.fjformer.xrapture.xrapture",
-        "peekOfCode": "LORA_FULL = -1\n@dataclass\nclass LoraWeight(ImplicitArray):\n    w: ArrayValue  # M x N\n    a: ArrayValue  # k x N\n    b: ArrayValue  # M x k\n    alpha: float = aux_field(default=1.0)\n    def __post_init__(self):\n        \"\"\"\n        The __post_init__ function is called after the __init__ function.",
-        "detail": "src.fjformer.xrapture.xrapture",
-        "documentation": {}
-    },
-    {
         "label": "JaxRNG",
         "kind": 6,
         "importPath": "src.fjformer.utils",
         "description": "src.fjformer.utils",
-        "peekOfCode": "class JaxRNG(object):\n    @classmethod\n    def from_seed(cls, seed):\n        \"\"\"\n            The from_seed function is a class method that takes a seed and returns an instance of the class.\n            This allows us to create multiple instances of the same random number generator with different seeds,\n            which can be useful for debugging or reproducibility.\n            :param cls: Pass the class of the object that is being created\n            :param seed: Initialize the random number generator\n            :return: An instance of the class",
+        "peekOfCode": "class JaxRNG:\n    \"\"\"A wrapper around JAX's PRNGKey that simplifies key splitting.\"\"\"\n    def __init__(self, rng: jrandom.PRNGKey):\n        \"\"\"Initializes the JaxRNG with a PRNGKey.\n        Args:\n            rng: A JAX PRNGKey.\n        \"\"\"\n        self.rng = rng\n    @classmethod\n    def from_seed(cls, seed: int) -> \"JaxRNG\":",
         "detail": "src.fjformer.utils",
         "documentation": {}
     },
@@ -6981,7 +6595,7 @@
         "kind": 6,
         "importPath": "src.fjformer.utils",
         "description": "src.fjformer.utils",
-        "peekOfCode": "class GenerateRNG:\n    def __init__(self, seed: int = 0):\n        \"\"\"\n        The __init__ function is called when the class is instantiated.\n        It sets up the initial state of the object, which in this case includes a seed and a random number generator.\n        The seed can be set by passing an argument to __init__, but if no argument is passed it defaults to 0.\n        :param self: Represent the instance of the class\n        :param seed: int: Set the seed for the random number generator\n        :return: The object itself\n        \"\"\"",
+        "peekOfCode": "class GenerateRNG:\n    \"\"\"An infinite generator of JAX PRNGKeys, useful for iterating over seeds.\"\"\"\n    def __init__(self, seed: int = 0):\n        \"\"\"Initializes the generator with a starting seed.\n        Args:\n            seed: The seed to use for the initial PRNGKey.\n        \"\"\"\n        self.seed = seed\n        self._rng = jrandom.PRNGKey(seed)\n    def __next__(self) -> jrandom.PRNGKey:",
         "detail": "src.fjformer.utils",
         "documentation": {}
     },
@@ -6990,7 +6604,7 @@
         "kind": 2,
         "importPath": "src.fjformer.utils",
         "description": "src.fjformer.utils",
-        "peekOfCode": "def is_torch_available():\n    \"\"\"\n    The is_torch_available function checks if PyTorch is installed.\n    :return: True if the torch module is installed\n    \"\"\"\n    return True if importlib.util.find_spec('torch') is not None else False\ndef count_num_params(_p):\n    \"\"\"\n    The count_num_params function is a helper function that counts the number of parameters in a model.\n    It takes as input an unfrozen parameter dictionary, and returns the total number of parameters.",
+        "peekOfCode": "def is_torch_available() -> bool:\n    \"\"\"Checks if PyTorch is installed.\n    Returns:\n        True if the torch module is installed, False otherwise.\n    \"\"\"\n    return importlib.util.find_spec(\"torch\") is not None\ndef count_num_params(params: flax.core.frozen_dict.FrozenDict) -> int:\n    \"\"\"Counts the number of parameters in a model.\n    Args:\n        params: A Flax FrozenDict containing the model parameters.",
         "detail": "src.fjformer.utils",
         "documentation": {}
     },
@@ -6999,7 +6613,7 @@
         "kind": 2,
         "importPath": "src.fjformer.utils",
         "description": "src.fjformer.utils",
-        "peekOfCode": "def count_num_params(_p):\n    \"\"\"\n    The count_num_params function is a helper function that counts the number of parameters in a model.\n    It takes as input an unfrozen parameter dictionary, and returns the total number of parameters.\n    :param _p: Count the number of parameters in a model\n    :return: The number of parameters in the model\n    \"\"\"\n    return sum(i.size for i in jax.tree_util.tree_flatten(flax.core.unfreeze(_p))[0])\ndef count_params(_p):\n    \"\"\"",
+        "peekOfCode": "def count_num_params(params: flax.core.frozen_dict.FrozenDict) -> int:\n    \"\"\"Counts the number of parameters in a model.\n    Args:\n        params: A Flax FrozenDict containing the model parameters.\n    Returns:\n        The total number of parameters in the model.\n    \"\"\"\n    return sum(\n        i.size for i in jax.tree_util.tree_flatten(flax.core.unfreeze(params))[0]\n    )",
         "detail": "src.fjformer.utils",
         "documentation": {}
     },
@@ -7008,7 +6622,7 @@
         "kind": 2,
         "importPath": "src.fjformer.utils",
         "description": "src.fjformer.utils",
-        "peekOfCode": "def count_params(_p):\n    \"\"\"\n    The count_params function takes in a Flax model and prints out the number of parameters it contains.\n        Args:\n            _p (Flax Params]): A Flax model to count the number of parameters for.\n    :param _p: Count the number of parameters in a model\n    :return: The number of parameters in a model\n    \"\"\"\n    print('\\033[1;31mModel Contain : ', count_num_params(_p) / 1e9, ' Billion Parameters')\nclass JaxRNG(object):",
+        "peekOfCode": "def count_params(params: flax.core.frozen_dict.FrozenDict) -> None:\n    \"\"\"Prints the number of parameters in a Flax model.\n    Args:\n        params: A Flax FrozenDict containing the model parameters.\n    \"\"\"\n    print(\n        f\"\\033[1;31mModel Contains : {count_num_params(params) / 1e9:.2f} Billion Parameters\"\n    )\nclass JaxRNG:\n    \"\"\"A wrapper around JAX's PRNGKey that simplifies key splitting.\"\"\"",
         "detail": "src.fjformer.utils",
         "documentation": {}
     },
@@ -7017,7 +6631,7 @@
         "kind": 2,
         "importPath": "src.fjformer.utils",
         "description": "src.fjformer.utils",
-        "peekOfCode": "def init_rng(seed):\n    \"\"\"\n    The init_rng function initializes the global random number generator.\n    :param seed: Initialize the random number generator\n    :return: A random number generator\n    \"\"\"\n    global jax_utils_rng\n    jax_utils_rng = JaxRNG.from_seed(seed)\ndef next_rng(*args, **kwargs):\n    \"\"\"",
+        "peekOfCode": "def init_rng(seed: int) -> None:\n    \"\"\"Initializes the global JaxRNG with a seed.\n    Args:\n        seed: The seed to use for the random number generator.\n    \"\"\"\n    global jax_utils_rng\n    jax_utils_rng = JaxRNG.from_seed(seed)\ndef next_rng(\n    *args, **kwargs\n) -> Union[jrandom.PRNGKey, Tuple[jrandom.PRNGKey, ...], dict]:",
         "detail": "src.fjformer.utils",
         "documentation": {}
     },
@@ -7026,7 +6640,34 @@
         "kind": 2,
         "importPath": "src.fjformer.utils",
         "description": "src.fjformer.utils",
-        "peekOfCode": "def next_rng(*args, **kwargs):\n    \"\"\"\n    The next_rng function is a wrapper around jax.random.PRNGKey, which\n    is used to generate random numbers in JAX. The next_rng function\n    generates a new PRNGKey from the previous one, and updates the global\n    variable jax_utils_rng with this new key.\n    :param *args: Pass a variable number of arguments to the function\n    :param **kwargs: Pass in a dictionary of parameters\n    :return: A random number generator\n    \"\"\"",
+        "peekOfCode": "def next_rng(\n    *args, **kwargs\n) -> Union[jrandom.PRNGKey, Tuple[jrandom.PRNGKey, ...], dict]:\n    \"\"\"Provides access to the global JaxRNG and splits the key based on arguments.\n    This function wraps the global `jax_utils_rng` instance and calls its `__call__` method,\n    passing through any arguments provided. This provides a convenient way to access and\n    split the global random number generator key.\n    Args:\n        *args: Positional arguments passed to the `jax_utils_rng` instance's `__call__` method.\n        **kwargs: Keyword arguments passed to the `jax_utils_rng` instance's `__call__` method.",
+        "detail": "src.fjformer.utils",
+        "documentation": {}
+    },
+    {
+        "label": "get_logger",
+        "kind": 2,
+        "importPath": "src.fjformer.utils",
+        "description": "src.fjformer.utils",
+        "peekOfCode": "def get_logger(name, level: int = logging.INFO) -> logging.Logger:\n    \"\"\"\n    Function to create and configure a logger.\n    Args:\n        name: str: The name of the logger.\n        level: int: The logging level. Defaults to logging.INFO.\n    Returns:\n        logging.Logger: The configured logger instance.\n    \"\"\"\n    logger = logging.getLogger(name)",
+        "detail": "src.fjformer.utils",
+        "documentation": {}
+    },
+    {
+        "label": "set_loggers_level",
+        "kind": 2,
+        "importPath": "src.fjformer.utils",
+        "description": "src.fjformer.utils",
+        "peekOfCode": "def set_loggers_level(level: int = logging.WARNING):\n    \"\"\"Function to set the logging level of all loggers to the specified level.\n    Args:\n        level: int: The logging level to set. Defaults to\n            logging.WARNING.\n    \"\"\"\n    logging.root.setLevel(level)\n    for handler in logging.root.handlers:\n        handler.setLevel(level)",
+        "detail": "src.fjformer.utils",
+        "documentation": {}
+    },
+    {
+        "label": "jax_utils_rng",
+        "kind": 5,
+        "importPath": "src.fjformer.utils",
+        "description": "src.fjformer.utils",
+        "peekOfCode": "jax_utils_rng = None\ndef init_rng(seed: int) -> None:\n    \"\"\"Initializes the global JaxRNG with a seed.\n    Args:\n        seed: The seed to use for the random number generator.\n    \"\"\"\n    global jax_utils_rng\n    jax_utils_rng = JaxRNG.from_seed(seed)\ndef next_rng(\n    *args, **kwargs",
         "detail": "src.fjformer.utils",
         "documentation": {}
     },
@@ -7148,11 +6789,38 @@
         "documentation": {}
     },
     {
-        "label": "Zeros",
+        "label": "QuantizedArray",
         "kind": 6,
         "importPath": "env",
         "description": "env",
-        "peekOfCode": "class Zeros(ia.ImplicitArray):\n    default_dtype = jnp.float32\n    def materialize(self):\n        return jnp.zeros(self.shape, self.dtype)\n    def __str__(self):\n        return f\"Zeros({self.shape}, {self.dtype})\"\n@ia.use_implicit_args\ndef f(x, y):\n    return (x + y)[0, 0]\ndef main():",
+        "peekOfCode": "class QuantizedArray(ImplicitArray):\n    array_quant: ArrayValue\n    scale: ArrayValue\n    min_vals: ArrayValue\n    def materialize(self):\n        return self.dequantize(\n            array_quant=self.array_quant,\n            scale=self.scale,\n            min_vals=self.min_vals,\n            float_dtype=self.dtype,",
+        "detail": "env",
+        "documentation": {}
+    },
+    {
+        "label": "quantize",
+        "kind": 2,
+        "importPath": "env",
+        "description": "env",
+        "peekOfCode": "def quantize(array: Array, axis: int = -1) -> Tuple[Array, Array, Array]:\n    min_vals = jnp.min(array, axis=axis, keepdims=True)\n    max_vals = jnp.max(array, axis=axis, keepdims=True)\n    # Compute the scaling factors\n    scale = (max_vals - min_vals) / (2**7 - 1)\n    # Quantize the data\n    quantized_data = jnp.round((array - min_vals) / scale)\n    # Clip the quantized values to ensure they lie within the representable range\n    quantized_data = jnp.clip(quantized_data, 0, 2**7 - 1).astype(jnp.uint8)\n    return quantized_data, scale, min_vals",
+        "detail": "env",
+        "documentation": {}
+    },
+    {
+        "label": "dequantize",
+        "kind": 2,
+        "importPath": "env",
+        "description": "env",
+        "peekOfCode": "def dequantize(\n    array_quant: Array,\n    scale: Array,\n    min_vals: Array,\n    float_dtype: jnp.dtype = jnp.float16,\n):\n    return (array_quant * scale + min_vals).astype(float_dtype)\n@dataclass\nclass QuantizedArray(ImplicitArray):\n    array_quant: ArrayValue",
+        "detail": "env",
+        "documentation": {}
+    },
+    {
+        "label": "get_binop_result_shape_dtype",
+        "kind": 2,
+        "importPath": "env",
+        "description": "env",
+        "peekOfCode": "def get_binop_result_shape_dtype(a, b):\n    out_shape = jnp.broadcast_shapes(jnp.shape(a), jnp.shape(b))\n    out_dtype = jnp.result_type(a.dtype, b.dtype)\n    return out_shape, out_dtype\n@jax.jit\n@use_implicit_args\ndef f(x, y):\n    return (x + y)[0, 0]\ndef main():\n    orginal_array = jax.random.normal(jax.random.PRNGKey(0), (512, 64))",
         "detail": "env",
         "documentation": {}
     },
@@ -7161,7 +6829,7 @@
         "kind": 2,
         "importPath": "env",
         "description": "env",
-        "peekOfCode": "def f(x, y):\n    return (x + y)[0, 0]\ndef main():\n    z = Zeros(shape=(2, 3))\n    try:\n        print(f(z, jnp.ones(3)))\n    except KeyboardInterrupt:\n        ...\n    # print(jax.lax.pjit_p)\nif __name__ == \"__main__\":",
+        "peekOfCode": "def f(x, y):\n    return (x + y)[0, 0]\ndef main():\n    orginal_array = jax.random.normal(jax.random.PRNGKey(0), (512, 64))\n    quantized_array = QuantizedArray.quantize(orginal_array)\n    print(f(quantized_array, jnp.ones(64)))\n    print((orginal_array + jnp.ones(64))[0, 0])\nif __name__ == \"__main__\":\n    main()",
         "detail": "env",
         "documentation": {}
     },
@@ -7170,7 +6838,7 @@
         "kind": 2,
         "importPath": "env",
         "description": "env",
-        "peekOfCode": "def main():\n    z = Zeros(shape=(2, 3))\n    try:\n        print(f(z, jnp.ones(3)))\n    except KeyboardInterrupt:\n        ...\n    # print(jax.lax.pjit_p)\nif __name__ == \"__main__\":\n    main()",
+        "peekOfCode": "def main():\n    orginal_array = jax.random.normal(jax.random.PRNGKey(0), (512, 64))\n    quantized_array = QuantizedArray.quantize(orginal_array)\n    print(f(quantized_array, jnp.ones(64)))\n    print((orginal_array + jnp.ones(64))[0, 0])\nif __name__ == \"__main__\":\n    main()",
         "detail": "env",
         "documentation": {}
     },

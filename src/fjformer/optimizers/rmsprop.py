@@ -195,7 +195,7 @@ def get_rmsprop_with_warmup_linear_scheduler(
     return tx, scheduler_combined
 
 
-def get_rmsprop_with_warm_up_cosine_scheduler(
+def get_rmsprop_with_warmup_cosine_scheduler(
     steps: int,
     learning_rate: float = 5e-5,
     learning_rate_end: float = 1e-5,

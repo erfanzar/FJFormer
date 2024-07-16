@@ -16,8 +16,8 @@ from contextvars import ContextVar
 from dataclasses import dataclass, field, fields, is_dataclass
 from functools import partial, wraps
 from itertools import chain, count
-from typing import ClassVar, Optional
-
+from typing import ClassVar, Optional, Callable, Any, Tuple
+from fjformer.core.errors import UninitializedAval
 import jax
 import jax.extend.linear_util as lu
 import jax.interpreters.partial_eval as pe
@@ -428,12 +428,14 @@ def materialize_nested(implicit_arr, full=False):
 
 
 def _with_implicit_flat(fun: lu.WrappedFun) -> lu.WrappedFun:
+    """Wrap a function to handle implicit arrays."""
     f = _implicit_inner(fun)
     return _implicit_outer(f)
 
 
 @lu.transformation
 def _implicit_outer(*in_vals):
+    """Outer transformation for implicit array handling."""
     with core.new_main(ImplicitArrayTrace) as main:
         outs = yield (main, *in_vals), {}
         del main
@@ -442,6 +444,7 @@ def _implicit_outer(*in_vals):
 
 @lu.transformation
 def _implicit_inner(main, *in_vals):
+    """Inner transformation for implicit array handling."""
     trace = main.with_cur_sublevel()
     in_tracers = [
         ImplicitArrayTracer(trace, val) if isinstance(val, ImplicitArray) else val
@@ -452,11 +455,17 @@ def _implicit_inner(main, *in_vals):
     yield out_vals
 
 
-def use_implicit_args(f):
+def use_implicit_args(f: Callable) -> Callable:
     """
     Decorator which allows a function to accept arguments which subclass ImplicitArray, possibly
     including further ImplicitArray instances as children.
     Any number of arguments (including 0) may be ImplicitArrays.
+
+    Args:
+        f: The function to be decorated.
+
+    Returns:
+        A wrapped function that can handle ImplicitArray arguments.
     """
 
     @wraps(f)
@@ -470,33 +479,26 @@ def use_implicit_args(f):
     return implicit_f
 
 
-def default_handler(primitive, *args, **params):
+def default_handler(primitive: Any, *args: Any, **params: Any) -> Any:
     """Default handler for primitives."""
     subfuns, bind_params = primitive.get_bind_params(params)
     return primitive.bind(*subfuns, *args, **bind_params)
 
 
-def aux_field(metadata=None, **kwargs):
+def aux_field(metadata: Optional[dict] = None, **kwargs: Any) -> Any:
     """Create an auxiliary field for ImplicitArray subclasses."""
     metadata = dict(metadata) if metadata else {}
     metadata["implicit_array_aux"] = True
     return field(metadata=metadata, **kwargs)
 
 
-class UninitializedAval(Exception):
-    """Exception raised when an aval is accessed before initialization."""
-
-    def __init__(self, kind):
-        super().__init__(_AVAL_ERROR_MESSAGE.format(kind))
-
-
 class _AvalDescriptor:
     """Descriptor for lazy initialization of shape and dtype."""
 
-    def __set_name__(self, owner, name):
+    def __set_name__(self, owner: Any, name: str) -> None:
         self._name = f"_{name}"
 
-    def __get__(self, obj, owner=None):
+    def __get__(self, obj: Any, owner: Any = None) -> Any:
         if obj is None:
             return None
         result = getattr(obj, self._name, None)
@@ -504,7 +506,7 @@ class _AvalDescriptor:
             raise UninitializedAval(kind=self._name[1:])
         return result
 
-    def __set__(self, obj, value):
+    def __set__(self, obj: Any, value: Any) -> None:
         setattr(obj, self._name, value)
 
 
@@ -528,11 +530,11 @@ class _ImplicitArrayBase(ArrayValue, ABC):
 
     commute_ops: ClassVar[bool] = True
     warn_on_materialize: ClassVar[bool] = True
-    default_shape: ClassVar[Optional[Shape]] = None
-    default_dtype: ClassVar[Optional[DTypeLike]] = None
+    default_shape: ClassVar[Optional[Tuple[int, ...]]] = None
+    default_dtype: ClassVar[Optional[Any]] = None
 
-    shape: Optional[Shape] = aux_field(kw_only=True, default=None)
-    dtype: DTypeLike = aux_field(kw_only=True, default=None)
+    shape: Optional[Tuple[int, ...]] = aux_field(kw_only=True, default=None)
+    dtype: Any = aux_field(kw_only=True, default=None)
 
 
 @dataclass
@@ -946,14 +948,3 @@ def _filter_materialization_warnings():
     with warnings.catch_warnings():
         warnings.filterwarnings("ignore", message="Primitive.*was not handled")
         yield
-
-
-_AVAL_ERROR_MESSAGE = (
-    "{} was not set during initialization. Shape and dtype may be set by:"
-    "\n\t1. Directly passing them as keyword arguments to ImplicitArray instances"
-    "\n\t2. Overriding the default_shape/default_dtype class attributes"
-    "\n\t3. Overriding the compute_shape/compute_dtype methods"
-    "\n\t4. Overriding __post_init__ and setting their values there"
-    "\n\t5. None of the above, in which case `materialize()` will be called in an attempt to infer them."
-    " If their values are required in order to compute the materialization this will be unsuccessful."
-)

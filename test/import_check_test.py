@@ -11,7 +11,7 @@ def main():
     from src.fjformer import optimizers
     from src.fjformer import pallas_operations
     from src.fjformer import sharding
-    from src.fjformer import xrapture
+    from src.fjformer import lora
     from src.fjformer import utils
     from src.fjformer.pallas_operations.pallas_attention import flash_attention
     from src.fjformer.pallas_operations.efficient_attention import efficient_attention

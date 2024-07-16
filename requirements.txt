@@ -1,5 +1,5 @@
-jax>=0.4.28
-jaxlib>=0.4.28
+jax>=0.4.30
+jaxlib>=0.4.30
 optax~=0.2.2
 msgpack~=1.0.7
 ipython~=8.17.2
@@ -12,5 +12,4 @@ chex>=0.1.7
 einops==0.8.0
 ml-collections==0.1.1
 plum-dispatch==2.3.2
-termcolor
 safetensors

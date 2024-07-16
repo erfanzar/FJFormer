@@ -3,11 +3,11 @@ name = "fjformer"
 authors = [{ name = "Erfan Zare Chavoshi", email = "Erfanzare810@gmail.com" }]
 requires-python = ">=3.9"
 readme = "README.md"
-version = "0.0.69"
+version = "0.0.70"
 
 dependencies = [
-    "jax>=0.4.28",
-    "jaxlib>=0.4.28",
+    "jax>=0.4.30",
+    "jaxlib>=0.4.30",
     "optax~=0.2.2",
     "msgpack~=1.0.7",
     "ipython~=8.17.2",
@@ -21,7 +21,6 @@ dependencies = [
     "ml-collections==0.1.1",
     "plum-dispatch==2.3.2",
     "safetensors",
-    "termcolor"
 ]
 
 classifiers = [

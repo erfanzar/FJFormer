@@ -3,9 +3,16 @@ from functools import partial
 from typing import Any, Optional, Tuple
 
 import jax
-import jax.numpy as jnp
 import numpy as np
+from jax import lax
+from jax import numpy as jnp
 
+from fjformer.core.errors import (
+    MaterializationError,
+    OperationError,
+    ShapeDtypeError,
+    UnsupportedPrimitiveError,
+)
 from fjformer.core.implicit_array import (
     ELEMENTWISE_BINOPS,
     ELEMENTWISE_UNOPS,
@@ -18,14 +25,14 @@ from fjformer.core.implicit_array import (
 )
 from fjformer.core.types import Complement
 
+INFINITY = float("inf")
+NEGATIVE_INFINITY = float("-inf")
 _GENERAL = -2
 _SPECIALIZED = -1
 
 
 def _get_shape_dtype(
-    x: Any,
-    shape: Optional[Tuple[int, ...]],
-    dtype: Optional[Any],
+    x: Any, shape: Optional[Tuple[int, ...]] = None, dtype: Optional[Any] = None
 ) -> Tuple[Tuple[int, ...], Any]:
     """
     Determine the shape and dtype for a given input.
@@ -36,16 +43,28 @@ def _get_shape_dtype(
         dtype: Optional dtype to use
 
     Returns:
-        Tuple of (shape, dtype)
-    """
-    if shape is None:
-        shape = np.shape(x)
-    else:
-        shape = jax.core.canonicalize_shape(shape)
+        A tuple containing:
+            - shape: Tuple[int, ...]: The determined shape
+            - dtype: Any: The determined dtype
 
-    if dtype is None:
-        dtype = jax.lax.dtype(x)
-    return shape, dtype
+    Raises:
+        ShapeDtypeError: If the input x is None and both shape and dtype are None
+    """
+    if x is None and shape is None and dtype is None:
+        raise ShapeDtypeError("Either x or both shape and dtype must be provided")
+
+    try:
+        if shape is None:
+            shape = np.shape(x)
+        else:
+            shape = jax.core.canonicalize_shape(shape)
+
+        if dtype is None:
+            dtype = lax.dtype(x)
+
+        return shape, dtype
+    except Exception as e:
+        raise ShapeDtypeError(f"Error determining shape and dtype: {str(e)}")
 
 
 def _out_shape_dtype(
@@ -72,9 +91,7 @@ def _out_shape_dtype(
 
 
 def symbolic_zero_like(
-    x: Any,
-    shape: Optional[Tuple[int, ...]] = None,
-    dtype: Optional[Any] = None,
+    x: Any, shape: Optional[Tuple[int, ...]] = None, dtype: Optional[Any] = None
 ) -> "SymbolicConstant":
     """
     Create a SymbolicConstant filled with zeros, similar to the input.
@@ -85,10 +102,16 @@ def symbolic_zero_like(
         dtype: Optional dtype for the result
 
     Returns:
-        SymbolicConstant filled with zeros
+        SymbolicConstant: A constant array filled with zeros
+
+    Raises:
+        OperationError: If creation of the zero-filled SymbolicConstant fails
     """
-    dtype = jax.lax.dtype(x) if dtype is None else dtype
-    return symbolic_full_like(x, 0, shape=shape, dtype=dtype)
+    try:
+        dtype = lax.dtype(x) if dtype is None else dtype
+        return symbolic_full_like(x, 0, shape=shape, dtype=dtype)
+    except Exception as e:
+        raise OperationError(f"Failed to create zero-filled SymbolicConstant: {str(e)}")
 
 
 def symbolic_full_like(
@@ -120,24 +143,59 @@ def symbolic_full_like(
 class SymbolicConstant(ImplicitArray):
     """
     Represents a constant array symbolically, allowing for efficient operations at compile time.
+
+    Attributes:
+        value (Any): The constant value of the array
+        weak_type (bool): Whether the constant has a weak type
     """
 
     value: Any = aux_field()
     weak_type: bool = aux_field(default=False)
 
     def __post_init__(self):
+        """Initialize the SymbolicConstant after creation."""
         super().__post_init__()
-        with jax.ensure_compile_time_eval():
-            self.value = jnp.asarray(self.value, dtype=self.dtype)
+        try:
+            with jax.ensure_compile_time_eval():
+                self.value = jnp.asarray(self.value, dtype=self.dtype)
+        except Exception as e:
+            raise OperationError(f"Failed to initialize SymbolicConstant: {str(e)}")
 
-    def compute_dtype(self):
-        return jax.lax.dtype(self.value)
+    def compute_dtype(self) -> Any:
+        """Compute the dtype of the constant."""
+        return lax.dtype(self.value)
 
-    def materialize(self):
-        return jnp.full(self.shape, self.value, dtype=self.dtype)
+    def materialize(self) -> jnp.ndarray:
+        """
+        Materialize the symbolic constant into a concrete array.
 
-    def copy(self):
-        return jax.tree_map(lambda x: x, self)
+        Returns:
+            jnp.ndarray: A concrete JAX array
+
+        Raises:
+            MaterializationError: If materialization fails
+        """
+        try:
+            return jnp.full(self.shape, self.value, dtype=self.dtype)
+        except Exception as e:
+            raise MaterializationError(
+                f"Failed to materialize SymbolicConstant: {str(e)}"
+            )
+
+    def copy(self) -> "SymbolicConstant":
+        """
+        Create a copy of the SymbolicConstant.
+
+        Returns:
+            SymbolicConstant: A copy of the current instance
+
+        Raises:
+            OperationError: If copying fails
+        """
+        try:
+            return jax.tree_map(lambda x: x, self)
+        except Exception as e:
+            raise OperationError(f"Failed to copy SymbolicConstant: {str(e)}")
 
 
 @use_implicit_args
@@ -200,9 +258,9 @@ def special_case_binop(
     rhs_type = Complement[ArrayValue, SymbolicConstant]
     if flip:
         lhs_type, rhs_type = rhs_type, lhs_type
-    
+
     @primitive_handler(name, precedence=_SPECIALIZED)
-    def handler(primitive, lhs: lhs_type, rhs: rhs_type, **kwargs):
+    def handler(primitive, lhs: lhs_type, rhs: rhs_type, **kwargs):  # type:ignore
         out_shape, out_dtype = _out_shape_dtype(
             primitive,
             lhs,
@@ -246,10 +304,27 @@ def eval_default_handler(primitive, *args, **kwargs):
 def handle_unop(primitive, sym: SymbolicConstant, **kwargs):
     """
     Handle unary operations on SymbolicConstants.
+
+    Args:
+        primitive: The JAX primitive to handle
+        sym: The SymbolicConstant to operate on
+        **kwargs: Additional keyword arguments
+
+    Returns:
+        SymbolicConstant: The result of the unary operation
+
+    Raises:
+        UnsupportedPrimitiveError: If the primitive is not supported
+        OperationError: If the operation fails
     """
-    print(f"Handling {primitive} with {sym}")
-    new_val = eval_default_handler(primitive, sym.value, **kwargs)
-    return symbolic_full_like(sym, new_val)
+
+    try:
+        new_val = eval_default_handler(primitive, sym.value, **kwargs)
+        return symbolic_full_like(sym, new_val)
+    except Exception as e:
+        if isinstance(e, NotImplementedError):
+            raise UnsupportedPrimitiveError(f"Unsupported primitive: {primitive}")
+        raise OperationError(f"Failed to handle unary operation {primitive}: {str(e)}")
 
 
 @primitive_handler(ELEMENTWISE_BINOPS, precedence=_GENERAL)
