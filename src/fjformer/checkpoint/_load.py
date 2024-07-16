@@ -1,10 +1,12 @@
 import os
+
 import msgpack
 from flax.serialization import from_bytes, to_bytes, to_state_dict
 from flax.traverse_util import flatten_dict
+from jax import numpy as jnp
+from typing import Union
 
 from fjformer.checkpoint.streamer import CheckpointManager
-from jax import numpy as jnp
 
 
 def get_dtype(dtype):
@@ -23,23 +25,29 @@ def get_dtype(dtype):
 
 
 def float_tensor_to_dtype(tensor, dtype):
-    if dtype is None or dtype == '':
+    if dtype is None or dtype == "":
         return tensor
     if isinstance(dtype, str):
         dtype = get_dtype(dtype)
     float_dtypes = (jnp.bfloat16, jnp.float16, jnp.float32, jnp.float64)
-    if getattr(tensor, 'dtype', None) in float_dtypes:
+    if getattr(tensor, "dtype", None) in float_dtypes:
         tensor = tensor.astype(dtype)
     return tensor
 
 
-def load_and_convert_checkpoint_to_torch(path, dtype=jnp.float16, transpose_needed=None,
-                                         transpose_not_needed=None, select_params_field: bool = True):
+def load_and_convert_checkpoint_to_torch(
+    path,
+    dtype=jnp.float16,
+    transpose_needed=None,
+    transpose_not_needed=None,
+    select_params_field: bool = True,
+):
     import torch
+
     if transpose_needed is None:
         transpose_needed = ["kernel"]
     if transpose_not_needed is None:
-        transpose_not_needed = ['none']
+        transpose_not_needed = ["none"]
 
     def match_keywords(string, ts, ns):
         for t in ts:
@@ -50,13 +58,11 @@ def load_and_convert_checkpoint_to_torch(path, dtype=jnp.float16, transpose_need
                 return False
         return True
 
-    _, flax_params = CheckpointManager.load_state_checkpoint('params', path)
-    flax_params = flatten_dict(
-        flax_params['params'],
-        sep='.'
-    ) if select_params_field else flatten_dict(
-        flax_params,
-        sep='.'
+    _, flax_params = CheckpointManager.load_state_checkpoint("params", path)
+    flax_params = (
+        flatten_dict(flax_params["params"], sep=".")
+        if select_params_field
+        else flatten_dict(flax_params, sep=".")
     )
     torch_params = {}
     for key, tensor in flax_params.items():
@@ -67,9 +73,11 @@ def load_and_convert_checkpoint_to_torch(path, dtype=jnp.float16, transpose_need
     return torch_params
 
 
-def read_ckpt(path: [str, os.PathLike], shard_fns=None, add_extra_past_fix: list = None):
+def read_ckpt(
+    path: Union[str, os.PathLike], shard_fns=None, add_extra_past_fix: list = None
+):
     tensors = {}
-    with open(path, 'rb') as stream:
+    with open(path, "rb") as stream:
         unpacker = msgpack.Unpacker(stream, read_size=83886080, max_buffer_size=0)
         for key, value in unpacker:
             if add_extra_past_fix is not None:

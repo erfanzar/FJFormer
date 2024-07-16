@@ -1,5 +1,7 @@
 import warnings
+from dataclasses import dataclass
 from functools import partial
+from typing import Any, Callable, Optional, Union
 
 import flax.core
 import jax
@@ -24,9 +26,6 @@ from fjformer.xrapture.implicit_array import (
 
 LORA_FREEZE = 0
 LORA_FULL = -1
-
-from dataclasses import dataclass
-from typing import Any, Callable, Optional, Union
 
 
 @dataclass

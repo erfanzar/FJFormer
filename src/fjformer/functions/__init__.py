@@ -1,5 +1,10 @@
-from fjformer.functions._func import average_metrics, global_norm, transpose, fused_softmax
-from fjformer.functions.loss_func import (
+from fjformer.functions._functions import (
+    average_metrics as average_metrics,
+    global_norm as global_norm,
+    transpose as transpose,
+    fused_softmax as fused_softmax,
+)
+from fjformer.functions.loss_functions import (
     auxiliary_load_balancing_loss_func as auxiliary_load_balancing_loss_func,
     get_loss_normalizing_factor_and_weights as get_loss_normalizing_factor_and_weights,
     convert_special_loss_normalizing_factor_to_enum as convert_special_loss_normalizing_factor_to_enum,
@@ -19,30 +24,4 @@ from fjformer.functions.loss_func import (
     nll as nll,
     mse_loss as mse_loss,
     mse as mse,
-)
-
-__all__ = (
-    "average_metrics",
-    "global_norm",
-    "transpose",
-    "fused_softmax",
-    "auxiliary_load_balancing_loss_func",
-    "get_loss_normalizing_factor_and_weights",
-    "convert_special_loss_normalizing_factor_to_enum",
-    "SpecialLossNormalizingFactor",
-    "cross_entropy_loss_and_accuracy",
-    "fused_cross_entropy_loss_and_accuracy",
-    "compute_weighted_cross_entropy_and_accuracy",
-    "compute_weighted_cross_entropy",
-    "binary_cross_entropy_onehot",
-    "binary_cross_entropy",
-    "cross_entropy",
-    "cross_entropy_with_logits",
-    "cross_entropy_onehot",
-    "l2",
-    "hinge",
-    "mae",
-    "mse_loss",
-    "mse",
-    "nll",
 )

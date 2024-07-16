@@ -1,57 +1,72 @@
-import jax
 import re
+from typing import Callable, Optional, Sequence, Tuple
 
-from jax.experimental.mesh_utils import create_device_mesh
-from jax.lax import with_sharding_constraint as _with_sharding_constraint
-import numpy as np
-from jax.sharding import PartitionSpec, NamedSharding
-from jax.experimental import mesh_utils
-from jax.interpreters import pxla
 import flax
-from jax.sharding import Mesh
-from typing import Sequence, Optional
+import jax
+import jax.numpy as jnp
+import numpy as np
+from jax.experimental import mesh_utils
+from jax.experimental.mesh_utils import create_device_mesh
+from jax.interpreters import pxla
+from jax.lax import with_sharding_constraint as _with_sharding_constraint
+from jax.sharding import Mesh, NamedSharding, PartitionSpec
 
 
-def make_shard_and_gather_fns(partition_specs, mesh: Optional[jax.sharding.Mesh] = None):
+def make_shard_and_gather_fns(
+        partition_specs: dict[str, PartitionSpec],
+        mesh: Optional[jax.sharding.Mesh] = None
+) -> Tuple[dict[Callable], dict[Callable]]:
     """
-    The make_shard_and_gather_fns function takes in a partition_specs and dtype_specs,
-    and returns two functions: shard_fns and gather_fns. The shard function is used to
-    shard the input tensor into the specified partitions. The gather function is used to
-    gather all the shards back together into one tensor.
+    Create shard and gather functions based on given partition specs and mesh.
 
-    :param partition_specs: Specify the sharding of the input tensor
-    :param mesh: jax.sharding.Mesh to create namedSharding
-    :return: A tuple of functions
+    This function generates dictionaries of shard and gather functions that can be used
+    to distribute and collect arrays across a JAX mesh. The functions are specifically
+    designed for use with Flax's `jax.tree_map`.
 
+    Args:
+        partition_specs: A dictionary mapping parameter names to their respective `PartitionSpec`.
+        mesh: The JAX mesh to use for sharding. If None, the current mesh is used.
+
+    Returns:
+        A tuple containing two dictionaries:
+            - `shard_fns`: A dictionary mapping parameter names to their corresponding shard functions.
+            - `gather_fns`: A dictionary mapping parameter names to their corresponding gather functions.
     """
     if mesh is None:
         mesh = jax.interpreters.pxla.thread_resources.env.physical_mesh
         assert not mesh.empty, (
-            "you should pass mesh to `make_shard_and_gather_fns` or"
-            " at least call that under mesh context manager"
+            "You should pass 'mesh' to `make_shard_and_gather_fns` or "
+            "at least call that under mesh context manager"
         )
+
     named_shardings = jax.tree_map(lambda p: NamedSharding(mesh=mesh, spec=p), partition_specs)
 
-    def make_shard_fn(partition_spec):
+    def make_shard_fn(partition_spec: NamedSharding) -> Callable:
+        """
+        Create a shard function for a specific partition spec.
+        """
         jax_shard_function = jax.jit(
             lambda x: x,
             in_shardings=None,
             out_shardings=partition_spec
         )
 
-        def shard_fn(tensor):
+        def shard_fn(tensor: jnp.ndarray) -> jnp.ndarray:
             return jax_shard_function(tensor).block_until_ready()
 
         return shard_fn
 
-    def make_gather_fn(partition_spec):
+    def make_gather_fn(partition_spec: NamedSharding) -> Callable:
+        """
+        Create a gather function for a specific partition spec.
+        """
         jax_gather_fn = jax.jit(
             lambda x: x,
             in_shardings=partition_spec,
             out_shardings=NamedSharding(mesh, PartitionSpec()),
         )
 
-        def gather_fn(tensor):
+        def gather_fn(tensor: jnp.ndarray) -> jnp.ndarray:
             return jax.device_get(jax_gather_fn(tensor))
 
         return gather_fn
@@ -61,18 +76,17 @@ def make_shard_and_gather_fns(partition_specs, mesh: Optional[jax.sharding.Mesh]
     return shard_fns, gather_fns
 
 
-def get_jax_mesh(axis_dims, names):
+def get_jax_mesh(axis_dims: str, names: Sequence[str]) -> jax.sharding.Mesh:
     """
-    The get_jax_mesh function takes a string of the form:
-        &lt;axis_dims&gt;
-    where axis_dims is a comma-separated list of dimensions, each dimension being either:
-        &lt;name&gt;:&lt;dim&gt;  or  &lt;dim&gt;
-    If there are no names, then the default names "x", "y", and "z" will be used. If there are fewer than three dimensions, then the remaining dimensions will be set to 1. For example:
+    Create a JAX mesh based on axis dimensions and names.
 
-    :param axis_dims: Specify the dimensions of the mesh
-    :param names: Specify the names of the dimensions in
-    :return: A mesh object
+    Args:
+        axis_dims: A comma-separated string specifying the dimensions of the mesh, e.g., "1,2,4".
+                   A "!" prefix indicates mesh axis splitting.
+        names: A sequence of names for the mesh axes, e.g., ["data", "model"].
 
+    Returns:
+        A JAX mesh object.
     """
     if axis_dims.startswith("!"):
         mesh_axis_splitting = True
@@ -85,14 +99,15 @@ def get_jax_mesh(axis_dims, names):
         dim_names = []
         for axis in axis_dims.split(","):
             name, dim = axis.split(":")
-            assert name in names
+            assert name in names, f"Axis name '{name}' not found in provided names: {names}"
             dims.append(int(dim))
             dim_names.append(name)
-        assert (set(dim_names) == set(names))
+        assert set(dim_names) == set(names), "Not all axis names were used in 'axis_dims'"
     else:
         dims = [int(x) for x in axis_dims.split(",")]
         dim_names = names
-    assert len(dims) == len(names)
+    assert len(dims) == len(names), "Number of dimensions and names must match"
+
     mesh_shape = np.arange(jax.device_count()).reshape(dims).shape
     if mesh_axis_splitting:
         physical_mesh = np.array(jax.devices()).reshape(mesh_shape)
@@ -101,29 +116,32 @@ def get_jax_mesh(axis_dims, names):
     return Mesh(physical_mesh, dim_names)
 
 
-def names_in_current_mesh(*names):
+def names_in_current_mesh(*names: str) -> bool:
     """
-    The names_in_current_mesh function is used to check if a set of names are in the current mesh.
+    Check if the given names are present in the current JAX mesh.
 
-    :param *names: Pass in a list of names to the function
-    :return: A boolean indicating whether
+    Args:
+        *names: Variable number of axis names to check.
 
+    Returns:
+        True if all given names are present in the current mesh, False otherwise.
     """
     mesh_axis_names = pxla.thread_resources.env.physical_mesh.axis_names
     return set(names) <= set(mesh_axis_names)
 
 
-def get_names_from_partition_spec(partition_specs):
+def get_names_from_partition_spec(partition_specs: dict[str, PartitionSpec]) -> list[str]:
     """
-    The get_names_from_partition_spec function takes a partition_specs argument, which is either a dictionary or list.
-    If it"s a dictionary, the function converts it to a list of values. Then for each item in the partition_specs list:
-        If the item is None, continue (do nothing) and move on to next iteration of loop.
-        If the item is an instance of str (i.e., if it"s just one string), add that string to names set and move on to next iteration of loop.
-        Otherwise (if not None or str), call get_names_from_partition_spec recurs
+    Extract axis names from a partition specification.
 
-    :param partition_specs: Specify the partitioning of the data
-    :return: A list of names
+    This function recursively iterates through the provided `partition_specs`
+    dictionary and extracts all unique axis names used in the sharding specifications.
 
+    Args:
+        partition_specs: A dictionary mapping parameter names to their respective `PartitionSpec`.
+
+    Returns:
+        A list of unique axis names used in the partition specs.
     """
     names = set()
     if isinstance(partition_specs, dict):
@@ -135,13 +153,23 @@ def get_names_from_partition_spec(partition_specs):
             names.add(item)
         else:
             names.update(get_names_from_partition_spec(item))
-
     return list(names)
 
 
-def with_sharding_constraint(x, partition_specs):
-    """ A smarter version of with_sharding_constraint that only applies the
-        constraint if the current mesh contains the axes in the partition specs.
+def with_sharding_constraint(x: jnp.ndarray, partition_specs: dict[str, PartitionSpec]) -> jnp.ndarray:
+    """
+    Apply sharding constraints if axis names are present in the current mesh.
+
+    This is a smarter version of `jax.lax.with_sharding_constraint`. It only applies the
+    sharding constraint if all the axis names specified in the `partition_specs` are
+    present in the current JAX mesh.
+
+    Args:
+        x: The JAX array to apply sharding constraints to.
+        partition_specs: A dictionary mapping parameter names to their respective `PartitionSpec`.
+
+    Returns:
+        The JAX array with sharding constraints applied (if applicable).
     """
     axis_names = get_names_from_partition_spec(partition_specs)
     if names_in_current_mesh(*axis_names):
@@ -149,11 +177,30 @@ def with_sharding_constraint(x, partition_specs):
     return x
 
 
-def wrap_function_with_rng(rng):
-    """ To be used as decorator, automatically bookkeep a RNG for the wrapped function. """
+def wrap_function_with_rng(rng: jnp.ndarray) -> Callable:
+    """
+    Wrap a function to automatically manage RNG splitting.
 
-    def wrap_function(function):
+    This decorator simplifies the use of RNGs within functions by handling the
+    splitting of the RNG key. When the wrapped function is called, it splits
+    the provided RNG key, passes the split key to the original function, and
+    updates the RNG state.
+
+    Args:
+        rng: The initial JAX RNG key.
+
+    Returns:
+        A wrapped function that manages RNG splitting internally.
+    """
+
+    def wrap_function(function: Callable) -> Callable:
+        """
+        Inner decorator function.
+        """
         def wrapped(*args, **kwargs):
+            """
+            The wrapped function that handles RNG splitting.
+            """
             nonlocal rng
             rng, split_rng = jax.random.split(rng)
             return function(split_rng, *args, **kwargs)
@@ -163,17 +210,17 @@ def wrap_function_with_rng(rng):
     return wrap_function
 
 
-def get_metrics(metrics, unreplicate=False, stack=False):
+def get_metrics(metrics: dict, unreplicate: bool = False, stack: bool = False) -> dict:
     """
-    The get_metrics function is a helper function that takes the metrics dictionary
-    returned by the training loop and converts it to a format that can be used for
-    plotting. It does this in two ways:
+    Process and aggregate metrics.
 
-    :param metrics: Store the metrics that we want to track
-    :param unreplicate: Convert the metrics from a replicated
-    :param stack: Stack the metrics in a list
-    :return: A dictionary of metrics
+    Args:
+        metrics: A dictionary of metrics, potentially replicated across devices.
+        unreplicate: If True, unreplicate the metrics before processing.
+        stack: If True, stack the metrics along a new axis.
 
+    Returns:
+        A dictionary of processed metrics.
     """
     if unreplicate:
         metrics = flax.jax_utils.unreplicate(metrics)
@@ -184,14 +231,16 @@ def get_metrics(metrics, unreplicate=False, stack=False):
         return {key: float(val) for key, val in metrics.items()}
 
 
-def tree_path_to_string(path, sep=None):
+def tree_path_to_string(path: tuple, sep: Optional[str] = None) -> str:
     """
-    The tree_path_to_string function takes a tree path and returns a string representation of it.
+    Convert a JAX tree path to a string representation.
 
-    :param path: Specify the path of the tree
-    :param sep: Join the keys with a separator
-    :return: A tuple of strings
+    Args:
+        path: The JAX tree path tuple.
+        sep: Separator to use when joining path elements.
 
+    Returns:
+        The string representation of the path.
     """
     keys = []
     for key in path:
@@ -206,22 +255,21 @@ def tree_path_to_string(path, sep=None):
         else:
             keys.append(str(key))
     if sep is None:
-        return tuple(keys)
+        return tuple(keys)  # Return a tuple of strings if no separator
     return sep.join(keys)
 
 
-def flatten_tree(xs, is_leaf=None, sep=None):
+def flatten_tree(xs: dict, is_leaf: Optional[Callable] = None, sep: Optional[str] = None) -> dict:
     """
-    The flatten_tree function takes a nested structure of arrays and returns a
-    dictionary mapping from string keys to the corresponding array values. The
-    string keys are derived from the tree path to each value, with `sep` used as
-    the separator between levels in the tree. For example:
+    Flatten a JAX tree and convert paths to strings.
 
-    :param xs: Store the tree structure
-    :param is_leaf: Determine if a node is a leaf
-    :param sep: Specify the separator between each key in the path
-    :return: A dict of flattened tree paths to values
+    Args:
+        xs: The JAX tree to flatten.
+        is_leaf: Optional function to determine leaf nodes.
+        sep: Separator to use when joining path elements.
 
+    Returns:
+        A flattened dictionary with string keys representing the tree paths.
     """
     flattened, _ = jax.tree_util.tree_flatten_with_path(xs, is_leaf=is_leaf)
     output = {}
@@ -230,25 +278,62 @@ def flatten_tree(xs, is_leaf=None, sep=None):
     return output
 
 
-def named_tree_map(f, tree, *rest, is_leaf=None, sep=None):
-    """ An extended version of jax.tree_util.tree_map, where the mapped function
-        f takes both the name (path) and the tree leaf as input.
+def named_tree_map(
+        f: Callable,
+        tree: dict,
+        *rest,
+        is_leaf: Optional[Callable] = None,
+        sep: Optional[str] = None
+):
+    """
+    An extended version of `jax.tree_util.tree_map`.
+
+    This function extends `jax.tree_util.tree_map` by providing the path
+    (as a string) to the current leaf node as an argument to the mapped function `f`.
+
+    Args:
+        f: The function to apply to each leaf node, taking the path and value as input.
+        tree: The JAX tree to map over.
+        *rest: Additional arguments to be passed to `f`.
+        is_leaf: Optional function to determine leaf nodes.
+        sep: Separator to use when joining path elements.
+
+    Returns:
+        A new tree with the same structure as `tree` but with the values modified by `f`.
     """
     return jax.tree_util.tree_map_with_path(
         lambda path, x, *r: f(tree_path_to_string(path, sep=sep), x, *r),
-        tree, *rest,
+        tree,
+        *rest,
         is_leaf=is_leaf
     )
 
 
-def match_partition_rules(rules, params):
-    """ Returns a pytree of PartitionSpec according to rules. Supports handling
-        Flax TrainState and Optax optimizer state.
+def match_partition_rules(rules: list[Tuple[str, PartitionSpec]], params: dict) -> dict:
+    """
+    Match partition rules to parameters based on their names.
+
+    This function takes a list of partition rules (regular expressions and
+    corresponding `PartitionSpec`) and applies them to a dictionary of parameters
+    based on their names. It's useful for automatically defining sharding strategies.
+
+    Args:
+        rules: A list of tuples, where each tuple contains:
+               - A regular expression to match parameter names.
+               - A `PartitionSpec` to apply if the name matches.
+        params: A dictionary of parameters, where keys are parameter names.
+
+    Returns:
+        A dictionary with the same keys as `params`, but values are replaced
+        with the corresponding `PartitionSpec` based on matching rules.
     """
 
-    def get_partition_spec(name, leaf):
+    def get_partition_spec(name: str, leaf: jnp.ndarray) -> PartitionSpec:
+        """
+        Determine the partition spec for a parameter based on its name.
+        """
         if len(leaf.shape) == 0 or np.prod(leaf.shape) == 1:
-            """ Don"t partition scalar values. """
+            """ Don't partition scalar values. """
             return PartitionSpec()
         for rule, ps in rules:
             if re.search(rule, name) is not None:
@@ -258,50 +343,70 @@ def match_partition_rules(rules, params):
     return named_tree_map(get_partition_spec, params, sep="/")
 
 
-def get_weight_decay_mask(exclusions):
-    """ Return a weight decay mask function that computes the pytree masks
-        according to the given exclusion rules.
+def get_weight_decay_mask(exclusions: list[str]) -> Callable:
+    """
+    Create a weight decay mask function based on exclusion rules.
+
+    Args:
+        exclusions: A list of regular expressions defining parameter names
+                   to exclude from weight decay.
+
+    Returns:
+        A function that takes a parameter dictionary and returns a mask
+        (a PyTree with the same structure as the parameters) indicating
+        which parameters should be subject to weight decay.
     """
 
-    def decay(name, _):
+    def decay(name: str, _) -> bool:
+        """
+        Determine if a parameter should be decayed based on its name.
+        """
         for rule in exclusions:
             if re.search(rule, name) is not None:
                 return False
         return True
 
-    def weight_decay_mask(params):
+    def weight_decay_mask(params: dict) -> dict:
+        """
+        Apply the weight decay mask to a parameter dictionary.
+        """
         return named_tree_map(decay, params, sep="/")
 
     return weight_decay_mask
 
 
-def tree_apply(fns, tree):
+def tree_apply(fns: dict, tree: dict):
     """
-    The tree_apply function is a generalization of the map function.
-    It takes two arguments: a pytree of functions and a pytree of values.
-    The tree_apply function applies each function in the first argument to its corresponding value in the second argument,
-    and returns a new pytree with these results.
+    Apply a dictionary of functions to a corresponding PyTree.
 
-    :param fns: Apply the functions to the tree
-    :param tree: Apply the function to each element in the tree
-    :return: A pytree of the same structure as the input
+    Args:
+        fns: A dictionary where keys match the PyTree structure and values are functions.
+        tree: The PyTree to apply functions to.
+
+    Returns:
+        A new PyTree with the same structure as `tree`, but with values modified by the functions in `fns`.
     """
     return jax.tree_util.tree_map(lambda fn, x: fn(x), fns, tree)
 
 
 def create_mesh(
-        axis_dims: Sequence[int] = (1, -1, 1, 1), axis_names: Sequence[str] = ("dp", "fsdp", "tp", "sp"), backend=""
-):
+        axis_dims: Sequence[int] = (1, -1, 1, 1),
+        axis_names: Sequence[str] = ("dp", "fsdp", "tp", "sp"),
+        backend: str = ""
+) -> jax.sharding.Mesh:
     """
-    The create_mesh function creates a mesh object that can be used to shard arrays.
+    Create a JAX mesh with specified dimensions and names.
 
-    :param axis_dims: Sequence[int]: Specify the dimensions of the mesh
-    :param axis_names: Sequence[str]: Name the axes of the mesh
-    :param backend: Specify the backend to use
-    :return: A mesh object
+    Args:
+        axis_dims: A sequence of integers representing the size of each mesh dimension.
+                   A dimension of -1 indicates that it should be inferred automatically.
+        axis_names: A sequence of strings representing the names of the mesh dimensions.
+        backend: The JAX backend to use. If "", the default backend is used.
 
+    Returns:
+        A JAX mesh object.
     """
-    array_devices = jax.numpy.ones((len(jax.devices() if backend == "" else jax.devices(backend)), 1))
+    array_devices = jax.numpy.ones((len(jax.devices(backend)) if backend else len(jax.devices()), 1))
     resh = array_devices.reshape(axis_dims).shape
 
     return jax.sharding.Mesh(

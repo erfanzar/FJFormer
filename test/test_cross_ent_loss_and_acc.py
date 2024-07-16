@@ -1,5 +1,5 @@
 import jax.numpy as jnp
-from fjformer.functions.loss_func import (
+from fjformer.functions.loss_functions import (
     compute_weighted_cross_entropy_and_accuracy,
     cross_entropy_loss_and_accuracy,
     cross_entropy_with_logits,

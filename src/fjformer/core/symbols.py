@@ -200,7 +200,7 @@ def special_case_binop(
     rhs_type = Complement[ArrayValue, SymbolicConstant]
     if flip:
         lhs_type, rhs_type = rhs_type, lhs_type
-
+    
     @primitive_handler(name, precedence=_SPECIALIZED)
     def handler(primitive, lhs: lhs_type, rhs: rhs_type, **kwargs):
         out_shape, out_dtype = _out_shape_dtype(

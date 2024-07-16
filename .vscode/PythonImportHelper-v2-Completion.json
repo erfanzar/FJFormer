@@ -1,5 +1,23 @@
 [
     {
+        "label": "os",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "os",
+        "description": "os",
+        "detail": "os",
+        "documentation": {}
+    },
+    {
+        "label": "sys",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "sys",
+        "description": "sys",
+        "detail": "sys",
+        "documentation": {}
+    },
+    {
         "label": "abc",
         "kind": 6,
         "isExtraImport": true,
@@ -163,6 +181,14 @@
     },
     {
         "label": "Callable",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "Union",
         "importPath": "typing",
         "description": "typing",
         "isExtraImport": true,
@@ -426,7 +452,15 @@
         "documentation": {}
     },
     {
-        "label": "Optional",
+        "label": "Tuple",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "Any",
         "importPath": "typing",
         "description": "typing",
         "isExtraImport": true,
@@ -435,6 +469,38 @@
     },
     {
         "label": "Optional",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "Tuple",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "Optional",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "Tuple",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "Callable",
         "importPath": "typing",
         "description": "typing",
         "isExtraImport": true,
@@ -443,6 +509,14 @@
     },
     {
         "label": "NamedTuple",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "Optional",
         "importPath": "typing",
         "description": "typing",
         "isExtraImport": true,
@@ -714,7 +788,7 @@
         "documentation": {}
     },
     {
-        "label": "Sequence",
+        "label": "Callable",
         "importPath": "typing",
         "description": "typing",
         "isExtraImport": true,
@@ -723,6 +797,22 @@
     },
     {
         "label": "Optional",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "Sequence",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "Tuple",
         "importPath": "typing",
         "description": "typing",
         "isExtraImport": true,
@@ -1166,7 +1256,7 @@
         "documentation": {}
     },
     {
-        "label": "numpy",
+        "label": "Array",
         "importPath": "jax",
         "description": "jax",
         "isExtraImport": true,
@@ -1174,7 +1264,7 @@
         "documentation": {}
     },
     {
-        "label": "Array",
+        "label": "numpy",
         "importPath": "jax",
         "description": "jax",
         "isExtraImport": true,
@@ -1545,15 +1635,6 @@
         "description": "jax._src.numpy",
         "isExtraImport": true,
         "detail": "jax._src.numpy",
-        "documentation": {}
-    },
-    {
-        "label": "os",
-        "kind": 6,
-        "isExtraImport": true,
-        "importPath": "os",
-        "description": "os",
-        "detail": "os",
         "documentation": {}
     },
     {
@@ -2055,6 +2136,14 @@
         "documentation": {}
     },
     {
+        "label": "mul",
+        "importPath": "operator",
+        "description": "operator",
+        "isExtraImport": true,
+        "detail": "operator",
+        "documentation": {}
+    },
+    {
         "label": "common_utils",
         "importPath": "flax.training",
         "description": "flax.training",
@@ -2068,14 +2157,6 @@
         "description": "jax.scipy.special",
         "isExtraImport": true,
         "detail": "jax.scipy.special",
-        "documentation": {}
-    },
-    {
-        "label": "mul",
-        "importPath": "operator",
-        "description": "operator",
-        "isExtraImport": true,
-        "detail": "operator",
         "documentation": {}
     },
     {
@@ -2224,14 +2305,6 @@
     },
     {
         "label": "optax_add_scheduled_weight_decay",
-        "importPath": "fjformer.optimizers.optimizer_utils",
-        "description": "fjformer.optimizers.optimizer_utils",
-        "isExtraImport": true,
-        "detail": "fjformer.optimizers.optimizer_utils",
-        "documentation": {}
-    },
-    {
-        "label": "OptaxScheduledWeightDecayState",
         "importPath": "fjformer.optimizers.optimizer_utils",
         "description": "fjformer.optimizers.optimizer_utils",
         "isExtraImport": true,
@@ -2538,7 +2611,15 @@
         "documentation": {}
     },
     {
-        "label": "PartitionSpec",
+        "label": "pxla",
+        "importPath": "jax.interpreters",
+        "description": "jax.interpreters",
+        "isExtraImport": true,
+        "detail": "jax.interpreters",
+        "documentation": {}
+    },
+    {
+        "label": "Mesh",
         "importPath": "jax.sharding",
         "description": "jax.sharding",
         "isExtraImport": true,
@@ -2554,7 +2635,7 @@
         "documentation": {}
     },
     {
-        "label": "Mesh",
+        "label": "PartitionSpec",
         "importPath": "jax.sharding",
         "description": "jax.sharding",
         "isExtraImport": true,
@@ -2575,14 +2656,6 @@
         "description": "jax.sharding",
         "isExtraImport": true,
         "detail": "jax.sharding",
-        "documentation": {}
-    },
-    {
-        "label": "pxla",
-        "importPath": "jax.interpreters",
-        "description": "jax.interpreters",
-        "isExtraImport": true,
-        "detail": "jax.interpreters",
         "documentation": {}
     },
     {
@@ -2799,85 +2872,166 @@
     },
     {
         "label": "compute_weighted_cross_entropy_and_accuracy",
-        "importPath": "fjformer.functions.loss_func",
-        "description": "fjformer.functions.loss_func",
+        "importPath": "fjformer.functions.loss_functions",
+        "description": "fjformer.functions.loss_functions",
         "isExtraImport": true,
-        "detail": "fjformer.functions.loss_func",
+        "detail": "fjformer.functions.loss_functions",
         "documentation": {}
     },
     {
         "label": "cross_entropy_loss_and_accuracy",
-        "importPath": "fjformer.functions.loss_func",
-        "description": "fjformer.functions.loss_func",
+        "importPath": "fjformer.functions.loss_functions",
+        "description": "fjformer.functions.loss_functions",
         "isExtraImport": true,
-        "detail": "fjformer.functions.loss_func",
+        "detail": "fjformer.functions.loss_functions",
         "documentation": {}
     },
     {
         "label": "cross_entropy_with_logits",
-        "importPath": "fjformer.functions.loss_func",
-        "description": "fjformer.functions.loss_func",
+        "importPath": "fjformer.functions.loss_functions",
+        "description": "fjformer.functions.loss_functions",
         "isExtraImport": true,
-        "detail": "fjformer.functions.loss_func",
+        "detail": "fjformer.functions.loss_functions",
         "documentation": {}
     },
     {
         "label": "get_loss_normalizing_factor_and_weights",
-        "importPath": "fjformer.functions.loss_func",
-        "description": "fjformer.functions.loss_func",
+        "importPath": "fjformer.functions.loss_functions",
+        "description": "fjformer.functions.loss_functions",
         "isExtraImport": true,
-        "detail": "fjformer.functions.loss_func",
+        "detail": "fjformer.functions.loss_functions",
         "documentation": {}
     },
     {
         "label": "fused_cross_entropy_loss_and_accuracy",
-        "importPath": "fjformer.functions.loss_func",
-        "description": "fjformer.functions.loss_func",
+        "importPath": "fjformer.functions.loss_functions",
+        "description": "fjformer.functions.loss_functions",
         "isExtraImport": true,
-        "detail": "fjformer.functions.loss_func",
+        "detail": "fjformer.functions.loss_functions",
         "documentation": {}
     },
     {
         "label": "SpecialLossNormalizingFactor",
-        "importPath": "fjformer.functions.loss_func",
-        "description": "fjformer.functions.loss_func",
+        "importPath": "fjformer.functions.loss_functions",
+        "description": "fjformer.functions.loss_functions",
         "isExtraImport": true,
-        "detail": "fjformer.functions.loss_func",
+        "detail": "fjformer.functions.loss_functions",
         "documentation": {}
     },
     {
-        "label": "sys",
-        "kind": 6,
+        "label": "implicit_array",
+        "importPath": "fjformer.xrapture",
+        "description": "fjformer.xrapture",
         "isExtraImport": true,
-        "importPath": "sys",
-        "description": "sys",
-        "detail": "sys",
+        "detail": "fjformer.xrapture",
         "documentation": {}
     },
     {
-        "label": "qax",
-        "kind": 6,
-        "isExtraImport": true,
-        "importPath": "qax",
-        "description": "qax",
-        "detail": "qax",
+        "label": "project",
+        "kind": 5,
+        "importPath": "docs.conf",
+        "description": "docs.conf",
+        "peekOfCode": "project = \"FJFormer\"\ncopyright = \"2023, Erfan Zare Chavoshi - FJFormer\"\nauthor = \"Erfan Zare Chavoshi\"\nextensions = [\n    \"sphinx.ext.autodoc\",\n    \"sphinx.ext.autosummary\",\n    \"sphinx.ext.autosectionlabel\",\n    \"sphinx.ext.doctest\",\n    \"sphinx.ext.intersphinx\",\n    \"sphinx.ext.mathjax\",",
+        "detail": "docs.conf",
         "documentation": {}
     },
     {
-        "label": "core",
-        "importPath": "fjformer",
-        "description": "fjformer",
-        "isExtraImport": true,
-        "detail": "fjformer",
+        "label": "copyright",
+        "kind": 5,
+        "importPath": "docs.conf",
+        "description": "docs.conf",
+        "peekOfCode": "copyright = \"2023, Erfan Zare Chavoshi - FJFormer\"\nauthor = \"Erfan Zare Chavoshi\"\nextensions = [\n    \"sphinx.ext.autodoc\",\n    \"sphinx.ext.autosummary\",\n    \"sphinx.ext.autosectionlabel\",\n    \"sphinx.ext.doctest\",\n    \"sphinx.ext.intersphinx\",\n    \"sphinx.ext.mathjax\",\n    \"sphinx.ext.napoleon\",",
+        "detail": "docs.conf",
         "documentation": {}
     },
     {
-        "label": "yaml",
-        "kind": 6,
-        "isExtraImport": true,
-        "importPath": "yaml",
-        "description": "yaml",
-        "detail": "yaml",
+        "label": "author",
+        "kind": 5,
+        "importPath": "docs.conf",
+        "description": "docs.conf",
+        "peekOfCode": "author = \"Erfan Zare Chavoshi\"\nextensions = [\n    \"sphinx.ext.autodoc\",\n    \"sphinx.ext.autosummary\",\n    \"sphinx.ext.autosectionlabel\",\n    \"sphinx.ext.doctest\",\n    \"sphinx.ext.intersphinx\",\n    \"sphinx.ext.mathjax\",\n    \"sphinx.ext.napoleon\",\n    \"sphinx.ext.viewcode\",",
+        "detail": "docs.conf",
+        "documentation": {}
+    },
+    {
+        "label": "extensions",
+        "kind": 5,
+        "importPath": "docs.conf",
+        "description": "docs.conf",
+        "peekOfCode": "extensions = [\n    \"sphinx.ext.autodoc\",\n    \"sphinx.ext.autosummary\",\n    \"sphinx.ext.autosectionlabel\",\n    \"sphinx.ext.doctest\",\n    \"sphinx.ext.intersphinx\",\n    \"sphinx.ext.mathjax\",\n    \"sphinx.ext.napoleon\",\n    \"sphinx.ext.viewcode\",\n    \"myst_parser\",",
+        "detail": "docs.conf",
+        "documentation": {}
+    },
+    {
+        "label": "templates_path",
+        "kind": 5,
+        "importPath": "docs.conf",
+        "description": "docs.conf",
+        "peekOfCode": "templates_path = [\"_templates\"]\nexclude_patterns = [\"_build\", \"Thumbs.db\", \".DS_Store\"]\nintersphinx_mapping = {\n    \"jax\": (\"https://jax.readthedocs.io/en/latest/\", None),\n    \"numpy\": (\"https://numpy.org/doc/stable/\", None),\n    \"flax\": (\"https://flax.readthedocs.io/en/latest/\", None),\n}\nhtml_theme = \"sphinx_book_theme\"\nhtml_static_path = [\"_static\"]\nhtml_css_files = [",
+        "detail": "docs.conf",
+        "documentation": {}
+    },
+    {
+        "label": "exclude_patterns",
+        "kind": 5,
+        "importPath": "docs.conf",
+        "description": "docs.conf",
+        "peekOfCode": "exclude_patterns = [\"_build\", \"Thumbs.db\", \".DS_Store\"]\nintersphinx_mapping = {\n    \"jax\": (\"https://jax.readthedocs.io/en/latest/\", None),\n    \"numpy\": (\"https://numpy.org/doc/stable/\", None),\n    \"flax\": (\"https://flax.readthedocs.io/en/latest/\", None),\n}\nhtml_theme = \"sphinx_book_theme\"\nhtml_static_path = [\"_static\"]\nhtml_css_files = [\n    \"style.css\",",
+        "detail": "docs.conf",
+        "documentation": {}
+    },
+    {
+        "label": "intersphinx_mapping",
+        "kind": 5,
+        "importPath": "docs.conf",
+        "description": "docs.conf",
+        "peekOfCode": "intersphinx_mapping = {\n    \"jax\": (\"https://jax.readthedocs.io/en/latest/\", None),\n    \"numpy\": (\"https://numpy.org/doc/stable/\", None),\n    \"flax\": (\"https://flax.readthedocs.io/en/latest/\", None),\n}\nhtml_theme = \"sphinx_book_theme\"\nhtml_static_path = [\"_static\"]\nhtml_css_files = [\n    \"style.css\",\n]",
+        "detail": "docs.conf",
+        "documentation": {}
+    },
+    {
+        "label": "html_theme",
+        "kind": 5,
+        "importPath": "docs.conf",
+        "description": "docs.conf",
+        "peekOfCode": "html_theme = \"sphinx_book_theme\"\nhtml_static_path = [\"_static\"]\nhtml_css_files = [\n    \"style.css\",\n]\nsource_suffix = [\".rst\", \".md\", \".ipynb\"]\nautosummary_generate = True",
+        "detail": "docs.conf",
+        "documentation": {}
+    },
+    {
+        "label": "html_static_path",
+        "kind": 5,
+        "importPath": "docs.conf",
+        "description": "docs.conf",
+        "peekOfCode": "html_static_path = [\"_static\"]\nhtml_css_files = [\n    \"style.css\",\n]\nsource_suffix = [\".rst\", \".md\", \".ipynb\"]\nautosummary_generate = True",
+        "detail": "docs.conf",
+        "documentation": {}
+    },
+    {
+        "label": "html_css_files",
+        "kind": 5,
+        "importPath": "docs.conf",
+        "description": "docs.conf",
+        "peekOfCode": "html_css_files = [\n    \"style.css\",\n]\nsource_suffix = [\".rst\", \".md\", \".ipynb\"]\nautosummary_generate = True",
+        "detail": "docs.conf",
+        "documentation": {}
+    },
+    {
+        "label": "source_suffix",
+        "kind": 5,
+        "importPath": "docs.conf",
+        "description": "docs.conf",
+        "peekOfCode": "source_suffix = [\".rst\", \".md\", \".ipynb\"]\nautosummary_generate = True",
+        "detail": "docs.conf",
+        "documentation": {}
+    },
+    {
+        "label": "autosummary_generate",
+        "kind": 5,
+        "importPath": "docs.conf",
+        "description": "docs.conf",
+        "peekOfCode": "autosummary_generate = True",
+        "detail": "docs.conf",
         "documentation": {}
     },
     {
@@ -3227,7 +3381,7 @@
         "kind": 2,
         "importPath": "src.fjformer.checkpoint._load",
         "description": "src.fjformer.checkpoint._load",
-        "peekOfCode": "def float_tensor_to_dtype(tensor, dtype):\n    if dtype is None or dtype == '':\n        return tensor\n    if isinstance(dtype, str):\n        dtype = get_dtype(dtype)\n    float_dtypes = (jnp.bfloat16, jnp.float16, jnp.float32, jnp.float64)\n    if getattr(tensor, 'dtype', None) in float_dtypes:\n        tensor = tensor.astype(dtype)\n    return tensor\ndef load_and_convert_checkpoint_to_torch(path, dtype=jnp.float16, transpose_needed=None,",
+        "peekOfCode": "def float_tensor_to_dtype(tensor, dtype):\n    if dtype is None or dtype == \"\":\n        return tensor\n    if isinstance(dtype, str):\n        dtype = get_dtype(dtype)\n    float_dtypes = (jnp.bfloat16, jnp.float16, jnp.float32, jnp.float64)\n    if getattr(tensor, \"dtype\", None) in float_dtypes:\n        tensor = tensor.astype(dtype)\n    return tensor\ndef load_and_convert_checkpoint_to_torch(",
         "detail": "src.fjformer.checkpoint._load",
         "documentation": {}
     },
@@ -3236,7 +3390,7 @@
         "kind": 2,
         "importPath": "src.fjformer.checkpoint._load",
         "description": "src.fjformer.checkpoint._load",
-        "peekOfCode": "def load_and_convert_checkpoint_to_torch(path, dtype=jnp.float16, transpose_needed=None,\n                                         transpose_not_needed=None, select_params_field: bool = True):\n    import torch\n    if transpose_needed is None:\n        transpose_needed = [\"kernel\"]\n    if transpose_not_needed is None:\n        transpose_not_needed = ['none']\n    def match_keywords(string, ts, ns):\n        for t in ts:\n            if t not in string:",
+        "peekOfCode": "def load_and_convert_checkpoint_to_torch(\n    path,\n    dtype=jnp.float16,\n    transpose_needed=None,\n    transpose_not_needed=None,\n    select_params_field: bool = True,\n):\n    import torch\n    if transpose_needed is None:\n        transpose_needed = [\"kernel\"]",
         "detail": "src.fjformer.checkpoint._load",
         "documentation": {}
     },
@@ -3245,7 +3399,7 @@
         "kind": 2,
         "importPath": "src.fjformer.checkpoint._load",
         "description": "src.fjformer.checkpoint._load",
-        "peekOfCode": "def read_ckpt(path: [str, os.PathLike], shard_fns=None, add_extra_past_fix: list = None):\n    tensors = {}\n    with open(path, 'rb') as stream:\n        unpacker = msgpack.Unpacker(stream, read_size=83886080, max_buffer_size=0)\n        for key, value in unpacker:\n            if add_extra_past_fix is not None:\n                key = add_extra_past_fix + key\n            key = tuple(key)\n            tensor = from_bytes(None, value)\n            if shard_fns is not None:",
+        "peekOfCode": "def read_ckpt(\n    path: Union[str, os.PathLike], shard_fns=None, add_extra_past_fix: list = None\n):\n    tensors = {}\n    with open(path, \"rb\") as stream:\n        unpacker = msgpack.Unpacker(stream, read_size=83886080, max_buffer_size=0)\n        for key, value in unpacker:\n            if add_extra_past_fix is not None:\n                key = add_extra_past_fix + key\n            key = tuple(key)",
         "detail": "src.fjformer.checkpoint._load",
         "documentation": {}
     },
@@ -3263,7 +3417,7 @@
         "kind": 6,
         "importPath": "src.fjformer.checkpoint.streamer",
         "description": "src.fjformer.checkpoint.streamer",
-        "peekOfCode": "class CheckpointManager(object):\n    \"\"\"\n    Custom msgpack checkpointer that saves large train states by serializing\n    and saving tensors one by one in a streaming fashion. Avoids running\n    out of memory or local TPU disk with default flax checkpointer.\n    \"\"\"\n    def __init__(\n            self,\n            checkpoint_dir,\n            enable=True,",
+        "peekOfCode": "class CheckpointManager(object):\n    \"\"\"\n    A class to manage saving and loading checkpoints.\n    Args:\n        checkpoint_dir: The directory to save checkpoints to.\n        enable: Whether to enable saving and loading checkpoints.\n        float_dtype: The floating-point data type to use for saving checkpoints.\n        save_optimizer_state: Whether to save the optimizer state in the checkpoint.\n        verbose: Whether to print verbose output.\n    \"\"\"",
         "detail": "src.fjformer.checkpoint.streamer",
         "documentation": {}
     },
@@ -3272,7 +3426,7 @@
         "kind": 2,
         "importPath": "src.fjformer.checkpoint.streamer",
         "description": "src.fjformer.checkpoint.streamer",
-        "peekOfCode": "def load_file(filename) -> Tuple[dict, dict]:\n    result = {}\n    with safetensors.safe_open(filename, framework=\"flax\") as f:\n        metadata = f.metadata()\n        for k in f.keys():\n            result[k] = f.get_tensor(k)\n    return result, metadata\ndef is_flatten(pytree: Union[dict, struct.PyTreeNode]):\n    \"\"\"The is_flatten function checks if the pytree is flattened.\n        If it is, then the first key in the dictionary will be a tuple of (mpl, mpl_id).",
+        "peekOfCode": "def load_file(filename: Union[str, os.PathLike]) -> Tuple[dict, dict]:\n    \"\"\"\n    Load a checkpoint file from the given filename.\n    Args:\n        filename: The path to the checkpoint file.\n    Returns:\n        A tuple containing the state dictionary and metadata.\n    \"\"\"\n    result = {}\n    with safetensors.safe_open(filename, framework=\"flax\") as f:",
         "detail": "src.fjformer.checkpoint.streamer",
         "documentation": {}
     },
@@ -3281,7 +3435,7 @@
         "kind": 2,
         "importPath": "src.fjformer.checkpoint.streamer",
         "description": "src.fjformer.checkpoint.streamer",
-        "peekOfCode": "def is_flatten(pytree: Union[dict, struct.PyTreeNode]):\n    \"\"\"The is_flatten function checks if the pytree is flattened.\n        If it is, then the first key in the dictionary will be a tuple of (mpl, mpl_id).\n        Otherwise, it will be an integer representing mpl_id.\n    Args:\n        pytree: dict: Pass the pytree to the function\n    Returns:\n        True if the pytree is a flattened tree, and false otherwise\n    \"\"\"\n    return True if isinstance([k for k in pytree.keys()][0], tuple) else False",
+        "peekOfCode": "def is_flatten(pytree: Union[dict, struct.PyTreeNode]) -> bool:\n    \"\"\"\n    Check if the given PyTree is flattened.\n    Args:\n        pytree: The PyTree to check.\n    Returns:\n        True if the PyTree is flattened, False otherwise.\n    \"\"\"\n    return True if isinstance([k for k in pytree.keys()][0], tuple) else False\ndef get_dtype(tensor: jax.Array, dtype: Optional[Union[str, jnp.dtype]]) -> jax.Array:",
         "detail": "src.fjformer.checkpoint.streamer",
         "documentation": {}
     },
@@ -3290,7 +3444,7 @@
         "kind": 2,
         "importPath": "src.fjformer.checkpoint.streamer",
         "description": "src.fjformer.checkpoint.streamer",
-        "peekOfCode": "def get_dtype(tensor, dtype):\n    if dtype is None or dtype == \"\":\n        return tensor\n    if isinstance(dtype, str):\n        dtype = {\n            \"bf16\": jnp.bfloat16,\n            \"bfloat16\": jnp.bfloat16,\n            \"fp16\": jnp.float16,\n            \"float16\": jnp.float16,\n            \"fp32\": jnp.float32,",
+        "peekOfCode": "def get_dtype(tensor: jax.Array, dtype: Optional[Union[str, jnp.dtype]]) -> jax.Array:\n    \"\"\"\n    Get the tensor with the specified data type.\n    Args:\n        tensor: The input tensor.\n        dtype: The desired data type.\n    Returns:\n        The tensor with the specified data type.\n    \"\"\"\n    if dtype is None or dtype == \"\":",
         "detail": "src.fjformer.checkpoint.streamer",
         "documentation": {}
     },
@@ -3837,217 +3991,217 @@
     {
         "label": "global_norm",
         "kind": 2,
-        "importPath": "src.fjformer.functions._func",
-        "description": "src.fjformer.functions._func",
-        "peekOfCode": "def global_norm(tree):\n    \"\"\" Return the global L2 norm of a pytree. \"\"\"\n    squared = jax.tree_util.tree_map(lambda x: jnp.sum(jnp.square(x)), tree)\n    flattened, _ = ravel_pytree(squared)\n    return jnp.sqrt(jnp.sum(flattened))\ndef average_metrics(metrics):\n    \"\"\"\n    The average_metrics function takes a list of metrics and averages them.\n    :param metrics: Store the metrics for each batch\n    :return: The mean of the metrics across all runs",
-        "detail": "src.fjformer.functions._func",
+        "importPath": "src.fjformer.functions._functions",
+        "description": "src.fjformer.functions._functions",
+        "peekOfCode": "def global_norm(tree: chex.ArrayTree) -> chex.Array:\n    \"\"\"\n    Computes the global norm of a PyTree of arrays.\n    The global norm is the square root of the sum of squares of all elements in the PyTree.\n    Args:\n        tree: The PyTree of arrays.\n    Returns:\n        The global norm as a scalar JAX array.\n    \"\"\"\n    squared = jax.tree_util.tree_map(lambda x: jnp.sum(jnp.square(x)), tree)",
+        "detail": "src.fjformer.functions._functions",
         "documentation": {}
     },
     {
         "label": "average_metrics",
         "kind": 2,
-        "importPath": "src.fjformer.functions._func",
-        "description": "src.fjformer.functions._func",
-        "peekOfCode": "def average_metrics(metrics):\n    \"\"\"\n    The average_metrics function takes a list of metrics and averages them.\n    :param metrics: Store the metrics for each batch\n    :return: The mean of the metrics across all runs\n    \"\"\"\n    return jax.tree_map(\n        lambda *args: jnp.mean(jnp.stack(args)),\n        *metrics\n    )",
-        "detail": "src.fjformer.functions._func",
+        "importPath": "src.fjformer.functions._functions",
+        "description": "src.fjformer.functions._functions",
+        "peekOfCode": "def average_metrics(metrics: list[chex.ArrayTree]) -> chex.ArrayTree:\n    \"\"\"\n    Averages a list of metrics, each represented as a PyTree.\n    This function is useful for averaging metrics across multiple devices or steps.\n    Args:\n        metrics: A list of PyTrees representing the metrics.\n    Returns:\n        A PyTree with the same structure as the input metrics, but with each leaf\n        node replaced by the average of the corresponding leaf nodes across the\n        input metrics.",
+        "detail": "src.fjformer.functions._functions",
         "documentation": {}
     },
     {
         "label": "transpose",
         "kind": 2,
-        "importPath": "src.fjformer.functions._func",
-        "description": "src.fjformer.functions._func",
-        "peekOfCode": "def transpose(array: chex.Array, dim0: int, dim1: int):\n    \"\"\"\n    The transpose function takes an array and two dimensions, and returns a new\n    array with the specified dimensions transposed. The first dimension is given as\n    a positive integer, where 0 represents the outermost dimension of the array. If\n    the first dimension is negative, it counts from the end of the shape tuple; -2\n    is equivalent to len(shape) - 2. The second dimension may be specified in a similar way.\n    :param array: chex.Array: Specify the array to be transposed\n    :param dim0: int: Specify the first dimension to be transposed\n    :param dim1: int: Specify the dimension of the array",
-        "detail": "src.fjformer.functions._func",
+        "importPath": "src.fjformer.functions._functions",
+        "description": "src.fjformer.functions._functions",
+        "peekOfCode": "def transpose(array: chex.Array, dim0: int, dim1: int) -> chex.Array:\n    \"\"\"\n    Transposes two dimensions of a JAX array.\n    This function provides a convenient way to swap two dimensions of an array using\n    negative indexing for dimensions.\n    Args:\n        array: The input array.\n        dim0: The first dimension to transpose. Can be negative.\n        dim1: The second dimension to transpose. Can be negative.\n    Returns:",
+        "detail": "src.fjformer.functions._functions",
         "documentation": {}
     },
     {
         "label": "fused_softmax",
         "kind": 2,
-        "importPath": "src.fjformer.functions._func",
-        "description": "src.fjformer.functions._func",
-        "peekOfCode": "def fused_softmax(x: chex.Array, axis: int = -1):\n    \"\"\"\n    The fused_softmax function is a fused version of the softmax function.\n    :param x: chex.Array: Specify the input to the function\n    :param axis: int: Specify the axis along which to apply the softmax function\n    :return: The same result as the softmax function\n    \"\"\"\n    return jnp.exp(jax.nn.log_softmax(x, axis=axis))",
-        "detail": "src.fjformer.functions._func",
+        "importPath": "src.fjformer.functions._functions",
+        "description": "src.fjformer.functions._functions",
+        "peekOfCode": "def fused_softmax(x: chex.Array, axis: int = -1) -> chex.Array:\n    \"\"\"\n    Computes a numerically stable softmax using a fused implementation.\n    This function computes the softmax by first calculating the log-softmax and\n    then exponentiating the result. This approach is more numerically stable than\n    directly computing the softmax.\n    Args:\n        x: The input array.\n        axis: The axis along which to compute the softmax.\n    Returns:",
+        "detail": "src.fjformer.functions._functions",
         "documentation": {}
     },
     {
         "label": "SpecialLossNormalizingFactor",
         "kind": 6,
-        "importPath": "src.fjformer.functions.loss_func",
-        "description": "src.fjformer.functions.loss_func",
-        "peekOfCode": "class SpecialLossNormalizingFactor(enum.Enum):\n    \"\"\"Specially calculated loss_normalizing_factors, that are not a constant.\n    Attributes:\n      NUM_REAL_TARGET_TOKENS: Whether to divide the loss by the number of real\n        (non-padding) tokens in the current target batch. If\n        'decoder_loss_weights' are specified, it will be the sum of the weights.\n        Otherwise it will be the number of non-zero 'decoder_target_tokens'.\n      NUM_TOTAL_TARGET_TOKENS: Whether to divide the loss by the total number of\n        target tokens, i.e., batch_size * target_seq_length (including padding).\n      AVERAGE_PER_SEQUENCE: This will first compute the per-sequence loss",
-        "detail": "src.fjformer.functions.loss_func",
+        "importPath": "src.fjformer.functions.loss_functions",
+        "description": "src.fjformer.functions.loss_functions",
+        "peekOfCode": "class SpecialLossNormalizingFactor(enum.Enum):\n    \"\"\"\n    Specially calculated loss normalizing factors that are not constant.\n    Attributes:\n        NUM_REAL_TARGET_TOKENS: Divide the loss by the number of real (non-padding) tokens.\n        NUM_TOTAL_TARGET_TOKENS: Divide the loss by the total number of target tokens.\n        AVERAGE_PER_SEQUENCE: Compute the average loss per sequence.\n    \"\"\"\n    NUM_REAL_TARGET_TOKENS = 1\n    NUM_TOTAL_TARGET_TOKENS = 2",
+        "detail": "src.fjformer.functions.loss_functions",
         "documentation": {}
     },
     {
         "label": "mse",
         "kind": 2,
-        "importPath": "src.fjformer.functions.loss_func",
-        "description": "src.fjformer.functions.loss_func",
-        "peekOfCode": "def mse(labels, predictions):\n    \"\"\"\n    The mse function computes the mean squared error between two arrays.\n    :param labels: Pass in the actual values of the data, and predictions is used to pass in our predicted values\n    :param predictions: Store the predictions made by the model\n    :return: The mean squared error (mse) between the labels and predictions\n    \"\"\"\n    return np.mean((labels - predictions) ** 2)\n# Mean Absolute Error\ndef mae(labels, predictions):",
-        "detail": "src.fjformer.functions.loss_func",
+        "importPath": "src.fjformer.functions.loss_functions",
+        "description": "src.fjformer.functions.loss_functions",
+        "peekOfCode": "def mse(labels: Array, predictions: Array) -> float:\n    \"\"\"\n    Computes the mean squared error between two arrays.\n    Args:\n        labels: The true values.\n        predictions: The predicted values.\n    Returns:\n        The mean squared error (MSE) between the labels and predictions.\n    \"\"\"\n    return np.mean((labels - predictions) ** 2)",
+        "detail": "src.fjformer.functions.loss_functions",
         "documentation": {}
     },
     {
         "label": "mae",
         "kind": 2,
-        "importPath": "src.fjformer.functions.loss_func",
-        "description": "src.fjformer.functions.loss_func",
-        "peekOfCode": "def mae(labels, predictions):\n    \"\"\"\n    The mae function calculates the mean absolute error between two lists of numbers.\n    :param labels: Store the actual values of the data\n    :param predictions: Store the predictions from the model\n    :return: The mean absolute error between the labels and predictions\n    \"\"\"\n    return np.mean(np.abs(labels - predictions))\n# Cross Entropy\ndef cross_entropy(labels, predictions, ignore_index=None):",
-        "detail": "src.fjformer.functions.loss_func",
+        "importPath": "src.fjformer.functions.loss_functions",
+        "description": "src.fjformer.functions.loss_functions",
+        "peekOfCode": "def mae(labels: Array, predictions: Array) -> float:\n    \"\"\"\n    Computes the mean absolute error between two arrays.\n    Args:\n        labels: The true values.\n        predictions: The predicted values.\n    Returns:\n        The mean absolute error (MAE) between the labels and predictions.\n    \"\"\"\n    return np.mean(np.abs(labels - predictions))",
+        "detail": "src.fjformer.functions.loss_functions",
         "documentation": {}
     },
     {
         "label": "cross_entropy",
         "kind": 2,
-        "importPath": "src.fjformer.functions.loss_func",
-        "description": "src.fjformer.functions.loss_func",
-        "peekOfCode": "def cross_entropy(labels, predictions, ignore_index=None):\n    \"\"\"\n    The cross_entropy function computes the cross entropy loss between a set of labels and predictions.\n    :param labels: Calculate the cross entropy loss\n    :param predictions: Calculate the log_softmax\n    :param ignore_index: Mask out the loss from a specific class\n    :return: The average cross entropy over the batch\n    \"\"\"\n    labels = jax.nn.one_hot(labels, predictions.shape[-1])\n    if ignore_index is not None:",
-        "detail": "src.fjformer.functions.loss_func",
+        "importPath": "src.fjformer.functions.loss_functions",
+        "description": "src.fjformer.functions.loss_functions",
+        "peekOfCode": "def cross_entropy(\n    labels: Array, predictions: Array, ignore_index: Optional[int] = None\n) -> float:\n    \"\"\"\n    Computes the cross-entropy loss between labels and predictions.\n    Args:\n        labels: The true class labels (integers).\n        predictions: The predicted class probabilities.\n        ignore_index: An optional index to ignore when computing the loss.\n    Returns:",
+        "detail": "src.fjformer.functions.loss_functions",
         "documentation": {}
     },
     {
         "label": "binary_cross_entropy",
         "kind": 2,
-        "importPath": "src.fjformer.functions.loss_func",
-        "description": "src.fjformer.functions.loss_func",
-        "peekOfCode": "def binary_cross_entropy(labels, predictions):\n    \"\"\"\n    The binary_cross_entropy function computes the binary cross entropy loss between\n    the labels and predictions. The function takes two arguments:\n        1) labels: a tensor of shape (batch_size, num_classes) containing the ground truth class indices for each\n        example in the batch.\n        2) predictions: a tensor of shape (batch_size, num_classes) containing model output probabilities for each\n        example in the batch.\n    :param labels: Specify the true class of each example\n    :param predictions: Calculate the loss",
-        "detail": "src.fjformer.functions.loss_func",
+        "importPath": "src.fjformer.functions.loss_functions",
+        "description": "src.fjformer.functions.loss_functions",
+        "peekOfCode": "def binary_cross_entropy(labels: Array, predictions: Array) -> float:\n    \"\"\"\n    Computes the binary cross-entropy loss between labels and predictions.\n    Args:\n        labels: The true binary labels (0 or 1).\n        predictions: The predicted probabilities for the positive class.\n    Returns:\n        The binary cross-entropy loss.\n    \"\"\"\n    labels = jax.nn.one_hot(labels, predictions.shape[-1])",
+        "detail": "src.fjformer.functions.loss_functions",
         "documentation": {}
     },
     {
         "label": "nll",
         "kind": 2,
-        "importPath": "src.fjformer.functions.loss_func",
-        "description": "src.fjformer.functions.loss_func",
-        "peekOfCode": "def nll(labels, predictions):\n    \"\"\"\n    The nll function computes the negative log likelihood of a set of predictions.\n    :param labels: Calculate the loss\n    :param predictions: Calculate the loss\n    :return: The negative log likelihood of the predictions\n    \"\"\"\n    return -np.sum(labels * np.log(predictions + 1e-8))\n# L2 Loss\ndef l2(labels, predictions):",
-        "detail": "src.fjformer.functions.loss_func",
+        "importPath": "src.fjformer.functions.loss_functions",
+        "description": "src.fjformer.functions.loss_functions",
+        "peekOfCode": "def nll(labels: Array, predictions: Array) -> float:\n    \"\"\"\n    Computes the negative log-likelihood loss.\n    Args:\n        labels: The true class labels (integers).\n        predictions: The predicted class probabilities.\n    Returns:\n        The negative log-likelihood loss.\n    \"\"\"\n    return -np.sum(labels * np.log(predictions + 1e-8))",
+        "detail": "src.fjformer.functions.loss_functions",
         "documentation": {}
     },
     {
         "label": "l2",
         "kind": 2,
-        "importPath": "src.fjformer.functions.loss_func",
-        "description": "src.fjformer.functions.loss_func",
-        "peekOfCode": "def l2(labels, predictions):\n    \"\"\"\n    The l2 function computes the sum of squared differences between labels and predictions.\n    :param labels: Calculate the difference between the labels and predictions\n    :param predictions: Calculate the difference between the labels and predictions\n    :return: The sum of the squared differences between labels and predictions\n    \"\"\"\n    return np.sum((labels - predictions) ** 2)\n# Hinge Loss\ndef hinge(labels, predictions):",
-        "detail": "src.fjformer.functions.loss_func",
+        "importPath": "src.fjformer.functions.loss_functions",
+        "description": "src.fjformer.functions.loss_functions",
+        "peekOfCode": "def l2(labels: Array, predictions: Array) -> float:\n    \"\"\"\n    Computes the L2 loss (sum of squared differences).\n    Args:\n        labels: The true values.\n        predictions: The predicted values.\n    Returns:\n        The L2 loss.\n    \"\"\"\n    return np.sum((labels - predictions) ** 2)",
+        "detail": "src.fjformer.functions.loss_functions",
         "documentation": {}
     },
     {
         "label": "hinge",
         "kind": 2,
-        "importPath": "src.fjformer.functions.loss_func",
-        "description": "src.fjformer.functions.loss_func",
-        "peekOfCode": "def hinge(labels, predictions):\n    \"\"\"\n    The hinge function is a loss function used for training classifiers.\n    The hinge loss is used for &quot;maximum-margin&quot; classification, most notably\n    for support vector machines (SVMs).\n    For an intended output t = + 1 or - 1 and a classifier score y, the hinge loss of the prediction y is defined as:\n    :param labels: Calculate the hinge loss\n    :param predictions: Calculate the hinge loss\n    :return: The average loss over the training set\n    \"\"\"",
-        "detail": "src.fjformer.functions.loss_func",
+        "importPath": "src.fjformer.functions.loss_functions",
+        "description": "src.fjformer.functions.loss_functions",
+        "peekOfCode": "def hinge(labels: Array, predictions: Array) -> float:\n    \"\"\"\n    Computes the hinge loss, commonly used in SVMs.\n    Args:\n        labels: The true class labels (-1 or 1).\n        predictions: The predicted values.\n    Returns:\n        The hinge loss.\n    \"\"\"\n    return np.mean(np.maximum(0, 1 - labels * predictions))",
+        "detail": "src.fjformer.functions.loss_functions",
         "documentation": {}
     },
     {
         "label": "log_cosh",
         "kind": 2,
-        "importPath": "src.fjformer.functions.loss_func",
-        "description": "src.fjformer.functions.loss_func",
-        "peekOfCode": "def log_cosh(labels, predictions):\n    \"\"\"\n    The log_cosh function is a loss function that takes in two arguments: labels and predictions.\n    The log_cosh function returns the mean of the logarithm of the hyperbolic cosine of (predictions - labels).\n    This loss function is used to measure how well our model performs on data it has not seen before.\n    :param labels: Pass the actual values of the data\n    :param predictions: Pass the predictions of your model\n    :return: The logarithm of the hyperbolic cosine of the prediction error\n    \"\"\"\n    def cosh(x):",
-        "detail": "src.fjformer.functions.loss_func",
+        "importPath": "src.fjformer.functions.loss_functions",
+        "description": "src.fjformer.functions.loss_functions",
+        "peekOfCode": "def log_cosh(labels: Array, predictions: Array) -> float:\n    \"\"\"\n    Computes the log-cosh loss, a smooth approximation of the MAE.\n    Args:\n        labels: The true values.\n        predictions: The predicted values.\n    Returns:\n        The log-cosh loss.\n    \"\"\"\n    def cosh(x):",
+        "detail": "src.fjformer.functions.loss_functions",
         "documentation": {}
     },
     {
         "label": "binary_cross_entropy_onehot",
         "kind": 2,
-        "importPath": "src.fjformer.functions.loss_func",
-        "description": "src.fjformer.functions.loss_func",
-        "peekOfCode": "def binary_cross_entropy_onehot(labels, predictions):\n    \"\"\"\n    The binary_cross_entropy_onehot function takes in two arguments:\n        labels: a 1D array of integers, where each integer is the index of the correct class for that example.\n        predictions: a 2D array of floats, where each row represents an example and each column represents a class.\n    :param labels: Determine the correct class of each image\n    :param predictions: Calculate the loss\n    :return: The binary cross entropy loss between the labels and predictions\n    \"\"\"\n    labels = jax.nn.one_hot(labels, predictions.shape[-1])",
-        "detail": "src.fjformer.functions.loss_func",
+        "importPath": "src.fjformer.functions.loss_functions",
+        "description": "src.fjformer.functions.loss_functions",
+        "peekOfCode": "def binary_cross_entropy_onehot(labels: Array, predictions: Array) -> float:\n    \"\"\"\n    Computes the binary cross-entropy loss using one-hot encoded labels.\n    Args:\n        labels: The true class labels (one-hot encoded).\n        predictions: The predicted class probabilities.\n    Returns:\n        The binary cross-entropy loss.\n    \"\"\"\n    labels = jax.nn.one_hot(labels, predictions.shape[-1])",
+        "detail": "src.fjformer.functions.loss_functions",
         "documentation": {}
     },
     {
         "label": "cross_entropy_onehot",
         "kind": 2,
-        "importPath": "src.fjformer.functions.loss_func",
-        "description": "src.fjformer.functions.loss_func",
-        "peekOfCode": "def cross_entropy_onehot(labels, predictions):\n    \"\"\"\n    The cross_entropy_onehot function takes two arguments:\n    labels - a 1D array of integers in the range [0, num_classes)\n    predictions - a 2D array of floats with shape (num_examples, num_classes)\n    The function returns the cross entropy loss between labels and predictions. The loss is averaged over all examples.\n    :param labels: Compute the one-hot encoding of the labels\n    :param predictions: Calculate the log_softmax\n    :return: The cross entropy loss\n    \"\"\"",
-        "detail": "src.fjformer.functions.loss_func",
+        "importPath": "src.fjformer.functions.loss_functions",
+        "description": "src.fjformer.functions.loss_functions",
+        "peekOfCode": "def cross_entropy_onehot(labels: Array, predictions: Array) -> float:\n    \"\"\"\n    Computes the cross-entropy loss using one-hot encoded labels.\n    Args:\n        labels: The true class labels (integers).\n        predictions: The predicted class probabilities.\n    Returns:\n        The cross-entropy loss.\n    \"\"\"\n    labels = jax.nn.one_hot(labels, predictions.shape[-1])",
+        "detail": "src.fjformer.functions.loss_functions",
         "documentation": {}
     },
     {
         "label": "mse_loss",
         "kind": 2,
-        "importPath": "src.fjformer.functions.loss_func",
-        "description": "src.fjformer.functions.loss_func",
-        "peekOfCode": "def mse_loss(val, target, valid=None):\n    \"\"\"\n    The mse_loss function computes the mean squared error between two arrays.\n    :param val: Store the output of the model\n    :param target: Calculate the loss\n    :param valid: Mask out the loss of certain pixels\n    :return: The mean square error of the input and target\n    \"\"\"\n    if valid is None:\n        valid = jnp.ones((*target.shape[:2], 1))",
-        "detail": "src.fjformer.functions.loss_func",
+        "importPath": "src.fjformer.functions.loss_functions",
+        "description": "src.fjformer.functions.loss_functions",
+        "peekOfCode": "def mse_loss(val: Array, target: Array, valid: Optional[Array] = None) -> float:\n    \"\"\"\n    Computes the mean squared error loss with optional masking.\n    Args:\n        val: The predicted values.\n        target: The true values.\n        valid: An optional mask to indicate valid positions.\n    Returns:\n        The masked mean squared error loss.\n    \"\"\"",
+        "detail": "src.fjformer.functions.loss_functions",
         "documentation": {}
     },
     {
         "label": "cross_entropy_loss_and_accuracy",
         "kind": 2,
-        "importPath": "src.fjformer.functions.loss_func",
-        "description": "src.fjformer.functions.loss_func",
-        "peekOfCode": "def cross_entropy_loss_and_accuracy(logits: chex.Array, tokens: chex.Array, valid: chex.Array = None):\n    \"\"\"\n    :param logits: Logits\n    :param tokens: labels\n    :param valid: attention_mask\n    :return: loss and accuracy\n    \"\"\"\n    if valid is None:\n        valid = jnp.ones(tokens.shape[:2])\n    valid = valid.astype(jnp.float32)",
-        "detail": "src.fjformer.functions.loss_func",
+        "importPath": "src.fjformer.functions.loss_functions",
+        "description": "src.fjformer.functions.loss_functions",
+        "peekOfCode": "def cross_entropy_loss_and_accuracy(\n    logits: chex.Array, tokens: chex.Array, valid: Optional[chex.Array] = None\n) -> Tuple[float, float]:\n    \"\"\"\n    Computes the cross-entropy loss and accuracy with optional masking.\n    Args:\n        logits: The predicted logits.\n        tokens: The true class labels (integers).\n        valid: An optional mask to indicate valid positions.\n    Returns:",
+        "detail": "src.fjformer.functions.loss_functions",
         "documentation": {}
     },
     {
         "label": "fused_cross_entropy_loss_and_accuracy",
         "kind": 2,
-        "importPath": "src.fjformer.functions.loss_func",
-        "description": "src.fjformer.functions.loss_func",
-        "peekOfCode": "def fused_cross_entropy_loss_and_accuracy(logits: chex.Array, tokens: chex.Array, valid: chex.Array = None):\n    \"\"\"\n    :param logits: Logits\n    :param tokens: labels\n    :param valid: attention_mask\n    :return: loss and accuracy\n    \"\"\"\n    if valid is None:\n        valid = jnp.ones(tokens.shape[:2])\n    valid = valid.astype(jnp.float32)",
-        "detail": "src.fjformer.functions.loss_func",
+        "importPath": "src.fjformer.functions.loss_functions",
+        "description": "src.fjformer.functions.loss_functions",
+        "peekOfCode": "def fused_cross_entropy_loss_and_accuracy(\n    logits: chex.Array, tokens: chex.Array, valid: Optional[chex.Array] = None\n) -> Tuple[float, float]:\n    \"\"\"\n    Computes the cross-entropy loss and accuracy with optional masking (fused version).\n    Args:\n        logits: The predicted logits.\n        tokens: The true class labels (integers).\n        valid: An optional mask to indicate valid positions.\n    Returns:",
+        "detail": "src.fjformer.functions.loss_functions",
         "documentation": {}
     },
     {
         "label": "cross_entropy_with_logits",
         "kind": 2,
-        "importPath": "src.fjformer.functions.loss_func",
-        "description": "src.fjformer.functions.loss_func",
-        "peekOfCode": "def cross_entropy_with_logits(logits: jnp.ndarray, targets: jnp.ndarray,\n                              z_loss: float) -> Tuple[jnp.ndarray, jnp.ndarray]:\n    \"\"\"Computes cross entropy loss with stable custom gradient.\n    Computes a stabilized-gradient version of:\n      -jnp.sum(targets * nn.log_softmax(logits), axis=-1)\n    If z_loss > 0, then an auxiliary loss equal to z_loss*log(z)^2\n    will be added to the cross entropy loss (z = softmax normalization constant).\n    The two uses of z_loss are:\n    1. To keep the logits from drifting too far from zero, which can cause\n       unacceptable roundoff errors in bfloat16.",
-        "detail": "src.fjformer.functions.loss_func",
+        "importPath": "src.fjformer.functions.loss_functions",
+        "description": "src.fjformer.functions.loss_functions",
+        "peekOfCode": "def cross_entropy_with_logits(\n    logits: jnp.ndarray, targets: jnp.ndarray, z_loss: float\n) -> Tuple[jnp.ndarray, jnp.ndarray]:\n    \"\"\"\n    Computes cross-entropy loss with a stable custom gradient.\n    This function computes the cross-entropy loss with an optional auxiliary loss\n    term (`z_loss`) to prevent logits from drifting too far from zero.\n    Args:\n        logits: The predicted logits.\n        targets: The one-hot encoded target labels.",
+        "detail": "src.fjformer.functions.loss_functions",
         "documentation": {}
     },
     {
         "label": "compute_weighted_cross_entropy",
         "kind": 2,
-        "importPath": "src.fjformer.functions.loss_func",
-        "description": "src.fjformer.functions.loss_func",
-        "peekOfCode": "def compute_weighted_cross_entropy(\n        logits: jnp.ndarray,\n        targets: jnp.ndarray,\n        weights: Optional[jnp.ndarray] = None,\n        label_smoothing: float = 0.0,\n        z_loss: float = 0.0,\n        loss_normalizing_factor: Optional[float] = None\n) -> Tuple[jnp.ndarray, jnp.ndarray, jnp.ndarray]:\n    \"\"\"Compute weighted cross entropy and entropy for log probs and targets.\n    Args:",
-        "detail": "src.fjformer.functions.loss_func",
+        "importPath": "src.fjformer.functions.loss_functions",
+        "description": "src.fjformer.functions.loss_functions",
+        "peekOfCode": "def compute_weighted_cross_entropy(\n    logits: jnp.ndarray,\n    targets: jnp.ndarray,\n    weights: Optional[jnp.ndarray] = None,\n    label_smoothing: float = 0.0,\n    z_loss: float = 0.0,\n    loss_normalizing_factor: Optional[float] = None,\n) -> Tuple[jnp.ndarray, jnp.ndarray, jnp.ndarray]:\n    \"\"\"\n    Computes weighted cross-entropy loss, z-loss, and weight sum.",
+        "detail": "src.fjformer.functions.loss_functions",
         "documentation": {}
     },
     {
         "label": "compute_weighted_cross_entropy_and_accuracy",
         "kind": 2,
-        "importPath": "src.fjformer.functions.loss_func",
-        "description": "src.fjformer.functions.loss_func",
-        "peekOfCode": "def compute_weighted_cross_entropy_and_accuracy(\n        logits: jnp.ndarray,\n        targets: jnp.ndarray,\n        weights: Optional[jnp.ndarray] = None,\n        label_smoothing: float = 0.0,\n        z_loss: float = 0.0,\n        loss_normalizing_factor: Optional[float] = None,\n) -> Tuple[jnp.ndarray, jnp.ndarray, jnp.ndarray, jnp.ndarray]:\n    \"\"\"Compute weighted cross entropy and entropy for log probs and targets.\n    Args:",
-        "detail": "src.fjformer.functions.loss_func",
+        "importPath": "src.fjformer.functions.loss_functions",
+        "description": "src.fjformer.functions.loss_functions",
+        "peekOfCode": "def compute_weighted_cross_entropy_and_accuracy(\n    logits: jnp.ndarray,\n    targets: jnp.ndarray,\n    weights: Optional[jnp.ndarray] = None,\n    label_smoothing: float = 0.0,\n    z_loss: float = 0.0,\n    loss_normalizing_factor: Optional[float] = None,\n) -> Tuple[jnp.ndarray, jnp.ndarray, jnp.ndarray, jnp.ndarray]:\n    \"\"\"\n    Computes weighted cross-entropy loss, z-loss, weight sum, and accuracy.",
+        "detail": "src.fjformer.functions.loss_functions",
         "documentation": {}
     },
     {
         "label": "convert_special_loss_normalizing_factor_to_enum",
         "kind": 2,
-        "importPath": "src.fjformer.functions.loss_func",
-        "description": "src.fjformer.functions.loss_func",
-        "peekOfCode": "def convert_special_loss_normalizing_factor_to_enum(\n        x: str) -> SpecialLossNormalizingFactor:\n    \"\"\"Converts stringified version of LNF to an enum.\n    This is useful because gin dynamic registration does not (currently)\n    have support for enum.\n    Args:\n      x: stringified version of SpecialLossNormalizingFactor enum.\n    Returns:\n      SpecialLossNormalizingFactor enum instance.\n    \"\"\"",
-        "detail": "src.fjformer.functions.loss_func",
+        "importPath": "src.fjformer.functions.loss_functions",
+        "description": "src.fjformer.functions.loss_functions",
+        "peekOfCode": "def convert_special_loss_normalizing_factor_to_enum(\n    x: str,\n) -> SpecialLossNormalizingFactor:\n    \"\"\"\n    Converts a stringified version of SpecialLossNormalizingFactor to an enum.\n    Args:\n        x: Stringified version of the enum value.\n    Returns:\n        The corresponding SpecialLossNormalizingFactor enum value.\n    \"\"\"",
+        "detail": "src.fjformer.functions.loss_functions",
         "documentation": {}
     },
     {
         "label": "get_loss_normalizing_factor_and_weights",
         "kind": 2,
-        "importPath": "src.fjformer.functions.loss_func",
-        "description": "src.fjformer.functions.loss_func",
-        "peekOfCode": "def get_loss_normalizing_factor_and_weights(\n        loss_normalizing_factor: Optional[Union[float, int, str,\n        SpecialLossNormalizingFactor]],\n        batch: Mapping[str, jnp.ndarray]\n):\n    \"\"\"Get the float loss_normalizing_factor and loss weights.\n    If loss_normalizing_factor is float or None, this will simply return the\n    input loss_normalizing_factor and batch.\n    If loss_normalizing_factor is a SpecialLossNormalizingFactor, it will\n    return a float loss_normalizing_factor and loss weights corresponding to",
-        "detail": "src.fjformer.functions.loss_func",
+        "importPath": "src.fjformer.functions.loss_functions",
+        "description": "src.fjformer.functions.loss_functions",
+        "peekOfCode": "def get_loss_normalizing_factor_and_weights(\n    loss_normalizing_factor: Optional[\n        Union[float, int, str, SpecialLossNormalizingFactor]\n    ],\n    batch: Mapping[str, jnp.ndarray],\n) -> Tuple[Optional[float], Optional[jnp.ndarray]]:\n    \"\"\"\n    Gets the loss normalizing factor and weights from a batch of data.\n    Args:\n        loss_normalizing_factor: The loss normalizing factor to use.",
+        "detail": "src.fjformer.functions.loss_functions",
         "documentation": {}
     },
     {
         "label": "auxiliary_load_balancing_loss_func",
         "kind": 2,
-        "importPath": "src.fjformer.functions.loss_func",
-        "description": "src.fjformer.functions.loss_func",
-        "peekOfCode": "def auxiliary_load_balancing_loss_func(\n        gate_logits: chex.Array,\n        num_experts: int,\n        top_k: int,\n        attention_mask: Optional[chex.Array],\n) -> chex.Array:\n    r\"\"\"\n    Computes auxiliary load balancing loss as in Switch Transformer - implemented in JAX.\n    See Switch Transformer (https://arxiv.org/abs/2101.03961) for more details. This function implements the loss\n    function presented in equations (4) - (6) of the paper. It aims at penalizing cases where the routing between",
-        "detail": "src.fjformer.functions.loss_func",
+        "importPath": "src.fjformer.functions.loss_functions",
+        "description": "src.fjformer.functions.loss_functions",
+        "peekOfCode": "def auxiliary_load_balancing_loss_func(\n    gate_logits: chex.Array,\n    num_experts: int,\n    top_k: int,\n    attention_mask: Optional[chex.Array] = None,\n) -> chex.Array:\n    \"\"\"Computes auxiliary load balancing loss as in Switch Transformer.\n    See Switch Transformer (https://arxiv.org/abs/2101.03961)\n    Args:\n        gate_logits: The logits for the gating network.",
+        "detail": "src.fjformer.functions.loss_functions",
         "documentation": {}
     },
     {
@@ -4676,7 +4830,7 @@
         "kind": 2,
         "importPath": "src.fjformer.optimizers.adafactor",
         "description": "src.fjformer.optimizers.adafactor",
-        "peekOfCode": "def get_adafactor_with_linear_scheduler(\n        steps: int,\n        learning_rate_start: float = 5e-5,\n        learning_rate_end: float = 1e-5,\n        weight_decay=1e-1,\n        min_dim_size_to_factor: int = 128,\n        decay_rate: float = 0.8,\n        decay_offset: int = 0,\n        multiply_by_parameter_scale: float = True,\n        clipping_threshold: Optional[float] = 1.0,",
+        "peekOfCode": "def get_adafactor_with_linear_scheduler(\n    steps: int,\n    learning_rate_start: float = 5e-5,\n    learning_rate_end: float = 1e-5,\n    weight_decay: float = 1e-1,\n    min_dim_size_to_factor: int = 128,\n    decay_rate: float = 0.8,\n    decay_offset: int = 0,\n    multiply_by_parameter_scale: bool = True,\n    clipping_threshold: Optional[float] = 1.0,",
         "detail": "src.fjformer.optimizers.adafactor",
         "documentation": {}
     },
@@ -4685,7 +4839,7 @@
         "kind": 2,
         "importPath": "src.fjformer.optimizers.adafactor",
         "description": "src.fjformer.optimizers.adafactor",
-        "peekOfCode": "def get_adafactor_with_warmup_linear_scheduler(\n        steps: int,\n        min_dim_size_to_factor: int = 128,\n        decay_rate: float = 0.8,\n        decay_offset: int = 0,\n        multiply_by_parameter_scale: float = True,\n        clipping_threshold: Optional[float] = 1.0,\n        momentum: Optional[float] = None,\n        dtype_momentum: chex.ArrayDType = jnp.float32,\n        weight_decay_rate: Optional[float] = None,",
+        "peekOfCode": "def get_adafactor_with_warmup_linear_scheduler(\n    steps: int,\n    learning_rate_start: float = 5e-5,\n    learning_rate_end: float = 1e-5,\n    warmup_steps: int = 500,\n    min_dim_size_to_factor: int = 128,\n    decay_rate: float = 0.8,\n    decay_offset: int = 0,\n    multiply_by_parameter_scale: bool = True,\n    clipping_threshold: Optional[float] = 1.0,",
         "detail": "src.fjformer.optimizers.adafactor",
         "documentation": {}
     },
@@ -4694,16 +4848,16 @@
         "kind": 2,
         "importPath": "src.fjformer.optimizers.adafactor",
         "description": "src.fjformer.optimizers.adafactor",
-        "peekOfCode": "def get_adafactor_with_cosine_scheduler(\n        steps: int,\n        learning_rate=5e-5,\n        min_dim_size_to_factor: int = 128,\n        decay_rate: float = 0.8,\n        decay_offset: int = 0,\n        multiply_by_parameter_scale: float = True,\n        clipping_threshold: Optional[float] = 1.0,\n        momentum: Optional[float] = None,\n        dtype_momentum: chex.ArrayDType = jnp.float32,",
+        "peekOfCode": "def get_adafactor_with_cosine_scheduler(\n    steps: int,\n    learning_rate: float = 5e-5,\n    min_dim_size_to_factor: int = 128,\n    decay_rate: float = 0.8,\n    decay_offset: int = 0,\n    multiply_by_parameter_scale: bool = True,\n    clipping_threshold: Optional[float] = 1.0,\n    momentum: Optional[float] = None,\n    dtype_momentum: chex.ArrayDType = jnp.float32,",
         "detail": "src.fjformer.optimizers.adafactor",
         "documentation": {}
     },
     {
-        "label": "get_adafactor_with_warm_up_cosine_scheduler",
+        "label": "get_adafactor_with_warmup_cosine_scheduler",
         "kind": 2,
         "importPath": "src.fjformer.optimizers.adafactor",
         "description": "src.fjformer.optimizers.adafactor",
-        "peekOfCode": "def get_adafactor_with_warm_up_cosine_scheduler(\n        steps: int,\n        learning_rate=5e-5,\n        learning_rate_end=1e-5,\n        weight_decay=1e-1,\n        min_dim_size_to_factor: int = 128,\n        decay_rate: float = 0.8,\n        decay_offset: int = 0,\n        multiply_by_parameter_scale: float = True,\n        clipping_threshold: Optional[float] = 1.0,",
+        "peekOfCode": "def get_adafactor_with_warmup_cosine_scheduler(\n    steps: int,\n    learning_rate: float = 5e-5,\n    learning_rate_end: float = 1e-5,\n    weight_decay: float = 1e-1,\n    min_dim_size_to_factor: int = 128,\n    decay_rate: float = 0.8,\n    decay_offset: int = 0,\n    multiply_by_parameter_scale: bool = True,\n    clipping_threshold: Optional[float] = 1.0,",
         "detail": "src.fjformer.optimizers.adafactor",
         "documentation": {}
     },
@@ -4712,7 +4866,7 @@
         "kind": 2,
         "importPath": "src.fjformer.optimizers.adamw",
         "description": "src.fjformer.optimizers.adamw",
-        "peekOfCode": "def get_adamw_with_cosine_scheduler(\n        steps: int,\n        learning_rate: float = 5e-5,\n        b1: float = 0.9,\n        b2: float = 0.999,\n        eps: float = 1e-8,\n        eps_root: float = 0.0,\n        weight_decay: float = 1e-1,\n        gradient_accumulation_steps: int = 1,\n        mu_dtype: Optional[chex.ArrayDType] = None,",
+        "peekOfCode": "def get_adamw_with_cosine_scheduler(\n    steps: int,\n    learning_rate: float = 5e-5,\n    b1: float = 0.9,\n    b2: float = 0.999,\n    eps: float = 1e-8,\n    eps_root: float = 0.0,\n    weight_decay: float = 1e-1,\n    gradient_accumulation_steps: int = 1,\n    mu_dtype: Optional[chex.ArrayDType] = None,",
         "detail": "src.fjformer.optimizers.adamw",
         "documentation": {}
     },
@@ -4721,7 +4875,7 @@
         "kind": 2,
         "importPath": "src.fjformer.optimizers.adamw",
         "description": "src.fjformer.optimizers.adamw",
-        "peekOfCode": "def get_adamw_with_linear_scheduler(\n        steps: int,\n        learning_rate_start: float = 5e-5,\n        learning_rate_end: float = 1e-5,\n        b1: float = 0.9,\n        b2: float = 0.999,\n        eps: float = 1e-8,\n        eps_root: float = 0.0,\n        weight_decay: float = 1e-1,\n        gradient_accumulation_steps: int = 1,",
+        "peekOfCode": "def get_adamw_with_linear_scheduler(\n    steps: int,\n    learning_rate_start: float = 5e-5,\n    learning_rate_end: float = 1e-5,\n    b1: float = 0.9,\n    b2: float = 0.999,\n    eps: float = 1e-8,\n    eps_root: float = 0.0,\n    weight_decay: float = 1e-1,\n    gradient_accumulation_steps: int = 1,",
         "detail": "src.fjformer.optimizers.adamw",
         "documentation": {}
     },
@@ -4730,16 +4884,16 @@
         "kind": 2,
         "importPath": "src.fjformer.optimizers.adamw",
         "description": "src.fjformer.optimizers.adamw",
-        "peekOfCode": "def get_adamw_with_warmup_linear_scheduler(\n        steps: int,\n        learning_rate_start: float = 5e-5,\n        learning_rate_end: float = 1e-5,\n        b1: float = 0.9,\n        b2: float = 0.999,\n        eps: float = 1e-8,\n        eps_root: float = 0.0,\n        weight_decay: float = 1e-1,\n        gradient_accumulation_steps: int = 1,",
+        "peekOfCode": "def get_adamw_with_warmup_linear_scheduler(\n    steps: int,\n    learning_rate_start: float = 5e-5,\n    learning_rate_end: float = 1e-5,\n    b1: float = 0.9,\n    b2: float = 0.999,\n    eps: float = 1e-8,\n    eps_root: float = 0.0,\n    weight_decay: float = 1e-1,\n    gradient_accumulation_steps: int = 1,",
         "detail": "src.fjformer.optimizers.adamw",
         "documentation": {}
     },
     {
-        "label": "get_adamw_with_warm_up_cosine_scheduler",
+        "label": "get_adamw_with_warmup_cosine_scheduler",
         "kind": 2,
         "importPath": "src.fjformer.optimizers.adamw",
         "description": "src.fjformer.optimizers.adamw",
-        "peekOfCode": "def get_adamw_with_warm_up_cosine_scheduler(\n        steps: int,\n        learning_rate: float = 5e-5,\n        learning_rate_end: float = 1e-5,\n        b1: float = 0.9,\n        b2: float = 0.999,\n        eps: float = 1e-8,\n        eps_root: float = 0.0,\n        weight_decay: float = 1e-1,\n        exponent: float = 1.0,",
+        "peekOfCode": "def get_adamw_with_warmup_cosine_scheduler(\n    steps: int,\n    learning_rate: float = 5e-5,\n    learning_rate_end: float = 1e-5,\n    b1: float = 0.9,\n    b2: float = 0.999,\n    eps: float = 1e-8,\n    eps_root: float = 0.0,\n    weight_decay: float = 1e-1,\n    exponent: float = 1.0,",
         "detail": "src.fjformer.optimizers.adamw",
         "documentation": {}
     },
@@ -4748,16 +4902,16 @@
         "kind": 2,
         "importPath": "src.fjformer.optimizers.lion",
         "description": "src.fjformer.optimizers.lion",
-        "peekOfCode": "def get_lion_with_linear_scheduler(\n        steps: int,\n        learning_rate_start: float = 5e-5,\n        learning_rate_end: float = 1e-5,\n        b1: float = 0.9,\n        b2: float = 0.99,\n        gradient_accumulation_steps: int = 1,\n        mu_dtype: Optional[chex.ArrayDType] = None,\n):\n    \"\"\"",
+        "peekOfCode": "def get_lion_with_linear_scheduler(\n    steps: int,\n    learning_rate_start: float = 5e-5,\n    learning_rate_end: float = 1e-5,\n    b1: float = 0.9,\n    b2: float = 0.99,\n    gradient_accumulation_steps: int = 1,\n    mu_dtype: Optional[chex.ArrayDType] = None,\n) -> Tuple[optax.GradientTransformation, optax.Schedule]:\n    \"\"\"",
         "detail": "src.fjformer.optimizers.lion",
         "documentation": {}
     },
     {
-        "label": "get_lion_with_with_warmup_linear_scheduler",
+        "label": "get_lion_with_warmup_linear_scheduler",
         "kind": 2,
         "importPath": "src.fjformer.optimizers.lion",
         "description": "src.fjformer.optimizers.lion",
-        "peekOfCode": "def get_lion_with_with_warmup_linear_scheduler(\n        steps: int,\n        b1: float = 0.9,\n        b2: float = 0.99,\n        gradient_accumulation_steps: int = 1,\n        mu_dtype: Optional[chex.ArrayDType] = None,\n        learning_rate_start: float = 5e-5,\n        learning_rate_end: float = 1e-5,\n        warmup_steps: int = 500\n):",
+        "peekOfCode": "def get_lion_with_warmup_linear_scheduler(\n    steps: int,\n    learning_rate_start: float = 5e-5,\n    learning_rate_end: float = 1e-5,\n    b1: float = 0.9,\n    b2: float = 0.99,\n    gradient_accumulation_steps: int = 1,\n    mu_dtype: Optional[chex.ArrayDType] = None,\n    warmup_steps: int = 500,\n    warmup_init_value: float = 5e-8,",
         "detail": "src.fjformer.optimizers.lion",
         "documentation": {}
     },
@@ -4766,16 +4920,16 @@
         "kind": 2,
         "importPath": "src.fjformer.optimizers.lion",
         "description": "src.fjformer.optimizers.lion",
-        "peekOfCode": "def get_lion_with_cosine_scheduler(\n        steps: int,\n        learning_rate=5e-5,\n        alpha: float = 0.0,\n        exponent: float = 1.0,\n        b1: float = 0.9,\n        b2: float = 0.99,\n        gradient_accumulation_steps: int = 1,\n        mu_dtype: Optional[chex.ArrayDType] = None,\n):",
+        "peekOfCode": "def get_lion_with_cosine_scheduler(\n    steps: int,\n    learning_rate: float = 5e-5,\n    alpha: float = 0.0,\n    exponent: float = 1.0,\n    b1: float = 0.9,\n    b2: float = 0.99,\n    gradient_accumulation_steps: int = 1,\n    mu_dtype: Optional[chex.ArrayDType] = None,\n) -> Tuple[optax.GradientTransformation, optax.Schedule]:",
         "detail": "src.fjformer.optimizers.lion",
         "documentation": {}
     },
     {
-        "label": "get_lion_with_warm_up_cosine_scheduler",
+        "label": "get_lion_with_warmup_cosine_scheduler",
         "kind": 2,
         "importPath": "src.fjformer.optimizers.lion",
         "description": "src.fjformer.optimizers.lion",
-        "peekOfCode": "def get_lion_with_warm_up_cosine_scheduler(\n        steps: int,\n        learning_rate=5e-5,\n        learning_rate_end=1e-5,\n        exponent: float = 1.0,\n        b1: float = 0.9,\n        b2: float = 0.99,\n        gradient_accumulation_steps: int = 1,\n        warmup_steps: int = 500,\n        mu_dtype: Optional[chex.ArrayDType] = None,",
+        "peekOfCode": "def get_lion_with_warmup_cosine_scheduler(\n    steps: int,\n    learning_rate: float = 5e-5,\n    learning_rate_end: float = 1e-5,\n    exponent: float = 1.0,\n    b1: float = 0.9,\n    b2: float = 0.99,\n    gradient_accumulation_steps: int = 1,\n    warmup_steps: int = 500,\n    mu_dtype: Optional[chex.ArrayDType] = None,",
         "detail": "src.fjformer.optimizers.lion",
         "documentation": {}
     },
@@ -4784,7 +4938,7 @@
         "kind": 6,
         "importPath": "src.fjformer.optimizers.optimizer_utils",
         "description": "src.fjformer.optimizers.optimizer_utils",
-        "peekOfCode": "class OptaxScheduledWeightDecayState(NamedTuple):\n    count: chex.Array\ndef optax_add_scheduled_weight_decay(schedule_fn, mask=None):\n    \"\"\"\n    :param schedule_fn:\n    :param mask:\n    :return: Optax GradientTransformation inited\n    \"\"\"\n    def init_fn(params):\n        del params",
+        "peekOfCode": "class OptaxScheduledWeightDecayState(NamedTuple):\n    \"\"\"\n    State for the scheduled weight decay optimizer.\n    \"\"\"\n    count: chex.Array  # Step count\ndef optax_add_scheduled_weight_decay(\n    schedule_fn: Callable[[chex.Array], chex.Array],\n    mask: Optional[chex.ArrayTree] = None,\n) -> optax.GradientTransformation:\n    \"\"\"",
         "detail": "src.fjformer.optimizers.optimizer_utils",
         "documentation": {}
     },
@@ -4793,7 +4947,7 @@
         "kind": 2,
         "importPath": "src.fjformer.optimizers.optimizer_utils",
         "description": "src.fjformer.optimizers.optimizer_utils",
-        "peekOfCode": "def optax_add_scheduled_weight_decay(schedule_fn, mask=None):\n    \"\"\"\n    :param schedule_fn:\n    :param mask:\n    :return: Optax GradientTransformation inited\n    \"\"\"\n    def init_fn(params):\n        del params\n        return OptaxScheduledWeightDecayState(count=jnp.zeros([], jnp.int32))\n    def update_fn(updates, state, params):",
+        "peekOfCode": "def optax_add_scheduled_weight_decay(\n    schedule_fn: Callable[[chex.Array], chex.Array],\n    mask: Optional[chex.ArrayTree] = None,\n) -> optax.GradientTransformation:\n    \"\"\"\n    Create an optax optimizer that applies weight decay on a schedule.\n    This function is similar to `optax.add_decayed_weights`, but it allows for\n    the weight decay rate to be scheduled over training steps.\n    Args:\n        schedule_fn: A function that takes the current step count as input",
         "detail": "src.fjformer.optimizers.optimizer_utils",
         "documentation": {}
     },
@@ -4802,7 +4956,7 @@
         "kind": 2,
         "importPath": "src.fjformer.optimizers.rmsprop",
         "description": "src.fjformer.optimizers.rmsprop",
-        "peekOfCode": "def get_rmsprop_with_cosine_scheduler(\n        steps: int,\n        learning_rate: float = 5e-5,\n        decay: float = 0.9,\n        initial_scale: float = 0.,\n        momentum: Optional[float] = None,\n        nesterov: bool = False,\n        eps: float = 1e-8,\n        weight_decay: float = 1e-1,\n        gradient_accumulation_steps: int = 1,",
+        "peekOfCode": "def get_rmsprop_with_cosine_scheduler(\n    steps: int,\n    learning_rate: float = 5e-5,\n    decay: float = 0.9,\n    initial_scale: float = 0.0,\n    momentum: Optional[float] = None,\n    nesterov: bool = False,\n    eps: float = 1e-8,\n    weight_decay: float = 1e-1,\n    gradient_accumulation_steps: int = 1,",
         "detail": "src.fjformer.optimizers.rmsprop",
         "documentation": {}
     },
@@ -4811,7 +4965,7 @@
         "kind": 2,
         "importPath": "src.fjformer.optimizers.rmsprop",
         "description": "src.fjformer.optimizers.rmsprop",
-        "peekOfCode": "def get_rmsprop_with_linear_scheduler(\n        steps: int,\n        learning_rate_start: float = 5e-5,\n        learning_rate_end: float = 1e-5,\n        decay: float = 0.9,\n        initial_scale: float = 0.,\n        momentum: Optional[float] = None,\n        nesterov: bool = False,\n        eps: float = 1e-8,\n        weight_decay: float = 1e-1,",
+        "peekOfCode": "def get_rmsprop_with_linear_scheduler(\n    steps: int,\n    learning_rate_start: float = 5e-5,\n    learning_rate_end: float = 1e-5,\n    decay: float = 0.9,\n    initial_scale: float = 0.0,\n    momentum: Optional[float] = None,\n    nesterov: bool = False,\n    eps: float = 1e-8,\n    weight_decay: float = 1e-1,",
         "detail": "src.fjformer.optimizers.rmsprop",
         "documentation": {}
     },
@@ -4820,7 +4974,7 @@
         "kind": 2,
         "importPath": "src.fjformer.optimizers.rmsprop",
         "description": "src.fjformer.optimizers.rmsprop",
-        "peekOfCode": "def get_rmsprop_with_warmup_linear_scheduler(\n        steps: int,\n        learning_rate_start: float = 5e-5,\n        learning_rate_end: float = 1e-5,\n        decay: float = 0.9,\n        eps: float = 1e-8,\n        initial_scale: float = 0.,\n        momentum: Optional[float] = None,\n        nesterov: bool = False,\n        weight_decay: float = 1e-1,",
+        "peekOfCode": "def get_rmsprop_with_warmup_linear_scheduler(\n    steps: int,\n    learning_rate_start: float = 5e-5,\n    learning_rate_end: float = 1e-5,\n    decay: float = 0.9,\n    eps: float = 1e-8,\n    initial_scale: float = 0.0,\n    momentum: Optional[float] = None,\n    nesterov: bool = False,\n    weight_decay: float = 1e-1,",
         "detail": "src.fjformer.optimizers.rmsprop",
         "documentation": {}
     },
@@ -4829,7 +4983,7 @@
         "kind": 2,
         "importPath": "src.fjformer.optimizers.rmsprop",
         "description": "src.fjformer.optimizers.rmsprop",
-        "peekOfCode": "def get_rmsprop_with_warm_up_cosine_scheduler(\n        steps: int,\n        learning_rate: float = 5e-5,\n        learning_rate_end: float = 1e-5,\n        decay: float = 0.9,\n        initial_scale: float = 0.,\n        momentum: Optional[float] = None,\n        nesterov: bool = False,\n        eps: float = 1e-8,\n        weight_decay: float = 1e-1,",
+        "peekOfCode": "def get_rmsprop_with_warm_up_cosine_scheduler(\n    steps: int,\n    learning_rate: float = 5e-5,\n    learning_rate_end: float = 1e-5,\n    decay: float = 0.9,\n    initial_scale: float = 0.0,\n    momentum: Optional[float] = None,\n    nesterov: bool = False,\n    eps: float = 1e-8,\n    weight_decay: float = 1e-1,",
         "detail": "src.fjformer.optimizers.rmsprop",
         "documentation": {}
     },
@@ -5783,7 +5937,7 @@
         "kind": 2,
         "importPath": "src.fjformer.sharding.sharding",
         "description": "src.fjformer.sharding.sharding",
-        "peekOfCode": "def make_shard_and_gather_fns(partition_specs, mesh: Optional[jax.sharding.Mesh] = None):\n    \"\"\"\n    The make_shard_and_gather_fns function takes in a partition_specs and dtype_specs,\n    and returns two functions: shard_fns and gather_fns. The shard function is used to\n    shard the input tensor into the specified partitions. The gather function is used to\n    gather all the shards back together into one tensor.\n    :param partition_specs: Specify the sharding of the input tensor\n    :param mesh: jax.sharding.Mesh to create namedSharding\n    :return: A tuple of functions\n    \"\"\"",
+        "peekOfCode": "def make_shard_and_gather_fns(\n        partition_specs: dict[str, PartitionSpec],\n        mesh: Optional[jax.sharding.Mesh] = None\n) -> Tuple[dict[Callable], dict[Callable]]:\n    \"\"\"\n    Create shard and gather functions based on given partition specs and mesh.\n    This function generates dictionaries of shard and gather functions that can be used\n    to distribute and collect arrays across a JAX mesh. The functions are specifically\n    designed for use with Flax's `jax.tree_map`.\n    Args:",
         "detail": "src.fjformer.sharding.sharding",
         "documentation": {}
     },
@@ -5792,7 +5946,7 @@
         "kind": 2,
         "importPath": "src.fjformer.sharding.sharding",
         "description": "src.fjformer.sharding.sharding",
-        "peekOfCode": "def get_jax_mesh(axis_dims, names):\n    \"\"\"\n    The get_jax_mesh function takes a string of the form:\n        &lt;axis_dims&gt;\n    where axis_dims is a comma-separated list of dimensions, each dimension being either:\n        &lt;name&gt;:&lt;dim&gt;  or  &lt;dim&gt;\n    If there are no names, then the default names \"x\", \"y\", and \"z\" will be used. If there are fewer than three dimensions, then the remaining dimensions will be set to 1. For example:\n    :param axis_dims: Specify the dimensions of the mesh\n    :param names: Specify the names of the dimensions in\n    :return: A mesh object",
+        "peekOfCode": "def get_jax_mesh(axis_dims: str, names: Sequence[str]) -> jax.sharding.Mesh:\n    \"\"\"\n    Create a JAX mesh based on axis dimensions and names.\n    Args:\n        axis_dims: A comma-separated string specifying the dimensions of the mesh, e.g., \"1,2,4\".\n                   A \"!\" prefix indicates mesh axis splitting.\n        names: A sequence of names for the mesh axes, e.g., [\"data\", \"model\"].\n    Returns:\n        A JAX mesh object.\n    \"\"\"",
         "detail": "src.fjformer.sharding.sharding",
         "documentation": {}
     },
@@ -5801,7 +5955,7 @@
         "kind": 2,
         "importPath": "src.fjformer.sharding.sharding",
         "description": "src.fjformer.sharding.sharding",
-        "peekOfCode": "def names_in_current_mesh(*names):\n    \"\"\"\n    The names_in_current_mesh function is used to check if a set of names are in the current mesh.\n    :param *names: Pass in a list of names to the function\n    :return: A boolean indicating whether\n    \"\"\"\n    mesh_axis_names = pxla.thread_resources.env.physical_mesh.axis_names\n    return set(names) <= set(mesh_axis_names)\ndef get_names_from_partition_spec(partition_specs):\n    \"\"\"",
+        "peekOfCode": "def names_in_current_mesh(*names: str) -> bool:\n    \"\"\"\n    Check if the given names are present in the current JAX mesh.\n    Args:\n        *names: Variable number of axis names to check.\n    Returns:\n        True if all given names are present in the current mesh, False otherwise.\n    \"\"\"\n    mesh_axis_names = pxla.thread_resources.env.physical_mesh.axis_names\n    return set(names) <= set(mesh_axis_names)",
         "detail": "src.fjformer.sharding.sharding",
         "documentation": {}
     },
@@ -5810,7 +5964,7 @@
         "kind": 2,
         "importPath": "src.fjformer.sharding.sharding",
         "description": "src.fjformer.sharding.sharding",
-        "peekOfCode": "def get_names_from_partition_spec(partition_specs):\n    \"\"\"\n    The get_names_from_partition_spec function takes a partition_specs argument, which is either a dictionary or list.\n    If it\"s a dictionary, the function converts it to a list of values. Then for each item in the partition_specs list:\n        If the item is None, continue (do nothing) and move on to next iteration of loop.\n        If the item is an instance of str (i.e., if it\"s just one string), add that string to names set and move on to next iteration of loop.\n        Otherwise (if not None or str), call get_names_from_partition_spec recurs\n    :param partition_specs: Specify the partitioning of the data\n    :return: A list of names\n    \"\"\"",
+        "peekOfCode": "def get_names_from_partition_spec(partition_specs: dict[str, PartitionSpec]) -> list[str]:\n    \"\"\"\n    Extract axis names from a partition specification.\n    This function recursively iterates through the provided `partition_specs`\n    dictionary and extracts all unique axis names used in the sharding specifications.\n    Args:\n        partition_specs: A dictionary mapping parameter names to their respective `PartitionSpec`.\n    Returns:\n        A list of unique axis names used in the partition specs.\n    \"\"\"",
         "detail": "src.fjformer.sharding.sharding",
         "documentation": {}
     },
@@ -5819,7 +5973,7 @@
         "kind": 2,
         "importPath": "src.fjformer.sharding.sharding",
         "description": "src.fjformer.sharding.sharding",
-        "peekOfCode": "def with_sharding_constraint(x, partition_specs):\n    \"\"\" A smarter version of with_sharding_constraint that only applies the\n        constraint if the current mesh contains the axes in the partition specs.\n    \"\"\"\n    axis_names = get_names_from_partition_spec(partition_specs)\n    if names_in_current_mesh(*axis_names):\n        x = _with_sharding_constraint(x, partition_specs)\n    return x\ndef wrap_function_with_rng(rng):\n    \"\"\" To be used as decorator, automatically bookkeep a RNG for the wrapped function. \"\"\"",
+        "peekOfCode": "def with_sharding_constraint(x: jnp.ndarray, partition_specs: dict[str, PartitionSpec]) -> jnp.ndarray:\n    \"\"\"\n    Apply sharding constraints if axis names are present in the current mesh.\n    This is a smarter version of `jax.lax.with_sharding_constraint`. It only applies the\n    sharding constraint if all the axis names specified in the `partition_specs` are\n    present in the current JAX mesh.\n    Args:\n        x: The JAX array to apply sharding constraints to.\n        partition_specs: A dictionary mapping parameter names to their respective `PartitionSpec`.\n    Returns:",
         "detail": "src.fjformer.sharding.sharding",
         "documentation": {}
     },
@@ -5828,7 +5982,7 @@
         "kind": 2,
         "importPath": "src.fjformer.sharding.sharding",
         "description": "src.fjformer.sharding.sharding",
-        "peekOfCode": "def wrap_function_with_rng(rng):\n    \"\"\" To be used as decorator, automatically bookkeep a RNG for the wrapped function. \"\"\"\n    def wrap_function(function):\n        def wrapped(*args, **kwargs):\n            nonlocal rng\n            rng, split_rng = jax.random.split(rng)\n            return function(split_rng, *args, **kwargs)\n        return wrapped\n    return wrap_function\ndef get_metrics(metrics, unreplicate=False, stack=False):",
+        "peekOfCode": "def wrap_function_with_rng(rng: jnp.ndarray) -> Callable:\n    \"\"\"\n    Wrap a function to automatically manage RNG splitting.\n    This decorator simplifies the use of RNGs within functions by handling the\n    splitting of the RNG key. When the wrapped function is called, it splits\n    the provided RNG key, passes the split key to the original function, and\n    updates the RNG state.\n    Args:\n        rng: The initial JAX RNG key.\n    Returns:",
         "detail": "src.fjformer.sharding.sharding",
         "documentation": {}
     },
@@ -5837,7 +5991,7 @@
         "kind": 2,
         "importPath": "src.fjformer.sharding.sharding",
         "description": "src.fjformer.sharding.sharding",
-        "peekOfCode": "def get_metrics(metrics, unreplicate=False, stack=False):\n    \"\"\"\n    The get_metrics function is a helper function that takes the metrics dictionary\n    returned by the training loop and converts it to a format that can be used for\n    plotting. It does this in two ways:\n    :param metrics: Store the metrics that we want to track\n    :param unreplicate: Convert the metrics from a replicated\n    :param stack: Stack the metrics in a list\n    :return: A dictionary of metrics\n    \"\"\"",
+        "peekOfCode": "def get_metrics(metrics: dict, unreplicate: bool = False, stack: bool = False) -> dict:\n    \"\"\"\n    Process and aggregate metrics.\n    Args:\n        metrics: A dictionary of metrics, potentially replicated across devices.\n        unreplicate: If True, unreplicate the metrics before processing.\n        stack: If True, stack the metrics along a new axis.\n    Returns:\n        A dictionary of processed metrics.\n    \"\"\"",
         "detail": "src.fjformer.sharding.sharding",
         "documentation": {}
     },
@@ -5846,7 +6000,7 @@
         "kind": 2,
         "importPath": "src.fjformer.sharding.sharding",
         "description": "src.fjformer.sharding.sharding",
-        "peekOfCode": "def tree_path_to_string(path, sep=None):\n    \"\"\"\n    The tree_path_to_string function takes a tree path and returns a string representation of it.\n    :param path: Specify the path of the tree\n    :param sep: Join the keys with a separator\n    :return: A tuple of strings\n    \"\"\"\n    keys = []\n    for key in path:\n        if isinstance(key, jax.tree_util.SequenceKey):",
+        "peekOfCode": "def tree_path_to_string(path: tuple, sep: Optional[str] = None) -> str:\n    \"\"\"\n    Convert a JAX tree path to a string representation.\n    Args:\n        path: The JAX tree path tuple.\n        sep: Separator to use when joining path elements.\n    Returns:\n        The string representation of the path.\n    \"\"\"\n    keys = []",
         "detail": "src.fjformer.sharding.sharding",
         "documentation": {}
     },
@@ -5855,7 +6009,7 @@
         "kind": 2,
         "importPath": "src.fjformer.sharding.sharding",
         "description": "src.fjformer.sharding.sharding",
-        "peekOfCode": "def flatten_tree(xs, is_leaf=None, sep=None):\n    \"\"\"\n    The flatten_tree function takes a nested structure of arrays and returns a\n    dictionary mapping from string keys to the corresponding array values. The\n    string keys are derived from the tree path to each value, with `sep` used as\n    the separator between levels in the tree. For example:\n    :param xs: Store the tree structure\n    :param is_leaf: Determine if a node is a leaf\n    :param sep: Specify the separator between each key in the path\n    :return: A dict of flattened tree paths to values",
+        "peekOfCode": "def flatten_tree(xs: dict, is_leaf: Optional[Callable] = None, sep: Optional[str] = None) -> dict:\n    \"\"\"\n    Flatten a JAX tree and convert paths to strings.\n    Args:\n        xs: The JAX tree to flatten.\n        is_leaf: Optional function to determine leaf nodes.\n        sep: Separator to use when joining path elements.\n    Returns:\n        A flattened dictionary with string keys representing the tree paths.\n    \"\"\"",
         "detail": "src.fjformer.sharding.sharding",
         "documentation": {}
     },
@@ -5864,7 +6018,7 @@
         "kind": 2,
         "importPath": "src.fjformer.sharding.sharding",
         "description": "src.fjformer.sharding.sharding",
-        "peekOfCode": "def named_tree_map(f, tree, *rest, is_leaf=None, sep=None):\n    \"\"\" An extended version of jax.tree_util.tree_map, where the mapped function\n        f takes both the name (path) and the tree leaf as input.\n    \"\"\"\n    return jax.tree_util.tree_map_with_path(\n        lambda path, x, *r: f(tree_path_to_string(path, sep=sep), x, *r),\n        tree, *rest,\n        is_leaf=is_leaf\n    )\ndef match_partition_rules(rules, params):",
+        "peekOfCode": "def named_tree_map(\n        f: Callable,\n        tree: dict,\n        *rest,\n        is_leaf: Optional[Callable] = None,\n        sep: Optional[str] = None\n):\n    \"\"\"\n    An extended version of `jax.tree_util.tree_map`.\n    This function extends `jax.tree_util.tree_map` by providing the path",
         "detail": "src.fjformer.sharding.sharding",
         "documentation": {}
     },
@@ -5873,7 +6027,7 @@
         "kind": 2,
         "importPath": "src.fjformer.sharding.sharding",
         "description": "src.fjformer.sharding.sharding",
-        "peekOfCode": "def match_partition_rules(rules, params):\n    \"\"\" Returns a pytree of PartitionSpec according to rules. Supports handling\n        Flax TrainState and Optax optimizer state.\n    \"\"\"\n    def get_partition_spec(name, leaf):\n        if len(leaf.shape) == 0 or np.prod(leaf.shape) == 1:\n            \"\"\" Don\"t partition scalar values. \"\"\"\n            return PartitionSpec()\n        for rule, ps in rules:\n            if re.search(rule, name) is not None:",
+        "peekOfCode": "def match_partition_rules(rules: list[Tuple[str, PartitionSpec]], params: dict) -> dict:\n    \"\"\"\n    Match partition rules to parameters based on their names.\n    This function takes a list of partition rules (regular expressions and\n    corresponding `PartitionSpec`) and applies them to a dictionary of parameters\n    based on their names. It's useful for automatically defining sharding strategies.\n    Args:\n        rules: A list of tuples, where each tuple contains:\n               - A regular expression to match parameter names.\n               - A `PartitionSpec` to apply if the name matches.",
         "detail": "src.fjformer.sharding.sharding",
         "documentation": {}
     },
@@ -5882,7 +6036,7 @@
         "kind": 2,
         "importPath": "src.fjformer.sharding.sharding",
         "description": "src.fjformer.sharding.sharding",
-        "peekOfCode": "def get_weight_decay_mask(exclusions):\n    \"\"\" Return a weight decay mask function that computes the pytree masks\n        according to the given exclusion rules.\n    \"\"\"\n    def decay(name, _):\n        for rule in exclusions:\n            if re.search(rule, name) is not None:\n                return False\n        return True\n    def weight_decay_mask(params):",
+        "peekOfCode": "def get_weight_decay_mask(exclusions: list[str]) -> Callable:\n    \"\"\"\n    Create a weight decay mask function based on exclusion rules.\n    Args:\n        exclusions: A list of regular expressions defining parameter names\n                   to exclude from weight decay.\n    Returns:\n        A function that takes a parameter dictionary and returns a mask\n        (a PyTree with the same structure as the parameters) indicating\n        which parameters should be subject to weight decay.",
         "detail": "src.fjformer.sharding.sharding",
         "documentation": {}
     },
@@ -5891,7 +6045,7 @@
         "kind": 2,
         "importPath": "src.fjformer.sharding.sharding",
         "description": "src.fjformer.sharding.sharding",
-        "peekOfCode": "def tree_apply(fns, tree):\n    \"\"\"\n    The tree_apply function is a generalization of the map function.\n    It takes two arguments: a pytree of functions and a pytree of values.\n    The tree_apply function applies each function in the first argument to its corresponding value in the second argument,\n    and returns a new pytree with these results.\n    :param fns: Apply the functions to the tree\n    :param tree: Apply the function to each element in the tree\n    :return: A pytree of the same structure as the input\n    \"\"\"",
+        "peekOfCode": "def tree_apply(fns: dict, tree: dict):\n    \"\"\"\n    Apply a dictionary of functions to a corresponding PyTree.\n    Args:\n        fns: A dictionary where keys match the PyTree structure and values are functions.\n        tree: The PyTree to apply functions to.\n    Returns:\n        A new PyTree with the same structure as `tree`, but with values modified by the functions in `fns`.\n    \"\"\"\n    return jax.tree_util.tree_map(lambda fn, x: fn(x), fns, tree)",
         "detail": "src.fjformer.sharding.sharding",
         "documentation": {}
     },
@@ -5900,7 +6054,7 @@
         "kind": 2,
         "importPath": "src.fjformer.sharding.sharding",
         "description": "src.fjformer.sharding.sharding",
-        "peekOfCode": "def create_mesh(\n        axis_dims: Sequence[int] = (1, -1, 1, 1), axis_names: Sequence[str] = (\"dp\", \"fsdp\", \"tp\", \"sp\"), backend=\"\"\n):\n    \"\"\"\n    The create_mesh function creates a mesh object that can be used to shard arrays.\n    :param axis_dims: Sequence[int]: Specify the dimensions of the mesh\n    :param axis_names: Sequence[str]: Name the axes of the mesh\n    :param backend: Specify the backend to use\n    :return: A mesh object\n    \"\"\"",
+        "peekOfCode": "def create_mesh(\n        axis_dims: Sequence[int] = (1, -1, 1, 1),\n        axis_names: Sequence[str] = (\"dp\", \"fsdp\", \"tp\", \"sp\"),\n        backend: str = \"\"\n) -> jax.sharding.Mesh:\n    \"\"\"\n    Create a JAX mesh with specified dimensions and names.\n    Args:\n        axis_dims: A sequence of integers representing the size of each mesh dimension.\n                   A dimension of -1 indicates that it should be inferred automatically.",
         "detail": "src.fjformer.sharding.sharding",
         "documentation": {}
     },
@@ -5909,7 +6063,7 @@
         "kind": 6,
         "importPath": "src.fjformer.sharding.t5x_partitioning",
         "description": "src.fjformer.sharding.t5x_partitioning",
-        "peekOfCode": "class AxisNames(tuple):\n    \"\"\"Tuple of strings specifying name for each axis.\n    We create a separate class for this so JAX's pytree utilities can distinguish\n    it from a tuple that should be treated as a pytree, instead treating it as a\n    leaf.\n    \"\"\"\n    def __new__(cls, *names):\n        return tuple.__new__(AxisNames, names)\n    def __repr__(self):\n        return 'AxisNames%s' % tuple.__repr__(self)",
+        "peekOfCode": "class AxisNames(tuple):\n    \"\"\"Tuple of strings specifying name for each axis.\n    We create a separate class for this so JAX's pytree utilities can distinguish\n    it from a tuple that should be treated as a pytree, instead treating it as a\n    leaf.\n    \"\"\"\n    def __new__(cls, *names):\n        return tuple.__new__(AxisNames, names)\n    def __repr__(self):\n        return \"AxisNames%s\" % tuple.__repr__(self)",
         "detail": "src.fjformer.sharding.t5x_partitioning",
         "documentation": {}
     },
@@ -5927,7 +6081,7 @@
         "kind": 6,
         "importPath": "src.fjformer.sharding.t5x_partitioning",
         "description": "src.fjformer.sharding.t5x_partitioning",
-        "peekOfCode": "class LocalChunker:\n    \"\"\"Utility class to aid chunking of sharded arrays in multihost settings.\"\"\"\n    def __init__(self, global_mesh: Mesh):\n        self.global_mesh = global_mesh\n        local_mesh = global_mesh.local_mesh\n        first_local_device = local_mesh.devices.reshape(-1)[0]\n        host_location = collections.OrderedDict(\n            zip(\n                global_mesh.shape.keys(),\n                list(zip(*np.nonzero(",
+        "peekOfCode": "class LocalChunker:\n    \"\"\"Utility class to aid chunking of sharded arrays in multihost settings.\"\"\"\n    def __init__(self, global_mesh: Mesh):\n        self.global_mesh = global_mesh\n        local_mesh = global_mesh.local_mesh\n        first_local_device = local_mesh.devices.reshape(-1)[0]\n        host_location = collections.OrderedDict(\n            zip(\n                global_mesh.shape.keys(),\n                list(zip(*np.nonzero(global_mesh.devices == first_local_device)))[0],",
         "detail": "src.fjformer.sharding.t5x_partitioning",
         "documentation": {}
     },
@@ -5945,7 +6099,7 @@
         "kind": 6,
         "importPath": "src.fjformer.sharding.t5x_partitioning",
         "description": "src.fjformer.sharding.t5x_partitioning",
-        "peekOfCode": "class BasePartitioner(metaclass=abc.ABCMeta):\n    \"\"\"Interface for partitioning computations across hardware devices.\"\"\"\n    def __init__(\n            self,\n            num_partitions: Optional[int] = None,\n            model_parallel_submesh: Optional[HardwareMesh] = None,\n            params_on_devices: bool = True,\n            backend: Optional[str] = None,\n            ici_mesh_shape: Optional[HardwareMesh] = None,\n            dcn_mesh_shape: Optional[HardwareMesh] = None,",
+        "peekOfCode": "class BasePartitioner(metaclass=abc.ABCMeta):\n    \"\"\"Interface for partitioning computations across hardware devices.\"\"\"\n    def __init__(\n        self,\n        num_partitions: Optional[int] = None,\n        model_parallel_submesh: Optional[HardwareMesh] = None,\n        params_on_devices: bool = True,\n        backend: Optional[str] = None,\n        ici_mesh_shape: Optional[HardwareMesh] = None,\n        dcn_mesh_shape: Optional[HardwareMesh] = None,",
         "detail": "src.fjformer.sharding.t5x_partitioning",
         "documentation": {}
     },
@@ -5954,7 +6108,7 @@
         "kind": 6,
         "importPath": "src.fjformer.sharding.t5x_partitioning",
         "description": "src.fjformer.sharding.t5x_partitioning",
-        "peekOfCode": "class PjittedFnWithContext(PartitionedCallable):\n    \"\"\"Wraps pjitted function to apply the appropriate contexts.\"\"\"\n    def __init__(self,\n                 pjitted_fn,\n                 partition_mesh: Mesh,\n                 logical_axis_rules: flax_partitioning.LogicalRules = ()):\n        self._pjitted_fn = pjitted_fn\n        self._mesh = partition_mesh\n        self._logical_axis_rules = logical_axis_rules\n    def __call__(self, *args, **kwargs):",
+        "peekOfCode": "class PjittedFnWithContext(PartitionedCallable):\n    \"\"\"Wraps pjitted function to apply the appropriate contexts.\"\"\"\n    def __init__(\n        self,\n        pjitted_fn,\n        partition_mesh: Mesh,\n        logical_axis_rules: flax_partitioning.LogicalRules = (),\n    ):\n        self._pjitted_fn = pjitted_fn\n        self._mesh = partition_mesh",
         "detail": "src.fjformer.sharding.t5x_partitioning",
         "documentation": {}
     },
@@ -5972,7 +6126,7 @@
         "kind": 6,
         "importPath": "src.fjformer.sharding.t5x_partitioning",
         "description": "src.fjformer.sharding.t5x_partitioning",
-        "peekOfCode": "class PjitPartitioner(BasePjitPartitioner):\n    \"\"\"Partitioner that uses named axes and jax.pjit.\"\"\"\n    def __init__(\n            self,\n            num_partitions: Optional[int] = None,\n            model_parallel_submesh: Optional[HardwareMesh] = None,\n            params_on_devices: bool = True,\n            backend: Optional[str] = None,\n            ici_mesh_shape: Optional[HardwareMesh] = None,\n            dcn_mesh_shape: Optional[HardwareMesh] = None,",
+        "peekOfCode": "class PjitPartitioner(BasePjitPartitioner):\n    \"\"\"Partitioner that uses named axes and jax.pjit.\"\"\"\n    def __init__(\n        self,\n        num_partitions: Optional[int] = None,\n        model_parallel_submesh: Optional[HardwareMesh] = None,\n        params_on_devices: bool = True,\n        backend: Optional[str] = None,\n        ici_mesh_shape: Optional[HardwareMesh] = None,\n        dcn_mesh_shape: Optional[HardwareMesh] = None,",
         "detail": "src.fjformer.sharding.t5x_partitioning",
         "documentation": {}
     },
@@ -5981,7 +6135,7 @@
         "kind": 2,
         "importPath": "src.fjformer.sharding.t5x_partitioning",
         "description": "src.fjformer.sharding.t5x_partitioning",
-        "peekOfCode": "def with_sharding_constraint(x, axis_resources):\n    \"\"\"Wrapper for lax.with_sharding_constraint, no-op on cpu or outside pjit.\"\"\"\n    if jax.devices()[0].platform == 'cpu' or not global_mesh_defined():\n        return x\n    else:\n        return jax.lax.with_sharding_constraint(x, axis_resources)\ndef bounds_from_last_device(last_device: jax.Device) -> HardwareMesh:\n    \"\"\"Get the bound from the given last device.\"\"\"\n    # Must be passed the device at the highest-coordinate corner of the\n    # relevant mesh, which is a requirement we know is satisfied by the last",
+        "peekOfCode": "def with_sharding_constraint(x, axis_resources):\n    \"\"\"Wrapper for lax.with_sharding_constraint, no-op on cpu or outside pjit.\"\"\"\n    if jax.devices()[0].platform == \"cpu\" or not global_mesh_defined():\n        return x\n    else:\n        return jax.lax.with_sharding_constraint(x, axis_resources)\ndef bounds_from_last_device(last_device: jax.Device) -> HardwareMesh:\n    \"\"\"Get the bound from the given last device.\"\"\"\n    # Must be passed the device at the highest-coordinate corner of the\n    # relevant mesh, which is a requirement we know is satisfied by the last",
         "detail": "src.fjformer.sharding.t5x_partitioning",
         "documentation": {}
     },
@@ -5990,7 +6144,7 @@
         "kind": 2,
         "importPath": "src.fjformer.sharding.t5x_partitioning",
         "description": "src.fjformer.sharding.t5x_partitioning",
-        "peekOfCode": "def bounds_from_last_device(last_device: jax.Device) -> HardwareMesh:\n    \"\"\"Get the bound from the given last device.\"\"\"\n    # Must be passed the device at the highest-coordinate corner of the\n    # relevant mesh, which is a requirement we know is satisfied by the last\n    # device in jax.devices().\n    if hasattr(last_device, 'coords'):\n        x, y, z = last_device.coords\n        return x + 1, y + 1, z + 1, last_device.core_on_chip + 1\n    else:\n        # On non-TPU platforms, the \"mesh\" is hosts x devices per host in order",
+        "peekOfCode": "def bounds_from_last_device(last_device: jax.Device) -> HardwareMesh:\n    \"\"\"Get the bound from the given last device.\"\"\"\n    # Must be passed the device at the highest-coordinate corner of the\n    # relevant mesh, which is a requirement we know is satisfied by the last\n    # device in jax.devices().\n    if hasattr(last_device, \"coords\"):\n        x, y, z = last_device.coords\n        return x + 1, y + 1, z + 1, last_device.core_on_chip + 1\n    else:\n        # On non-TPU platforms, the \"mesh\" is hosts x devices per host in order",
         "detail": "src.fjformer.sharding.t5x_partitioning",
         "documentation": {}
     },
@@ -5999,7 +6153,7 @@
         "kind": 2,
         "importPath": "src.fjformer.sharding.t5x_partitioning",
         "description": "src.fjformer.sharding.t5x_partitioning",
-        "peekOfCode": "def get_coords(device: jax.Device) -> HardwareMesh:\n    \"\"\"Returns the coordinates of the given device.\"\"\"\n    if hasattr(device, 'coords'):\n        return *device.coords, device.core_on_chip\n    return device.process_index, device.id % jax.local_device_count()\ndef global_mesh_defined():\n    \"\"\"Checks if global xmap/pjit mesh resource environment is defined.\"\"\"\n    maps_env = jax.experimental.maps.thread_resources.env\n    return maps_env.physical_mesh.devices.shape != ()  # pylint: disable=g-explicit-bool-comparison\ndef get_mesh(model_parallel_submesh: HardwareMesh,",
+        "peekOfCode": "def get_coords(device: jax.Device) -> HardwareMesh:\n    \"\"\"Returns the coordinates of the given device.\"\"\"\n    if hasattr(device, \"coords\"):\n        return *device.coords, device.core_on_chip\n    return device.process_index, device.id % jax.local_device_count()\ndef global_mesh_defined():\n    \"\"\"Checks if global xmap/pjit mesh resource environment is defined.\"\"\"\n    maps_env = jax.experimental.maps.thread_resources.env\n    return (\n        maps_env.physical_mesh.devices.shape != ()",
         "detail": "src.fjformer.sharding.t5x_partitioning",
         "documentation": {}
     },
@@ -6008,7 +6162,7 @@
         "kind": 2,
         "importPath": "src.fjformer.sharding.t5x_partitioning",
         "description": "src.fjformer.sharding.t5x_partitioning",
-        "peekOfCode": "def global_mesh_defined():\n    \"\"\"Checks if global xmap/pjit mesh resource environment is defined.\"\"\"\n    maps_env = jax.experimental.maps.thread_resources.env\n    return maps_env.physical_mesh.devices.shape != ()  # pylint: disable=g-explicit-bool-comparison\ndef get_mesh(model_parallel_submesh: HardwareMesh,\n             input_devices: Sequence[JaxDevice] = (),\n             input_local_devices: Sequence[JaxDevice] = (),\n             tile_by_host_if_needed: bool = True,\n             backend: Optional[str] = None) -> Mesh:\n    \"\"\"Construct an xmap/pjit Mesh for the given model-parallel submesh.",
+        "peekOfCode": "def global_mesh_defined():\n    \"\"\"Checks if global xmap/pjit mesh resource environment is defined.\"\"\"\n    maps_env = jax.experimental.maps.thread_resources.env\n    return (\n        maps_env.physical_mesh.devices.shape != ()\n    )  # pylint: disable=g-explicit-bool-comparison\ndef get_mesh(\n    model_parallel_submesh: HardwareMesh,\n    input_devices: Sequence[JaxDevice] = (),\n    input_local_devices: Sequence[JaxDevice] = (),",
         "detail": "src.fjformer.sharding.t5x_partitioning",
         "documentation": {}
     },
@@ -6017,7 +6171,7 @@
         "kind": 2,
         "importPath": "src.fjformer.sharding.t5x_partitioning",
         "description": "src.fjformer.sharding.t5x_partitioning",
-        "peekOfCode": "def get_mesh(model_parallel_submesh: HardwareMesh,\n             input_devices: Sequence[JaxDevice] = (),\n             input_local_devices: Sequence[JaxDevice] = (),\n             tile_by_host_if_needed: bool = True,\n             backend: Optional[str] = None) -> Mesh:\n    \"\"\"Construct an xmap/pjit Mesh for the given model-parallel submesh.\n    The resulting mesh has two resource axes: 'model', with the provided submesh\n    shape, and 'data', which covers the rest of the mesh.\n    Args:\n      model_parallel_submesh: a HardwareMesh spec, namely (x,y,z,core) on TPU for",
+        "peekOfCode": "def get_mesh(\n    model_parallel_submesh: HardwareMesh,\n    input_devices: Sequence[JaxDevice] = (),\n    input_local_devices: Sequence[JaxDevice] = (),\n    tile_by_host_if_needed: bool = True,\n    backend: Optional[str] = None,\n) -> Mesh:\n    \"\"\"Construct an xmap/pjit Mesh for the given model-parallel submesh.\n    The resulting mesh has two resource axes: 'model', with the provided submesh\n    shape, and 'data', which covers the rest of the mesh.",
         "detail": "src.fjformer.sharding.t5x_partitioning",
         "documentation": {}
     },
@@ -6026,7 +6180,7 @@
         "kind": 2,
         "importPath": "src.fjformer.sharding.t5x_partitioning",
         "description": "src.fjformer.sharding.t5x_partitioning",
-        "peekOfCode": "def get_cpu_mesh() -> Mesh:\n    \"\"\"Trivial mesh for CPU Testing.\"\"\"\n    devices = np.empty(\n        (jax.process_count(), jax.local_device_count()), dtype=object\n    )\n    for device in jax.devices():\n        devices[device.process_index, device.id % jax.local_device_count()] = device\n    return Mesh(devices, ['data', 'model'])\ndef get_gpu_mesh(num_partitions: int) -> Mesh:\n    \"\"\"Mesh for GPUs that preferentially places 'model' on NVLink.\"\"\"",
+        "peekOfCode": "def get_cpu_mesh() -> Mesh:\n    \"\"\"Trivial mesh for CPU Testing.\"\"\"\n    devices = np.empty((jax.process_count(), jax.local_device_count()), dtype=object)\n    for device in jax.devices():\n        devices[device.process_index, device.id % jax.local_device_count()] = device\n    return Mesh(devices, [\"data\", \"model\"])\ndef get_gpu_mesh(num_partitions: int) -> Mesh:\n    \"\"\"Mesh for GPUs that preferentially places 'model' on NVLink.\"\"\"\n    nvlink_size = jax.local_device_count()\n    dcn_size = jax.process_count()",
         "detail": "src.fjformer.sharding.t5x_partitioning",
         "documentation": {}
     },
@@ -6035,7 +6189,7 @@
         "kind": 2,
         "importPath": "src.fjformer.sharding.t5x_partitioning",
         "description": "src.fjformer.sharding.t5x_partitioning",
-        "peekOfCode": "def get_gpu_mesh(num_partitions: int) -> Mesh:\n    \"\"\"Mesh for GPUs that preferentially places 'model' on NVLink.\"\"\"\n    nvlink_size = jax.local_device_count()\n    dcn_size = jax.process_count()\n    nvlink_mp = min(num_partitions, nvlink_size)\n    nvlink_dp, extra1 = divmod(nvlink_size, nvlink_mp)\n    dcn_mp, extra2 = divmod(num_partitions, nvlink_mp)\n    assert not (extra1 or extra2), ('number of partitions on GPU must be a factor'\n                                    ' or multiple of the number of local devices')\n    dcn_dp = dcn_size // dcn_mp",
+        "peekOfCode": "def get_gpu_mesh(num_partitions: int) -> Mesh:\n    \"\"\"Mesh for GPUs that preferentially places 'model' on NVLink.\"\"\"\n    nvlink_size = jax.local_device_count()\n    dcn_size = jax.process_count()\n    nvlink_mp = min(num_partitions, nvlink_size)\n    nvlink_dp, extra1 = divmod(nvlink_size, nvlink_mp)\n    dcn_mp, extra2 = divmod(num_partitions, nvlink_mp)\n    assert not (extra1 or extra2), (\n        \"number of partitions on GPU must be a factor\"\n        \" or multiple of the number of local devices\"",
         "detail": "src.fjformer.sharding.t5x_partitioning",
         "documentation": {}
     },
@@ -6044,7 +6198,7 @@
         "kind": 2,
         "importPath": "src.fjformer.sharding.t5x_partitioning",
         "description": "src.fjformer.sharding.t5x_partitioning",
-        "peekOfCode": "def default_mesh(\n        num_partitions: int,\n        model_parallel_submesh: Optional[HardwareMesh] = None,\n        backend: Optional[str] = None,\n        ici_mesh_shape: Optional[HardwareMesh] = None,\n        dcn_mesh_shape: Optional[HardwareMesh] = None,\n) -> Mesh:\n    \"\"\"Attempt to return a default mesh for simple cases.\n    Args:\n      num_partitions: number of partitions to use, will be ignored if",
+        "peekOfCode": "def default_mesh(\n    num_partitions: int,\n    model_parallel_submesh: Optional[HardwareMesh] = None,\n    backend: Optional[str] = None,\n    ici_mesh_shape: Optional[HardwareMesh] = None,\n    dcn_mesh_shape: Optional[HardwareMesh] = None,\n) -> Mesh:\n    \"\"\"Attempt to return a default mesh for simple cases.\n    Args:\n      num_partitions: number of partitions to use, will be ignored if",
         "detail": "src.fjformer.sharding.t5x_partitioning",
         "documentation": {}
     },
@@ -6053,7 +6207,7 @@
         "kind": 2,
         "importPath": "src.fjformer.sharding.t5x_partitioning",
         "description": "src.fjformer.sharding.t5x_partitioning",
-        "peekOfCode": "def standard_logical_axis_rules(\n        activation_partitioning_dims: int = 1,\n        parameter_partitioning_dims: int = 1,\n        additional_rules: Optional[LogicalAxisRules] = None) -> LogicalAxisRules:\n    \"\"\"Default sharding rules for T5X model in terms of logical axis names.\n    Args:\n      activation_partitioning_dims: enables 2-D activation sharding when set to 2.\n      parameter_partitioning_dims: enables 2-D parameter sharding when set to 2.\n      additional_rules: additional rules (a sequence of tuples) that will be\n        appended to the standard rules.",
+        "peekOfCode": "def standard_logical_axis_rules(\n    activation_partitioning_dims: int = 1,\n    parameter_partitioning_dims: int = 1,\n    additional_rules: Optional[LogicalAxisRules] = None,\n) -> LogicalAxisRules:\n    \"\"\"Default sharding rules for T5X model in terms of logical axis names.\n    Args:\n      activation_partitioning_dims: enables 2-D activation sharding when set to 2.\n      parameter_partitioning_dims: enables 2-D parameter sharding when set to 2.\n      additional_rules: additional rules (a sequence of tuples) that will be",
         "detail": "src.fjformer.sharding.t5x_partitioning",
         "documentation": {}
     },
@@ -6062,7 +6216,7 @@
         "kind": 2,
         "importPath": "src.fjformer.sharding.t5x_partitioning",
         "description": "src.fjformer.sharding.t5x_partitioning",
-        "peekOfCode": "def host_local_array_to_global_array(arr_tree, mesh: jax.sharding.Mesh, pspecs):\n    pspecs = jax.tree_map(\n        lambda x: PartitionSpec() if x is None else x,\n        pspecs,\n        is_leaf=lambda x: x is None,\n    )\n    return multihost_utils.host_local_array_to_global_array(\n        arr_tree, mesh, pspecs\n    )",
+        "peekOfCode": "def host_local_array_to_global_array(arr_tree, mesh: jax.sharding.Mesh, pspecs):\n    pspecs = jax.tree_map(\n        lambda x: PartitionSpec() if x is None else x,\n        pspecs,\n        is_leaf=lambda x: x is None,\n    )\n    return multihost_utils.host_local_array_to_global_array(arr_tree, mesh, pspecs)",
         "detail": "src.fjformer.sharding.t5x_partitioning",
         "documentation": {}
     },
@@ -6125,7 +6279,7 @@
         "kind": 5,
         "importPath": "src.fjformer.sharding.t5x_partitioning",
         "description": "src.fjformer.sharding.t5x_partitioning",
-        "peekOfCode": "PartitionedCallable = Callable[..., Any]\nCompiledPartitionedCallable = Callable[..., Any]\nclass BasePartitioner(metaclass=abc.ABCMeta):\n    \"\"\"Interface for partitioning computations across hardware devices.\"\"\"\n    def __init__(\n            self,\n            num_partitions: Optional[int] = None,\n            model_parallel_submesh: Optional[HardwareMesh] = None,\n            params_on_devices: bool = True,\n            backend: Optional[str] = None,",
+        "peekOfCode": "PartitionedCallable = Callable[..., Any]\nCompiledPartitionedCallable = Callable[..., Any]\nclass BasePartitioner(metaclass=abc.ABCMeta):\n    \"\"\"Interface for partitioning computations across hardware devices.\"\"\"\n    def __init__(\n        self,\n        num_partitions: Optional[int] = None,\n        model_parallel_submesh: Optional[HardwareMesh] = None,\n        params_on_devices: bool = True,\n        backend: Optional[str] = None,",
         "detail": "src.fjformer.sharding.t5x_partitioning",
         "documentation": {}
     },
@@ -6134,7 +6288,7 @@
         "kind": 5,
         "importPath": "src.fjformer.sharding.t5x_partitioning",
         "description": "src.fjformer.sharding.t5x_partitioning",
-        "peekOfCode": "CompiledPartitionedCallable = Callable[..., Any]\nclass BasePartitioner(metaclass=abc.ABCMeta):\n    \"\"\"Interface for partitioning computations across hardware devices.\"\"\"\n    def __init__(\n            self,\n            num_partitions: Optional[int] = None,\n            model_parallel_submesh: Optional[HardwareMesh] = None,\n            params_on_devices: bool = True,\n            backend: Optional[str] = None,\n            ici_mesh_shape: Optional[HardwareMesh] = None,",
+        "peekOfCode": "CompiledPartitionedCallable = Callable[..., Any]\nclass BasePartitioner(metaclass=abc.ABCMeta):\n    \"\"\"Interface for partitioning computations across hardware devices.\"\"\"\n    def __init__(\n        self,\n        num_partitions: Optional[int] = None,\n        model_parallel_submesh: Optional[HardwareMesh] = None,\n        params_on_devices: bool = True,\n        backend: Optional[str] = None,\n        ici_mesh_shape: Optional[HardwareMesh] = None,",
         "detail": "src.fjformer.sharding.t5x_partitioning",
         "documentation": {}
     },
@@ -6800,7 +6954,7 @@
         "kind": 5,
         "importPath": "src.fjformer.xrapture.xrapture",
         "description": "src.fjformer.xrapture.xrapture",
-        "peekOfCode": "LORA_FREEZE = 0\nLORA_FULL = -1\nfrom dataclasses import dataclass\nfrom typing import Any, Callable, Optional, Union\n@dataclass\nclass LoraWeight(ImplicitArray):\n    w: ArrayValue  # M x N\n    a: ArrayValue  # k x N\n    b: ArrayValue  # M x k\n    alpha: float = aux_field(default=1.0)",
+        "peekOfCode": "LORA_FREEZE = 0\nLORA_FULL = -1\n@dataclass\nclass LoraWeight(ImplicitArray):\n    w: ArrayValue  # M x N\n    a: ArrayValue  # k x N\n    b: ArrayValue  # M x k\n    alpha: float = aux_field(default=1.0)\n    def __post_init__(self):\n        \"\"\"",
         "detail": "src.fjformer.xrapture.xrapture",
         "documentation": {}
     },
@@ -6809,7 +6963,7 @@
         "kind": 5,
         "importPath": "src.fjformer.xrapture.xrapture",
         "description": "src.fjformer.xrapture.xrapture",
-        "peekOfCode": "LORA_FULL = -1\nfrom dataclasses import dataclass\nfrom typing import Any, Callable, Optional, Union\n@dataclass\nclass LoraWeight(ImplicitArray):\n    w: ArrayValue  # M x N\n    a: ArrayValue  # k x N\n    b: ArrayValue  # M x k\n    alpha: float = aux_field(default=1.0)\n    def __post_init__(self):",
+        "peekOfCode": "LORA_FULL = -1\n@dataclass\nclass LoraWeight(ImplicitArray):\n    w: ArrayValue  # M x N\n    a: ArrayValue  # k x N\n    b: ArrayValue  # M x k\n    alpha: float = aux_field(default=1.0)\n    def __post_init__(self):\n        \"\"\"\n        The __post_init__ function is called after the __init__ function.",
         "detail": "src.fjformer.xrapture.xrapture",
         "documentation": {}
     },
@@ -6998,52 +7152,7 @@
         "kind": 6,
         "importPath": "env",
         "description": "env",
-        "peekOfCode": "class Zeros(qax.ImplicitArray):\n    default_dtype = jnp.float32\n    def materialize(self):\n        # self.shape and self.dtype will be\n        # populated by the ImplicitArray constructor\n        return jnp.zeros(self.shape, self.dtype)\n    def __str__(self):\n        return f\"Zeros({self.shape}, {self.dtype})\"\ndef get_binop_result_shape_dtype(a, b):\n    out_shape = jnp.broadcast_shapes(jnp.shape(a), jnp.shape(b))",
-        "detail": "env",
-        "documentation": {}
-    },
-    {
-        "label": "get_binop_result_shape_dtype",
-        "kind": 2,
-        "importPath": "env",
-        "description": "env",
-        "peekOfCode": "def get_binop_result_shape_dtype(a, b):\n    out_shape = jnp.broadcast_shapes(jnp.shape(a), jnp.shape(b))\n    out_dtype = jnp.result_type(a.dtype, b.dtype)\n    return out_shape, out_dtype\n# primitive_handler() takes a string, JAX primitive, or a list of those types\n# strings are used to find the corresponding primitive from `jax.lax`\n@qax.primitive_handler(\"add\")\ndef my_add_handler(primitive, a: Zeros, b):\n    # Handlers will receive as arguments:\n    # - primitive: a jax.core.Primitive instance (often can be ignored if the handler is just for one op)",
-        "detail": "env",
-        "documentation": {}
-    },
-    {
-        "label": "my_add_handler",
-        "kind": 2,
-        "importPath": "env",
-        "description": "env",
-        "peekOfCode": "def my_add_handler(primitive, a: Zeros, b):\n    # Handlers will receive as arguments:\n    # - primitive: a jax.core.Primitive instance (often can be ignored if the handler is just for one op)\n    # Any number of arguments which are either JAX values or ImplicitArrays\n    # Keyword arguments specifying parameters of the operation (e.g. axes for reduction operations)\n    out_shape, out_dtype = get_binop_result_shape_dtype(a, b)\n    if isinstance(b, Zeros):\n        # We can return further ImplicitArray instances if we want\n        return Zeros(shape=out_shape, dtype=out_dtype)\n    # Return b, possibly modifying its shape or dtype",
-        "detail": "env",
-        "documentation": {}
-    },
-    {
-        "label": "add",
-        "kind": 2,
-        "importPath": "env",
-        "description": "env",
-        "peekOfCode": "def add(x, y):\n    return (x + y)[0, 0]\n@qax.primitive_handler(\"mul\")\ndef handle_mul(primitive, a: Zeros, b):\n    out_shape, out_dtype = get_binop_result_shape_dtype(a, b)\n    return Zeros(shape=out_shape, dtype=out_dtype)\n@jax.jit\n@qax.use_implicit_args\ndef g(x, y):\n    return (1 + x) * y",
-        "detail": "env",
-        "documentation": {}
-    },
-    {
-        "label": "handle_mul",
-        "kind": 2,
-        "importPath": "env",
-        "description": "env",
-        "peekOfCode": "def handle_mul(primitive, a: Zeros, b):\n    out_shape, out_dtype = get_binop_result_shape_dtype(a, b)\n    return Zeros(shape=out_shape, dtype=out_dtype)\n@jax.jit\n@qax.use_implicit_args\ndef g(x, y):\n    return (1 + x) * y\n@qax.use_implicit_args\ndef f(x, y):\n    return (x + y)[0, 0]",
-        "detail": "env",
-        "documentation": {}
-    },
-    {
-        "label": "g",
-        "kind": 2,
-        "importPath": "env",
-        "description": "env",
-        "peekOfCode": "def g(x, y):\n    return (1 + x) * y\n@qax.use_implicit_args\ndef f(x, y):\n    return (x + y)[0, 0]\ndef main():\n    z = Zeros(shape=(2, 3))\n    print(g(z, z))\n    with warnings.catch_warnings():\n        warnings.simplefilter(\"always\")",
+        "peekOfCode": "class Zeros(ia.ImplicitArray):\n    default_dtype = jnp.float32\n    def materialize(self):\n        return jnp.zeros(self.shape, self.dtype)\n    def __str__(self):\n        return f\"Zeros({self.shape}, {self.dtype})\"\n@ia.use_implicit_args\ndef f(x, y):\n    return (x + y)[0, 0]\ndef main():",
         "detail": "env",
         "documentation": {}
     },
@@ -7052,7 +7161,7 @@
         "kind": 2,
         "importPath": "env",
         "description": "env",
-        "peekOfCode": "def f(x, y):\n    return (x + y)[0, 0]\ndef main():\n    z = Zeros(shape=(2, 3))\n    print(g(z, z))\n    with warnings.catch_warnings():\n        warnings.simplefilter(\"always\")\n        print(f(z, jnp.ones(3)))\nif __name__ == \"__main__\":\n    main()",
+        "peekOfCode": "def f(x, y):\n    return (x + y)[0, 0]\ndef main():\n    z = Zeros(shape=(2, 3))\n    try:\n        print(f(z, jnp.ones(3)))\n    except KeyboardInterrupt:\n        ...\n    # print(jax.lax.pjit_p)\nif __name__ == \"__main__\":",
         "detail": "env",
         "documentation": {}
     },
@@ -7061,8 +7170,17 @@
         "kind": 2,
         "importPath": "env",
         "description": "env",
-        "peekOfCode": "def main():\n    z = Zeros(shape=(2, 3))\n    print(g(z, z))\n    with warnings.catch_warnings():\n        warnings.simplefilter(\"always\")\n        print(f(z, jnp.ones(3)))\nif __name__ == \"__main__\":\n    main()",
+        "peekOfCode": "def main():\n    z = Zeros(shape=(2, 3))\n    try:\n        print(f(z, jnp.ones(3)))\n    except KeyboardInterrupt:\n        ...\n    # print(jax.lax.pjit_p)\nif __name__ == \"__main__\":\n    main()",
         "detail": "env",
+        "documentation": {}
+    },
+    {
+        "label": "flatten_dict",
+        "kind": 2,
+        "importPath": "generate_documents",
+        "description": "generate_documents",
+        "peekOfCode": "def flatten_dict(d, parent_key=\"\", sep=\"-\"):\n    items = []\n    for k, v in d.items():\n        new_key = parent_key + sep + k if parent_key else k\n        if isinstance(v, dict):\n            items.extend(flatten_dict(v, new_key, sep=sep).items())\n        else:\n            items.append((new_key, v))\n    return dict(items)\ndef unflatten_dict(xs, sep=None):",
+        "detail": "generate_documents",
         "documentation": {}
     },
     {
@@ -7079,7 +7197,7 @@
         "kind": 2,
         "importPath": "generate_documents",
         "description": "generate_documents",
-        "peekOfCode": "def get_inner(path: str):\n    return [os.path.join(path, o) for o in os.listdir(path) if os.path.exists(os.path.join(path, o))]\ndef get_dirs(path: str):\n    return [os.path.join(path, o) for o in os.listdir(path) if\n            os.path.exists(os.path.join(path, o)) and os.path.isdir(os.path.join(path, o))]\ndef get_files(path: str):\n    return [os.path.join(path, o) for o in os.listdir(path) if\n            os.path.exists(os.path.join(path, o)) and not os.path.isdir(os.path.join(path, o))]\ndef run(project_locations=\"src/fjformer\", docs_file=\"docs/\", start_head=\"src/fjformer\"):\n    global cache",
+        "peekOfCode": "def get_inner(path: str):\n    return [\n        os.path.join(path, o)\n        for o in os.listdir(path)\n        if os.path.exists(os.path.join(path, o))\n    ]\ndef get_dirs(path: str):\n    return [\n        os.path.join(path, o)\n        for o in os.listdir(path)",
         "detail": "generate_documents",
         "documentation": {}
     },
@@ -7088,7 +7206,7 @@
         "kind": 2,
         "importPath": "generate_documents",
         "description": "generate_documents",
-        "peekOfCode": "def get_dirs(path: str):\n    return [os.path.join(path, o) for o in os.listdir(path) if\n            os.path.exists(os.path.join(path, o)) and os.path.isdir(os.path.join(path, o))]\ndef get_files(path: str):\n    return [os.path.join(path, o) for o in os.listdir(path) if\n            os.path.exists(os.path.join(path, o)) and not os.path.isdir(os.path.join(path, o))]\ndef run(project_locations=\"src/fjformer\", docs_file=\"docs/\", start_head=\"src/fjformer\"):\n    global cache\n    for current_file in get_inner(docs_file):\n        if current_file.startswith(\"generated-\"):",
+        "peekOfCode": "def get_dirs(path: str):\n    return [\n        os.path.join(path, o)\n        for o in os.listdir(path)\n        if os.path.exists(os.path.join(path, o))\n        and os.path.isdir(os.path.join(path, o))\n    ]\ndef get_files(path: str):\n    return [\n        os.path.join(path, o)",
         "detail": "generate_documents",
         "documentation": {}
     },
@@ -7097,7 +7215,7 @@
         "kind": 2,
         "importPath": "generate_documents",
         "description": "generate_documents",
-        "peekOfCode": "def get_files(path: str):\n    return [os.path.join(path, o) for o in os.listdir(path) if\n            os.path.exists(os.path.join(path, o)) and not os.path.isdir(os.path.join(path, o))]\ndef run(project_locations=\"src/fjformer\", docs_file=\"docs/\", start_head=\"src/fjformer\"):\n    global cache\n    for current_file in get_inner(docs_file):\n        if current_file.startswith(\"generated-\"):\n            os.remove(os.path.join(docs_file, current_file))\n    try:\n        for current_file in get_inner(project_locations):",
+        "peekOfCode": "def get_files(path: str):\n    return [\n        os.path.join(path, o)\n        for o in os.listdir(path)\n        if os.path.exists(os.path.join(path, o))\n        and not os.path.isdir(os.path.join(path, o))\n    ]\ndef run(\n    project_locations=\"src/fjformer/\",\n    start_head=\"fjformer\",",
         "detail": "generate_documents",
         "documentation": {}
     },
@@ -7106,7 +7224,25 @@
         "kind": 2,
         "importPath": "generate_documents",
         "description": "generate_documents",
-        "peekOfCode": "def run(project_locations=\"src/fjformer\", docs_file=\"docs/\", start_head=\"src/fjformer\"):\n    global cache\n    for current_file in get_inner(docs_file):\n        if current_file.startswith(\"generated-\"):\n            os.remove(os.path.join(docs_file, current_file))\n    try:\n        for current_file in get_inner(project_locations):\n            if not current_file.endswith(\n                    \"__init__.py\"\n            ) and not os.path.isdir(",
+        "peekOfCode": "def run(\n    project_locations=\"src/fjformer/\",\n    start_head=\"fjformer\",\n):\n    global cache\n    try:\n        for current_file in get_inner(project_locations):\n            if (\n                not current_file.endswith(\"__init__.py\")\n                and not os.path.isdir(current_file)",
+        "detail": "generate_documents",
+        "documentation": {}
+    },
+    {
+        "label": "create_rst",
+        "kind": 2,
+        "importPath": "generate_documents",
+        "description": "generate_documents",
+        "peekOfCode": "def create_rst(name, children, output_dir):\n    \"\"\"Create an .rst file with a toctree linking its children.\"\"\"\n    rst_path = os.path.join(output_dir, f\"{name}.rst\")\n    # print(rst_path)\n    if isinstance(children, dict):\n        with open(rst_path, \"w\") as rst_file:\n            rst_file.write(f\"{name.replace('_', ' ')}\\n{'=' * len(name)}\\n\\n\")\n            rst_file.write(\".. toctree::\\n   :maxdepth: 2\\n\\n\")\n            for child_name, child_value in children.items():\n                if isinstance(child_value, str):",
+        "detail": "generate_documents",
+        "documentation": {}
+    },
+    {
+        "label": "generate_api_docs",
+        "kind": 2,
+        "importPath": "generate_documents",
+        "description": "generate_documents",
+        "peekOfCode": "def generate_api_docs(structure, output_dir):\n    \"\"\"Recursively generate .rst files based on the given dictionary structure.\"\"\"\n    if not os.path.exists(output_dir):\n        os.makedirs(output_dir)\n    for root_name, children in structure.items():\n        create_rst(root_name.replace(\" \", \"_\"), children, output_dir)\ndef main():\n    global cache\n    for current_file in get_inner(\"docs/api_docs/\"):\n        if current_file.startswith(\"docs/api_docs/\"):",
         "detail": "generate_documents",
         "documentation": {}
     },
@@ -7115,7 +7251,25 @@
         "kind": 2,
         "importPath": "generate_documents",
         "description": "generate_documents",
-        "peekOfCode": "def main():\n    global cache\n    run()\n    string_options = \"\"\"\nplugins:\n  - search\n  - mkdocstrings:\n      handlers:\n        python:\n          options:",
+        "peekOfCode": "def main():\n    global cache\n    for current_file in get_inner(\"docs/api_docs/\"):\n        if current_file.startswith(\"docs/api_docs/\"):\n            os.remove(current_file)\n            # print(\"Removed Past generated file: \" + current_file)\n    run()\n    cache = {(\"APIs\",) + k: v for k, v in cache.items()}\n    # print(cache)\n    pages = unflatten_dict(cache)",
+        "detail": "generate_documents",
+        "documentation": {}
+    },
+    {
+        "label": "dirname",
+        "kind": 5,
+        "importPath": "generate_documents",
+        "description": "generate_documents",
+        "peekOfCode": "dirname = os.path.dirname(os.path.basename(__file__))\nsys.path.append(dirname)\nsys.path.append(os.path.join(dirname, \"src\"))\nstatic_joins = \"\\n\\t:members:\\n\\t:undoc-members:\\n\\t:show-inheritance:\"\ncache = {}\ndef flatten_dict(d, parent_key=\"\", sep=\"-\"):\n    items = []\n    for k, v in d.items():\n        new_key = parent_key + sep + k if parent_key else k\n        if isinstance(v, dict):",
+        "detail": "generate_documents",
+        "documentation": {}
+    },
+    {
+        "label": "static_joins",
+        "kind": 5,
+        "importPath": "generate_documents",
+        "description": "generate_documents",
+        "peekOfCode": "static_joins = \"\\n\\t:members:\\n\\t:undoc-members:\\n\\t:show-inheritance:\"\ncache = {}\ndef flatten_dict(d, parent_key=\"\", sep=\"-\"):\n    items = []\n    for k, v in d.items():\n        new_key = parent_key + sep + k if parent_key else k\n        if isinstance(v, dict):\n            items.extend(flatten_dict(v, new_key, sep=sep).items())\n        else:\n            items.append((new_key, v))",
         "detail": "generate_documents",
         "documentation": {}
     },
@@ -7124,7 +7278,7 @@
         "kind": 5,
         "importPath": "generate_documents",
         "description": "generate_documents",
-        "peekOfCode": "cache = {}\ndef unflatten_dict(xs, sep=None):\n    assert isinstance(xs, dict), f\"input is not a dict; it is a {type(xs)}\"\n    result = {}\n    for path, value in xs.items():\n        if sep is not None:\n            path = path.split(sep)\n        cursor = result\n        for key in path[:-1]:\n            if key not in cursor:",
+        "peekOfCode": "cache = {}\ndef flatten_dict(d, parent_key=\"\", sep=\"-\"):\n    items = []\n    for k, v in d.items():\n        new_key = parent_key + sep + k if parent_key else k\n        if isinstance(v, dict):\n            items.extend(flatten_dict(v, new_key, sep=sep).items())\n        else:\n            items.append((new_key, v))\n    return dict(items)",
         "detail": "generate_documents",
         "documentation": {}
     }

@@ -1,2 +1,0 @@
-# pallas_operations.efficient_attention.efficient_attention
-::: src.fjformer.pallas_operations.efficient_attention.efficient_attention
