@@ -1,7 +1,7 @@
-tracer package
+errors package
 ==============
 
-.. automodule:: fjformer.xrapture.tracer
+.. automodule:: fjformer.core.errors
     :members:
     :undoc-members:
     :show-inheritance:

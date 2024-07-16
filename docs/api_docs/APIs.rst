@@ -9,10 +9,10 @@ FJFormer APIs 🔮
    Core
    Functions
    Linen
+   Lora
    Monitor
    Optimizers
    Pallas Operations
    Sharding
    Utils
-   Xrapture
    
