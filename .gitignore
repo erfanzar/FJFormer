@@ -2,6 +2,7 @@
 __pycache__/
 *.py[cod]
 *$py.class
+.vscode/*
 # Hidden Local Files
 env.py
 experimental.py
