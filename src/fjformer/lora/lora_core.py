@@ -211,6 +211,8 @@ def eval_lora_convert_element_type(
     primitive: Any, arg: LoraWeight, **params: Any
 ) -> LoraWeight:
     """Handle element type conversion for LoraWeight."""
-    result = jax.tree_map(partial(cr.default_handler, primitive, **params), arg)
+    result = jax.tree_util.tree_map(
+        partial(cr.default_handler, primitive, **params), arg
+    )
     result.dtype = params["new_dtype"]
     return result

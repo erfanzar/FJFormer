@@ -93,7 +93,7 @@ def _out_shape_dtype(
         partial(default_handler, primitive, **kwargs),
         *(jax.core.get_aval(x) for x in args),
     )
-    return jax.tree_map(lambda x: (x.shape, x.dtype), out_aval)
+    return jax.tree_util.tree_map(lambda x: (x.shape, x.dtype), out_aval)
 
 
 def symbolic_zero_like(
@@ -199,7 +199,7 @@ class SymbolicConstant(ImplicitArray):
             OperationError: If copying fails
         """
         try:
-            return jax.tree_map(lambda x: x, self)
+            return jax.tree_util.tree_map(lambda x: x, self)
         except Exception as e:
             raise OperationError(f"Failed to copy SymbolicConstant: {str(e)}")
 

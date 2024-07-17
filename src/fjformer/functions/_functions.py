@@ -35,7 +35,7 @@ def average_metrics(metrics: list[chex.ArrayTree]) -> chex.ArrayTree:
         node replaced by the average of the corresponding leaf nodes across the
         input metrics.
     """
-    return jax.tree_map(lambda *args: jnp.mean(jnp.stack(args)), *metrics)
+    return jax.tree_util.tree_map(lambda *args: jnp.mean(jnp.stack(args)), *metrics)
 
 
 def transpose(array: chex.Array, dim0: int, dim1: int) -> chex.Array:

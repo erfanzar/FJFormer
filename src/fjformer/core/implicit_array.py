@@ -38,6 +38,7 @@ warnings.filterwarnings(
     "ignore", message="Could not resolve the type hint of `~A`", module="plum.type"
 )
 
+
 class ArrayValue(ABC):
     pass
 
@@ -236,7 +237,7 @@ def leaf_predicate(x):
     return isinstance(x, (ImplicitArray, _EmptyNodeCls))
 
 
-tree_map_with_implicit = combine_leaf_predicate(jax.tree_map, leaf_predicate)
+tree_map_with_implicit = combine_leaf_predicate(jax.tree_util.tree_map, leaf_predicate)
 tree_map_with_path_with_implicit = combine_leaf_predicate(
     tree_util.tree_map_with_path, leaf_predicate
 )
@@ -896,7 +897,7 @@ def _handle_scan(primitive, *vals, params):
         warnings.warn("Not Supported Yet.")
         carries = _materialize_all(carries)
 
-    sliced_xs = jax.tree_map(partial(jax.eval_shape, lambda x: x[0]), xs)
+    sliced_xs = jax.tree_util.tree_map(partial(jax.eval_shape, lambda x: x[0]), xs)
 
     for x in sliced_xs:
         if isinstance(x, ImplicitArray):

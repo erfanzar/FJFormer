@@ -114,7 +114,7 @@ def freeze_subtrees(
                     )
                 return grad
 
-            fixed_grads = jax.tree_map(map_float0, params, grads)
+            fixed_grads = jax.tree_util.tree_map(map_float0, params, grads)
             return multi_transformed_optimizer.update(fixed_grads, opt_state, params)
 
         return optax.GradientTransformation(
@@ -158,7 +158,7 @@ def freeze_keys(
             return struct
 
         def label_fn(root: Any) -> Any:
-            return jax.tree_map(
+            return jax.tree_util.tree_map(
                 label_leaf, root, is_leaf=lambda x: isinstance(x, arr_type)
             )
 
@@ -213,7 +213,10 @@ def set_to_zero_scalar() -> optax.GradientTransformation:
             return optax.EmptyState()
 
         def update_fn(updates: Any, state: Any, params: Any = None) -> Tuple[Any, Any]:
-            return jax.tree_map(lambda x: jnp.zeros((), x.dtype), updates), state
+            return (
+                jax.tree_util.tree_map(lambda x: jnp.zeros((), x.dtype), updates),
+                state,
+            )
 
         return optax.GradientTransformation(init_fn, update_fn)
     except Exception as e:

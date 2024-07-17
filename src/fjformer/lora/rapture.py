@@ -148,7 +148,7 @@ class LoraRapture:
             if isinstance(param, LoraWeight):
                 result = materialize(param)
                 if destructive:
-                    jax.tree_map(_ensure_delete, param)
+                    jax.tree_util.tree_map(_ensure_delete, param)
                 return result
             return param
 
@@ -409,7 +409,7 @@ class LoraRapture:
             The wrapped Optax gradient transformation that handles LoRA
             parameters and parameter freezing.
         """
-        full_freeze_labels = jax.tree_map(
+        full_freeze_labels = jax.tree_util.tree_map(
             lambda x: "freeze" if x == LORA_FREEZE else "train",
             lora_spec,
         )

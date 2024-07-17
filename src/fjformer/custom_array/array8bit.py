@@ -502,7 +502,7 @@ def convert_element_type(
     **params,
 ) -> Array8Bit:
     """Handle element type conversion for Array8Bit."""
-    result = jax.tree_map(
+    result = jax.tree_util.tree_map(
         functools.partial(core.default_handler, primitive, **params), arg
     )
     result.dtype = params["new_dtype"]

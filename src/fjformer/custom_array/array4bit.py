@@ -688,7 +688,9 @@ def convert_element_type(
     **params,
 ) -> Array4Bit:
     """Handle element type conversion for Array4Bit."""
-    result = jax.tree_map(partial(core.default_handler, primitive, **params), arg)
+    result = jax.tree_util.tree_map(
+        partial(core.default_handler, primitive, **params), arg
+    )
     result.dtype = params["new_dtype"]
     return result
 
@@ -753,4 +755,4 @@ def _out_shape_dtype(
         partial(core.default_handler, primitive, **kwargs),
         *(jax.core.get_aval(x) for x in args),
     )
-    return jax.tree_map(lambda x: (x.shape, x.dtype), out_aval)
+    return jax.tree_util.tree_map(lambda x: (x.shape, x.dtype), out_aval)

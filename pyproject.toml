@@ -3,7 +3,7 @@ name = "fjformer"
 authors = [{ name = "Erfan Zare Chavoshi", email = "Erfanzare810@gmail.com" }]
 requires-python = ">=3.9"
 readme = "README.md"
-version = "0.0.70"
+version = "0.0.71"
 
 dependencies = [
     "jax>=0.4.30",

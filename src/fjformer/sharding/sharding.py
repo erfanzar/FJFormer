@@ -21,7 +21,7 @@ def make_shard_and_gather_fns(
 
     This function generates dictionaries of shard and gather functions that can be used
     to distribute and collect arrays across a JAX mesh. The functions are specifically
-    designed for use with Flax's `jax.tree_map`.
+    designed for use with Flax's `jax.tree_util.tree_map`.
 
     Args:
         partition_specs: A dictionary mapping parameter names to their respective `PartitionSpec`.
@@ -39,7 +39,7 @@ def make_shard_and_gather_fns(
             "at least call that under mesh context manager"
         )
 
-    named_shardings = jax.tree_map(lambda p: NamedSharding(mesh=mesh, spec=p), partition_specs)
+    named_shardings = jax.tree_util.tree_map(lambda p: NamedSharding(mesh=mesh, spec=p), partition_specs)
 
     def make_shard_fn(partition_spec: NamedSharding) -> Callable:
         """
@@ -226,7 +226,7 @@ def get_metrics(metrics: dict, unreplicate: bool = False, stack: bool = False) -
         metrics = flax.jax_utils.unreplicate(metrics)
     metrics = jax.device_get(metrics)
     if stack:
-        return jax.tree_map(lambda *args: np.stack(args), *metrics)
+        return jax.tree_util.tree_map(lambda *args: np.stack(args), *metrics)
     else:
         return {key: float(val) for key, val in metrics.items()}
 
