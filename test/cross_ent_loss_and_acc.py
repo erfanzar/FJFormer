@@ -1,13 +1,26 @@
+import os
+import sys
+
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+sys.path.append(
+    os.path.join(
+        os.path.dirname(
+            os.path.abspath(__file__),
+        ),
+        "../src",
+    )
+)
+
 import jax.numpy as jnp
+import numpy as np
 from fjformer.functions.loss_functions import (
+    SpecialLossNormalizingFactor,
     compute_weighted_cross_entropy_and_accuracy,
     cross_entropy_loss_and_accuracy,
     cross_entropy_with_logits,
-    get_loss_normalizing_factor_and_weights,
     fused_cross_entropy_loss_and_accuracy,
-    SpecialLossNormalizingFactor,
+    get_loss_normalizing_factor_and_weights,
 )
-import numpy as np
 from optax import softmax_cross_entropy
 
 
@@ -77,8 +90,12 @@ def test_compute_weighted_cross_entropy_1():
     ce_loss, ce_accuracy = cross_entropy_loss_and_accuracy(logits, targets)
     print(f"Cross Entropy Loss: {ce_loss}, Accuracy: {wce_accuracy}")
 
-    assert np.isclose(ce_loss, wce_loss, rtol=1e-3, atol=1e-3), "Cross Entropy Losses do not match"
-    assert np.isclose(ce_accuracy, wce_accuracy, rtol=1e-2, atol=1e-2), "Accuracies do not match"
+    assert np.isclose(
+        ce_loss, wce_loss, rtol=1e-3, atol=1e-3
+    ), "Cross Entropy Losses do not match"
+    assert np.isclose(
+        ce_accuracy, wce_accuracy, rtol=1e-2, atol=1e-2
+    ), "Accuracies do not match"
 
 
 def test_compute_weighted_cross_entropy_ignore_token_minus100():
@@ -152,8 +169,12 @@ def test_compute_weighted_cross_entropy_ignore_token_minus100():
     ce_loss, ce_accuracy = cross_entropy_loss_and_accuracy(logits, targets, valid)
     print(f"Cross Entropy Loss: {ce_loss}, Accuracy: {ce_accuracy}")
 
-    assert np.isclose(ce_loss, wce_loss, rtol=1e-2, atol=1e-2), "Cross Entropy Losses do not match"
-    assert np.isclose(ce_accuracy, wce_accuracy, rtol=1e-1, atol=1e-1), "Accuracies do not match"
+    assert np.isclose(
+        ce_loss, wce_loss, rtol=1e-2, atol=1e-2
+    ), "Cross Entropy Losses do not match"
+    assert np.isclose(
+        ce_accuracy, wce_accuracy, rtol=1e-1, atol=1e-1
+    ), "Accuracies do not match"
 
 
 def test_multiple():
@@ -243,8 +264,12 @@ def test_multiple():
         f"Weighted Cross Entropy Loss: {total_loss}, Z-loss: {total_z_loss}, Weight Sum: {weight_sum}, Accuracy: {ce_accuracy}"
     )
 
-    assert np.isclose(ce_loss, total_loss, rtol=1e-2, atol=1e-2), "Cross Entropy Losses do not match"
-    assert np.isclose(ce_accuracy, fused_accuracy, rtol=1e-2, atol=1e-2), "Accuracies do not match"
+    assert np.isclose(
+        ce_loss, total_loss, rtol=1e-2, atol=1e-2
+    ), "Cross Entropy Losses do not match"
+    assert np.isclose(
+        ce_accuracy, fused_accuracy, rtol=1e-2, atol=1e-2
+    ), "Accuracies do not match"
 
 
 if __name__ == "__main__":

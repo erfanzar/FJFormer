@@ -1,26 +1,26 @@
-import jax.random
-from jax import numpy as jnp
+import os
+import sys
 
-import src.fjformer.linen as nn
-from src.fjformer import GenerateRNG
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+sys.path.append(
+    os.path.join(
+        os.path.dirname(
+            os.path.abspath(__file__),
+        ),
+        "../src",
+    )
+)
+
+import fjformer.linen as nn
+import jax.random
+from fjformer import GenerateRNG
+from jax import numpy as jnp
 
 
 class DummyNet(nn.Module):
     @nn.compact
     def __call__(self, x):
-        return nn.LayerNorm(
-
-        )(
-            nn.Dense(
-                64
-            )(
-                nn.Embed(
-                    512, 1024
-                )(
-                    x
-                )
-            )
-        )
+        return nn.LayerNorm()(nn.Dense(64)(nn.Embed(512, 1024)(x)))
 
 
 def main():
@@ -28,8 +28,7 @@ def main():
     net = DummyNet()
 
     params = net.init(
-        rng_gen.rng,
-        jax.random.randint(rng_gen.rng, (1, 68), minval=0, maxval=512)
+        rng_gen.rng, jax.random.randint(rng_gen.rng, (1, 68), minval=0, maxval=512)
     )
 
     quantized_params = nn.quantize_int8_parameters(["kernel", "embedding"], params)
@@ -44,5 +43,5 @@ def main():
     print((qun_pred - org_pred).sum().mean())
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

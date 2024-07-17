@@ -1,9 +1,14 @@
+# TODO : Implement Custom Backward Prp
+import functools
 from dataclasses import dataclass
-from typing import Optional, Sequence, Union
+from typing import Any, Optional, Sequence, Union
 
-import fjformer.core as core
+import jax
 from jax import Array, lax
 from jax import numpy as jnp
+from jax.core import Primitive
+
+import fjformer.core as core
 
 
 @dataclass
@@ -163,7 +168,13 @@ ArrayType = Union[Array, Array8Bit]
 
 
 @core.primitive_handler("dot_general")
-def handle_dot_general(primitive, lhs: ArrayType, rhs: ArrayType, *args, **kwargs):
+def handle_dot_general(
+    primitive,
+    lhs: ArrayType,
+    rhs: ArrayType,
+    *args,
+    **kwargs,
+):
     """
     Custom handler for JAX's dot_general operation.
 
@@ -187,7 +198,11 @@ def handle_dot_general(primitive, lhs: ArrayType, rhs: ArrayType, *args, **kwarg
 
 
 @core.primitive_handler("add")
-def handle_add(primitive, x: ArrayType, y: ArrayType):
+def handle_add(
+    primitive,
+    x: ArrayType,
+    y: ArrayType,
+):
     """
     Custom handler for JAX's add operation.
 
@@ -210,7 +225,11 @@ def handle_add(primitive, x: ArrayType, y: ArrayType):
 
 @core.primitive_handler("reduce")
 def handle_reduce(
-    primitive, operand: ArrayType, init_value: ArrayType, *args, **kwargs
+    primitive,
+    operand: ArrayType,
+    init_value: ArrayType,
+    *args,
+    **kwargs,
 ):
     """
     Custom handler for JAX's reduce operation.
@@ -235,7 +254,11 @@ def handle_reduce(
 
 
 @core.primitive_handler("mul")
-def handle_mul(primitive, x: ArrayType, y: ArrayType):
+def handle_mul(
+    primitive,
+    x: ArrayType,
+    y: ArrayType,
+):
     """
     Custom handler for JAX's mul operation.
 
@@ -257,7 +280,12 @@ def handle_mul(primitive, x: ArrayType, y: ArrayType):
 
 
 @core.primitive_handler("transpose")
-def handle_transpose(primitive, operand: ArrayType, *args, **kwargs):
+def handle_transpose(
+    primitive,
+    operand: ArrayType,
+    *args,
+    **kwargs,
+):
     """
     Custom handler for JAX's transpose operation.
 
@@ -273,18 +301,24 @@ def handle_transpose(primitive, operand: ArrayType, *args, **kwargs):
     Returns:
         The result of lax.transpose operation, potentially re-quantized.
     """
-    _org_8 = False
+    original_quantized = False
     if isinstance(operand, Array8Bit):
         operand = operand.materialize()
-        _org_8 = True
+        original_quantized = True
     operand = lax.transpose(operand, *args, **kwargs)
-    if _org_8:
+    if original_quantized:
         operand = Array8Bit.quantize(operand, dtype=operand.dtype)
     return operand
 
 
 @core.primitive_handler("conv_general_dilated")
-def handle_conv(primitive, lhs: ArrayType, rhs: ArrayType, *args, **kwargs):
+def handle_conv(
+    primitive,
+    lhs: ArrayType,
+    rhs: ArrayType,
+    *args,
+    **kwargs,
+):
     """
     Custom handler for JAX's conv_general_dilated operation.
 
@@ -308,7 +342,13 @@ def handle_conv(primitive, lhs: ArrayType, rhs: ArrayType, *args, **kwargs):
 
 
 @core.primitive_handler("max")
-def handle_max(primitive, x: ArrayType, y: ArrayType, *args, **kwargs):
+def handle_max(
+    primitive,
+    x: ArrayType,
+    y: ArrayType,
+    *args,
+    **kwargs,
+):
     """
     Custom handler for JAX's max operation.
 
@@ -332,7 +372,12 @@ def handle_max(primitive, x: ArrayType, y: ArrayType, *args, **kwargs):
 
 
 @core.primitive_handler("exp")
-def handle_exp(primitive, x: ArrayType, *args, **kwargs):
+def handle_exp(
+    primitive,
+    x: ArrayType,
+    *args,
+    **kwargs,
+):
     """
     Custom handler for JAX's exp operation.
 
@@ -353,7 +398,12 @@ def handle_exp(primitive, x: ArrayType, *args, **kwargs):
 
 
 @core.primitive_handler("log")
-def handle_log(primitive, x: ArrayType, *args, **kwargs):
+def handle_log(
+    primitive,
+    x: ArrayType,
+    *args,
+    **kwargs,
+):
     """
     Custom handler for JAX's log operation.
 
@@ -374,34 +424,54 @@ def handle_log(primitive, x: ArrayType, *args, **kwargs):
 
 
 @core.primitive_handler("reshape")
-def handle_reshape(primitive, operand: ArrayType, *args, **kwargs):
+def handle_reshape(
+    primitive: Primitive,
+    operand: ArrayType,
+    **kwargs: Any,
+):
     """
     Custom handler for JAX's reshape operation.
 
-    Materializes Array8Bit input before performing the operation.
-    Re-quantizes the result if the input was Array8Bit.
+    This function handles reshaping for both regular arrays and Array8Bit quantized arrays.
+    It materializes Array4Bit input before reshaping and re-quantizes the result if the input was Array4Bit.
 
     Args:
-        primitive: The JAX primitive being handled.
+        primitive (Primitive): The JAX primitive being handled.
         operand (ArrayType): The array to be reshaped.
-        *args: Variable length argument list.
-        **kwargs: Arbitrary keyword arguments.
+        new_sizes (Tuple[int, ...]): The desired new shape of the array.
+        dimensions (Tuple[int, ...], optional): The order in which dimensions should be permuted before reshaping.
+        **kwargs: Additional keyword arguments for the reshape operation.
 
     Returns:
-        The result of lax.reshape operation, potentially re-quantized.
+        ArrayType: The reshaped array, potentially re-quantized if the input was Array8Bit.
+
+    Raises:
+        ValueError: If the new shape is not compatible with the original array's size.
     """
-    _org_8 = False
-    if isinstance(operand, Array8Bit):
+    original_quantized = isinstance(operand, Array8Bit)
+
+    if original_quantized:
         operand = operand.materialize()
-        _org_8 = True
-    operand = lax.reshape(operand, *args, **kwargs)
-    if _org_8:
-        operand = Array8Bit.quantize(operand, dtype=operand.dtype)
-    return operand
+
+    try:
+        reshaped = lax.reshape(operand, **kwargs)
+    except ValueError as e:
+        raise ValueError(
+            f"Reshape operation failed: {str(e)}. "
+            f"Ensure the new shape {kwargs} is compatible with the original array size."
+        ) from e
+    if original_quantized:
+        reshaped = Array8Bit.quantize(reshaped, dtype=reshaped.dtype)
+    return reshaped
 
 
 @core.primitive_handler("concatenate")
-def handle_concatenate(primitive, operands: Sequence[ArrayType], *args, **kwargs):
+def handle_concatenate(
+    primitive,
+    operands: Sequence[ArrayType],
+    *args,
+    **kwargs,
+):
     """
     Custom handler for JAX's concatenate operation.
 
@@ -420,3 +490,17 @@ def handle_concatenate(primitive, operands: Sequence[ArrayType], *args, **kwargs
         op.materialize() if isinstance(op, Array8Bit) else op for op in operands
     ]
     return lax.concatenate(materialized_operands, *args, **kwargs)
+
+
+@core.primitive_handler("convert_element_type")
+def convert_element_type(
+    primitive,
+    arg: Array8Bit,
+    **params,
+) -> Array8Bit:
+    """Handle element type conversion for Array8Bit."""
+    result = jax.tree_map(
+        functools.partial(core.default_handler, primitive, **params), arg
+    )
+    result.dtype = params["new_dtype"]
+    return result

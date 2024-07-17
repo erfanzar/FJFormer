@@ -953,3 +953,6 @@ def _filter_materialization_warnings():
     with warnings.catch_warnings():
         warnings.filterwarnings("ignore", message="Primitive.*was not handled")
         yield
+
+
+# Most Core part's of this package is Developed from orginal implimentation of QAX from davisyoshida

@@ -1,7 +1,9 @@
-from typing import Optional, Tuple, Any
-import jax.numpy as jnp
+from typing import Any, Optional, Tuple
+
 import chex
+import jax.numpy as jnp
 import optax
+
 from fjformer.optimizers.optimizer_utils import optax_add_scheduled_weight_decay
 
 
@@ -146,7 +148,7 @@ def get_adafactor_with_warmup_linear_scheduler(
     steps: int,
     learning_rate_start: float = 5e-5,
     learning_rate_end: float = 1e-5,
-    warmup_steps: int = 500,
+    warmup_steps: int = 100,
     min_dim_size_to_factor: int = 128,
     decay_rate: float = 0.8,
     decay_offset: int = 0,
@@ -287,7 +289,7 @@ def get_adafactor_with_warmup_cosine_scheduler(
     exponent: float = 1.0,
     weight_decay_mask: Optional[Any] = None,
     gradient_accumulation_steps: int = 1,
-    warmup_steps: int = 500,
+    warmup_steps: int = 100,
 ) -> Tuple[optax.GradientTransformation, optax.Schedule]:
     """
     Creates an Adafactor optimizer with a warm-up cosine learning rate scheduler.

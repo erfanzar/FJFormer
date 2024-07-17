@@ -388,6 +388,7 @@ class LoraRapture:
         stddev: float = 0.01,
         alpha: float = 1.0,
         is_leaf: bool = None,
+        func_target: Optional[str] = None,
     ) -> RaptureModule:
         """Applies LoRA to a Flax module and wraps the optimizer.
 
@@ -404,8 +405,7 @@ class LoraRapture:
             decision_fn: An optional callable to override the default
                 `base_decision_function` for determining parameter-specific
                 fine-tuning strategies.
-            tune_vectors: Whether to tune vector parameters using full
-                fine-tuning.
+            tune_vectors: Whether to tune vector parameters using full fine-tuning.
             rng: A JAX PRNG key for random initialization.
             stddev: Standard deviation for initializing LoRA adapter matrices.
             alpha: Scaling factor for the LoRA adapters.
@@ -432,8 +432,10 @@ class LoraRapture:
         )
         tx = self.wrap_tx(tx=tx, lora_spec=lora_spec)
         opt_state = tx.init(lora_parameters)
-        lora_model = implicit_compact(module)
-
+        if func_target is None:
+            lora_model = implicit_compact(module)
+        else:
+            lora_model = implicit_compact(getattr(module, func_target))
         return RaptureModule(
             lora_opt_state=opt_state,
             lora_module=lora_model,

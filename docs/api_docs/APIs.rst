@@ -7,8 +7,8 @@ FJFormer APIs 🔮
    Bit Quantization
    Checkpoint
    Core
+   Custom Array
    Functions
-   Linen
    Lora
    Monitor
    Optimizers

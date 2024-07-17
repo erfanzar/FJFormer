@@ -20,8 +20,8 @@ from fjformer.core.implicit_array import (
     ImplicitArray,
     aux_field,
     default_handler,
-    primitive_handler,
     implicit_compact,
+    primitive_handler,
 )
 from fjformer.core.types import Complement
 
@@ -68,20 +68,26 @@ def _get_shape_dtype(
 
 
 def _out_shape_dtype(
-    primitive,
-    *args,
-    **kwargs,
+    primitive: Any,
+    *args: Any,
+    **kwargs: Any,
 ):
     """
     Determine the output shape and dtype for a given primitive operation.
 
+    This function uses JAX's shape inference capabilities to determine what
+    the shape and dtype of the output would be if the operation were performed
+    on concrete arrays.
+
     Args:
-        primitive: JAX primitive
-        *args: Positional arguments for the primitive
-        **kwargs: Keyword arguments for the primitive
+        primitive (Any): JAX primitive to be evaluated.
+        *args: Positional arguments for the primitive.
+        **kwargs: Keyword arguments for the primitive.
 
     Returns:
-        Tuple of (shape, dtype) for the output
+        Tuple[Tuple[int, ...], Any]: A tuple containing:
+            - The shape of the output as a tuple of integers.
+            - The dtype of the output.
     """
     out_aval = jax.eval_shape(
         partial(default_handler, primitive, **kwargs),
@@ -218,9 +224,25 @@ def astype(val, dtype):
         "reduce_and",
     ]
 )
-def unchanged_value_op(primitive, sym: SymbolicConstant, **kwargs):
+def unchanged_value_op(
+    primitive: Any,
+    sym: SymbolicConstant,
+    **kwargs: Any,
+) -> SymbolicConstant:
     """
-    Handle operations that don't change the constant value.
+    Handler for JAX primitives that don't change the value of a SymbolicConstant.
+
+    This function handles operations that may change the shape or other properties
+    of a SymbolicConstant, but not its fundamental value.
+
+    Args:
+        primitive (Any): The JAX primitive being handled.
+        sym (core.symbols.SymbolicConstant): The symbolic constant being operated on.
+        **kwargs: Additional keyword arguments for the primitive operation.
+
+    Returns:
+        core.symbols.SymbolicConstant: A new SymbolicConstant with potentially
+        updated shape and dtype, but the same value as the input.
     """
     out_shape, out_dtype = _out_shape_dtype(primitive, sym, **kwargs)
     return SymbolicConstant(sym.value, shape=out_shape, dtype=out_dtype)

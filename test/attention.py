@@ -1,13 +1,19 @@
-import math
 import os
-
-import jax
-
-os.environ['JAX_TRACEBACK_FILTERING'] = 'off'
-from flax.linen.attention import dot_product_attention, make_attention_mask, make_causal_mask, combine_masks
+import sys
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+sys.path.append(
+    os.path.join(
+        os.path.dirname(
+            os.path.abspath(__file__),
+        ),
+        "../src",
+    )
+)
+from flax.linen.attention import combine_masks, dot_product_attention, make_causal_mask
+from jax import numpy as jnp
+from jax import random
 
 from src.fjformer.pallas_operations.pallas_attention import flash_attention
-from jax import random, numpy as jnp
 
 batch = 1
 seq = 6
@@ -19,10 +25,14 @@ def combine_causal_and_attention_mask(q_attention_mask, kv_attention_mask):
     assert q_attention_mask.ndim == 2
     assert kv_attention_mask.ndim == 2
     return jnp.bitwise_and(
-        jnp.bitwise_and(q_attention_mask.astype("bool"), kv_attention_mask.astype("bool")),
-        jnp.tril(jnp.ones(
-            (q_attention_mask.shape[-1], kv_attention_mask.shape[-1]), dtype="bool")
-        )[None, None, :, :]
+        jnp.bitwise_and(
+            q_attention_mask.astype("bool"), kv_attention_mask.astype("bool")
+        ),
+        jnp.tril(
+            jnp.ones(
+                (q_attention_mask.shape[-1], kv_attention_mask.shape[-1]), dtype="bool"
+            )
+        )[None, None, :, :],
     ).astype("bool")
 
 
@@ -32,7 +42,7 @@ def main():
     k = random.normal(k2, (batch, seq, heads, hd), "float32")
     v = random.normal(k3, (batch, seq, heads, hd), "float32")
     a = jnp.ones((batch, seq), dtype="bool")
-    a = a.at[:, :seq // 2].set(0)
+    a = a.at[:, : seq // 2].set(0)
     # a = a.at[:, seq // 2:].set(0)
     # print(a)
     csm = make_causal_mask(jnp.ones((batch, seq)))
@@ -63,5 +73,5 @@ def main():
     # plt.show()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

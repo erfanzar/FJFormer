@@ -133,7 +133,7 @@ def get_rmsprop_with_warmup_linear_scheduler(
     nesterov: bool = False,
     weight_decay: float = 1e-1,
     gradient_accumulation_steps: int = 1,
-    warmup_steps: int = 500,
+    warmup_steps: int = 100,
 ) -> tuple[optax.GradientTransformation, optax.Schedule]:
     """
     Creates an RMSprop optimizer with a linear learning rate scheduler with warmup.
@@ -207,7 +207,7 @@ def get_rmsprop_with_warmup_cosine_scheduler(
     weight_decay: float = 1e-1,
     exponent: float = 1.0,
     gradient_accumulation_steps: int = 1,
-    warmup_steps: int = 500,
+    warmup_steps: int = 100,
 ) -> tuple[optax.GradientTransformation, optax.Schedule]:
     """
     Creates an RMSprop optimizer with a cosine learning rate scheduler with warmup.

@@ -163,7 +163,7 @@ def get_adamw_with_warmup_linear_scheduler(
     weight_decay: float = 1e-1,
     gradient_accumulation_steps: int = 1,
     mu_dtype: Optional[chex.ArrayDType] = None,
-    warmup_steps: int = 500,
+    warmup_steps: int = 100,
     warmup_init_value: float = 5e-8,
     clip_grad: Optional[float] = 1.0,
 ) -> Tuple[optax.GradientTransformation, optax.Schedule]:
@@ -228,7 +228,7 @@ def get_adamw_with_warmup_cosine_scheduler(
     weight_decay: float = 1e-1,
     exponent: float = 1.0,
     gradient_accumulation_steps: int = 1,
-    warmup_steps: int = 500,
+    warmup_steps: int = 100,
     mu_dtype: Optional[chex.ArrayDType] = None,
     warmup_init_value: float = 0.5e-7,
     clip_grad: Optional[float] = 1.0,

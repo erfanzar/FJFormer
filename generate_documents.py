@@ -1,7 +1,7 @@
 import os
 import sys
 
-dirname = os.path.dirname(os.path.basename(__file__))
+dirname = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(dirname)
 sys.path.append(os.path.join(dirname, "src"))
 static_joins = "\n\t:members:\n\t:undoc-members:\n\t:show-inheritance:"

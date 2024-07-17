@@ -1,4 +1,5 @@
 from typing import Optional, Tuple
+
 import chex
 import optax
 
@@ -80,7 +81,7 @@ def get_lion_with_warmup_linear_scheduler(
     b2: float = 0.99,
     gradient_accumulation_steps: int = 1,
     mu_dtype: Optional[chex.ArrayDType] = None,
-    warmup_steps: int = 500,
+    warmup_steps: int = 100,
     warmup_init_value: float = 5e-8,
 ) -> Tuple[optax.GradientTransformation, optax.Schedule]:
     """
@@ -178,7 +179,7 @@ def get_lion_with_warmup_cosine_scheduler(
     b1: float = 0.9,
     b2: float = 0.99,
     gradient_accumulation_steps: int = 1,
-    warmup_steps: int = 500,
+    warmup_steps: int = 100,
     mu_dtype: Optional[chex.ArrayDType] = None,
     warmup_init_value: float = 0.5e-7,
 ) -> Tuple[optax.GradientTransformation, optax.Schedule]:
