@@ -1,3 +1,4 @@
+import warnings
 from typing import Optional, Tuple
 
 import chex
@@ -10,6 +11,8 @@ def _get_lion_base(
     b2: float = 0.99,
     mu_dtype: Optional[chex.ArrayDType] = None,
     gradient_accumulation_steps: int = 1,
+    clip_grad: Optional[float] = None,
+    **kwargs,
 ) -> optax.GradientTransformation:
     """
     Creates a base Lion optimizer with the given scheduler.
@@ -20,15 +23,21 @@ def _get_lion_base(
         b2 (float): The exponential decay rate for the second moment estimates.
         mu_dtype (Optional[chex.ArrayDType]): Optional datatype for the first moment estimates.
         gradient_accumulation_steps (int): Number of steps to accumulate gradients.
+        clip_grad (Optional[float]): If provided, gradients will be clipped to this maximum norm.
 
     Returns:
         optax.GradientTransformation: The configured optimizer.
     """
-    tx = optax.chain(
+    for kwarg in kwargs.keys():
+        warnings.warn(f"Key {kwarg} is not used for optimizer.")
+    chain = [
         optax.scale_by_lion(b1=b1, b2=b2, mu_dtype=mu_dtype),
         optax.scale_by_schedule(scheduler),
         optax.scale(-1),
-    )
+    ]
+    if clip_grad is not None:
+        chain.insert(0, optax.clip_by_global_norm(clip_grad))
+    tx = optax.chain(*chain)
     if gradient_accumulation_steps > 1:
         tx = optax.MultiSteps(tx, gradient_accumulation_steps)
     return tx
@@ -42,6 +51,8 @@ def get_lion_with_linear_scheduler(
     b2: float = 0.99,
     gradient_accumulation_steps: int = 1,
     mu_dtype: Optional[chex.ArrayDType] = None,
+    clip_grad: Optional[float] = None,
+    **kwargs,
 ) -> Tuple[optax.GradientTransformation, optax.Schedule]:
     """
     Creates a Lion optimizer with a linear learning rate scheduler.
@@ -54,6 +65,7 @@ def get_lion_with_linear_scheduler(
         b2 (float): The exponential decay rate for the second moment estimates.
         gradient_accumulation_steps (int): Number of steps to accumulate gradients.
         mu_dtype (Optional[chex.ArrayDType]): Optional datatype for the first moment estimates.
+        clip_grad (Optional[float]): If provided, gradients will be clipped to this maximum norm.
 
     Returns:
         Tuple[optax.GradientTransformation, optax.Schedule]: The optimizer and scheduler.
@@ -69,6 +81,8 @@ def get_lion_with_linear_scheduler(
         b2=b2,
         mu_dtype=mu_dtype,
         gradient_accumulation_steps=gradient_accumulation_steps,
+        clip_grad=clip_grad,
+        **kwargs,
     )
     return tx, scheduler
 
@@ -83,6 +97,8 @@ def get_lion_with_warmup_linear_scheduler(
     mu_dtype: Optional[chex.ArrayDType] = None,
     warmup_steps: int = 100,
     warmup_init_value: float = 5e-8,
+    clip_grad: Optional[float] = None,
+    **kwargs,
 ) -> Tuple[optax.GradientTransformation, optax.Schedule]:
     """
     Creates a Lion optimizer with a warm-up linear learning rate scheduler.
@@ -97,6 +113,7 @@ def get_lion_with_warmup_linear_scheduler(
         mu_dtype (Optional[chex.ArrayDType]): Optional datatype for the first moment estimates.
         warmup_steps (int): Number of warm-up steps.
         warmup_init_value (float): Initial learning rate for warm-up.
+        clip_grad (Optional[float]): If provided, gradients will be clipped to this maximum norm.
 
     Returns:
         Tuple[optax.GradientTransformation, optax.Schedule]: The optimizer and scheduler.
@@ -121,6 +138,8 @@ def get_lion_with_warmup_linear_scheduler(
         b2=b2,
         mu_dtype=mu_dtype,
         gradient_accumulation_steps=gradient_accumulation_steps,
+        clip_grad=clip_grad,
+        **kwargs,
     )
     return tx, scheduler_combined
 
@@ -134,6 +153,8 @@ def get_lion_with_cosine_scheduler(
     b2: float = 0.99,
     gradient_accumulation_steps: int = 1,
     mu_dtype: Optional[chex.ArrayDType] = None,
+    clip_grad: Optional[float] = None,
+    **kwargs,
 ) -> Tuple[optax.GradientTransformation, optax.Schedule]:
     """
     Creates a Lion optimizer with a cosine learning rate scheduler.
@@ -147,6 +168,7 @@ def get_lion_with_cosine_scheduler(
         b2 (float): The exponential decay rate for the second moment estimates.
         gradient_accumulation_steps (int): Number of steps to accumulate gradients.
         mu_dtype (Optional[chex.ArrayDType]): Optional datatype for the first moment estimates.
+        clip_grad (Optional[float]): If provided, gradients will be clipped to this maximum norm.
 
     Returns:
         Tuple[optax.GradientTransformation, optax.Schedule]: The optimizer and scheduler.
@@ -167,6 +189,8 @@ def get_lion_with_cosine_scheduler(
         b2=b2,
         mu_dtype=mu_dtype,
         gradient_accumulation_steps=gradient_accumulation_steps,
+        clip_grad=clip_grad,
+        **kwargs,
     )
     return tx, scheduler
 
@@ -182,6 +206,8 @@ def get_lion_with_warmup_cosine_scheduler(
     warmup_steps: int = 100,
     mu_dtype: Optional[chex.ArrayDType] = None,
     warmup_init_value: float = 0.5e-7,
+    clip_grad: Optional[float] = None,
+    **kwargs,
 ) -> Tuple[optax.GradientTransformation, optax.Schedule]:
     """
     Creates a Lion optimizer with a warm-up cosine learning rate scheduler.
@@ -197,6 +223,7 @@ def get_lion_with_warmup_cosine_scheduler(
         warmup_steps (int): Number of warm-up steps.
         mu_dtype (Optional[chex.ArrayDType]): Optional datatype for the first moment estimates.
         warmup_init_value (float): Initial learning rate for warm-up.
+        clip_grad (Optional[float]): If provided, gradients will be clipped to this maximum norm.
 
     Returns:
         Tuple[optax.GradientTransformation, optax.Schedule]: The optimizer and scheduler.
@@ -215,5 +242,7 @@ def get_lion_with_warmup_cosine_scheduler(
         b2=b2,
         mu_dtype=mu_dtype,
         gradient_accumulation_steps=gradient_accumulation_steps,
+        clip_grad=clip_grad,
+        **kwargs,
     )
     return tx, scheduler

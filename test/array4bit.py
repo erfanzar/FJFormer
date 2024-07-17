@@ -90,10 +90,10 @@ def main():
     init_x = jax.random.normal(rng.rng, (1, 64))
     x = jax.random.normal(rng.rng, (1, 64))
     params = model.init(rng.rng, init_x)
-    model: Callable = jax.jit(implicit_compact(model.apply))
+    model_apply: Callable = jax.jit(implicit_compact(model.apply))
     q_params = quantize_params(params)
-    q_out = float(model(q_params, x).reshape(-1)[0])
-    out = float(model(params, x).reshape(-1)[0])
+    q_out = float(model_apply(q_params, x).reshape(-1)[0])
+    out = float(model_apply(params, x).reshape(-1)[0])
     print(f"Original Model  Output: {out:.3e}")
     print(f"Quantized Model Output: {q_out:.3e}")
 

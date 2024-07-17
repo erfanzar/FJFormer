@@ -1,3 +1,4 @@
+import warnings
 from typing import Optional, Tuple
 
 import chex
@@ -13,7 +14,8 @@ def _get_adamw_base(
     weight_decay: float = 1e-1,
     gradient_accumulation_steps: int = 1,
     mu_dtype: Optional[chex.ArrayDType] = None,
-    clip_grad: Optional[float] = 1.0,
+    clip_grad: Optional[float] = None,
+    **kwargs,
 ) -> optax.GradientTransformation:
     """
     Creates a base AdamW optimizer with the given scheduler.
@@ -32,6 +34,8 @@ def _get_adamw_base(
     Returns:
         optax.GradientTransformation: The configured optimizer.
     """
+    for kwarg in kwargs.keys():
+        warnings.warn(f"Key {kwarg} is not used for optimizer.")
     chain = [
         optax.scale_by_adam(
             b1=b1,
@@ -66,7 +70,8 @@ def get_adamw_with_cosine_scheduler(
     weight_decay: float = 1e-1,
     gradient_accumulation_steps: int = 1,
     mu_dtype: Optional[chex.ArrayDType] = None,
-    clip_grad: Optional[float] = 1.0,
+    clip_grad: Optional[float] = None,
+    **kwargs,
 ) -> Tuple[optax.GradientTransformation, optax.Schedule]:
     """
     Creates an AdamW optimizer with a cosine learning rate scheduler.
@@ -97,6 +102,7 @@ def get_adamw_with_cosine_scheduler(
         gradient_accumulation_steps=gradient_accumulation_steps,
         mu_dtype=mu_dtype,
         clip_grad=clip_grad,
+        **kwargs,
     )
     return tx, scheduler
 
@@ -112,7 +118,8 @@ def get_adamw_with_linear_scheduler(
     weight_decay: float = 1e-1,
     gradient_accumulation_steps: int = 1,
     mu_dtype: Optional[chex.ArrayDType] = None,
-    clip_grad: Optional[float] = 1.0,
+    clip_grad: Optional[float] = None,
+    **kwargs,
 ) -> Tuple[optax.GradientTransformation, optax.Schedule]:
     """
     Creates an AdamW optimizer with a linear learning rate scheduler.
@@ -148,6 +155,7 @@ def get_adamw_with_linear_scheduler(
         gradient_accumulation_steps=gradient_accumulation_steps,
         mu_dtype=mu_dtype,
         clip_grad=clip_grad,
+        **kwargs,
     )
     return tx, scheduler
 
@@ -165,7 +173,8 @@ def get_adamw_with_warmup_linear_scheduler(
     mu_dtype: Optional[chex.ArrayDType] = None,
     warmup_steps: int = 100,
     warmup_init_value: float = 5e-8,
-    clip_grad: Optional[float] = 1.0,
+    clip_grad: Optional[float] = None,
+    **kwargs,
 ) -> Tuple[optax.GradientTransformation, optax.Schedule]:
     """
     Creates an AdamW optimizer with a linear learning rate scheduler and warm-up phase.
@@ -213,6 +222,7 @@ def get_adamw_with_warmup_linear_scheduler(
         gradient_accumulation_steps=gradient_accumulation_steps,
         mu_dtype=mu_dtype,
         clip_grad=clip_grad,
+        **kwargs,
     )
     return tx, scheduler_combined
 
@@ -231,7 +241,8 @@ def get_adamw_with_warmup_cosine_scheduler(
     warmup_steps: int = 100,
     mu_dtype: Optional[chex.ArrayDType] = None,
     warmup_init_value: float = 0.5e-7,
-    clip_grad: Optional[float] = 1.0,
+    clip_grad: Optional[float] = None,
+    **kwargs,
 ) -> Tuple[optax.GradientTransformation, optax.Schedule]:
     """
     Creates an AdamW optimizer with a cosine learning rate scheduler and warm-up phase.
@@ -273,5 +284,6 @@ def get_adamw_with_warmup_cosine_scheduler(
         gradient_accumulation_steps=gradient_accumulation_steps,
         mu_dtype=mu_dtype,
         clip_grad=clip_grad,
+        **kwargs,
     )
     return tx, scheduler

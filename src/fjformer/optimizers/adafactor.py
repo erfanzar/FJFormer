@@ -5,6 +5,7 @@ import jax.numpy as jnp
 import optax
 
 from fjformer.optimizers.optimizer_utils import optax_add_scheduled_weight_decay
+import warnings
 
 
 def _get_adafactor_base(
@@ -22,6 +23,8 @@ def _get_adafactor_base(
     weight_decay: float = 0.0,
     weight_decay_mask: Optional[Any] = None,
     gradient_accumulation_steps: int = 1,
+    clip_grad: Optional[float] = None,
+    **kwargs
 ) -> optax.GradientTransformation:
     """
     Creates a base Adafactor optimizer with the given scheduler and options.
@@ -41,10 +44,14 @@ def _get_adafactor_base(
         weight_decay (float): Additional weight decay factor.
         weight_decay_mask (Optional[Any]): Mask for weight decay.
         gradient_accumulation_steps (int): Number of steps to accumulate gradients.
+        clip_grad (Optional[float]): If provided, gradients will be clipped to this maximum norm.
 
     Returns:
         optax.GradientTransformation: The configured optimizer.
     """
+
+    for kwarg in kwargs.keys():
+        warnings.warn(f"Key {kwarg} is not used for optimizer.")
     chain = [
         optax.adafactor(
             learning_rate=scheduler,
@@ -60,6 +67,8 @@ def _get_adafactor_base(
             factored=factored,
         )
     ]
+    if clip_grad is not None:
+        chain.insert(0, optax.clip_by_global_norm(clip_grad))
 
     if weight_decay != 0.0:
         chain.append(
@@ -93,6 +102,8 @@ def get_adafactor_with_linear_scheduler(
     factored: bool = True,
     gradient_accumulation_steps: int = 1,
     weight_decay_mask: Optional[Any] = None,
+    clip_grad: Optional[float] = None,
+    **kwargs,
 ) -> Tuple[optax.GradientTransformation, optax.Schedule]:
     """
     Creates an Adafactor optimizer with a linear learning rate scheduler.
@@ -114,6 +125,7 @@ def get_adafactor_with_linear_scheduler(
         factored (bool): Whether to use factored second moment estimates.
         gradient_accumulation_steps (int): Number of steps to accumulate gradients.
         weight_decay_mask (Optional[Any]): Mask for weight decay.
+        clip_grad (Optional[float]): If provided, gradients will be clipped to this maximum norm.
 
     Returns:
         Tuple[optax.GradientTransformation, optax.Schedule]: The optimizer and scheduler.
@@ -139,6 +151,8 @@ def get_adafactor_with_linear_scheduler(
         weight_decay=weight_decay,
         weight_decay_mask=weight_decay_mask,
         gradient_accumulation_steps=gradient_accumulation_steps,
+        clip_grad=clip_grad,
+        **kwargs,
     )
 
     return tx, scheduler
@@ -160,6 +174,8 @@ def get_adafactor_with_warmup_linear_scheduler(
     eps: float = 1e-30,
     factored: bool = True,
     gradient_accumulation_steps: int = 1,
+    clip_grad: Optional[float] = None,
+    **kwargs,
 ) -> Tuple[optax.GradientTransformation, optax.Schedule]:
     """
     Creates an Adafactor optimizer with a warm-up linear learning rate scheduler.
@@ -180,6 +196,7 @@ def get_adafactor_with_warmup_linear_scheduler(
         eps (float): Epsilon for numerical stability.
         factored (bool): Whether to use factored second moment estimates.
         gradient_accumulation_steps (int): Number of steps to accumulate gradients.
+        clip_grad (Optional[float]): If provided, gradients will be clipped to this maximum norm.
 
     Returns:
         Tuple[optax.GradientTransformation, optax.Schedule]: The optimizer and scheduler.
@@ -210,6 +227,8 @@ def get_adafactor_with_warmup_linear_scheduler(
         eps=eps,
         factored=factored,
         gradient_accumulation_steps=gradient_accumulation_steps,
+        clip_grad=clip_grad,
+        **kwargs,
     )
 
     return tx, scheduler_combined
@@ -229,6 +248,8 @@ def get_adafactor_with_cosine_scheduler(
     eps: float = 1e-30,
     factored: bool = True,
     gradient_accumulation_steps: int = 1,
+    clip_grad: Optional[float] = None,
+    **kwargs,
 ) -> Tuple[optax.GradientTransformation, optax.Schedule]:
     """
     Creates an Adafactor optimizer with a cosine learning rate scheduler.
@@ -247,6 +268,7 @@ def get_adafactor_with_cosine_scheduler(
         eps (float): Epsilon for numerical stability.
         factored (bool): Whether to use factored second moment estimates.
         gradient_accumulation_steps (int): Number of steps to accumulate gradients.
+        clip_grad (Optional[float]): If provided, gradients will be clipped to this maximum norm.
 
     Returns:
         Tuple[optax.GradientTransformation, optax.Schedule]: The optimizer and scheduler.
@@ -266,6 +288,8 @@ def get_adafactor_with_cosine_scheduler(
         eps=eps,
         factored=factored,
         gradient_accumulation_steps=gradient_accumulation_steps,
+        clip_grad=clip_grad,
+        **kwargs,
     )
 
     return tx, scheduler
@@ -290,6 +314,8 @@ def get_adafactor_with_warmup_cosine_scheduler(
     weight_decay_mask: Optional[Any] = None,
     gradient_accumulation_steps: int = 1,
     warmup_steps: int = 100,
+    clip_grad: Optional[float] = None,
+    **kwargs,
 ) -> Tuple[optax.GradientTransformation, optax.Schedule]:
     """
     Creates an Adafactor optimizer with a warm-up cosine learning rate scheduler.
@@ -313,6 +339,7 @@ def get_adafactor_with_warmup_cosine_scheduler(
         weight_decay_mask (Optional[Any]): Mask for weight decay.
         gradient_accumulation_steps (int): Number of steps to accumulate gradients.
         warmup_steps (int): Number of warm-up steps.
+        clip_grad (Optional[float]): If provided, gradients will be clipped to this maximum norm.
 
     Returns:
         Tuple[optax.GradientTransformation, optax.Schedule]: The optimizer and scheduler.
@@ -341,6 +368,8 @@ def get_adafactor_with_warmup_cosine_scheduler(
         weight_decay=weight_decay,
         weight_decay_mask=weight_decay_mask,
         gradient_accumulation_steps=gradient_accumulation_steps,
+        clip_grad=clip_grad,
+        **kwargs,
     )
 
     return tx, scheduler

@@ -1,3 +1,4 @@
+import warnings
 from typing import Optional
 
 import optax
@@ -13,6 +14,8 @@ def get_rmsprop_with_cosine_scheduler(
     eps: float = 1e-8,
     weight_decay: float = 1e-1,
     gradient_accumulation_steps: int = 1,
+    clip_grad: Optional[float] = None,
+    **kwargs,
 ) -> tuple[optax.GradientTransformation, optax.Schedule]:
     """
     Creates an RMSprop optimizer with a cosine learning rate scheduler.
@@ -27,16 +30,19 @@ def get_rmsprop_with_cosine_scheduler(
         eps: A small value added to the denominator for numerical stability.
         weight_decay: The weight decay rate.
         gradient_accumulation_steps: The number of steps to accumulate gradients over.
+        clip_grad (Optional[float]): If provided, gradients will be clipped to this maximum norm.
 
     Returns:
         A tuple containing the optimizer and the learning rate scheduler.
     """
+    for kwarg in kwargs.keys():
+        warnings.warn(f"Key {kwarg} is not used for optimizer.")
     scheduler = optax.cosine_decay_schedule(
         init_value=learning_rate,
         decay_steps=steps,
     )
 
-    tx = optax.chain(
+    chain = [
         optax.scale_by_rms(
             decay=decay,
             eps=eps,
@@ -55,7 +61,11 @@ def get_rmsprop_with_cosine_scheduler(
         optax.add_decayed_weights(
             weight_decay=weight_decay,
         ),
-    )
+    ]
+
+    if clip_grad is not None:
+        chain.insert(0, optax.clip_by_global_norm(clip_grad))
+    tx = optax.chain(*chain)
     if gradient_accumulation_steps > 1:
         tx = optax.MultiSteps(tx, gradient_accumulation_steps)
     return tx, scheduler
@@ -72,6 +82,8 @@ def get_rmsprop_with_linear_scheduler(
     eps: float = 1e-8,
     weight_decay: float = 1e-1,
     gradient_accumulation_steps: int = 1,
+    clip_grad: Optional[float] = None,
+    **kwargs,
 ) -> tuple[optax.GradientTransformation, optax.Schedule]:
     """
     Creates an RMSprop optimizer with a linear learning rate scheduler.
@@ -87,17 +99,20 @@ def get_rmsprop_with_linear_scheduler(
         eps: A small value added to the denominator for numerical stability.
         weight_decay: The weight decay rate.
         gradient_accumulation_steps: The number of steps to accumulate gradients over.
+        clip_grad (Optional[float]): If provided, gradients will be clipped to this maximum norm.
 
     Returns:
         A tuple containing the optimizer and the learning rate scheduler.
     """
+    for kwarg in kwargs.keys():
+        warnings.warn(f"Key {kwarg} is not used for optimizer.")
     scheduler = optax.linear_schedule(
         init_value=learning_rate_start,
         end_value=learning_rate_end,
         transition_steps=steps,
     )
 
-    tx = optax.chain(
+    chain = [
         optax.scale_by_rms(
             decay=decay,
             eps=eps,
@@ -116,7 +131,10 @@ def get_rmsprop_with_linear_scheduler(
         optax.add_decayed_weights(
             weight_decay=weight_decay,
         ),
-    )
+    ]
+    if clip_grad is not None:
+        chain.insert(0, optax.clip_by_global_norm(clip_grad))
+    tx = optax.chain(*chain)
     if gradient_accumulation_steps > 1:
         tx = optax.MultiSteps(tx, gradient_accumulation_steps)
     return tx, scheduler
@@ -134,6 +152,8 @@ def get_rmsprop_with_warmup_linear_scheduler(
     weight_decay: float = 1e-1,
     gradient_accumulation_steps: int = 1,
     warmup_steps: int = 100,
+    clip_grad: Optional[float] = None,
+    **kwargs,
 ) -> tuple[optax.GradientTransformation, optax.Schedule]:
     """
     Creates an RMSprop optimizer with a linear learning rate scheduler with warmup.
@@ -150,10 +170,13 @@ def get_rmsprop_with_warmup_linear_scheduler(
         weight_decay: The weight decay rate.
         gradient_accumulation_steps: The number of steps to accumulate gradients over.
         warmup_steps: The number of warmup steps.
+        clip_grad (Optional[float]): If provided, gradients will be clipped to this maximum norm.
 
     Returns:
         A tuple containing the optimizer and the learning rate scheduler.
     """
+    for kwarg in kwargs.keys():
+        warnings.warn(f"Key {kwarg} is not used for optimizer.")
     scheduler_warmup = optax.linear_schedule(
         init_value=5e-8,
         end_value=learning_rate_start,
@@ -170,7 +193,7 @@ def get_rmsprop_with_warmup_linear_scheduler(
         boundaries=[warmup_steps],
     )
 
-    tx = optax.chain(
+    chain = [
         optax.scale_by_rms(
             decay=decay,
             eps=eps,
@@ -189,7 +212,11 @@ def get_rmsprop_with_warmup_linear_scheduler(
         optax.add_decayed_weights(
             weight_decay=weight_decay,
         ),
-    )
+    ]
+
+    if clip_grad is not None:
+        chain.insert(0, optax.clip_by_global_norm(clip_grad))
+    tx = optax.chain(*chain)
     if gradient_accumulation_steps > 1:
         tx = optax.MultiSteps(tx, gradient_accumulation_steps)
     return tx, scheduler_combined
@@ -208,6 +235,8 @@ def get_rmsprop_with_warmup_cosine_scheduler(
     exponent: float = 1.0,
     gradient_accumulation_steps: int = 1,
     warmup_steps: int = 100,
+    clip_grad: Optional[float] = None,
+    **kwargs,
 ) -> tuple[optax.GradientTransformation, optax.Schedule]:
     """
     Creates an RMSprop optimizer with a cosine learning rate scheduler with warmup.
@@ -225,10 +254,13 @@ def get_rmsprop_with_warmup_cosine_scheduler(
         exponent: The exponent to use for the cosine decay.
         gradient_accumulation_steps: The number of steps to accumulate gradients over.
         warmup_steps: The number of warmup steps.
+        clip_grad (Optional[float]): If provided, gradients will be clipped to this maximum norm.
 
     Returns:
         A tuple containing the optimizer and the learning rate scheduler.
     """
+    for kwarg in kwargs.keys():
+        warnings.warn(f"Key {kwarg} is not used for optimizer.")
     scheduler = optax.warmup_cosine_decay_schedule(
         init_value=0.5e-7,
         peak_value=learning_rate,
@@ -238,7 +270,7 @@ def get_rmsprop_with_warmup_cosine_scheduler(
         exponent=exponent,
     )
 
-    tx = optax.chain(
+    chain = [
         optax.scale_by_rms(
             decay=decay,
             eps=eps,
@@ -257,7 +289,11 @@ def get_rmsprop_with_warmup_cosine_scheduler(
         optax.add_decayed_weights(
             weight_decay=weight_decay,
         ),
-    )
+    ]
+
+    if clip_grad is not None:
+        chain.insert(0, optax.clip_by_global_norm(clip_grad))
+    tx = optax.chain(*chain)
     if gradient_accumulation_steps > 1:
         tx = optax.MultiSteps(tx, gradient_accumulation_steps)
     return tx, scheduler

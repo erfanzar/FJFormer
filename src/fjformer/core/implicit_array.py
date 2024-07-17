@@ -16,8 +16,8 @@ from contextvars import ContextVar
 from dataclasses import dataclass, field, fields, is_dataclass
 from functools import partial, wraps
 from itertools import chain, count
-from typing import ClassVar, Optional, Callable, Any, Tuple
-from fjformer.core.errors import UninitializedAval
+from typing import Any, Callable, ClassVar, Optional, Tuple
+
 import jax
 import jax.extend.linear_util as lu
 import jax.interpreters.partial_eval as pe
@@ -27,9 +27,16 @@ from jax.api_util import flatten_fun, flatten_fun_nokwargs
 from jax.tree_util import register_pytree_with_keys_class
 from plum import Dispatcher, Function
 
+from fjformer.core.errors import UninitializedAval
+
 _dispatch = Dispatcher()
 _primitive_ids = count()
-
+warnings.filterwarnings(
+    "ignore", message="Could not resolve the type hint of `~B`", module="plum.type"
+)
+warnings.filterwarnings(
+    "ignore", message="Could not resolve the type hint of `~A`", module="plum.type"
+)
 
 class ArrayValue(ABC):
     pass

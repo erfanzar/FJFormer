@@ -69,7 +69,10 @@ class Array8Bit(core.ImplicitArray):
 
     @classmethod
     def quantize(
-        cls, array: Array, axis: int = -1, dtype: Optional[jnp.dtype] = None
+        cls,
+        array: Array,
+        axis: int = -1,
+        dtype: Optional[jnp.dtype] = None,
     ) -> "Array8Bit":
         """
         Quantize a JAX array to 8-bit representation.

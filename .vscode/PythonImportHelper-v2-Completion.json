@@ -212,15 +212,7 @@
         "documentation": {}
     },
     {
-        "label": "ClassVar",
-        "importPath": "typing",
-        "description": "typing",
-        "isExtraImport": true,
-        "detail": "typing",
-        "documentation": {}
-    },
-    {
-        "label": "Optional",
+        "label": "Any",
         "importPath": "typing",
         "description": "typing",
         "isExtraImport": true,
@@ -236,7 +228,15 @@
         "documentation": {}
     },
     {
-        "label": "Any",
+        "label": "ClassVar",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "Optional",
         "importPath": "typing",
         "description": "typing",
         "isExtraImport": true,
@@ -1068,31 +1068,7 @@
         "documentation": {}
     },
     {
-        "label": "Any",
-        "importPath": "typing",
-        "description": "typing",
-        "isExtraImport": true,
-        "detail": "typing",
-        "documentation": {}
-    },
-    {
-        "label": "Callable",
-        "importPath": "typing",
-        "description": "typing",
-        "isExtraImport": true,
-        "detail": "typing",
-        "documentation": {}
-    },
-    {
-        "label": "Optional",
-        "importPath": "typing",
-        "description": "typing",
-        "isExtraImport": true,
-        "detail": "typing",
-        "documentation": {}
-    },
-    {
-        "label": "Literal",
+        "label": "Tuple",
         "importPath": "typing",
         "description": "typing",
         "isExtraImport": true,
@@ -1152,6 +1128,14 @@
     },
     {
         "label": "is_dataclass",
+        "importPath": "dataclasses",
+        "description": "dataclasses",
+        "isExtraImport": true,
+        "detail": "dataclasses",
+        "documentation": {}
+    },
+    {
+        "label": "dataclass",
         "importPath": "dataclasses",
         "description": "dataclasses",
         "isExtraImport": true,
@@ -1656,7 +1640,7 @@
         "documentation": {}
     },
     {
-        "label": "Array",
+        "label": "numpy",
         "importPath": "jax",
         "description": "jax",
         "isExtraImport": true,
@@ -1664,7 +1648,7 @@
         "documentation": {}
     },
     {
-        "label": "numpy",
+        "label": "Array",
         "importPath": "jax",
         "description": "jax",
         "isExtraImport": true,
@@ -1745,14 +1729,6 @@
         "documentation": {}
     },
     {
-        "label": "partial",
-        "importPath": "functools",
-        "description": "functools",
-        "isExtraImport": true,
-        "detail": "functools",
-        "documentation": {}
-    },
-    {
         "label": "numpy",
         "kind": 6,
         "isExtraImport": true,
@@ -1798,14 +1774,6 @@
     },
     {
         "label": "traverse_util",
-        "importPath": "flax",
-        "description": "flax",
-        "isExtraImport": true,
-        "detail": "flax",
-        "documentation": {}
-    },
-    {
-        "label": "linen",
         "importPath": "flax",
         "description": "flax",
         "isExtraImport": true,
@@ -2051,46 +2019,6 @@
         "documentation": {}
     },
     {
-        "label": "UninitializedAval",
-        "importPath": "fjformer.core.errors",
-        "description": "fjformer.core.errors",
-        "isExtraImport": true,
-        "detail": "fjformer.core.errors",
-        "documentation": {}
-    },
-    {
-        "label": "MaterializationError",
-        "importPath": "fjformer.core.errors",
-        "description": "fjformer.core.errors",
-        "isExtraImport": true,
-        "detail": "fjformer.core.errors",
-        "documentation": {}
-    },
-    {
-        "label": "OperationError",
-        "importPath": "fjformer.core.errors",
-        "description": "fjformer.core.errors",
-        "isExtraImport": true,
-        "detail": "fjformer.core.errors",
-        "documentation": {}
-    },
-    {
-        "label": "ShapeDtypeError",
-        "importPath": "fjformer.core.errors",
-        "description": "fjformer.core.errors",
-        "isExtraImport": true,
-        "detail": "fjformer.core.errors",
-        "documentation": {}
-    },
-    {
-        "label": "UnsupportedPrimitiveError",
-        "importPath": "fjformer.core.errors",
-        "description": "fjformer.core.errors",
-        "isExtraImport": true,
-        "detail": "fjformer.core.errors",
-        "documentation": {}
-    },
-    {
         "label": "jax.extend.linear_util",
         "kind": 6,
         "isExtraImport": true,
@@ -2190,6 +2118,46 @@
         "documentation": {}
     },
     {
+        "label": "UninitializedAval",
+        "importPath": "fjformer.core.errors",
+        "description": "fjformer.core.errors",
+        "isExtraImport": true,
+        "detail": "fjformer.core.errors",
+        "documentation": {}
+    },
+    {
+        "label": "MaterializationError",
+        "importPath": "fjformer.core.errors",
+        "description": "fjformer.core.errors",
+        "isExtraImport": true,
+        "detail": "fjformer.core.errors",
+        "documentation": {}
+    },
+    {
+        "label": "OperationError",
+        "importPath": "fjformer.core.errors",
+        "description": "fjformer.core.errors",
+        "isExtraImport": true,
+        "detail": "fjformer.core.errors",
+        "documentation": {}
+    },
+    {
+        "label": "ShapeDtypeError",
+        "importPath": "fjformer.core.errors",
+        "description": "fjformer.core.errors",
+        "isExtraImport": true,
+        "detail": "fjformer.core.errors",
+        "documentation": {}
+    },
+    {
+        "label": "UnsupportedPrimitiveError",
+        "importPath": "fjformer.core.errors",
+        "description": "fjformer.core.errors",
+        "isExtraImport": true,
+        "detail": "fjformer.core.errors",
+        "documentation": {}
+    },
+    {
         "label": "ELEMENTWISE_BINOPS",
         "importPath": "fjformer.core.implicit_array",
         "description": "fjformer.core.implicit_array",
@@ -2247,14 +2215,6 @@
     },
     {
         "label": "primitive_handler",
-        "importPath": "fjformer.core.implicit_array",
-        "description": "fjformer.core.implicit_array",
-        "isExtraImport": true,
-        "detail": "fjformer.core.implicit_array",
-        "documentation": {}
-    },
-    {
-        "label": "implicit_compact",
         "importPath": "fjformer.core.implicit_array",
         "description": "fjformer.core.implicit_array",
         "isExtraImport": true,
@@ -2384,6 +2344,38 @@
         "documentation": {}
     },
     {
+        "label": "ImplicitArray",
+        "importPath": "fjformer.core",
+        "description": "fjformer.core",
+        "isExtraImport": true,
+        "detail": "fjformer.core",
+        "documentation": {}
+    },
+    {
+        "label": "primitive_handler",
+        "importPath": "fjformer.core",
+        "description": "fjformer.core",
+        "isExtraImport": true,
+        "detail": "fjformer.core",
+        "documentation": {}
+    },
+    {
+        "label": "use_implicit_args",
+        "importPath": "fjformer.core",
+        "description": "fjformer.core",
+        "isExtraImport": true,
+        "detail": "fjformer.core",
+        "documentation": {}
+    },
+    {
+        "label": "ArrayValue",
+        "importPath": "fjformer.core",
+        "description": "fjformer.core",
+        "isExtraImport": true,
+        "detail": "fjformer.core",
+        "documentation": {}
+    },
+    {
         "label": "chex",
         "kind": 6,
         "isExtraImport": true,
@@ -2426,14 +2418,6 @@
     },
     {
         "label": "core",
-        "importPath": "fjformer",
-        "description": "fjformer",
-        "isExtraImport": true,
-        "detail": "fjformer",
-        "documentation": {}
-    },
-    {
-        "label": "GenerateRNG",
         "importPath": "fjformer",
         "description": "fjformer",
         "isExtraImport": true,
@@ -2984,14 +2968,6 @@
         "documentation": {}
     },
     {
-        "label": "Array4Bit",
-        "importPath": "fjformer.custom_array.array4bit",
-        "description": "fjformer.custom_array.array4bit",
-        "isExtraImport": true,
-        "detail": "fjformer.custom_array.array4bit",
-        "documentation": {}
-    },
-    {
         "label": "Array8Bit",
         "importPath": "fjformer.custom_array.array8bit",
         "description": "fjformer.custom_array.array8bit",
@@ -3101,46 +3077,6 @@
         "description": "fjformer.optimizers.adamw",
         "isExtraImport": true,
         "detail": "fjformer.optimizers.adamw",
-        "documentation": {}
-    },
-    {
-        "label": "quad",
-        "importPath": "scipy.integrate",
-        "description": "scipy.integrate",
-        "isExtraImport": true,
-        "detail": "scipy.integrate",
-        "documentation": {}
-    },
-    {
-        "label": "root_scalar",
-        "importPath": "scipy.optimize",
-        "description": "scipy.optimize",
-        "isExtraImport": true,
-        "detail": "scipy.optimize",
-        "documentation": {}
-    },
-    {
-        "label": "norm",
-        "importPath": "scipy.stats",
-        "description": "scipy.stats",
-        "isExtraImport": true,
-        "detail": "scipy.stats",
-        "documentation": {}
-    },
-    {
-        "label": "halfnorm",
-        "importPath": "scipy.stats",
-        "description": "scipy.stats",
-        "isExtraImport": true,
-        "detail": "scipy.stats",
-        "documentation": {}
-    },
-    {
-        "label": "truncnorm",
-        "importPath": "scipy.stats",
-        "description": "scipy.stats",
-        "isExtraImport": true,
-        "detail": "scipy.stats",
         "documentation": {}
     },
     {
@@ -3922,7 +3858,7 @@
         "kind": 5,
         "importPath": "src.fjformer.core.implicit_array",
         "description": "src.fjformer.core.implicit_array",
-        "peekOfCode": "_dispatch = Dispatcher()\n_primitive_ids = count()\nclass ArrayValue(ABC):\n    pass\nArrayValue.register(jax.Array)\ndef get_lax_primitive_by_name(name: str) -> jax.core.Primitive:\n    \"\"\"Get a JAX LAX primitive by its name.\"\"\"\n    return getattr(jax.lax, f\"{name}_p\")\ndef get_primitive_handler(primitive):\n    \"\"\"Get or create a handler for a given primitive.\"\"\"",
+        "peekOfCode": "_dispatch = Dispatcher()\n_primitive_ids = count()\nwarnings.filterwarnings(\n    \"ignore\", message=\"Could not resolve the type hint of `~B`\", module=\"plum.type\"\n)\nwarnings.filterwarnings(\n    \"ignore\", message=\"Could not resolve the type hint of `~A`\", module=\"plum.type\"\n)\nclass ArrayValue(ABC):\n    pass",
         "detail": "src.fjformer.core.implicit_array",
         "documentation": {}
     },
@@ -3931,7 +3867,7 @@
         "kind": 5,
         "importPath": "src.fjformer.core.implicit_array",
         "description": "src.fjformer.core.implicit_array",
-        "peekOfCode": "_primitive_ids = count()\nclass ArrayValue(ABC):\n    pass\nArrayValue.register(jax.Array)\ndef get_lax_primitive_by_name(name: str) -> jax.core.Primitive:\n    \"\"\"Get a JAX LAX primitive by its name.\"\"\"\n    return getattr(jax.lax, f\"{name}_p\")\ndef get_primitive_handler(primitive):\n    \"\"\"Get or create a handler for a given primitive.\"\"\"\n    if isinstance(primitive, str):",
+        "peekOfCode": "_primitive_ids = count()\nwarnings.filterwarnings(\n    \"ignore\", message=\"Could not resolve the type hint of `~B`\", module=\"plum.type\"\n)\nwarnings.filterwarnings(\n    \"ignore\", message=\"Could not resolve the type hint of `~A`\", module=\"plum.type\"\n)\nclass ArrayValue(ABC):\n    pass\nArrayValue.register(jax.Array)",
         "detail": "src.fjformer.core.implicit_array",
         "documentation": {}
     },
@@ -5110,7 +5046,7 @@
         "kind": 2,
         "importPath": "src.fjformer.optimizers.lion",
         "description": "src.fjformer.optimizers.lion",
-        "peekOfCode": "def get_lion_with_linear_scheduler(\n    steps: int,\n    learning_rate_start: float = 5e-5,\n    learning_rate_end: float = 1e-5,\n    b1: float = 0.9,\n    b2: float = 0.99,\n    gradient_accumulation_steps: int = 1,\n    mu_dtype: Optional[chex.ArrayDType] = None,\n) -> Tuple[optax.GradientTransformation, optax.Schedule]:\n    \"\"\"",
+        "peekOfCode": "def get_lion_with_linear_scheduler(\n    steps: int,\n    learning_rate_start: float = 5e-5,\n    learning_rate_end: float = 1e-5,\n    b1: float = 0.9,\n    b2: float = 0.99,\n    gradient_accumulation_steps: int = 1,\n    mu_dtype: Optional[chex.ArrayDType] = None,\n    clip_grad: Optional[float] = None,\n    **kwargs,",
         "detail": "src.fjformer.optimizers.lion",
         "documentation": {}
     },
@@ -5128,7 +5064,7 @@
         "kind": 2,
         "importPath": "src.fjformer.optimizers.lion",
         "description": "src.fjformer.optimizers.lion",
-        "peekOfCode": "def get_lion_with_cosine_scheduler(\n    steps: int,\n    learning_rate: float = 5e-5,\n    alpha: float = 0.0,\n    exponent: float = 1.0,\n    b1: float = 0.9,\n    b2: float = 0.99,\n    gradient_accumulation_steps: int = 1,\n    mu_dtype: Optional[chex.ArrayDType] = None,\n) -> Tuple[optax.GradientTransformation, optax.Schedule]:",
+        "peekOfCode": "def get_lion_with_cosine_scheduler(\n    steps: int,\n    learning_rate: float = 5e-5,\n    alpha: float = 0.0,\n    exponent: float = 1.0,\n    b1: float = 0.9,\n    b2: float = 0.99,\n    gradient_accumulation_steps: int = 1,\n    mu_dtype: Optional[chex.ArrayDType] = None,\n    clip_grad: Optional[float] = None,",
         "detail": "src.fjformer.optimizers.lion",
         "documentation": {}
     },
@@ -6789,20 +6725,47 @@
         "documentation": {}
     },
     {
-        "label": "Model",
+        "label": "QuantizedArray",
         "kind": 6,
         "importPath": "env",
         "description": "env",
-        "peekOfCode": "class Model(nn.Module):\n    \"\"\"A simple linear model for demonstration.\"\"\"\n    def setup(self) -> None:\n        \"\"\"Initializes the model layers.\"\"\"\n        self.fc = nn.Dense(512, use_bias=True, dtype=jnp.float32)\n        self.fc1 = nn.Dense(64, use_bias=True, dtype=jnp.float32)\n        self.out = nn.Dense(1, use_bias=True, dtype=jnp.float32)\n    def __call__(self, x):\n        \"\"\"Performs a forward pass through the model.\"\"\"\n        x = self.fc(x)",
+        "peekOfCode": "class QuantizedArray(ImplicitArray):\n    array_quant: ArrayValue\n    scale: ArrayValue\n    min_vals: ArrayValue\n    def materialize(self):\n        return self.dequantize(\n            array_quant=self.array_quant,\n            scale=self.scale,\n            min_vals=self.min_vals,\n            float_dtype=self.dtype,",
         "detail": "env",
         "documentation": {}
     },
     {
-        "label": "quantize_params",
+        "label": "quantize",
         "kind": 2,
         "importPath": "env",
         "description": "env",
-        "peekOfCode": "def quantize_params(\n    params: dict,\n    block_size: Literal[32, 64, 128, 256, 512, 1024, 2048, 4096] = 64,\n    contraction_axis: int = -1,\n    factors: Optional[Array] = None,\n) -> dict:\n    \"\"\"Quantizes model parameters using Array4Bit.\n    Args:\n        params: A dictionary of model parameters.\n    Returns:",
+        "peekOfCode": "def quantize(array: Array, axis: int = -1) -> Tuple[Array, Array, Array]:\n    min_vals = jnp.min(array, axis=axis, keepdims=True)\n    max_vals = jnp.max(array, axis=axis, keepdims=True)\n    # Compute the scaling factors\n    scale = (max_vals - min_vals) / (2**7 - 1)\n    # Quantize the data\n    quantized_data = jnp.round((array - min_vals) / scale)\n    # Clip the quantized values to ensure they lie within the representable range\n    quantized_data = jnp.clip(quantized_data, 0, 2**7 - 1).astype(jnp.uint8)\n    return quantized_data, scale, min_vals",
+        "detail": "env",
+        "documentation": {}
+    },
+    {
+        "label": "dequantize",
+        "kind": 2,
+        "importPath": "env",
+        "description": "env",
+        "peekOfCode": "def dequantize(\n    array_quant: Array,\n    scale: Array,\n    min_vals: Array,\n    float_dtype: jnp.dtype = jnp.float16,\n):\n    return (array_quant * scale + min_vals).astype(float_dtype)\n@dataclass\nclass QuantizedArray(ImplicitArray):\n    array_quant: ArrayValue",
+        "detail": "env",
+        "documentation": {}
+    },
+    {
+        "label": "get_binop_result_shape_dtype",
+        "kind": 2,
+        "importPath": "env",
+        "description": "env",
+        "peekOfCode": "def get_binop_result_shape_dtype(a, b):\n    out_shape = jnp.broadcast_shapes(jnp.shape(a), jnp.shape(b))\n    out_dtype = jnp.result_type(a.dtype, b.dtype)\n    return out_shape, out_dtype\n@jax.jit\n@use_implicit_args\ndef f(x, y):\n    return (x + y)[0, 0]\ndef main():\n    orginal_array = jax.random.normal(jax.random.PRNGKey(0), (512, 64))",
+        "detail": "env",
+        "documentation": {}
+    },
+    {
+        "label": "f",
+        "kind": 2,
+        "importPath": "env",
+        "description": "env",
+        "peekOfCode": "def f(x, y):\n    return (x + y)[0, 0]\ndef main():\n    orginal_array = jax.random.normal(jax.random.PRNGKey(0), (512, 64))\n    quantized_array = QuantizedArray.quantize(orginal_array)\n    print(f(quantized_array, jnp.ones(64)))\n    print((orginal_array + jnp.ones(64))[0, 0])\nif __name__ == \"__main__\":\n    main()",
         "detail": "env",
         "documentation": {}
     },
@@ -6811,98 +6774,8 @@
         "kind": 2,
         "importPath": "env",
         "description": "env",
-        "peekOfCode": "def main():\n    \"\"\"\n    Demonstrates the quantization process using a simple model.\n    - Initializes a model and random input data.\n    - Quantizes the model parameters.\n    - Performs inference using both the original and quantized models.\n    - Prints the output of both models for comparison.\n    \"\"\"\n    model = Model()\n    init_x = jax.random.normal(rng.rng, (1, 64))",
+        "peekOfCode": "def main():\n    orginal_array = jax.random.normal(jax.random.PRNGKey(0), (512, 64))\n    quantized_array = QuantizedArray.quantize(orginal_array)\n    print(f(quantized_array, jnp.ones(64)))\n    print((orginal_array + jnp.ones(64))[0, 0])\nif __name__ == \"__main__\":\n    main()",
         "detail": "env",
-        "documentation": {}
-    },
-    {
-        "label": "rng",
-        "kind": 5,
-        "importPath": "env",
-        "description": "env",
-        "peekOfCode": "rng = GenerateRNG()\nclass Model(nn.Module):\n    \"\"\"A simple linear model for demonstration.\"\"\"\n    def setup(self) -> None:\n        \"\"\"Initializes the model layers.\"\"\"\n        self.fc = nn.Dense(512, use_bias=True, dtype=jnp.float32)\n        self.fc1 = nn.Dense(64, use_bias=True, dtype=jnp.float32)\n        self.out = nn.Dense(1, use_bias=True, dtype=jnp.float32)\n    def __call__(self, x):\n        \"\"\"Performs a forward pass through the model.\"\"\"",
-        "detail": "env",
-        "documentation": {}
-    },
-    {
-        "label": "integrand",
-        "kind": 2,
-        "importPath": "experimental",
-        "description": "experimental",
-        "peekOfCode": "def integrand(block_size, x, m):\n    p_z_less_than_mx = truncnorm.cdf(m * x, -m, m)\n    pm = block_size * (halfnorm.cdf(m) ** (block_size - 1)) * 2 * norm.pdf(m)\n    return p_z_less_than_mx * pm\ndef scaled_norm_cdf(block_size, x):\n    result = quad(\n        partial(integrand, block_size, x),\n        0,\n        np.inf,\n        epsabs=1e-9,",
-        "detail": "experimental",
-        "documentation": {}
-    },
-    {
-        "label": "scaled_norm_cdf",
-        "kind": 2,
-        "importPath": "experimental",
-        "description": "experimental",
-        "peekOfCode": "def scaled_norm_cdf(block_size, x):\n    result = quad(\n        partial(integrand, block_size, x),\n        0,\n        np.inf,\n        epsabs=1e-9,\n    )\n    return result[0]\ndef cdf(x, block_size):\n    discrete_mass = 1 / (2 * block_size)",
-        "detail": "experimental",
-        "documentation": {}
-    },
-    {
-        "label": "cdf",
-        "kind": 2,
-        "importPath": "experimental",
-        "description": "experimental",
-        "peekOfCode": "def cdf(x, block_size):\n    discrete_mass = 1 / (2 * block_size)\n    cont_mass = scaled_norm_cdf(block_size, x) * (block_size - 1) / block_size\n    result = discrete_mass + cont_mass\n    result = np.where(x < -1, 0, result)\n    result = np.where(x >= 1, 1, result)\n    return result\ndef inv_cdf(val, block_size):\n    edge_mass = 1 / (2 * block_size)\n    if val <= edge_mass:",
-        "detail": "experimental",
-        "documentation": {}
-    },
-    {
-        "label": "inv_cdf",
-        "kind": 2,
-        "importPath": "experimental",
-        "description": "experimental",
-        "peekOfCode": "def inv_cdf(val, block_size):\n    edge_mass = 1 / (2 * block_size)\n    if val <= edge_mass:\n        return -1\n    if val >= 1 - edge_mass:\n        return 1\n    def search_fn(x):\n        return cdf(x, block_size) - val\n    return root_scalar(search_fn, bracket=[-1, 1]).root\ndef build_code(",
-        "detail": "experimental",
-        "documentation": {}
-    },
-    {
-        "label": "build_code",
-        "kind": 2,
-        "importPath": "experimental",
-        "description": "experimental",
-        "peekOfCode": "def build_code(\n    start,\n    lower_bound,\n    upper_bound,\n    n_steps,\n    bcdf,\n    binv_cdf,\n    lower_bound_is_code_point=True,\n):\n    code = [start]",
-        "detail": "experimental",
-        "documentation": {}
-    },
-    {
-        "label": "interval_code_search",
-        "kind": 2,
-        "importPath": "experimental",
-        "description": "experimental",
-        "peekOfCode": "def interval_code_search(\n    lower_bound,\n    upper_bound,\n    n_steps,\n    block_size,\n    bounds_are_code_points=True,\n):\n    bcdf = partial(cdf, block_size=block_size)\n    binv_cdf = partial(inv_cdf, block_size=block_size)\n    code_builder = partial(",
-        "detail": "experimental",
-        "documentation": {}
-    },
-    {
-        "label": "construct_af4",
-        "kind": 2,
-        "importPath": "experimental",
-        "description": "experimental",
-        "peekOfCode": "def construct_af4(block_size):\n    lower = interval_code_search(-1, 0, 5, block_size)\n    upper = -interval_code_search(-1, 0, 6, block_size)[::-1]\n    code = np.asarray([-1.0, *lower, 0.0, *upper, 1.0], dtype=np.float64)\n    assert code.shape == (16,)\n    return code\ndef main():\n    for block_size in (2048,):\n        start = time.time()\n        code = construct_af4(block_size)",
-        "detail": "experimental",
-        "documentation": {}
-    },
-    {
-        "label": "main",
-        "kind": 2,
-        "importPath": "experimental",
-        "description": "experimental",
-        "peekOfCode": "def main():\n    for block_size in (2048,):\n        start = time.time()\n        code = construct_af4(block_size)\n        end = time.time()\n        print(f\"B = {block_size} - Runtime: {end - start:.2f} sec\\n{code}\\n\")\n        np.save(f\"af4_{block_size}.npy\", code)\ndef view():\n    for block_size in (2048,):\n        array = np.load(f\"af4_{block_size}.npy\")",
-        "detail": "experimental",
-        "documentation": {}
-    },
-    {
-        "label": "view",
-        "kind": 2,
-        "importPath": "experimental",
-        "description": "experimental",
-        "peekOfCode": "def view():\n    for block_size in (2048,):\n        array = np.load(f\"af4_{block_size}.npy\")\n        print(array)\nif __name__ == \"__main__\":\n    main()\n    # view()",
-        "detail": "experimental",
         "documentation": {}
     },
     {

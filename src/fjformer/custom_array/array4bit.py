@@ -467,12 +467,20 @@ def handle_transpose(
     """
     original_quantized = False
     if isinstance(operand, Array4Bit):
-        operand = operand.materialize()
+        array = operand.materialize()
         original_quantized = True
-    operand = lax.transpose(operand, *args, **kwargs)
+    else:
+        array = operand
+    array = lax.transpose(array, *args, **kwargs)
     if original_quantized:
-        operand = Array4Bit.quantize(operand, dtype=operand.dtype)
-    return operand
+        array = Array4Bit.quantize(
+            array=array,
+            block_size=operand.block_size,
+            contraction_axis=operand.contraction_axis,
+            dtype=operand.dtype,
+            factors=operand.factors,
+        )
+    return array
 
 
 @core.primitive_handler("conv_general_dilated")
