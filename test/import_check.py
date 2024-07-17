@@ -12,6 +12,7 @@ sys.path.append(
     )
 )
 
+
 def main():
     start_time = time.time()
     import fjformer as fjformer
@@ -34,11 +35,15 @@ def main():
     from fjformer.pallas_operations.gpu.rms_norm import rms_norm as rms_norm
     from fjformer.pallas_operations.gpu.softmax import softmax as softmax
     from fjformer.pallas_operations.pallas_attention import (
-        flash_attention as flash_attention,
+        flash_attention as _flash_attention,
     )
+
+    del _flash_attention
     from fjformer.pallas_operations.tpu.flash_attention import (
-        flash_attention as flash_attention,
+        flash_attention as _flash_attention,
     )
+
+    del _flash_attention
     from fjformer.pallas_operations.tpu.paged_attention import (
         paged_attention as paged_attention,
     )

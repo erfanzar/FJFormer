@@ -1,7 +1,8 @@
 from dataclasses import dataclass
-from typing import Any, Callable, Optional, List, Union
+from typing import Any, Callable, Dict, List, Optional, Union
 
 import flax.core
+import flax.traverse_util
 import jax
 import jax.tree_util
 import optax
@@ -9,11 +10,11 @@ from jax import numpy as jnp
 
 from fjformer.core import (
     EmptyNode,
+    implicit_compact,
     materialize_nested,
     tree_map_with_implicit,
-    implicit_compact,
 )
-from fjformer.core.utilities import freeze_subtrees, freeze_keys
+from fjformer.core.utilities import freeze_keys, freeze_subtrees
 from fjformer.lora.lora_core import LoraWeight
 from fjformer.utils import get_logger
 
@@ -113,7 +114,7 @@ class LoraRapture:
     @staticmethod
     def merge_parameters(
         lora_parameters: Union[dict, jax.tree_util.PyTreeDef],
-        destructive: bool = True,
+        destructive: bool = False,
     ) -> Union[dict, jax.tree_util.PyTreeDef]:
         """Merges LoRA parameters into the base model parameters.
 
@@ -152,6 +153,53 @@ class LoraRapture:
             return param
 
         return tree_map_with_implicit(map_fn, lora_parameters)
+
+    def get_lora_parameters(self, lora_parameters) -> Dict:
+        """
+        Extract LoRA (Low-Rank Adaptation) parameters from a parameter tree.
+
+        This method traverses the given parameter tree and extracts LoRA-specific
+        parameters (a, b, and alpha) from LoraWeight instances. It flattens the
+        resulting structure, removes any None values, and then unflattens it back
+        into a nested dictionary.
+
+        Args:
+            lora_parameters (Any): A nested structure containing model parameters,
+                                potentially including LoraWeight instances.
+
+        Returns:
+            Dict: A nested dictionary containing only the LoRA parameters. Each LoRA
+                parameter set is represented as a dict with keys 'a', 'b', and 'alpha'.
+
+        Note:
+            - This method uses `tree_map_with_implicit` to traverse the parameter tree.
+            - Parameters that are not instances of LoraWeight are mapped to None
+            and subsequently removed from the result.
+        """
+
+        def map_fn(param: Any) -> Dict[str, Any] | None:
+            """
+            Extract LoRA parameters from a single parameter.
+
+            Args:
+                param (Any): A single parameter from the parameter tree.
+
+            Returns:
+                Dict[str, Any] | None: A dictionary containing LoRA parameters
+                                    if the input is a LoraWeight instance,
+                                    otherwise None.
+            """
+            if isinstance(param, LoraWeight):
+                return {"a": param.a, "b": param.b, "alpha": param.alpha}
+            return None
+
+        pure_map = tree_map_with_implicit(map_fn, lora_parameters)
+        pure_map = flax.traverse_util.flatten_dict(pure_map)
+        keys = list(pure_map.keys())
+        for key in keys:
+            if pure_map[key] is None:
+                pure_map.pop(key)
+        return flax.traverse_util.unflatten_dict(pure_map)
 
     def base_decision_function(
         self,

@@ -29,7 +29,7 @@ from flax import linen as nn  # noqa
 from fjformer.optimizers.adamw import get_adamw_with_warmup_cosine_scheduler  # noqa
 
 rng = GenerateRNG()
-STEPS = 50_000
+STEPS = 5_000
 
 
 class Model(nn.Module):
@@ -127,6 +127,8 @@ def main():
         )
         bar.update(1)
     bar.close()
+    print(f"Merged Parameters : {rapture.merge_parameters(lora_parameters)}")
+    print(f"Lora Parameters : {rapture.get_lora_parameters(lora_parameters)}")
 
 
 if __name__ == "__main__":

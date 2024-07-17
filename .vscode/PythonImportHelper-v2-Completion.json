@@ -516,7 +516,7 @@
         "documentation": {}
     },
     {
-        "label": "Optional",
+        "label": "Dict",
         "importPath": "typing",
         "description": "typing",
         "isExtraImport": true,
@@ -525,6 +525,14 @@
     },
     {
         "label": "List",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "Optional",
         "importPath": "typing",
         "description": "typing",
         "isExtraImport": true,
@@ -1648,14 +1656,6 @@
         "documentation": {}
     },
     {
-        "label": "numpy",
-        "importPath": "jax",
-        "description": "jax",
-        "isExtraImport": true,
-        "detail": "jax",
-        "documentation": {}
-    },
-    {
         "label": "Array",
         "importPath": "jax",
         "description": "jax",
@@ -2360,6 +2360,14 @@
         "documentation": {}
     },
     {
+        "label": "implicit_compact",
+        "importPath": "fjformer.core",
+        "description": "fjformer.core",
+        "isExtraImport": true,
+        "detail": "fjformer.core",
+        "documentation": {}
+    },
+    {
         "label": "materialize_nested",
         "importPath": "fjformer.core",
         "description": "fjformer.core",
@@ -2369,14 +2377,6 @@
     },
     {
         "label": "tree_map_with_implicit",
-        "importPath": "fjformer.core",
-        "description": "fjformer.core",
-        "isExtraImport": true,
-        "detail": "fjformer.core",
-        "documentation": {}
-    },
-    {
-        "label": "implicit_compact",
         "importPath": "fjformer.core",
         "description": "fjformer.core",
         "isExtraImport": true,
@@ -2465,14 +2465,6 @@
         "documentation": {}
     },
     {
-        "label": "GenerateRNG",
-        "importPath": "fjformer",
-        "description": "fjformer",
-        "isExtraImport": true,
-        "detail": "fjformer",
-        "documentation": {}
-    },
-    {
         "label": "flax.core",
         "kind": 6,
         "isExtraImport": true,
@@ -2482,7 +2474,7 @@
         "documentation": {}
     },
     {
-        "label": "freeze_subtrees",
+        "label": "freeze_keys",
         "importPath": "fjformer.core.utilities",
         "description": "fjformer.core.utilities",
         "isExtraImport": true,
@@ -2490,7 +2482,7 @@
         "documentation": {}
     },
     {
-        "label": "freeze_keys",
+        "label": "freeze_subtrees",
         "importPath": "fjformer.core.utilities",
         "description": "fjformer.core.utilities",
         "isExtraImport": true,
@@ -3085,15 +3077,6 @@
         "description": "fjformer.functions.loss_functions",
         "isExtraImport": true,
         "detail": "fjformer.functions.loss_functions",
-        "documentation": {}
-    },
-    {
-        "label": "fjformer.linen",
-        "kind": 6,
-        "isExtraImport": true,
-        "importPath": "fjformer.linen",
-        "description": "fjformer.linen",
-        "detail": "fjformer.linen",
         "documentation": {}
     },
     {
@@ -6770,24 +6753,6 @@
         "documentation": {}
     },
     {
-        "label": "DummyNet",
-        "kind": 6,
-        "importPath": "test.linear_bit_kernel",
-        "description": "test.linear_bit_kernel",
-        "peekOfCode": "class DummyNet(nn.Module):\n    @nn.compact\n    def __call__(self, x):\n        return nn.LayerNorm()(nn.Dense(64)(nn.Embed(512, 1024)(x)))\ndef main():\n    rng_gen = GenerateRNG(42)\n    net = DummyNet()\n    params = net.init(\n        rng_gen.rng, jax.random.randint(rng_gen.rng, (1, 68), minval=0, maxval=512)\n    )",
-        "detail": "test.linear_bit_kernel",
-        "documentation": {}
-    },
-    {
-        "label": "main",
-        "kind": 2,
-        "importPath": "test.linear_bit_kernel",
-        "description": "test.linear_bit_kernel",
-        "peekOfCode": "def main():\n    rng_gen = GenerateRNG(42)\n    net = DummyNet()\n    params = net.init(\n        rng_gen.rng, jax.random.randint(rng_gen.rng, (1, 68), minval=0, maxval=512)\n    )\n    quantized_params = nn.quantize_int8_parameters([\"kernel\", \"embedding\"], params)\n    inputs = jax.random.randint(rng_gen.rng, (1, 128), minval=0, maxval=512)\n    print(quantized_params)\n    org_pred = net.apply(params, inputs)",
-        "detail": "test.linear_bit_kernel",
-        "documentation": {}
-    },
-    {
         "label": "Model",
         "kind": 6,
         "importPath": "test.lora",
@@ -6810,7 +6775,7 @@
         "kind": 5,
         "importPath": "test.lora",
         "description": "test.lora",
-        "peekOfCode": "rng = GenerateRNG()\nSTEPS = 50_000\nclass Model(nn.Module):\n    \"\"\"A simple linear model for demonstration.\"\"\"\n    fc_out: int = 6\n    fc1_out: int = 4\n    out_num: int = 1\n    def setup(self) -> None:\n        \"\"\"Initializes the model layers.\"\"\"\n        self.fc = nn.Dense(self.fc_out, use_bias=False, dtype=jnp.float32)",
+        "peekOfCode": "rng = GenerateRNG()\nSTEPS = 5_000\nclass Model(nn.Module):\n    \"\"\"A simple linear model for demonstration.\"\"\"\n    fc_out: int = 6\n    fc1_out: int = 4\n    out_num: int = 1\n    def setup(self) -> None:\n        \"\"\"Initializes the model layers.\"\"\"\n        self.fc = nn.Dense(self.fc_out, use_bias=False, dtype=jnp.float32)",
         "detail": "test.lora",
         "documentation": {}
     },
@@ -6819,7 +6784,7 @@
         "kind": 5,
         "importPath": "test.lora",
         "description": "test.lora",
-        "peekOfCode": "STEPS = 50_000\nclass Model(nn.Module):\n    \"\"\"A simple linear model for demonstration.\"\"\"\n    fc_out: int = 6\n    fc1_out: int = 4\n    out_num: int = 1\n    def setup(self) -> None:\n        \"\"\"Initializes the model layers.\"\"\"\n        self.fc = nn.Dense(self.fc_out, use_bias=False, dtype=jnp.float32)\n        self.fc1 = nn.Dense(self.fc1_out, use_bias=False, dtype=jnp.float32)",
+        "peekOfCode": "STEPS = 5_000\nclass Model(nn.Module):\n    \"\"\"A simple linear model for demonstration.\"\"\"\n    fc_out: int = 6\n    fc1_out: int = 4\n    out_num: int = 1\n    def setup(self) -> None:\n        \"\"\"Initializes the model layers.\"\"\"\n        self.fc = nn.Dense(self.fc_out, use_bias=False, dtype=jnp.float32)\n        self.fc1 = nn.Dense(self.fc1_out, use_bias=False, dtype=jnp.float32)",
         "detail": "test.lora",
         "documentation": {}
     },
