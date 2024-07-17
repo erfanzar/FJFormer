@@ -7,7 +7,7 @@ import optax
 from jax import tree_util
 from jax.dtypes import float0
 
-from fjformer.core.implicit_array import use_implicit_args
+from fjformer.core.implicit_array import implicit_compact
 from fjformer.core.symbols import SymbolicConstant
 
 
@@ -187,7 +187,7 @@ def apply_updates(params: optax.Params, updates: optax.Updates) -> optax.Params:
         )
         semi_flat_params = update_struct.flatten_up_to(params)
 
-        updated_flat = use_implicit_args(optax.apply_updates)(
+        updated_flat = implicit_compact(optax.apply_updates)(
             semi_flat_params, updates_flat
         )
         updated = update_struct.unflatten(updated_flat)

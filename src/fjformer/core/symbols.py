@@ -21,7 +21,7 @@ from fjformer.core.implicit_array import (
     aux_field,
     default_handler,
     primitive_handler,
-    use_implicit_args,
+    implicit_compact,
 )
 from fjformer.core.types import Complement
 
@@ -198,12 +198,12 @@ class SymbolicConstant(ImplicitArray):
             raise OperationError(f"Failed to copy SymbolicConstant: {str(e)}")
 
 
-@use_implicit_args
+@implicit_compact
 def broadcast_to(val, shape):
     return jnp.broadcast_to(val, shape)
 
 
-@use_implicit_args
+@implicit_compact
 def astype(val, dtype):
     return val.astype(dtype)
 
@@ -233,7 +233,7 @@ def _op_and_reshape(primitive, lhs, rhs, flip=False):
     if flip:
         lhs, rhs = (rhs, lhs)
 
-    @use_implicit_args
+    @implicit_compact
     def inner(arg):
         other = lhs
         if flip:

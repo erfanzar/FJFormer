@@ -24,7 +24,7 @@ class UnsupportedOperationError(LoraError):
 
 def lora(f: Any) -> Any:
     """Decorator for LoRA-compatible functions."""
-    return cr.use_implicit_args(f)
+    return cr.implicit_compact(f)
 
 
 @dataclass

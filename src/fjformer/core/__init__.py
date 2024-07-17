@@ -1,6 +1,6 @@
 from fjformer.core.implicit_array import (
     ImplicitArray as ImplicitArray,
-    use_implicit_args as use_implicit_args,
+    implicit_compact as implicit_compact,
     aux_field as aux_field,
     UninitializedAval as UninitializedAval,
     default_handler as default_handler,

@@ -11,7 +11,7 @@ from fjformer.core import (
     EmptyNode,
     materialize_nested,
     tree_map_with_implicit,
-    use_implicit_args,
+    implicit_compact,
 )
 from fjformer.core.utilities import freeze_subtrees, freeze_keys
 from fjformer.lora.lora_core import LoraWeight
@@ -432,7 +432,7 @@ class LoraRapture:
         )
         tx = self.wrap_tx(tx=tx, lora_spec=lora_spec)
         opt_state = tx.init(lora_parameters)
-        lora_model = use_implicit_args(module)
+        lora_model = implicit_compact(module)
 
         return RaptureModule(
             lora_opt_state=opt_state,

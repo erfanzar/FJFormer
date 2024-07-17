@@ -372,6 +372,30 @@
         "documentation": {}
     },
     {
+        "label": "Optional",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "Sequence",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
+        "label": "Union",
+        "importPath": "typing",
+        "description": "typing",
+        "isExtraImport": true,
+        "detail": "typing",
+        "documentation": {}
+    },
+    {
         "label": "Mapping",
         "importPath": "typing",
         "description": "typing",
@@ -1052,14 +1076,6 @@
         "documentation": {}
     },
     {
-        "label": "Tuple",
-        "importPath": "typing",
-        "description": "typing",
-        "isExtraImport": true,
-        "detail": "typing",
-        "documentation": {}
-    },
-    {
         "label": "flax.struct",
         "kind": 6,
         "isExtraImport": true,
@@ -1112,6 +1128,14 @@
     },
     {
         "label": "is_dataclass",
+        "importPath": "dataclasses",
+        "description": "dataclasses",
+        "isExtraImport": true,
+        "detail": "dataclasses",
+        "documentation": {}
+    },
+    {
+        "label": "dataclass",
         "importPath": "dataclasses",
         "description": "dataclasses",
         "isExtraImport": true,
@@ -1360,6 +1384,30 @@
         "documentation": {}
     },
     {
+        "label": "Array",
+        "importPath": "jax",
+        "description": "jax",
+        "isExtraImport": true,
+        "detail": "jax",
+        "documentation": {}
+    },
+    {
+        "label": "lax",
+        "importPath": "jax",
+        "description": "jax",
+        "isExtraImport": true,
+        "detail": "jax",
+        "documentation": {}
+    },
+    {
+        "label": "numpy",
+        "importPath": "jax",
+        "description": "jax",
+        "isExtraImport": true,
+        "detail": "jax",
+        "documentation": {}
+    },
+    {
         "label": "numpy",
         "importPath": "jax",
         "description": "jax",
@@ -1545,6 +1593,14 @@
     },
     {
         "label": "numpy",
+        "importPath": "jax",
+        "description": "jax",
+        "isExtraImport": true,
+        "detail": "jax",
+        "documentation": {}
+    },
+    {
+        "label": "lax",
         "importPath": "jax",
         "description": "jax",
         "isExtraImport": true,
@@ -2102,7 +2158,7 @@
         "documentation": {}
     },
     {
-        "label": "use_implicit_args",
+        "label": "implicit_compact",
         "importPath": "fjformer.core.implicit_array",
         "description": "fjformer.core.implicit_array",
         "isExtraImport": true,
@@ -2110,7 +2166,7 @@
         "documentation": {}
     },
     {
-        "label": "use_implicit_args",
+        "label": "implicit_compact",
         "importPath": "fjformer.core.implicit_array",
         "description": "fjformer.core.implicit_array",
         "isExtraImport": true,
@@ -2156,6 +2212,47 @@
         "description": "fjformer.core.symbols",
         "isExtraImport": true,
         "detail": "fjformer.core.symbols",
+        "documentation": {}
+    },
+    {
+        "label": "fjformer.core",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "fjformer.core",
+        "description": "fjformer.core",
+        "detail": "fjformer.core",
+        "documentation": {}
+    },
+    {
+        "label": "EmptyNode",
+        "importPath": "fjformer.core",
+        "description": "fjformer.core",
+        "isExtraImport": true,
+        "detail": "fjformer.core",
+        "documentation": {}
+    },
+    {
+        "label": "materialize_nested",
+        "importPath": "fjformer.core",
+        "description": "fjformer.core",
+        "isExtraImport": true,
+        "detail": "fjformer.core",
+        "documentation": {}
+    },
+    {
+        "label": "tree_map_with_implicit",
+        "importPath": "fjformer.core",
+        "description": "fjformer.core",
+        "isExtraImport": true,
+        "detail": "fjformer.core",
+        "documentation": {}
+    },
+    {
+        "label": "implicit_compact",
+        "importPath": "fjformer.core",
+        "description": "fjformer.core",
+        "isExtraImport": true,
+        "detail": "fjformer.core",
         "documentation": {}
     },
     {
@@ -2263,70 +2360,6 @@
         "description": "fjformer",
         "isExtraImport": true,
         "detail": "fjformer",
-        "documentation": {}
-    },
-    {
-        "label": "EmptyNode",
-        "importPath": "fjformer.core",
-        "description": "fjformer.core",
-        "isExtraImport": true,
-        "detail": "fjformer.core",
-        "documentation": {}
-    },
-    {
-        "label": "materialize_nested",
-        "importPath": "fjformer.core",
-        "description": "fjformer.core",
-        "isExtraImport": true,
-        "detail": "fjformer.core",
-        "documentation": {}
-    },
-    {
-        "label": "tree_map_with_implicit",
-        "importPath": "fjformer.core",
-        "description": "fjformer.core",
-        "isExtraImport": true,
-        "detail": "fjformer.core",
-        "documentation": {}
-    },
-    {
-        "label": "use_implicit_args",
-        "importPath": "fjformer.core",
-        "description": "fjformer.core",
-        "isExtraImport": true,
-        "detail": "fjformer.core",
-        "documentation": {}
-    },
-    {
-        "label": "ImplicitArray",
-        "importPath": "fjformer.core",
-        "description": "fjformer.core",
-        "isExtraImport": true,
-        "detail": "fjformer.core",
-        "documentation": {}
-    },
-    {
-        "label": "primitive_handler",
-        "importPath": "fjformer.core",
-        "description": "fjformer.core",
-        "isExtraImport": true,
-        "detail": "fjformer.core",
-        "documentation": {}
-    },
-    {
-        "label": "use_implicit_args",
-        "importPath": "fjformer.core",
-        "description": "fjformer.core",
-        "isExtraImport": true,
-        "detail": "fjformer.core",
-        "documentation": {}
-    },
-    {
-        "label": "ArrayValue",
-        "importPath": "fjformer.core",
-        "description": "fjformer.core",
-        "isExtraImport": true,
-        "detail": "fjformer.core",
         "documentation": {}
     },
     {
@@ -2925,6 +2958,14 @@
         "description": "fjformer.functions.loss_functions",
         "isExtraImport": true,
         "detail": "fjformer.functions.loss_functions",
+        "documentation": {}
+    },
+    {
+        "label": "Array8Bit",
+        "importPath": "fjformer.custom_array.quantized_8bit",
+        "description": "fjformer.custom_array.quantized_8bit",
+        "isExtraImport": true,
+        "detail": "fjformer.custom_array.quantized_8bit",
         "documentation": {}
     },
     {
@@ -3553,7 +3594,7 @@
         "kind": 6,
         "importPath": "src.fjformer.core.implicit_array",
         "description": "src.fjformer.core.implicit_array",
-        "peekOfCode": "class ImplicitArray(_ImplicitArrayBase):\n    \"\"\"\n    Abstract class for representing an abstract array without instantiation.\n    Subclasses must implement the materialize method, which defines the relationship\n    between the implicit array and the value it represents. Subclasses are valid\n    arguments to functions decorated with qax.use_implicit_args.\n    The represented shape and dtype may be defined in various ways:\n    1. Explicitly passing shape/dtype keyword arguments at initialization\n    2. Overriding the default_shape/default_dtype class variables\n    3. Overriding the compute_shape/compute_dtype methods",
+        "peekOfCode": "class ImplicitArray(_ImplicitArrayBase):\n    \"\"\"\n    Abstract class for representing an abstract array without instantiation.\n    Subclasses must implement the materialize method, which defines the relationship\n    between the implicit array and the value it represents. Subclasses are valid\n    arguments to functions decorated with core.implicit_compact.\n    The represented shape and dtype may be defined in various ways:\n    1. Explicitly passing shape/dtype keyword arguments at initialization\n    2. Overriding the default_shape/default_dtype class variables\n    3. Overriding the compute_shape/compute_dtype methods",
         "detail": "src.fjformer.core.implicit_array",
         "documentation": {}
     },
@@ -3657,11 +3698,11 @@
         "documentation": {}
     },
     {
-        "label": "use_implicit_args",
+        "label": "implicit_compact",
         "kind": 2,
         "importPath": "src.fjformer.core.implicit_array",
         "description": "src.fjformer.core.implicit_array",
-        "peekOfCode": "def use_implicit_args(f: Callable) -> Callable:\n    \"\"\"\n    Decorator which allows a function to accept arguments which subclass ImplicitArray, possibly\n    including further ImplicitArray instances as children.\n    Any number of arguments (including 0) may be ImplicitArrays.\n    Args:\n        f: The function to be decorated.\n    Returns:\n        A wrapped function that can handle ImplicitArray arguments.\n    \"\"\"",
+        "peekOfCode": "def implicit_compact(f: Callable) -> Callable:\n    \"\"\"\n    A decorator that enables compact handling of ImplicitArray subclasses within a function.\n    This allows for seamless integration of custom array types in JAX operations.\n    This decorator can be used in combination with jax.jit for optimized execution.\n    Args:\n        f: The function to be decorated.\n    Returns:\n        A wrapped function that can handle both regular arrays and ImplicitArray instances.\n    Example:",
         "detail": "src.fjformer.core.implicit_array",
         "documentation": {}
     },
@@ -3688,7 +3729,7 @@
         "kind": 2,
         "importPath": "src.fjformer.core.implicit_array",
         "description": "src.fjformer.core.implicit_array",
-        "peekOfCode": "def wrap_jaxpr(jaxpr, vals_with_implicits, return_closed=True):\n    if isinstance(jaxpr, jax.core.ClosedJaxpr):\n        literals = jaxpr.literals\n        jaxpr = jaxpr.jaxpr\n    else:\n        literals = []\n    wrapped_fn = lu.wrap_init(use_implicit_args(partial(core.eval_jaxpr, jaxpr)))\n    flat_args, in_tree = jax.tree_util.tree_flatten((literals, *vals_with_implicits))\n    flat_fn, out_tree = flatten_fun_nokwargs(wrapped_fn, in_tree)\n    new_jaxpr, _, consts = pe.trace_to_jaxpr_dynamic(",
+        "peekOfCode": "def wrap_jaxpr(jaxpr, vals_with_implicits, return_closed=True):\n    if isinstance(jaxpr, jax.core.ClosedJaxpr):\n        literals = jaxpr.literals\n        jaxpr = jaxpr.jaxpr\n    else:\n        literals = []\n    wrapped_fn = lu.wrap_init(implicit_compact(partial(core.eval_jaxpr, jaxpr)))\n    flat_args, in_tree = jax.tree_util.tree_flatten((literals, *vals_with_implicits))\n    flat_fn, out_tree = flatten_fun_nokwargs(wrapped_fn, in_tree)\n    new_jaxpr, _, consts = pe.trace_to_jaxpr_dynamic(",
         "detail": "src.fjformer.core.implicit_array",
         "documentation": {}
     },
@@ -3697,7 +3738,7 @@
         "kind": 2,
         "importPath": "src.fjformer.core.implicit_array",
         "description": "src.fjformer.core.implicit_array",
-        "peekOfCode": "def materialize_handler(primitive, *vals, params):\n    vals = _materialize_all(vals)\n    subfuns, bind_params = primitive.get_bind_params(params)\n    result = use_implicit_args(primitive.bind)(*subfuns, *vals, **bind_params)\n    return result\ndef _broadcast_tuple(t, trees):\n    if isinstance(trees, jax.tree_util.PyTreeDef):\n        trees = jax.tree_util.tree_unflatten(trees, range(trees.num_leaves))\n    assert len(t) == len(trees)\n    return tuple(",
+        "peekOfCode": "def materialize_handler(primitive, *vals, params):\n    vals = _materialize_all(vals)\n    subfuns, bind_params = primitive.get_bind_params(params)\n    result = implicit_compact(primitive.bind)(*subfuns, *vals, **bind_params)\n    return result\ndef _broadcast_tuple(t, trees):\n    if isinstance(trees, jax.tree_util.PyTreeDef):\n        trees = jax.tree_util.tree_unflatten(trees, range(trees.num_leaves))\n    assert len(t) == len(trees)\n    return tuple(",
         "detail": "src.fjformer.core.implicit_array",
         "documentation": {}
     },
@@ -3841,7 +3882,7 @@
         "kind": 5,
         "importPath": "src.fjformer.core.implicit_array",
         "description": "src.fjformer.core.implicit_array",
-        "peekOfCode": "_default_handlers = {\n    \"cond\": _handle_cond,\n    \"remat2\": _handle_remat2,\n    \"pjit\": _handle_pjit,\n    \"scan\": _handle_scan,\n}\ndef materialize_handler(primitive, *vals, params):\n    vals = _materialize_all(vals)\n    subfuns, bind_params = primitive.get_bind_params(params)\n    result = use_implicit_args(primitive.bind)(*subfuns, *vals, **bind_params)",
+        "peekOfCode": "_default_handlers = {\n    \"cond\": _handle_cond,\n    \"remat2\": _handle_remat2,\n    \"pjit\": _handle_pjit,\n    \"scan\": _handle_scan,\n}\ndef materialize_handler(primitive, *vals, params):\n    vals = _materialize_all(vals)\n    subfuns, bind_params = primitive.get_bind_params(params)\n    result = implicit_compact(primitive.bind)(*subfuns, *vals, **bind_params)",
         "detail": "src.fjformer.core.implicit_array",
         "documentation": {}
     },
@@ -3877,7 +3918,7 @@
         "kind": 2,
         "importPath": "src.fjformer.core.symbols",
         "description": "src.fjformer.core.symbols",
-        "peekOfCode": "def broadcast_to(val, shape):\n    return jnp.broadcast_to(val, shape)\n@use_implicit_args\ndef astype(val, dtype):\n    return val.astype(dtype)\n@primitive_handler(\n    [\n        \"reshape\",\n        \"broadcast_in_dim\",\n        \"reduce_min\",",
+        "peekOfCode": "def broadcast_to(val, shape):\n    return jnp.broadcast_to(val, shape)\n@implicit_compact\ndef astype(val, dtype):\n    return val.astype(dtype)\n@primitive_handler(\n    [\n        \"reshape\",\n        \"broadcast_in_dim\",\n        \"reduce_min\",",
         "detail": "src.fjformer.core.symbols",
         "documentation": {}
     },
@@ -4122,6 +4163,123 @@
         "description": "src.fjformer.core.utilities",
         "peekOfCode": "def set_to_zero_scalar() -> optax.GradientTransformation:\n    \"\"\"\n    Returns a gradient transformation that sets all gradients to 0 to make downstream constant folding cheaper.\n    Returns:\n        A gradient transformation that sets all gradients to scalar zeros.\n    Raises:\n        OptimizerError: If there's an error during the transformation process.\n    \"\"\"\n    try:\n        def init_fn(params: Any) -> optax.EmptyState:",
         "detail": "src.fjformer.core.utilities",
+        "documentation": {}
+    },
+    {
+        "label": "Array8Bit",
+        "kind": 6,
+        "importPath": "src.fjformer.custom_array.quantized_8bit",
+        "description": "src.fjformer.custom_array.quantized_8bit",
+        "peekOfCode": "class Array8Bit(core.ImplicitArray):\n    \"\"\"\n    Custom 8-bit Quantized Array for efficient manipulation of JAX arrays.\n    This class provides methods for quantizing and dequantizing JAX arrays to 8-bit\n    representation, which can significantly reduce memory usage and potentially\n    improve computation speed for certain operations.\n    Attributes:\n        array_quantized (core.ArrayValue): The quantized array data.\n        scale (core.ArrayValue): Scaling factors for dequantization.\n        min_vals (core.ArrayValue): Minimum values used in quantization.",
+        "detail": "src.fjformer.custom_array.quantized_8bit",
+        "documentation": {}
+    },
+    {
+        "label": "handle_dot_general",
+        "kind": 2,
+        "importPath": "src.fjformer.custom_array.quantized_8bit",
+        "description": "src.fjformer.custom_array.quantized_8bit",
+        "peekOfCode": "def handle_dot_general(primitive, lhs: ArrayType, rhs: ArrayType, *args, **kwargs):\n    \"\"\"\n    Custom handler for JAX's dot_general operation.\n    Materializes Array8Bit inputs before performing the operation.\n    Args:\n        primitive: The JAX primitive being handled.\n        lhs (ArrayType): Left-hand side array.\n        rhs (ArrayType): Right-hand side array.\n        *args: Variable length argument list.\n        **kwargs: Arbitrary keyword arguments.",
+        "detail": "src.fjformer.custom_array.quantized_8bit",
+        "documentation": {}
+    },
+    {
+        "label": "handle_add",
+        "kind": 2,
+        "importPath": "src.fjformer.custom_array.quantized_8bit",
+        "description": "src.fjformer.custom_array.quantized_8bit",
+        "peekOfCode": "def handle_add(primitive, x: ArrayType, y: ArrayType):\n    \"\"\"\n    Custom handler for JAX's add operation.\n    Materializes Array8Bit inputs before performing the operation.\n    Args:\n        primitive: The JAX primitive being handled.\n        x (ArrayType): First array to add.\n        y (ArrayType): Second array to add.\n    Returns:\n        The result of lax.add operation.",
+        "detail": "src.fjformer.custom_array.quantized_8bit",
+        "documentation": {}
+    },
+    {
+        "label": "handle_reduce",
+        "kind": 2,
+        "importPath": "src.fjformer.custom_array.quantized_8bit",
+        "description": "src.fjformer.custom_array.quantized_8bit",
+        "peekOfCode": "def handle_reduce(\n    primitive, operand: ArrayType, init_value: ArrayType, *args, **kwargs\n):\n    \"\"\"\n    Custom handler for JAX's reduce operation.\n    Materializes Array8Bit inputs before performing the operation.\n    Args:\n        primitive: The JAX primitive being handled.\n        operand (ArrayType): The array to be reduced.\n        init_value (ArrayType): The initial value for the reduction.",
+        "detail": "src.fjformer.custom_array.quantized_8bit",
+        "documentation": {}
+    },
+    {
+        "label": "handle_mul",
+        "kind": 2,
+        "importPath": "src.fjformer.custom_array.quantized_8bit",
+        "description": "src.fjformer.custom_array.quantized_8bit",
+        "peekOfCode": "def handle_mul(primitive, x: ArrayType, y: ArrayType):\n    \"\"\"\n    Custom handler for JAX's mul operation.\n    Materializes Array8Bit inputs before performing the operation.\n    Args:\n        primitive: The JAX primitive being handled.\n        x (ArrayType): First array to multiply.\n        y (ArrayType): Second array to multiply.\n    Returns:\n        The result of lax.mul operation.",
+        "detail": "src.fjformer.custom_array.quantized_8bit",
+        "documentation": {}
+    },
+    {
+        "label": "handle_transpose",
+        "kind": 2,
+        "importPath": "src.fjformer.custom_array.quantized_8bit",
+        "description": "src.fjformer.custom_array.quantized_8bit",
+        "peekOfCode": "def handle_transpose(primitive, operand: ArrayType, *args, **kwargs):\n    \"\"\"\n    Custom handler for JAX's transpose operation.\n    Materializes Array8Bit input before performing the operation.\n    Re-quantizes the result if the input was Array8Bit.\n    Args:\n        primitive: The JAX primitive being handled.\n        operand (ArrayType): The array to be transposed.\n        *args: Variable length argument list.\n        **kwargs: Arbitrary keyword arguments.",
+        "detail": "src.fjformer.custom_array.quantized_8bit",
+        "documentation": {}
+    },
+    {
+        "label": "handle_conv",
+        "kind": 2,
+        "importPath": "src.fjformer.custom_array.quantized_8bit",
+        "description": "src.fjformer.custom_array.quantized_8bit",
+        "peekOfCode": "def handle_conv(primitive, lhs: ArrayType, rhs: ArrayType, *args, **kwargs):\n    \"\"\"\n    Custom handler for JAX's conv_general_dilated operation.\n    Materializes Array8Bit inputs before performing the operation.\n    Args:\n        primitive: The JAX primitive being handled.\n        lhs (ArrayType): Left-hand side array (input).\n        rhs (ArrayType): Right-hand side array (kernel).\n        *args: Variable length argument list.\n        **kwargs: Arbitrary keyword arguments.",
+        "detail": "src.fjformer.custom_array.quantized_8bit",
+        "documentation": {}
+    },
+    {
+        "label": "handle_max",
+        "kind": 2,
+        "importPath": "src.fjformer.custom_array.quantized_8bit",
+        "description": "src.fjformer.custom_array.quantized_8bit",
+        "peekOfCode": "def handle_max(primitive, x: ArrayType, y: ArrayType, *args, **kwargs):\n    \"\"\"\n    Custom handler for JAX's max operation.\n    Materializes Array8Bit inputs before performing the operation.\n    Args:\n        primitive: The JAX primitive being handled.\n        x (ArrayType): First array for max comparison.\n        y (ArrayType): Second array for max comparison.\n        *args: Variable length argument list.\n        **kwargs: Arbitrary keyword arguments.",
+        "detail": "src.fjformer.custom_array.quantized_8bit",
+        "documentation": {}
+    },
+    {
+        "label": "handle_exp",
+        "kind": 2,
+        "importPath": "src.fjformer.custom_array.quantized_8bit",
+        "description": "src.fjformer.custom_array.quantized_8bit",
+        "peekOfCode": "def handle_exp(primitive, x: ArrayType, *args, **kwargs):\n    \"\"\"\n    Custom handler for JAX's exp operation.\n    Materializes Array8Bit input before performing the operation.\n    Args:\n        primitive: The JAX primitive being handled.\n        x (ArrayType): The array to apply exponential to.\n        *args: Variable length argument list.\n        **kwargs: Arbitrary keyword arguments.\n    Returns:",
+        "detail": "src.fjformer.custom_array.quantized_8bit",
+        "documentation": {}
+    },
+    {
+        "label": "handle_log",
+        "kind": 2,
+        "importPath": "src.fjformer.custom_array.quantized_8bit",
+        "description": "src.fjformer.custom_array.quantized_8bit",
+        "peekOfCode": "def handle_log(primitive, x: ArrayType, *args, **kwargs):\n    \"\"\"\n    Custom handler for JAX's log operation.\n    Materializes Array8Bit input before performing the operation.\n    Args:\n        primitive: The JAX primitive being handled.\n        x (ArrayType): The array to apply logarithm to.\n        *args: Variable length argument list.\n        **kwargs: Arbitrary keyword arguments.\n    Returns:",
+        "detail": "src.fjformer.custom_array.quantized_8bit",
+        "documentation": {}
+    },
+    {
+        "label": "handle_reshape",
+        "kind": 2,
+        "importPath": "src.fjformer.custom_array.quantized_8bit",
+        "description": "src.fjformer.custom_array.quantized_8bit",
+        "peekOfCode": "def handle_reshape(primitive, operand: ArrayType, *args, **kwargs):\n    \"\"\"\n    Custom handler for JAX's reshape operation.\n    Materializes Array8Bit input before performing the operation.\n    Re-quantizes the result if the input was Array8Bit.\n    Args:\n        primitive: The JAX primitive being handled.\n        operand (ArrayType): The array to be reshaped.\n        *args: Variable length argument list.\n        **kwargs: Arbitrary keyword arguments.",
+        "detail": "src.fjformer.custom_array.quantized_8bit",
+        "documentation": {}
+    },
+    {
+        "label": "handle_concatenate",
+        "kind": 2,
+        "importPath": "src.fjformer.custom_array.quantized_8bit",
+        "description": "src.fjformer.custom_array.quantized_8bit",
+        "peekOfCode": "def handle_concatenate(primitive, operands: Sequence[ArrayType], *args, **kwargs):\n    \"\"\"\n    Custom handler for JAX's concatenate operation.\n    Materializes Array8Bit inputs before performing the operation.\n    Args:\n        primitive: The JAX primitive being handled.\n        operands (Sequence[ArrayType]): Sequence of arrays to concatenate.\n        *args: Variable length argument list.\n        **kwargs: Arbitrary keyword arguments.\n    Returns:",
+        "detail": "src.fjformer.custom_array.quantized_8bit",
+        "documentation": {}
+    },
+    {
+        "label": "ArrayType",
+        "kind": 5,
+        "importPath": "src.fjformer.custom_array.quantized_8bit",
+        "description": "src.fjformer.custom_array.quantized_8bit",
+        "peekOfCode": "ArrayType = Union[Array, Array8Bit]\n@core.primitive_handler(\"dot_general\")\ndef handle_dot_general(primitive, lhs: ArrayType, rhs: ArrayType, *args, **kwargs):\n    \"\"\"\n    Custom handler for JAX's dot_general operation.\n    Materializes Array8Bit inputs before performing the operation.\n    Args:\n        primitive: The JAX primitive being handled.\n        lhs (ArrayType): Left-hand side array.\n        rhs (ArrayType): Right-hand side array.",
+        "detail": "src.fjformer.custom_array.quantized_8bit",
         "documentation": {}
     },
     {
@@ -4912,7 +5070,7 @@
         "kind": 6,
         "importPath": "src.fjformer.lora.lora_core",
         "description": "src.fjformer.lora.lora_core",
-        "peekOfCode": "class LoraError(Exception):\n    \"\"\"Base exception for LoRA-related errors.\"\"\"\n    pass\nclass UnsupportedOperationError(LoraError):\n    \"\"\"Raised when an unsupported operation is encountered.\"\"\"\n    pass\ndef lora(f: Any) -> Any:\n    \"\"\"Decorator for LoRA-compatible functions.\"\"\"\n    return cr.use_implicit_args(f)\n@dataclass",
+        "peekOfCode": "class LoraError(Exception):\n    \"\"\"Base exception for LoRA-related errors.\"\"\"\n    pass\nclass UnsupportedOperationError(LoraError):\n    \"\"\"Raised when an unsupported operation is encountered.\"\"\"\n    pass\ndef lora(f: Any) -> Any:\n    \"\"\"Decorator for LoRA-compatible functions.\"\"\"\n    return cr.implicit_compact(f)\n@dataclass",
         "detail": "src.fjformer.lora.lora_core",
         "documentation": {}
     },
@@ -4921,7 +5079,7 @@
         "kind": 6,
         "importPath": "src.fjformer.lora.lora_core",
         "description": "src.fjformer.lora.lora_core",
-        "peekOfCode": "class UnsupportedOperationError(LoraError):\n    \"\"\"Raised when an unsupported operation is encountered.\"\"\"\n    pass\ndef lora(f: Any) -> Any:\n    \"\"\"Decorator for LoRA-compatible functions.\"\"\"\n    return cr.use_implicit_args(f)\n@dataclass\nclass LoraWeight(cr.ImplicitArray):\n    \"\"\"Represents a LoRA (Low-Rank Adaptation) weight.\"\"\"\n    w: cr.ArrayValue  # M x N (2D)",
+        "peekOfCode": "class UnsupportedOperationError(LoraError):\n    \"\"\"Raised when an unsupported operation is encountered.\"\"\"\n    pass\ndef lora(f: Any) -> Any:\n    \"\"\"Decorator for LoRA-compatible functions.\"\"\"\n    return cr.implicit_compact(f)\n@dataclass\nclass LoraWeight(cr.ImplicitArray):\n    \"\"\"Represents a LoRA (Low-Rank Adaptation) weight.\"\"\"\n    w: cr.ArrayValue  # M x N (2D)",
         "detail": "src.fjformer.lora.lora_core",
         "documentation": {}
     },
@@ -4939,7 +5097,7 @@
         "kind": 2,
         "importPath": "src.fjformer.lora.lora_core",
         "description": "src.fjformer.lora.lora_core",
-        "peekOfCode": "def lora(f: Any) -> Any:\n    \"\"\"Decorator for LoRA-compatible functions.\"\"\"\n    return cr.use_implicit_args(f)\n@dataclass\nclass LoraWeight(cr.ImplicitArray):\n    \"\"\"Represents a LoRA (Low-Rank Adaptation) weight.\"\"\"\n    w: cr.ArrayValue  # M x N (2D)\n    a: cr.ArrayValue  # k x N (2D)\n    b: cr.ArrayValue  # M x k (2D)\n    alpha: float = cr.aux_field(default=1.00)",
+        "peekOfCode": "def lora(f: Any) -> Any:\n    \"\"\"Decorator for LoRA-compatible functions.\"\"\"\n    return cr.implicit_compact(f)\n@dataclass\nclass LoraWeight(cr.ImplicitArray):\n    \"\"\"Represents a LoRA (Low-Rank Adaptation) weight.\"\"\"\n    w: cr.ArrayValue  # M x N (2D)\n    a: cr.ArrayValue  # k x N (2D)\n    b: cr.ArrayValue  # M x k (2D)\n    alpha: float = cr.aux_field(default=1.00)",
         "detail": "src.fjformer.lora.lora_core",
         "documentation": {}
     },
@@ -6789,47 +6947,11 @@
         "documentation": {}
     },
     {
-        "label": "QuantizedArray",
-        "kind": 6,
-        "importPath": "env",
-        "description": "env",
-        "peekOfCode": "class QuantizedArray(ImplicitArray):\n    array_quant: ArrayValue\n    scale: ArrayValue\n    min_vals: ArrayValue\n    def materialize(self):\n        return self.dequantize(\n            array_quant=self.array_quant,\n            scale=self.scale,\n            min_vals=self.min_vals,\n            float_dtype=self.dtype,",
-        "detail": "env",
-        "documentation": {}
-    },
-    {
-        "label": "quantize",
-        "kind": 2,
-        "importPath": "env",
-        "description": "env",
-        "peekOfCode": "def quantize(array: Array, axis: int = -1) -> Tuple[Array, Array, Array]:\n    min_vals = jnp.min(array, axis=axis, keepdims=True)\n    max_vals = jnp.max(array, axis=axis, keepdims=True)\n    # Compute the scaling factors\n    scale = (max_vals - min_vals) / (2**7 - 1)\n    # Quantize the data\n    quantized_data = jnp.round((array - min_vals) / scale)\n    # Clip the quantized values to ensure they lie within the representable range\n    quantized_data = jnp.clip(quantized_data, 0, 2**7 - 1).astype(jnp.uint8)\n    return quantized_data, scale, min_vals",
-        "detail": "env",
-        "documentation": {}
-    },
-    {
-        "label": "dequantize",
-        "kind": 2,
-        "importPath": "env",
-        "description": "env",
-        "peekOfCode": "def dequantize(\n    array_quant: Array,\n    scale: Array,\n    min_vals: Array,\n    float_dtype: jnp.dtype = jnp.float16,\n):\n    return (array_quant * scale + min_vals).astype(float_dtype)\n@dataclass\nclass QuantizedArray(ImplicitArray):\n    array_quant: ArrayValue",
-        "detail": "env",
-        "documentation": {}
-    },
-    {
-        "label": "get_binop_result_shape_dtype",
-        "kind": 2,
-        "importPath": "env",
-        "description": "env",
-        "peekOfCode": "def get_binop_result_shape_dtype(a, b):\n    out_shape = jnp.broadcast_shapes(jnp.shape(a), jnp.shape(b))\n    out_dtype = jnp.result_type(a.dtype, b.dtype)\n    return out_shape, out_dtype\n@jax.jit\n@use_implicit_args\ndef f(x, y):\n    return (x + y)[0, 0]\ndef main():\n    orginal_array = jax.random.normal(jax.random.PRNGKey(0), (512, 64))",
-        "detail": "env",
-        "documentation": {}
-    },
-    {
         "label": "f",
         "kind": 2,
         "importPath": "env",
         "description": "env",
-        "peekOfCode": "def f(x, y):\n    return (x + y)[0, 0]\ndef main():\n    orginal_array = jax.random.normal(jax.random.PRNGKey(0), (512, 64))\n    quantized_array = QuantizedArray.quantize(orginal_array)\n    print(f(quantized_array, jnp.ones(64)))\n    print((orginal_array + jnp.ones(64))[0, 0])\nif __name__ == \"__main__\":\n    main()",
+        "peekOfCode": "def f(x, xp):\n    r = x @ xp\n    r *= 0.689435468\n    r = r @ xp.T\n    return r\ndef main():\n    x = jax.random.normal(jax.random.key(0), (512, 64), dtype=jnp.float32)\n    xp = jax.random.normal(jax.random.key(1), (64, 256), dtype=jnp.float32)\n    quantized_x = Array8Bit.quantize(x)  # Now it's quantized Array\n    quantized_xp = Array8Bit.quantize(xp)  # Now it's quantized Array",
         "detail": "env",
         "documentation": {}
     },
@@ -6838,7 +6960,7 @@
         "kind": 2,
         "importPath": "env",
         "description": "env",
-        "peekOfCode": "def main():\n    orginal_array = jax.random.normal(jax.random.PRNGKey(0), (512, 64))\n    quantized_array = QuantizedArray.quantize(orginal_array)\n    print(f(quantized_array, jnp.ones(64)))\n    print((orginal_array + jnp.ones(64))[0, 0])\nif __name__ == \"__main__\":\n    main()",
+        "peekOfCode": "def main():\n    x = jax.random.normal(jax.random.key(0), (512, 64), dtype=jnp.float32)\n    xp = jax.random.normal(jax.random.key(1), (64, 256), dtype=jnp.float32)\n    quantized_x = Array8Bit.quantize(x)  # Now it's quantized Array\n    quantized_xp = Array8Bit.quantize(xp)  # Now it's quantized Array\n    result = f(x, xp)\n    q_result = f(quantized_x, quantized_xp)\n    print(result[0, 0])\n    print(q_result[0, 0])\nif __name__ == \"__main__\":",
         "detail": "env",
         "documentation": {}
     },
