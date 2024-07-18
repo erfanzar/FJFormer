@@ -645,7 +645,7 @@ def handle_reshape(
 
     if original_quantized:
         return Array4Bit.quantize(
-            array=array,
+            array=reshaped,
             block_size=operand.block_size,
             contraction_axis=operand.contraction_axis,
             dtype=operand.dtype,
@@ -756,3 +756,43 @@ def _out_shape_dtype(
         *(jax.core.get_aval(x) for x in args),
     )
     return jax.tree_util.tree_map(lambda x: (x.shape, x.dtype), out_aval)
+
+
+@core.primitive_handler("broadcast_in_dim")
+def handle_broadcast_in_dim(
+    primitive,
+    operand: Array4Bit,
+    *args,
+    **kwargs,
+) -> Array4Bit:
+    """Handle broadcast_in_dim for Array4Bit."""
+    original_quantized = isinstance(operand, Array4Bit)
+    array = operand
+    if original_quantized:
+        array = operand.materialize()
+    result = jax.lax.broadcast_in_dim(array, *args, **kwargs)
+    if original_quantized:
+        result = Array4Bit.quantize(
+            array=result,
+            block_size=operand.block_size,
+            contraction_axis=operand.contraction_axis,
+            dtype=operand.dtype,
+            factors=operand.factors,
+        )
+    return result
+
+
+@core.primitive_handler("gather")
+def handle_gather(
+    primitive,
+    operand: Array4Bit,
+    *args,
+    **kwargs,
+) -> Array4Bit:
+    """Handle gather for Array4Bit."""
+    original_quantized = isinstance(operand, Array4Bit)
+    array = operand
+    if original_quantized:
+        array = operand.materialize()
+    result = jax.lax.gather(array, *args, **kwargs)
+    return result

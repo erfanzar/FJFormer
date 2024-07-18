@@ -498,12 +498,46 @@ def handle_concatenate(
 @core.primitive_handler("convert_element_type")
 def convert_element_type(
     primitive,
-    arg: Array8Bit,
+    arg: ArrayType,
     **params,
-) -> Array8Bit:
+) -> ArrayType:
     """Handle element type conversion for Array8Bit."""
     result = jax.tree_util.tree_map(
         functools.partial(core.default_handler, primitive, **params), arg
     )
     result.dtype = params["new_dtype"]
+    return result
+
+
+@core.primitive_handler("broadcast_in_dim")
+def handle_broadcast_in_dim(
+    primitive,
+    operand: ArrayType,
+    *args,
+    **kwargs,
+) -> ArrayType:
+    """Handle broadcast_in_dim for Array8Bit."""
+    original_quantized = isinstance(operand, Array8Bit)
+    array = operand
+    if original_quantized:
+        array = operand.materialize()
+    result = jax.lax.broadcast_in_dim(array, *args, **kwargs)
+    if original_quantized:
+        result = Array8Bit.quantize(result, dtype=operand.dtype)
+    return result
+
+
+@core.primitive_handler("gather")
+def handle_gather(
+    primitive,
+    operand: ArrayType,
+    *args,
+    **kwargs,
+) -> ArrayType:
+    """Handle gather for Array8Bit."""
+    original_quantized = isinstance(operand, Array8Bit)
+    array = operand
+    if original_quantized:
+        array = operand.materialize()
+    result = jax.lax.gather(array, *args, **kwargs)
     return result
