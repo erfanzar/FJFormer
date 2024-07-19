@@ -67,7 +67,6 @@ def quantize_params(
             array=array,
             block_size=block_size,
             contraction_axis=contraction_axis,
-            factors=factors,
         )
 
     return flax.traverse_util.unflatten_dict(
