@@ -28,13 +28,16 @@ class Model(nn.Module):
 
     def setup(self) -> None:
         """Initializes the model layers."""
+        self.embed_time = nn.Embed(512, 512)
         self.fc = nn.Dense(512, use_bias=True, dtype=jnp.float32)
         self.fc1 = nn.Dense(64, use_bias=True, dtype=jnp.float32)
         self.out = nn.Dense(1, use_bias=True, dtype=jnp.float32)
 
     def __call__(self, x):
         """Performs a forward pass through the model."""
-        x = self.fc(x)
+        x_time = jnp.arange(x.shape[1]).reshape(x.shape[0], -1)
+        xt = self.embed_time(x_time)
+        x = self.fc(x) + xt
         x = self.fc1(x)
         return self.out(x)
 
@@ -57,6 +60,8 @@ def quantize_params(
     def q(path: str, array: Any) -> Array4Bit:
         """Quantizes a single parameter array."""
         path = ".".join(p for p in path[0].key)
+        if path.endswith(".embedding"):
+            return array
         if array.ndim > 2:
             return array
         dim = array.shape[contraction_axis]
@@ -86,8 +91,8 @@ def main():
     - Prints the output of both models for comparison.
     """
     model = Model()
-    init_x = jax.random.normal(rng.rng, (1, 64))
-    x = jax.random.normal(rng.rng, (1, 64))
+    init_x = jax.random.normal(rng.rng, (1, 1, 64))
+    x = jax.random.normal(rng.rng, (1, 1, 64))
     params = model.init(rng.rng, init_x)
     model_apply: Callable = jax.jit(implicit_compact(model.apply))
     q_params = quantize_params(params)

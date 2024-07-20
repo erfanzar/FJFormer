@@ -22,4 +22,4 @@ from fjformer.utils import GenerateRNG as GenerateRNG
 from fjformer.utils import JaxRNG as JaxRNG
 from fjformer.utils import get_logger as get_logger
 
-__version__ = "0.0.72"
+__version__ = "0.0.73"
