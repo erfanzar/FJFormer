@@ -37,10 +37,12 @@ def quantize_block(A, absmax):
 
     dist_left = jnp.abs(normed_values - CODE[indices])
     dist_right = jnp.abs(
-        normed_values - CODE[jnp.clip(indices + 1, 0, CODE.shape[0] - 1)]
+        normed_values - CODE[jnp.clip(indices + 1, 0, CODE.shape[0] - 1)],
     )
     indices = jnp.where(
-        dist_right < dist_left, jnp.clip(indices + 1, 0, CODE.shape[0] - 1), indices
+        dist_right < dist_left,
+        jnp.clip(indices + 1, 0, CODE.shape[0] - 1),
+        indices,
     )
 
     return indices.astype(jnp.uint8)
@@ -102,11 +104,11 @@ def dequantize_jax(A, absmax):
 
 
 @dataclass
-class Array8Lt(core.ImplicitArray):
+class Array4Lt(core.ImplicitArray):
     """
-    Custom 8-bit Quantized Array for efficient manipulation of JAX arrays.
+    Custom 4-bit Quantized Array for efficient manipulation of JAX arrays.
 
-    This class provides methods for quantizing and dequantizing JAX arrays to 8-bit
+    This class provides methods for quantizing and dequantizing JAX arrays to 4-bit
     representation, which can significantly reduce memory usage and potentially
     improve computation speed for certain operations.
 
@@ -117,8 +119,8 @@ class Array8Lt(core.ImplicitArray):
         >>> x = jax.random.normal(jax.random.key(0), (512, 64), dtype=jnp.float32)
         >>> xp = jax.random.normal(jax.random.key(1), (64, 256), dtype=jnp.float32)
 
-        >>> quantized_x = Array8Lt.quantize(x, 64)
-        >>> quantized_xp = Array8Lt.quantize(xp, 64)
+        >>> quantized_x = Array4Lt.quantize(x, )
+        >>> quantized_xp = Array4Lt.quantize(xp, )
 
         >>> @jax.jit
         >>> @core.implicit_compact
@@ -153,10 +155,8 @@ class Array8Lt(core.ImplicitArray):
         cls,
         array: Array,
         dtype: Optional[jnp.dtype] = None,
-    ) -> Array8Lt:
-        QA, absmax = quantize_jax(
-            array,
-        )
+    ) -> Array4Lt:
+        QA, absmax = quantize_jax(array)
         return cls(
             A=QA,
             absmax=absmax,
@@ -176,7 +176,7 @@ class Array8Lt(core.ImplicitArray):
         ).astype(float_dtype)
 
     def __repr__(self) -> str:
-        return f"Array8Lt(shape={self.shape}, dtype={self.dtype})"
+        return f"Array4Lt(shape={self.shape}, dtype={self.dtype})"
 
     @property
     def nbytes(self) -> int:
@@ -199,7 +199,7 @@ class Array8Lt(core.ImplicitArray):
         return (1 - self.nbytes / original_size) * 100
 
 
-ArrayType = Union[Array, Array8Lt]
+ArrayType = Union[Array, Array4Lt]
 
 
 @core.primitive_handler("dot_general")
@@ -213,7 +213,7 @@ def handle_dot_general(
     """
     Custom handler for JAX's dot_general operation.
 
-    Materializes Array8Lt inputs before performing the operation.
+    Materializes Array4Lt inputs before performing the operation.
 
     Args:
         primitive: The JAX primitive being handled.
@@ -225,9 +225,9 @@ def handle_dot_general(
     Returns:
         The result of lax.dot_general operation.
     """
-    if isinstance(lhs, Array8Lt):
+    if isinstance(lhs, Array4Lt):
         lhs = lhs.materialize()
-    if isinstance(rhs, Array8Lt):
+    if isinstance(rhs, Array4Lt):
         rhs = rhs.materialize()
     return lax.dot_general(lhs=lhs, rhs=rhs, *args, **kwargs)
 
@@ -241,7 +241,7 @@ def handle_add(
     """
     Custom handler for JAX's add operation.
 
-    Materializes Array8Lt inputs before performing the operation.
+    Materializes Array4Lt inputs before performing the operation.
 
     Args:
         primitive: The JAX primitive being handled.
@@ -251,9 +251,9 @@ def handle_add(
     Returns:
         The result of lax.add operation.
     """
-    if isinstance(x, Array8Lt):
+    if isinstance(x, Array4Lt):
         x = x.materialize()
-    if isinstance(y, Array8Lt):
+    if isinstance(y, Array4Lt):
         y = y.materialize()
     return lax.add(x, y)
 
@@ -269,7 +269,7 @@ def handle_reduce(
     """
     Custom handler for JAX's reduce operation.
 
-    Materializes Array8Lt inputs before performing the operation.
+    Materializes Array4Lt inputs before performing the operation.
 
     Args:
         primitive: The JAX primitive being handled.
@@ -281,9 +281,9 @@ def handle_reduce(
     Returns:
         The result of lax.reduce operation.
     """
-    if isinstance(operand, Array8Lt):
+    if isinstance(operand, Array4Lt):
         operand = operand.materialize()
-    if isinstance(init_value, Array8Lt):
+    if isinstance(init_value, Array4Lt):
         init_value = init_value.materialize()
     return lax.reduce(operand, init_value, *args, **kwargs)
 
@@ -297,7 +297,7 @@ def handle_mul(
     """
     Custom handler for JAX's mul operation.
 
-    Materializes Array8Lt inputs before performing the operation.
+    Materializes Array4Lt inputs before performing the operation.
 
     Args:
         primitive: The JAX primitive being handled.
@@ -307,9 +307,9 @@ def handle_mul(
     Returns:
         The result of lax.mul operation.
     """
-    if isinstance(x, Array8Lt):
+    if isinstance(x, Array4Lt):
         x = x.materialize()
-    if isinstance(y, Array8Lt):
+    if isinstance(y, Array4Lt):
         y = y.materialize()
     return lax.mul(x, y)
 
@@ -324,8 +324,8 @@ def handle_transpose(
     """
     Custom handler for JAX's transpose operation.
 
-    Materializes Array8Lt input before performing the operation.
-    Re-quantizes the result if the input was Array8Lt.
+    Materializes Array4Lt input before performing the operation.
+    Re-quantizes the result if the input was Array4Lt.
 
     Args:
         primitive: The JAX primitive being handled.
@@ -337,13 +337,13 @@ def handle_transpose(
         The result of lax.transpose operation, potentially re-quantized.
     """
     original_quantized = False
-    if isinstance(operand, Array8Lt):
+    if isinstance(operand, Array4Lt):
         # # blocksize = operand.blocksize
         operand = operand.materialize()
         original_quantized = True
     operand = lax.transpose(operand, *args, **kwargs)
     if original_quantized:
-        operand = Array8Lt.quantize(
+        operand = Array4Lt.quantize(
             operand,
             # # blocksize=blocksize,
             dtype=operand.dtype,
@@ -362,7 +362,7 @@ def handle_conv(
     """
     Custom handler for JAX's conv_general_dilated operation.
 
-    Materializes Array8Lt inputs before performing the operation.
+    Materializes Array4Lt inputs before performing the operation.
 
     Args:
         primitive: The JAX primitive being handled.
@@ -374,9 +374,9 @@ def handle_conv(
     Returns:
         The result of lax.conv operation.
     """
-    if isinstance(lhs, Array8Lt):
+    if isinstance(lhs, Array4Lt):
         lhs = lhs.materialize()
-    if isinstance(rhs, Array8Lt):
+    if isinstance(rhs, Array4Lt):
         rhs = rhs.materialize()
     return lax.conv_general_dilated(lhs, rhs, *args, **kwargs)
 
@@ -392,7 +392,7 @@ def handle_max(
     """
     Custom handler for JAX's max operation.
 
-    Materializes Array8Lt inputs before performing the operation.
+    Materializes Array4Lt inputs before performing the operation.
 
     Args:
         primitive: The JAX primitive being handled.
@@ -404,9 +404,9 @@ def handle_max(
     Returns:
         The result of lax.max operation.
     """
-    if isinstance(x, Array8Lt):
+    if isinstance(x, Array4Lt):
         x = x.materialize()
-    if isinstance(y, Array8Lt):
+    if isinstance(y, Array4Lt):
         y = y.materialize()
     return lax.max(x, y, *args, **kwargs)
 
@@ -421,7 +421,7 @@ def handle_exp(
     """
     Custom handler for JAX's exp operation.
 
-    Materializes Array8Lt input before performing the operation.
+    Materializes Array4Lt input before performing the operation.
 
     Args:
         primitive: The JAX primitive being handled.
@@ -432,7 +432,7 @@ def handle_exp(
     Returns:
         The result of lax.exp operation.
     """
-    if isinstance(x, Array8Lt):
+    if isinstance(x, Array4Lt):
         x = x.materialize()
     return lax.exp(x, *args, **kwargs)
 
@@ -447,7 +447,7 @@ def handle_log(
     """
     Custom handler for JAX's log operation.
 
-    Materializes Array8Lt input before performing the operation.
+    Materializes Array4Lt input before performing the operation.
 
     Args:
         primitive: The JAX primitive being handled.
@@ -458,7 +458,7 @@ def handle_log(
     Returns:
         The result of lax.log operation.
     """
-    if isinstance(x, Array8Lt):
+    if isinstance(x, Array4Lt):
         x = x.materialize()
     return lax.log(x, *args, **kwargs)
 
@@ -472,7 +472,7 @@ def handle_reshape(
     """
     Custom handler for JAX's reshape operation.
 
-    This function handles reshaping for both regular arrays and Array8Lt quantized arrays.
+    This function handles reshaping for both regular arrays and Array4Lt quantized arrays.
     It materializes Array4Bit input before reshaping and re-quantizes the result if the input was Array4Bit.
 
     Args:
@@ -483,12 +483,12 @@ def handle_reshape(
         **kwargs: Additional keyword arguments for the reshape operation.
 
     Returns:
-        ArrayType: The reshaped array, potentially re-quantized if the input was Array8Lt.
+        ArrayType: The reshaped array, potentially re-quantized if the input was Array4Lt.
 
     Raises:
         ValueError: If the new shape is not compatible with the original array's size.
     """
-    original_quantized = isinstance(operand, Array8Lt)
+    original_quantized = isinstance(operand, Array4Lt)
 
     if original_quantized:
         # blocksize = operand.blocksize
@@ -502,7 +502,7 @@ def handle_reshape(
             f"Ensure the new shape {kwargs} is compatible with the original array size."
         ) from e
     if original_quantized:
-        reshaped = Array8Lt.quantize(
+        reshaped = Array4Lt.quantize(
             operand,
             # blocksize=blocksize,
             dtype=operand.dtype,
@@ -520,7 +520,7 @@ def handle_concatenate(
     """
     Custom handler for JAX's concatenate operation.
 
-    Materializes Array8Lt inputs before performing the operation.
+    Materializes Array4Lt inputs before performing the operation.
 
     Args:
         primitive: The JAX primitive being handled.
@@ -532,7 +532,7 @@ def handle_concatenate(
         The result of lax.concatenate operation.
     """
     materialized_operands = [
-        op.materialize() if isinstance(op, Array8Lt) else op for op in operands
+        op.materialize() if isinstance(op, Array4Lt) else op for op in operands
     ]
     return lax.concatenate(materialized_operands, *args, **kwargs)
 
@@ -543,7 +543,7 @@ def convert_element_type(
     arg: ArrayType,
     **params,
 ) -> ArrayType:
-    """Handle element type conversion for Array8Lt."""
+    """Handle element type conversion for Array4Lt."""
     result = jax.tree_util.tree_map(
         functools.partial(core.default_handler, primitive, **params), arg
     )
@@ -558,15 +558,15 @@ def handle_broadcast_in_dim(
     *args,
     **kwargs,
 ) -> ArrayType:
-    """Handle broadcast_in_dim for Array8Lt."""
-    original_quantized = isinstance(operand, Array8Lt)
+    """Handle broadcast_in_dim for Array4Lt."""
+    original_quantized = isinstance(operand, Array4Lt)
     array = operand
     if original_quantized:
         # blocksize = operand.blocksize
         array = operand.materialize()
     result = jax.lax.broadcast_in_dim(array, *args, **kwargs)
     if original_quantized:
-        result = Array8Lt.quantize(
+        result = Array4Lt.quantize(
             result,
             # blocksize=blocksize,
             dtype=operand.dtype,
@@ -581,8 +581,8 @@ def handle_gather(
     *args,
     **kwargs,
 ) -> ArrayType:
-    """Handle gather for Array8Lt."""
-    original_quantized = isinstance(operand, Array8Lt)
+    """Handle gather for Array4Lt."""
+    original_quantized = isinstance(operand, Array4Lt)
     array = operand
     if original_quantized:
         array = operand.materialize()
