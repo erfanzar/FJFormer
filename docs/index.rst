@@ -34,7 +34,7 @@ Our innovative ImplicitArray class provides a powerful abstraction for represent
 
 - Implement 4-bit quantization (NF4) effortlessly using our Array4Bit class, built on top of ImplicitArray. Reduce model size and increase inference speed without significant loss in accuracy.
 
-- Similar to Array4Bit, our Array8Bit implementation offers 8-bit quantization via ImplicitArray, providing a balance between model compression and precision.
+- Similar to Array4Bit, our Array8Lt implementation offers 8-bit quantization via ImplicitArray, providing a balance between model compression and precision.
 
 7. LoRA (Low-Rank Adaptation)
 Efficiently fine-tune large language models with our LoRA implementation, leveraging ImplicitArray for optimal performance and memory usage.

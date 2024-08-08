@@ -14,7 +14,7 @@ sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), "../src
 import fjformer.core as core  # noqa
 from fjformer import GenerateRNG  # noqa
 from jax import numpy as jnp  # noqa
-from fjformer.custom_array.array8bit import Array8Bit  # noqa
+from fjformer.custom_array.array8lt import Array8Lt  # noqa
 from flax import linen as nn  # noqa
 from fjformer.core.implicit_array import implicit_compact  # noqa
 
@@ -39,7 +39,7 @@ class Model(nn.Module):
 
 
 def quantize_params(params: dict) -> dict:
-    """Quantizes model parameters using Array8Bit.
+    """Quantizes model parameters using Array8Lt.
 
     Args:
         params: A dictionary of model parameters.
@@ -48,10 +48,14 @@ def quantize_params(params: dict) -> dict:
         A dictionary of quantized model parameters.
     """
 
-    def q(path: str, array: Any) -> Array8Bit:
+    def q(path: str, array: Any) -> Array8Lt:
         """Quantizes a single parameter array."""
         path = ".".join(p for p in path[0].key)
-        return Array8Bit.quantize(array, dtype=array.dtype)
+        return Array8Lt.quantize(
+            array,
+            # blocksize=64,
+            dtype=array.dtype,
+        )
 
     return flax.traverse_util.unflatten_dict(
         jax.tree_util.tree_map_with_path(

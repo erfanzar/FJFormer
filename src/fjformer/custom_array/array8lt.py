@@ -1,4 +1,6 @@
 # TODO : Implement Custom Backward Prp
+from __future__ import annotations
+
 import functools
 from dataclasses import dataclass
 from typing import Any, Optional, Sequence, Union
@@ -10,22 +12,103 @@ from jax.core import Primitive
 
 import fjformer.core as core
 
+# Define a global codebook for quantization
+CODE = jnp.linspace(-1.0, 1.0, 256)
+BLOCKSIZE = 4096
+
+
+@jax.jit
+def quantize_block(A, absmax):
+    """
+    Quantize the input array with the given absolute maximum values.
+
+    Args:
+        A (jnp.ndarray): The input array to be quantized.
+        absmax (jnp.ndarray): The absolute maximum values for each element.
+
+    Returns:
+        jnp.ndarray: The quantized array.
+    """
+    reshape_dim = (A.shape[0],)
+    if A.ndim > 1:
+        reshape_dim += (1,) * (A.ndim - 1)
+    normed_values = A / absmax.reshape(reshape_dim)
+    indices = jnp.searchsorted(CODE, normed_values, side="left")
+
+    dist_left = jnp.abs(normed_values - CODE[indices])
+    dist_right = jnp.abs(
+        normed_values - CODE[jnp.clip(indices + 1, 0, CODE.shape[0] - 1)]
+    )
+    indices = jnp.where(
+        dist_right < dist_left, jnp.clip(indices + 1, 0, CODE.shape[0] - 1), indices
+    )
+
+    return indices.astype(jnp.uint8)
+
+
+@functools.partial(jax.jit)
+def quantize_jax(A):
+    """
+    Quantize the input array.
+
+    Args:
+        A (jnp.ndarray): The input array to be quantized.
+
+    Returns:
+        Tuple[jnp.ndarray,jnp.ndarray]: The quantized array, The absolute maximum values for each block.
+    """
+    n = A.shape[0]
+    num_blocks = (n + BLOCKSIZE - 1) // BLOCKSIZE
+
+    indices = jnp.arange(n)
+    block_indices = indices // BLOCKSIZE
+
+    absmax_blocks = jnp.zeros((num_blocks,))
+    for i in range(num_blocks):
+        start = i * BLOCKSIZE
+        end = min((i + 1) * BLOCKSIZE, n)
+        absmax_blocks = absmax_blocks.at[i].set(jnp.max(jnp.abs(A[start:end])))
+
+    absmax = absmax_blocks[block_indices]
+
+    quantized_A = quantize_block(A, absmax)
+
+    return quantized_A, absmax_blocks
+
+
+@jax.jit
+def dequantize_jax(A, absmax):
+    """
+    Dequantize the input array.
+
+    Args:
+        A (jnp.ndarray): The quantized array.
+        absmax (jnp.ndarray): The absolute maximum values for each block.
+        blocksize (int): The size of the blocks for dequantization.
+
+    Returns:
+        jnp.ndarray: The dequantized array.
+    """
+    indices = jnp.arange(A.shape[0])
+    block_indices = indices // BLOCKSIZE
+    extra_dim = ()
+    if CODE[A].ndim > 1:
+        extra_dim = (1,) * (len(CODE[A].shape) - 1)
+    dequantized_A = CODE[A] * jnp.reshape(
+        absmax[block_indices],
+        (CODE[A].shape[0],) + extra_dim,
+    )
+    return dequantized_A
+
 
 @dataclass
-class Array8Bit(core.ImplicitArray):
+class Array8Lt(core.ImplicitArray):
     """
     Custom 8-bit Quantized Array for efficient manipulation of JAX arrays.
 
     This class provides methods for quantizing and dequantizing JAX arrays to 8-bit
     representation, which can significantly reduce memory usage and potentially
     improve computation speed for certain operations.
-
-    Attributes:
-        array_quantized (core.ArrayValue): The quantized array data.
-        scale (core.ArrayValue): Scaling factors for dequantization.
-        min_vals (core.ArrayValue): Minimum values used in quantization.
-        shape (tuple): Shape of the quantized array.
-        dtype (jnp.dtype): Original dtype of the array before quantization.
 
     Example:
         >>> import jax
@@ -34,8 +117,8 @@ class Array8Bit(core.ImplicitArray):
         >>> x = jax.random.normal(jax.random.key(0), (512, 64), dtype=jnp.float32)
         >>> xp = jax.random.normal(jax.random.key(1), (64, 256), dtype=jnp.float32)
 
-        >>> quantized_x = Array8Bit.quantize(x)
-        >>> quantized_xp = Array8Bit.quantize(xp)
+        >>> quantized_x = Array8Lt.quantize(x, 64)
+        >>> quantized_xp = Array8Lt.quantize(xp, 64)
 
         >>> @jax.jit
         >>> @core.implicit_compact
@@ -49,9 +132,8 @@ class Array8Bit(core.ImplicitArray):
         True
     """
 
-    array_quantized: core.ArrayValue
-    scale: core.ArrayValue
-    min_vals: core.ArrayValue
+    A: core.ArrayValue
+    absmax: core.ArrayValue
 
     def materialize(self) -> Array:
         """
@@ -61,9 +143,8 @@ class Array8Bit(core.ImplicitArray):
             Array: The dequantized array in its original dtype.
         """
         return self.dequantize(
-            array_quantized=self.array_quantized,
-            scale=self.scale,
-            min_vals=self.min_vals,
+            A=self.A,
+            absmax=self.absmax,
             float_dtype=self.dtype,
         )
 
@@ -71,80 +152,31 @@ class Array8Bit(core.ImplicitArray):
     def quantize(
         cls,
         array: Array,
-        axis: int = -1,
         dtype: Optional[jnp.dtype] = None,
-    ) -> "Array8Bit":
-        """
-        Quantize a JAX array to 8-bit representation.
-
-        Args:
-            array (Array): The input array to quantize.
-            axis (int, optional): The axis along which to compute min and max. Defaults to -1.
-            dtype (jnp.dtype, optional): The desired dtype for the output. If None, uses the input array's dtype.
-
-        Returns:
-            Array8Bit: The quantized array.
-        """
-        min_vals = jnp.min(array, axis=axis, keepdims=True)
-        max_vals = jnp.max(array, axis=axis, keepdims=True)
-
-        # Compute the scaling factors
-        scale = (max_vals - min_vals) / 255
-
-        # Quantize the data
-        quantized_data = jnp.round((array - min_vals) / scale)
-
-        # Clip the quantized values to ensure they lie within the representable range
-        quantized_data = jnp.clip(quantized_data, 0, 255).astype(jnp.uint8)
-
+    ) -> Array8Lt:
+        QA, absmax = quantize_jax(
+            array,
+        )
         return cls(
-            array_quantized=quantized_data,
-            scale=scale,
-            min_vals=min_vals,
-            shape=quantized_data.shape,
+            A=QA,
+            absmax=absmax,
+            shape=QA.shape,
             dtype=dtype or array.dtype,
         )
 
     @staticmethod
     def dequantize(
-        array_quantized: Array,
-        scale: Array,
-        min_vals: Array,
+        A,
+        absmax,
         float_dtype: jnp.dtype,
     ) -> Array:
-        """
-        Dequantize an 8-bit array back to its original representation.
-
-        Args:
-            array_quantized (Array): The quantized array data.
-            scale (Array): The scaling factors used in quantization.
-            min_vals (Array): The minimum values used in quantization.
-            float_dtype (jnp.dtype): The desired output dtype.
-
-        Returns:
-            Array: The dequantized array.
-        """
-        return (array_quantized.astype(float_dtype) * scale + min_vals).astype(
-            float_dtype
-        )
-
-    def __getitem__(self, idx: Union[int, slice, tuple]) -> Array:
-        """
-        Enable indexing of the quantized array.
-
-        Args:
-            idx (Union[int, slice, tuple]): The index or slice to access.
-
-        Returns:
-            Array: The dequantized slice of the array.
-        """
-        quantized_slice = self.array_quantized[idx]
-        scale_slice = self.scale[idx] if self.scale.ndim > 0 else self.scale
-        min_vals_slice = self.min_vals[idx] if self.min_vals.ndim > 0 else self.min_vals
-        return self.dequantize(quantized_slice, scale_slice, min_vals_slice, self.dtype)
+        return dequantize_jax(
+            A=A,
+            absmax=absmax,
+        ).astype(float_dtype)
 
     def __repr__(self) -> str:
-        return f"Array8Bit(shape={self.shape}, dtype={self.dtype})"
+        return f"Array8Lt(shape={self.shape}, dtype={self.dtype})"
 
     @property
     def nbytes(self) -> int:
@@ -167,7 +199,7 @@ class Array8Bit(core.ImplicitArray):
         return (1 - self.nbytes / original_size) * 100
 
 
-ArrayType = Union[Array, Array8Bit]
+ArrayType = Union[Array, Array8Lt]
 
 
 @core.primitive_handler("dot_general")
@@ -181,7 +213,7 @@ def handle_dot_general(
     """
     Custom handler for JAX's dot_general operation.
 
-    Materializes Array8Bit inputs before performing the operation.
+    Materializes Array8Lt inputs before performing the operation.
 
     Args:
         primitive: The JAX primitive being handled.
@@ -193,9 +225,9 @@ def handle_dot_general(
     Returns:
         The result of lax.dot_general operation.
     """
-    if isinstance(lhs, Array8Bit):
+    if isinstance(lhs, Array8Lt):
         lhs = lhs.materialize()
-    if isinstance(rhs, Array8Bit):
+    if isinstance(rhs, Array8Lt):
         rhs = rhs.materialize()
     return lax.dot_general(lhs=lhs, rhs=rhs, *args, **kwargs)
 
@@ -209,7 +241,7 @@ def handle_add(
     """
     Custom handler for JAX's add operation.
 
-    Materializes Array8Bit inputs before performing the operation.
+    Materializes Array8Lt inputs before performing the operation.
 
     Args:
         primitive: The JAX primitive being handled.
@@ -219,9 +251,9 @@ def handle_add(
     Returns:
         The result of lax.add operation.
     """
-    if isinstance(x, Array8Bit):
+    if isinstance(x, Array8Lt):
         x = x.materialize()
-    if isinstance(y, Array8Bit):
+    if isinstance(y, Array8Lt):
         y = y.materialize()
     return lax.add(x, y)
 
@@ -237,7 +269,7 @@ def handle_reduce(
     """
     Custom handler for JAX's reduce operation.
 
-    Materializes Array8Bit inputs before performing the operation.
+    Materializes Array8Lt inputs before performing the operation.
 
     Args:
         primitive: The JAX primitive being handled.
@@ -249,9 +281,9 @@ def handle_reduce(
     Returns:
         The result of lax.reduce operation.
     """
-    if isinstance(operand, Array8Bit):
+    if isinstance(operand, Array8Lt):
         operand = operand.materialize()
-    if isinstance(init_value, Array8Bit):
+    if isinstance(init_value, Array8Lt):
         init_value = init_value.materialize()
     return lax.reduce(operand, init_value, *args, **kwargs)
 
@@ -265,7 +297,7 @@ def handle_mul(
     """
     Custom handler for JAX's mul operation.
 
-    Materializes Array8Bit inputs before performing the operation.
+    Materializes Array8Lt inputs before performing the operation.
 
     Args:
         primitive: The JAX primitive being handled.
@@ -275,9 +307,9 @@ def handle_mul(
     Returns:
         The result of lax.mul operation.
     """
-    if isinstance(x, Array8Bit):
+    if isinstance(x, Array8Lt):
         x = x.materialize()
-    if isinstance(y, Array8Bit):
+    if isinstance(y, Array8Lt):
         y = y.materialize()
     return lax.mul(x, y)
 
@@ -292,8 +324,8 @@ def handle_transpose(
     """
     Custom handler for JAX's transpose operation.
 
-    Materializes Array8Bit input before performing the operation.
-    Re-quantizes the result if the input was Array8Bit.
+    Materializes Array8Lt input before performing the operation.
+    Re-quantizes the result if the input was Array8Lt.
 
     Args:
         primitive: The JAX primitive being handled.
@@ -305,12 +337,17 @@ def handle_transpose(
         The result of lax.transpose operation, potentially re-quantized.
     """
     original_quantized = False
-    if isinstance(operand, Array8Bit):
+    if isinstance(operand, Array8Lt):
+        # # blocksize = operand.blocksize
         operand = operand.materialize()
         original_quantized = True
     operand = lax.transpose(operand, *args, **kwargs)
     if original_quantized:
-        operand = Array8Bit.quantize(operand, dtype=operand.dtype)
+        operand = Array8Lt.quantize(
+            operand,
+            # # blocksize=blocksize,
+            dtype=operand.dtype,
+        )
     return operand
 
 
@@ -325,7 +362,7 @@ def handle_conv(
     """
     Custom handler for JAX's conv_general_dilated operation.
 
-    Materializes Array8Bit inputs before performing the operation.
+    Materializes Array8Lt inputs before performing the operation.
 
     Args:
         primitive: The JAX primitive being handled.
@@ -337,9 +374,9 @@ def handle_conv(
     Returns:
         The result of lax.conv operation.
     """
-    if isinstance(lhs, Array8Bit):
+    if isinstance(lhs, Array8Lt):
         lhs = lhs.materialize()
-    if isinstance(rhs, Array8Bit):
+    if isinstance(rhs, Array8Lt):
         rhs = rhs.materialize()
     return lax.conv_general_dilated(lhs, rhs, *args, **kwargs)
 
@@ -355,7 +392,7 @@ def handle_max(
     """
     Custom handler for JAX's max operation.
 
-    Materializes Array8Bit inputs before performing the operation.
+    Materializes Array8Lt inputs before performing the operation.
 
     Args:
         primitive: The JAX primitive being handled.
@@ -367,9 +404,9 @@ def handle_max(
     Returns:
         The result of lax.max operation.
     """
-    if isinstance(x, Array8Bit):
+    if isinstance(x, Array8Lt):
         x = x.materialize()
-    if isinstance(y, Array8Bit):
+    if isinstance(y, Array8Lt):
         y = y.materialize()
     return lax.max(x, y, *args, **kwargs)
 
@@ -384,7 +421,7 @@ def handle_exp(
     """
     Custom handler for JAX's exp operation.
 
-    Materializes Array8Bit input before performing the operation.
+    Materializes Array8Lt input before performing the operation.
 
     Args:
         primitive: The JAX primitive being handled.
@@ -395,7 +432,7 @@ def handle_exp(
     Returns:
         The result of lax.exp operation.
     """
-    if isinstance(x, Array8Bit):
+    if isinstance(x, Array8Lt):
         x = x.materialize()
     return lax.exp(x, *args, **kwargs)
 
@@ -410,7 +447,7 @@ def handle_log(
     """
     Custom handler for JAX's log operation.
 
-    Materializes Array8Bit input before performing the operation.
+    Materializes Array8Lt input before performing the operation.
 
     Args:
         primitive: The JAX primitive being handled.
@@ -421,7 +458,7 @@ def handle_log(
     Returns:
         The result of lax.log operation.
     """
-    if isinstance(x, Array8Bit):
+    if isinstance(x, Array8Lt):
         x = x.materialize()
     return lax.log(x, *args, **kwargs)
 
@@ -435,7 +472,7 @@ def handle_reshape(
     """
     Custom handler for JAX's reshape operation.
 
-    This function handles reshaping for both regular arrays and Array8Bit quantized arrays.
+    This function handles reshaping for both regular arrays and Array8Lt quantized arrays.
     It materializes Array4Bit input before reshaping and re-quantizes the result if the input was Array4Bit.
 
     Args:
@@ -446,14 +483,15 @@ def handle_reshape(
         **kwargs: Additional keyword arguments for the reshape operation.
 
     Returns:
-        ArrayType: The reshaped array, potentially re-quantized if the input was Array8Bit.
+        ArrayType: The reshaped array, potentially re-quantized if the input was Array8Lt.
 
     Raises:
         ValueError: If the new shape is not compatible with the original array's size.
     """
-    original_quantized = isinstance(operand, Array8Bit)
+    original_quantized = isinstance(operand, Array8Lt)
 
     if original_quantized:
+        # blocksize = operand.blocksize
         operand = operand.materialize()
 
     try:
@@ -464,7 +502,11 @@ def handle_reshape(
             f"Ensure the new shape {kwargs} is compatible with the original array size."
         ) from e
     if original_quantized:
-        reshaped = Array8Bit.quantize(reshaped, dtype=reshaped.dtype)
+        reshaped = Array8Lt.quantize(
+            operand,
+            # blocksize=blocksize,
+            dtype=operand.dtype,
+        )
     return reshaped
 
 
@@ -478,7 +520,7 @@ def handle_concatenate(
     """
     Custom handler for JAX's concatenate operation.
 
-    Materializes Array8Bit inputs before performing the operation.
+    Materializes Array8Lt inputs before performing the operation.
 
     Args:
         primitive: The JAX primitive being handled.
@@ -490,7 +532,7 @@ def handle_concatenate(
         The result of lax.concatenate operation.
     """
     materialized_operands = [
-        op.materialize() if isinstance(op, Array8Bit) else op for op in operands
+        op.materialize() if isinstance(op, Array8Lt) else op for op in operands
     ]
     return lax.concatenate(materialized_operands, *args, **kwargs)
 
@@ -501,7 +543,7 @@ def convert_element_type(
     arg: ArrayType,
     **params,
 ) -> ArrayType:
-    """Handle element type conversion for Array8Bit."""
+    """Handle element type conversion for Array8Lt."""
     result = jax.tree_util.tree_map(
         functools.partial(core.default_handler, primitive, **params), arg
     )
@@ -516,14 +558,19 @@ def handle_broadcast_in_dim(
     *args,
     **kwargs,
 ) -> ArrayType:
-    """Handle broadcast_in_dim for Array8Bit."""
-    original_quantized = isinstance(operand, Array8Bit)
+    """Handle broadcast_in_dim for Array8Lt."""
+    original_quantized = isinstance(operand, Array8Lt)
     array = operand
     if original_quantized:
+        # blocksize = operand.blocksize
         array = operand.materialize()
     result = jax.lax.broadcast_in_dim(array, *args, **kwargs)
     if original_quantized:
-        result = Array8Bit.quantize(result, dtype=operand.dtype)
+        result = Array8Lt.quantize(
+            result,
+            # blocksize=blocksize,
+            dtype=operand.dtype,
+        )
     return result
 
 
@@ -534,8 +581,8 @@ def handle_gather(
     *args,
     **kwargs,
 ) -> ArrayType:
-    """Handle gather for Array8Bit."""
-    original_quantized = isinstance(operand, Array8Bit)
+    """Handle gather for Array8Lt."""
+    original_quantized = isinstance(operand, Array8Lt)
     array = operand
     if original_quantized:
         array = operand.materialize()
