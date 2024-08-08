@@ -14,7 +14,7 @@ import fjformer.core as core
 
 # Define a global codebook for quantization
 CODE = jnp.linspace(-1.0, 1.0, 256)
-BLOCKSIZE = 4096
+BLOCKSIZE = 256
 
 
 @jax.jit
