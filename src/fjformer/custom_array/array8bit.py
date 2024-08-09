@@ -436,7 +436,7 @@ def handle_reshape(
     Custom handler for JAX's reshape operation.
 
     This function handles reshaping for both regular arrays and Array8Bit quantized arrays.
-    It materializes Array4Bit input before reshaping and re-quantizes the result if the input was Array4Bit.
+    It materializes ArrayNF4 input before reshaping and re-quantizes the result if the input was ArrayNF4.
 
     Args:
         primitive (Primitive): The JAX primitive being handled.

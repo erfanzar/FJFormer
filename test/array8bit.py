@@ -39,7 +39,7 @@ class Model(nn.Module):
 
 
 def quantize_params(params: dict) -> dict:
-    """Quantizes model parameters using Array4Lt.
+    """Quantizes model parameters using Array8Lt.
 
     Args:
         params: A dictionary of model parameters.
@@ -82,6 +82,7 @@ def main():
     out = float(model.apply(params, x).reshape(-1)[0])
     print(f"Original Model  Output: {out:.3e}")
     print(f"Quantized Model Output: {q_out:.3e}")
+    print(f"Overall error: {(out-q_out):.5e}")
 
 
 if __name__ == "__main__":

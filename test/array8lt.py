@@ -9,12 +9,11 @@ import jax.tree_util
 
 jax.config.update("jax_platform_name", "cpu")
 
-sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), "../src"))
 import fjformer.core as core  # noqa
 from fjformer import GenerateRNG  # noqa
 from jax import numpy as jnp  # noqa
-from fjformer.custom_array.array4lt import Array4Lt  # noqa
+from fjformer.custom_array.array8lt import Array8Lt  # noqa
 from flax import linen as nn  # noqa
 from fjformer.core.implicit_array import implicit_compact  # noqa
 
@@ -39,7 +38,7 @@ class Model(nn.Module):
 
 
 def quantize_params(params: dict) -> dict:
-    """Quantizes model parameters using Array4Lt.
+    """Quantizes model parameters using Array8Lt.
 
     Args:
         params: A dictionary of model parameters.
@@ -48,12 +47,11 @@ def quantize_params(params: dict) -> dict:
         A dictionary of quantized model parameters.
     """
 
-    def q(path: str, array: Any) -> Array4Lt:
+    def q(path: str, array: Any) -> Array8Lt:
         """Quantizes a single parameter array."""
         path = ".".join(p for p in path[0].key)
-        return Array4Lt.quantize(
+        return Array8Lt.quantize(
             array,
-            dtype=array.dtype,
         )
 
     return flax.traverse_util.unflatten_dict(
@@ -82,6 +80,7 @@ def main():
     out = float(model.apply(params, x).reshape(-1)[0])
     print(f"Original Model  Output: {out:.3e}")
     print(f"Quantized Model Output: {q_out:.3e}")
+    print(f"Overall error: {(out-q_out):.5e}")
 
 
 if __name__ == "__main__":

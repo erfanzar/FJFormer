@@ -10,12 +10,11 @@ from jax import Array
 
 jax.config.update("jax_platform_name", "cpu")
 
-sys.path.append(os.path.dirname(os.path.abspath(__file__)))
-sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), "src"))
+sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), "../src"))
 import fjformer.core as core  # noqa
 from fjformer import GenerateRNG  # noqa
 from jax import numpy as jnp  # noqa
-from fjformer.custom_array.array4bit import Array4Bit  # noqa
+from fjformer.custom_array.arraynf4 import ArrayNF4  # noqa
 from flax import linen as nn  # noqa
 from fjformer.core.implicit_array import implicit_compact  # noqa
 
@@ -48,7 +47,7 @@ def quantize_params(
     contraction_axis: int = -1,
     factors: Optional[Array] = None,
 ) -> dict:
-    """Quantizes model parameters using Array4Bit.
+    """Quantizes model parameters using ArrayNF4.
 
     Args:
         params: A dictionary of model parameters.
@@ -57,7 +56,7 @@ def quantize_params(
         A dictionary of quantized model parameters.
     """
 
-    def q(path: str, array: Any) -> Array4Bit:
+    def q(path: str, array: Any) -> ArrayNF4:
         """Quantizes a single parameter array."""
         path = ".".join(p for p in path[0].key)
         if path.endswith(".embedding"):
@@ -65,10 +64,10 @@ def quantize_params(
         if array.ndim > 2:
             return array
         dim = array.shape[contraction_axis]
-        if not (dim % 16 == 0):
+        if not (dim % 2 == 0):
             return array
         print(f"{path} quantized.")
-        return Array4Bit.quantize(
+        return ArrayNF4.quantize(
             array=array,
             block_size=block_size,
             contraction_axis=contraction_axis,
@@ -100,6 +99,7 @@ def main():
     out = float(model_apply(params, x).reshape(-1)[0])
     print(f"Original Model  Output: {out:.3e}")
     print(f"Quantized Model Output: {q_out:.3e}")
+    print(f"Overall error: {(out-q_out):.5e}")
 
 
 if __name__ == "__main__":
