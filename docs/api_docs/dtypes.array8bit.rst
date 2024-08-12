@@ -1,7 +1,7 @@
-Array8Lt package
+array8bit package
 =================
 
-.. automodule:: fjformer.custom_array.Array8Lt
+.. automodule:: fjformer.dtypes.array8bit
     :members:
     :undoc-members:
     :show-inheritance:

@@ -4,5 +4,5 @@ Lora
 .. toctree::
    :maxdepth: 2
 
-   lora.lora_core
    lora.rapture
+   lora.lora_core

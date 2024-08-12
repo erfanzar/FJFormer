@@ -7,7 +7,7 @@ FJFormer APIs 🔮
    Bit Quantization
    Checkpoint
    Core
-   Custom Array
+   Dtypes
    Functions
    Lora
    Monitor
