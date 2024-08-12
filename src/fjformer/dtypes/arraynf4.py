@@ -251,7 +251,7 @@ class ArrayNF4(core.ImplicitArray):
             block_size=self.block_size,
             org_dtype=dtype,
             org_shape=self.shape,
-        )
+        ).astype(self.dtype)
 
     @classmethod
     def quantize(
@@ -429,7 +429,7 @@ def handle_transpose(
     else:
         array = operand
     array = lax.transpose(array, *args, **kwargs)
-    if original_quantized:
+    if original_quantized and array.ndim <= 2:
         array = ArrayNF4.quantize(
             array=array,
             block_size=operand.block_size,
@@ -636,7 +636,12 @@ def convert_element_type(
 ) -> ArrayNF4:
     """Handle element type conversion for ArrayNF4."""
     result = jax.tree_util.tree_map(
-        partial(core.default_handler, primitive, **params), arg
+        partial(
+            core.default_handler,
+            primitive,
+            **params,
+        ),
+        arg,
     )
     result.dtype = params["new_dtype"]
     return result
@@ -718,12 +723,6 @@ def handle_broadcast_in_dim(
     if original_quantized:
         array = operand.materialize()
     result = jax.lax.broadcast_in_dim(array, *args, **kwargs)
-    if original_quantized:
-        result = ArrayNF4.quantize(
-            array=result,
-            block_size=operand.block_size,
-            scaler_block_size=operand.scaler_block_size,
-        )
     return result
 
 
