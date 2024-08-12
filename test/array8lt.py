@@ -13,7 +13,7 @@ sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), "../src
 import fjformer.core as core  # noqa
 from fjformer import GenerateRNG  # noqa
 from jax import numpy as jnp  # noqa
-from fjformer.custom_array.array8lt import Array8Lt  # noqa
+from fjformer.dtypes.array8lt import Array8Lt  # noqa
 from flax import linen as nn  # noqa
 from fjformer.core.implicit_array import implicit_compact  # noqa
 

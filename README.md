@@ -35,7 +35,7 @@ Our innovative ImplicitArray class provides a powerful abstraction for represent
 
 ### 6. Custom Dtypes
 
-- Implement 4-bit quantization (NF4) effortlessly using our ArrayNF4 class, built on top of ImplicitArray. Reduce model size and increase inference speed without significant loss in accuracy.
+- Implement 4-bit quantization (NF4) effortlessly using our ArrayNF4 class, built on top of ImplicitArray. Reduce model size and increase inference speed without significant loss in accuracy (from QLoRA paper).
 
 - Similar to ArrayNF4, our Array8Lt implementation offers 8-bit quantization via ImplicitArray, providing a balance between model compression and precision.
 
