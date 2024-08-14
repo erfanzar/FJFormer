@@ -11,12 +11,14 @@ import torch
 from jax import Array, lax
 from jax import numpy as jnp
 from jax.core import Primitive
+from jax.sharding import NamedSharding, SingleDeviceSharding
 
 import fjformer.core as core
+from fjformer.sharding import auto_shard_array, with_sharding_constraint
 
 torch.manual_seed(42)
 CHUNK_SIZE = 1024**2
-NF4 = jnp.array(
+NF4 = jnp.array(  # I took this from QLoRA Paper.
     [
         -1.0,
         -0.6961928009986877,
@@ -221,6 +223,7 @@ class ArrayNF4(core.ImplicitArray):
     scaler_mean: core.ArrayValue
     scaler_block_size: int = core.aux_field()
     block_size: int = core.aux_field()
+    sharding: Union[NamedSharding, SingleDeviceSharding] = core.aux_field()
 
     def materialize(self) -> Array:
         """
@@ -241,8 +244,9 @@ class ArrayNF4(core.ImplicitArray):
         Returns:
             Array: Dequantized array.
         """
+
         dtype = dtype if dtype is not None else self.dtype
-        return dequantize_nf4(
+        dequantized_array = dequantize_nf4(
             quantized_data=self.quantized_data,
             quantized_scalers=self.quantized_scalers,
             quantization_factor=self.quantization_factor,
@@ -252,14 +256,26 @@ class ArrayNF4(core.ImplicitArray):
             org_dtype=dtype,
             org_shape=self.shape,
         ).astype(self.dtype)
+        if isinstance(self.sharding, NamedSharding):
+            with self.sharding.mesh:
+                dequantized_array = with_sharding_constraint(
+                    dequantized_array,
+                    self.sharding.spec,
+                )
+        elif isinstance(self.sharding, SingleDeviceSharding):
+            dequantized_array = jax.device_put(dequantized_array, self.sharding)
+        else:
+            raise NotImplementedError(f"Unknown device sharding {self.sharding}")
+        return dequantized_array
 
     @classmethod
     def quantize(
         cls,
-        array,
+        array: chex.Array,
         block_size: int = 64,
         scaler_block_size: Optional[int] = None,
     ) -> "ArrayNF4":
+        sharding = array.sharding
         if scaler_block_size is None:
             scaler_block_size = float(array.size / block_size)
             assert (
@@ -276,7 +292,22 @@ class ArrayNF4(core.ImplicitArray):
             block_size=block_size,
             scaler_block_size=scaler_block_size,
         )
+        if isinstance(sharding, NamedSharding):
+            names = [s for s in sharding.spec if s is not None]
+            with sharding.mesh:
+                quantized_data = auto_shard_array(quantized_data, names=names)
+                quantized_scalers = auto_shard_array(quantized_scalers, names=names)
+                quantization_factor = auto_shard_array(quantization_factor, names=names)
+                scaler_mean = auto_shard_array(scaler_mean, names=names)
 
+        elif isinstance(sharding, SingleDeviceSharding):
+            # just simply put them on the same device as org array
+            quantized_data = jax.device_put(quantized_data, device=sharding)
+            quantized_scalers = jax.device_put(quantized_scalers, device=sharding)
+            quantization_factor = jax.device_put(scaler_mean, device=sharding)
+            scaler_mean = jax.device_put(scaler_mean, device=sharding)
+        else:
+            raise NotImplementedError(f"Unknown device sharding {sharding}")
         return cls(
             quantized_data=quantized_data,
             quantized_scalers=quantized_scalers,
@@ -286,6 +317,7 @@ class ArrayNF4(core.ImplicitArray):
             block_size=block_size,
             dtype=array.dtype,
             shape=array.shape,
+            sharding=sharding,
         )
 
 
@@ -422,19 +454,11 @@ def handle_transpose(
     Returns:
         The result of lax.transpose operation, potentially re-quantized.
     """
-    original_quantized = False
     if isinstance(operand, ArrayNF4):
         array = operand.materialize()
-        original_quantized = True
     else:
         array = operand
     array = lax.transpose(array, *args, **kwargs)
-    if original_quantized and array.ndim <= 2:
-        array = ArrayNF4.quantize(
-            array=array,
-            block_size=operand.block_size,
-            scaler_block_size=operand.scaler_block_size,
-        )
     return array
 
 

@@ -1,6 +1,7 @@
 import re
-from typing import Callable, Optional, Sequence, Tuple
+from typing import Callable, List, Optional, Sequence, Tuple, Union
 
+import chex
 import flax
 import jax
 import jax.numpy as jnp
@@ -13,8 +14,8 @@ from jax.sharding import Mesh, NamedSharding, PartitionSpec
 
 
 def make_shard_and_gather_fns(
-        partition_specs: dict[str, PartitionSpec],
-        mesh: Optional[jax.sharding.Mesh] = None
+    partition_specs: dict[str, PartitionSpec],
+    mesh: Optional[jax.sharding.Mesh] = None,
 ) -> Tuple[dict[Callable], dict[Callable]]:
     """
     Create shard and gather functions based on given partition specs and mesh.
@@ -39,16 +40,16 @@ def make_shard_and_gather_fns(
             "at least call that under mesh context manager"
         )
 
-    named_shardings = jax.tree_util.tree_map(lambda p: NamedSharding(mesh=mesh, spec=p), partition_specs)
+    named_shardings = jax.tree_util.tree_map(
+        lambda p: NamedSharding(mesh=mesh, spec=p), partition_specs
+    )
 
     def make_shard_fn(partition_spec: NamedSharding) -> Callable:
         """
         Create a shard function for a specific partition spec.
         """
         jax_shard_function = jax.jit(
-            lambda x: x,
-            in_shardings=None,
-            out_shardings=partition_spec
+            lambda x: x, in_shardings=None, out_shardings=partition_spec
         )
 
         def shard_fn(tensor: jnp.ndarray) -> jnp.ndarray:
@@ -99,10 +100,14 @@ def get_jax_mesh(axis_dims: str, names: Sequence[str]) -> jax.sharding.Mesh:
         dim_names = []
         for axis in axis_dims.split(","):
             name, dim = axis.split(":")
-            assert name in names, f"Axis name '{name}' not found in provided names: {names}"
+            assert (
+                name in names
+            ), f"Axis name '{name}' not found in provided names: {names}"
             dims.append(int(dim))
             dim_names.append(name)
-        assert set(dim_names) == set(names), "Not all axis names were used in 'axis_dims'"
+        assert set(dim_names) == set(
+            names
+        ), "Not all axis names were used in 'axis_dims'"
     else:
         dims = [int(x) for x in axis_dims.split(",")]
         dim_names = names
@@ -114,6 +119,146 @@ def get_jax_mesh(axis_dims: str, names: Sequence[str]) -> jax.sharding.Mesh:
     else:
         physical_mesh = mesh_utils.create_device_mesh(mesh_shape)
     return Mesh(physical_mesh, dim_names)
+
+
+def auto_partition_spec(
+    x: chex.Array,
+    mesh: Optional[Mesh] = None,
+    names: Optional[List[Union[str, Tuple[str, ...]]]] = None,
+    min_sharding_size: Optional[int] = None,
+    reverse: bool = False,
+) -> PartitionSpec:
+    """
+    Create PartitionSpec to shard an array across a device mesh.
+
+    Args:
+        x: The input array to be sharded.
+        mesh: The device mesh to shard across. If None, uses the current thread's mesh.
+        names: List of mesh axis names to use for sharding. If None, derives from mesh shape.
+        min_sharding_size: Minimum size of array to shard. If None, uses the product of mesh device shape.
+        reverse: If True, reverses the sorting order of array dimensions.
+
+    Returns:
+        A PartitionSpec describing how the array should be sharded.
+
+    Raises:
+        ValueError: If no mesh is available or if names contain invalid types.
+    """
+    if mesh is None:
+        mesh = pxla.thread_resources.env.physical_mesh
+        if mesh.empty:
+            raise ValueError(
+                "`auto_partition_spec` needs to be used with a mesh. Pass a mesh as an argument "
+                "or use this function under a mesh context manager."
+            )
+
+    if min_sharding_size is None:
+        min_sharding_size = np.prod(mesh.devices.shape)
+
+    if names is None or len(names) == 0:
+        names = [
+            mesh.axis_names[i] for i in np.argsort([-s for s in mesh.devices.shape])
+        ]
+    names = list(names)
+    if np.prod(x.shape) < min_sharding_size:
+        return PartitionSpec()
+
+    partition_spec = [None] * len(x.shape)
+    sort_order = np.argsort(x.shape if reverse else [-dim for dim in x.shape])
+
+    for i in sort_order:
+        for name in list(
+            names
+        ):  # Create a copy to safely remove items during iteration
+            if isinstance(name, tuple):
+                size = np.prod([mesh.shape[nm] for nm in name])
+            elif isinstance(name, str):
+                size = mesh.shape[name]
+            else:
+                raise ValueError(
+                    f"Invalid name type: {type(name)}. Expected str or tuple."
+                )
+
+            if x.shape[i] % size == 0:
+                partition_spec[i] = name
+                names.remove(name)
+                break
+
+    return PartitionSpec(*partition_spec)
+
+
+def auto_shard_array(
+    x: chex.Array,
+    mesh: Optional[Mesh] = None,
+    names: Optional[List[Union[str, Tuple[str, ...]]]] = None,
+    min_sharding_size: Optional[int] = None,
+    reverse: bool = False,
+):
+    """
+    Shards an array across a device mesh according to an automatically derived PartitionSpec.
+
+    This function acts as a wrapper around `pjit(x, in_axis_resources=...)`.
+
+    Args:
+        x: The input array to be sharded.
+        mesh: The device mesh to shard across. If None, uses the current thread's mesh.
+        names: List of mesh axis names to use for sharding. If None, derives from mesh shape.
+        min_sharding_size: Minimum size of array to shard. If None, uses the product of mesh device shape.
+        reverse: If True, reverses the sorting order of array dimensions.
+
+    Returns:
+        The sharded array.
+    """
+    if mesh is None:
+        mesh = pxla.thread_resources.env.physical_mesh
+        if mesh.empty:
+            raise ValueError(
+                "`auto_shard_array` needs to be used with a mesh. Pass a mesh as an argument "
+                "or use this function under a mesh context manager."
+            )
+    partition_spec = auto_partition_spec(
+        x=x,
+        mesh=mesh,
+        names=names,
+        min_sharding_size=min_sharding_size,
+        reverse=reverse,
+    )
+    with mesh:
+        return with_sharding_constraint(x=x, partition_specs=partition_spec)
+
+
+def auto_namedsharding(
+    mesh: Optional[Mesh] = None,
+    names: Optional[List[Union[str, Tuple[str, ...]]]] = None,
+    min_sharding_size: Optional[int] = None,
+    reverse: bool = False,
+):
+    """
+    Returns a function that creates a NamedSharding for an array based on the provided parameters.
+
+    Args:
+        mesh: The device mesh to shard across. If None, uses the current thread's mesh.
+        names: List of mesh axis names to use for sharding. If None, derives from mesh shape.
+        min_sharding_size: Minimum size of array to shard. If None, uses the product of mesh device shape.
+        reverse: If True, reverses the sorting order of array dimensions.
+
+    Returns:
+        A function that takes an array as input and returns a NamedSharding object.
+    """
+
+    def _named_sharding_fn(x: chex.Array):
+        return NamedSharding(
+            mesh,
+            auto_partition_spec(
+                x=x,
+                mesh=mesh,
+                names=names,
+                min_sharding_size=min_sharding_size,
+                reverse=reverse,
+            ),
+        )
+
+    return _named_sharding_fn
 
 
 def names_in_current_mesh(*names: str) -> bool:
@@ -130,7 +275,9 @@ def names_in_current_mesh(*names: str) -> bool:
     return set(names) <= set(mesh_axis_names)
 
 
-def get_names_from_partition_spec(partition_specs: dict[str, PartitionSpec]) -> list[str]:
+def get_names_from_partition_spec(
+    partition_specs: dict[str, PartitionSpec],
+) -> list[str]:
     """
     Extract axis names from a partition specification.
 
@@ -156,7 +303,9 @@ def get_names_from_partition_spec(partition_specs: dict[str, PartitionSpec]) -> 
     return list(names)
 
 
-def with_sharding_constraint(x: jnp.ndarray, partition_specs: dict[str, PartitionSpec]) -> jnp.ndarray:
+def with_sharding_constraint(
+    x: jnp.ndarray, partition_specs: dict[str, PartitionSpec]
+) -> jnp.ndarray:
     """
     Apply sharding constraints if axis names are present in the current mesh.
 
@@ -197,6 +346,7 @@ def wrap_function_with_rng(rng: jnp.ndarray) -> Callable:
         """
         Inner decorator function.
         """
+
         def wrapped(*args, **kwargs):
             """
             The wrapped function that handles RNG splitting.
@@ -259,7 +409,9 @@ def tree_path_to_string(path: tuple, sep: Optional[str] = None) -> str:
     return sep.join(keys)
 
 
-def flatten_tree(xs: dict, is_leaf: Optional[Callable] = None, sep: Optional[str] = None) -> dict:
+def flatten_tree(
+    xs: dict, is_leaf: Optional[Callable] = None, sep: Optional[str] = None
+) -> dict:
     """
     Flatten a JAX tree and convert paths to strings.
 
@@ -279,11 +431,11 @@ def flatten_tree(xs: dict, is_leaf: Optional[Callable] = None, sep: Optional[str
 
 
 def named_tree_map(
-        f: Callable,
-        tree: dict,
-        *rest,
-        is_leaf: Optional[Callable] = None,
-        sep: Optional[str] = None
+    f: Callable,
+    tree: dict,
+    *rest,
+    is_leaf: Optional[Callable] = None,
+    sep: Optional[str] = None,
 ):
     """
     An extended version of `jax.tree_util.tree_map`.
@@ -305,7 +457,7 @@ def named_tree_map(
         lambda path, x, *r: f(tree_path_to_string(path, sep=sep), x, *r),
         tree,
         *rest,
-        is_leaf=is_leaf
+        is_leaf=is_leaf,
     )
 
 
@@ -390,9 +542,9 @@ def tree_apply(fns: dict, tree: dict):
 
 
 def create_mesh(
-        axis_dims: Sequence[int] = (1, -1, 1, 1),
-        axis_names: Sequence[str] = ("dp", "fsdp", "tp", "sp"),
-        backend: str = ""
+    axis_dims: Sequence[int] = (1, -1, 1, 1),
+    axis_names: Sequence[str] = ("dp", "fsdp", "tp", "sp"),
+    backend: str = "",
 ) -> jax.sharding.Mesh:
     """
     Create a JAX mesh with specified dimensions and names.
@@ -406,9 +558,9 @@ def create_mesh(
     Returns:
         A JAX mesh object.
     """
-    array_devices = jax.numpy.ones((len(jax.devices(backend)) if backend else len(jax.devices()), 1))
+    array_devices = jax.numpy.ones(
+        (len(jax.devices(backend)) if backend else len(jax.devices()), 1)
+    )
     resh = array_devices.reshape(axis_dims).shape
 
-    return jax.sharding.Mesh(
-        create_device_mesh(resh), axis_names
-    )
+    return jax.sharding.Mesh(create_device_mesh(resh), axis_names)
