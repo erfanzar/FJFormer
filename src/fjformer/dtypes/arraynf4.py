@@ -2,8 +2,8 @@
 
 import math
 from dataclasses import dataclass
-from functools import partial
-from typing import Any, Optional, Sequence, Tuple, Union
+from functools import lru_cache, partial
+from typing import Any, Optional, Sequence, Union
 
 import chex
 import jax
@@ -58,161 +58,128 @@ def get_block_absmax(array: chex.Array, block_size: int) -> chex.Array:
     return jnp.max(jnp.abs(blocks), axis=1)
 
 
-@partial(jax.jit, static_argnames=["block_size", "scaler_block_size"])
-def double_quantize_scalers(
-    array: chex.Array,
-    block_size: int,
-    scaler_block_size: int,
-) -> Tuple[chex.Array, chex.Array, chex.Array]:
-    assert array.ndim == 1
-    assert (array.size % scaler_block_size) == 0
+def create_quantize_dequantize_funcs(block_size: int, scaler_block_size: int):
+    @jax.jit
+    def quantize_to_nf4(array: chex.Array):
+        assert array.ndim <= 2
+        assert array.size % block_size == 0
+        assert (array.size % scaler_block_size) == 0
+        n_blocks = array.size // block_size
 
-    scalers_1 = get_block_absmax(array, block_size)
-    scalers_1_mean = jnp.mean(scalers_1)
-    scalers_1 = scalers_1 - scalers_1_mean
-    # Second round of quantization
-    assert (
-        scalers_1.size % scaler_block_size == 0
-    ), f"given `scaler_block_size` won't match for array size {array.size}."
-    n_scaler_blocks = scalers_1.size // scaler_block_size
-    scaler_blocks = scalers_1.reshape(n_scaler_blocks, scaler_block_size)
+        array = array.ravel()
 
-    scaler_absmax = get_block_absmax(scalers_1, scaler_block_size)
-    scaler_absmax = jnp.broadcast_to(
-        jnp.expand_dims(scaler_absmax, -1), (n_scaler_blocks, scaler_block_size)
-    )
+        scalers_1 = get_block_absmax(array, block_size)
+        scaler_mean = jnp.mean(scalers_1)
+        scalers_1 = scalers_1 - scaler_mean
+        assert (
+            scalers_1.size % scaler_block_size == 0
+        ), f"given `scaler_block_size` won't match for array size {array.size}."
+        n_scaler_blocks = scalers_1.size // scaler_block_size
+        scaler_blocks = scalers_1.reshape(n_scaler_blocks, scaler_block_size)
 
-    quantization_factor = 256 / (2 * scaler_absmax)
-    quantized_scaler_blocks = scaler_blocks * quantization_factor
-    quantized_scaler_blocks = jnp.round(quantized_scaler_blocks)
-    quantized_scaler_blocks = jnp.clip(quantized_scaler_blocks, min=-128, max=127)
-
-    quantization_factor = quantization_factor[:, 0]
-
-    return (
-        quantized_scaler_blocks.flatten().astype(jnp.int8),
-        jax.lax.stop_gradient(quantization_factor.reshape(n_scaler_blocks)),
-        scalers_1_mean,
-    )
-
-
-@partial(jax.jit, static_argnames=["block_size", "n_blocks"])
-def convert_to_norm_float_weight(
-    array: chex.Array,
-    n_blocks: int,
-    block_size: int,
-    nf4: chex.Array,
-) -> chex.Array:
-    flattened_tensor = array.flatten()
-    numel = array.size
-    assert numel % 2 == 0
-    blocks = flattened_tensor.reshape(n_blocks, block_size)
-
-    # Scale the blocks
-    scalers = get_block_absmax(array.flatten(), block_size)
-    scales = jnp.broadcast_to(jnp.expand_dims(scalers, -1), (n_blocks, block_size))
-    scaled_blocks = blocks / scales
-
-    quantized_blocks = jnp.empty(numel, dtype=jnp.uint8)
-    flattened = scaled_blocks.flatten()
-
-    for chunk_num in range(math.ceil(numel / CHUNK_SIZE)):
-        start = chunk_num * CHUNK_SIZE
-        end = min(start + CHUNK_SIZE, numel)
-        quantized_blocks = quantized_blocks.at[start:end].set(
-            quantize_tensor_nearest(
-                flattened[start:end],
-                nf4,
-            ).astype(jnp.uint8)
+        scaler_absmax = get_block_absmax(scalers_1, scaler_block_size)
+        scaler_absmax = jnp.broadcast_to(
+            jnp.expand_dims(scaler_absmax, -1), (n_scaler_blocks, scaler_block_size)
         )
 
-    combined_blocks = quantized_blocks[::2] << 4 | quantized_blocks[1::2]
+        quantization_factor = 256 / (2 * scaler_absmax)
+        quantized_scalers = scaler_blocks * quantization_factor
+        quantized_scalers = jnp.round(quantized_scalers)
+        quantized_scalers = (
+            jnp.clip(quantized_scalers, min=-128, max=127).flatten().astype(jnp.int8)
+        )
 
-    return combined_blocks.astype(jnp.uint8)
+        quantization_factor = quantization_factor[:, 0]
+        quantization_factor = jax.lax.stop_gradient(
+            quantization_factor.reshape(n_scaler_blocks)
+        )
+
+        flattened_tensor = array.ravel()
+        numel = array.size
+        assert numel % 2 == 0
+        blocks = flattened_tensor.reshape(n_blocks, block_size)
+
+        # Scale the blocks
+        scalers = get_block_absmax(array.ravel(), block_size)
+        scales = jnp.broadcast_to(jnp.expand_dims(scalers, -1), (n_blocks, block_size))
+        scaled_blocks = blocks / scales
+
+        quantized_blocks = jnp.empty(numel, dtype=jnp.uint8)
+        flattened = scaled_blocks.ravel()
+
+        for chunk_num in range(math.ceil(numel / CHUNK_SIZE)):
+            start = chunk_num * CHUNK_SIZE
+            end = min(start + CHUNK_SIZE, numel)
+            quantized_blocks = quantized_blocks.at[start:end].set(
+                quantize_tensor_nearest(
+                    flattened[start:end],
+                    NF4,
+                ).astype(jnp.uint8)
+            )
+
+        combined_blocks = quantized_blocks[::2] << 4 | quantized_blocks[1::2]
+
+        quantized_data = combined_blocks.astype(jnp.uint8)
+        return quantized_data, quantized_scalers, quantization_factor, scaler_mean
+
+    @partial(jax.jit, static_argnums=(4, 5))
+    def dequantize_nf4(
+        quantized_data: chex.Array,
+        quantized_scalers: chex.Array,
+        quantization_factor: chex.Array,
+        scaler_mean: chex.Array,
+        org_dtype: jnp.dtype,
+        org_shape: chex.Shape,
+    ):
+        first_elements = (quantized_data >> 4).astype("i4")
+        second_elements = (quantized_data & 0b1111).astype("i4")
+
+        # Dequantize every element
+        dequantized_first = NF4[first_elements]
+        dequantized_second = NF4[second_elements]
+
+        assert quantized_scalers.ndim == 1
+        assert (quantized_scalers.size % scaler_block_size) == 0
+        n_scaler_blocks = quantized_scalers.size // scaler_block_size
+        quantized_scalers = quantized_scalers.reshape(
+            n_scaler_blocks, scaler_block_size
+        )
+        scalers = (
+            quantized_scalers / jnp.expand_dims(quantization_factor, -1)
+        ).flatten().astype(org_dtype) + scaler_mean
+
+        repeated = jnp.broadcast_to(
+            jnp.expand_dims(scalers, -1),
+            (scalers.shape[0], block_size // 2),
+        )
+
+        scaled_first = dequantized_first * repeated.flatten()
+        scaled_second = dequantized_second * repeated.flatten()
+
+        scaled_first = jnp.expand_dims(scaled_first, -1).transpose(1, 0)
+        scaled_second = jnp.expand_dims(scaled_second, -1).transpose(1, 0)
+        return jnp.stack([scaled_first, scaled_second], axis=-1).reshape(org_shape)
+
+    return quantize_to_nf4, dequantize_nf4
 
 
-@partial(jax.jit, static_argnames=["scaler_block_size", "dtype"])
-def dequantize_scalers(
-    quantized_scalers: chex.Array,
-    quantization_factor: chex.Array,
-    scaler_mean: chex.Array,
-    scaler_block_size: int,
-    dtype: jnp.dtype,
-) -> chex.Array:
-    assert quantized_scalers.ndim == 1
-    assert (quantized_scalers.size % scaler_block_size) == 0
-    n_scaler_blocks = quantized_scalers.size // scaler_block_size
-    quantized_scalers = quantized_scalers.reshape(n_scaler_blocks, scaler_block_size)
-    dequantized = (
-        quantized_scalers / jnp.expand_dims(quantization_factor, -1)
-    ).flatten().astype(dtype) + scaler_mean
-    return dequantized
+@lru_cache(maxsize=None)
+def get_quantize_func(block_size, scaler_block_size):
 
-
-@partial(jax.jit, static_argnames=["block_size", "scaler_block_size"])
-def quantize_to_nf4(
-    array: chex.Array,
-    block_size: int,
-    scaler_block_size: int,
-):
-    assert array.ndim <= 2
-    assert array.size % block_size == 0
-    n_blocks = array.size // block_size
-
-    (
-        quantized_scalers,
-        quantization_factor,
-        scaler_mean,
-    ) = double_quantize_scalers(
-        array.flatten(),
-        block_size,
-        scaler_block_size,
-    )
-
-    quantized_data = convert_to_norm_float_weight(
-        array,
-        n_blocks,
-        block_size,
-        NF4,
-    )
-    return quantized_data, quantized_scalers, quantization_factor, scaler_mean
-
-
-def dequantize_nf4(
-    quantized_data: chex.Array,
-    quantized_scalers: chex.Array,
-    quantization_factor: chex.Array,
-    scaler_mean: chex.Array,
-    scaler_block_size: chex.Array,
-    block_size: int,
-    org_dtype: jnp.dtype,
-    org_shape: chex.Shape,
-):
-    first_elements = (quantized_data >> 4).astype("i4")
-    second_elements = (quantized_data & 0b1111).astype("i4")
-
-    # Dequantize every element
-    dequantized_first = NF4[first_elements]
-    dequantized_second = NF4[second_elements]
-
-    scalers = dequantize_scalers(
-        quantized_scalers=quantized_scalers,
-        quantization_factor=quantization_factor,
-        scaler_mean=scaler_mean,
+    quantize, dequantize = create_quantize_dequantize_funcs(
+        block_size=block_size,
         scaler_block_size=scaler_block_size,
-        dtype=org_dtype,
     )
-    repeated = jnp.broadcast_to(
-        jnp.expand_dims(scalers, -1),
-        (scalers.shape[0], block_size // 2),
+    return quantize
+
+
+@lru_cache(maxsize=None)
+def get_dequantize_func(block_size, scaler_block_size):
+    quantize, dequantize = create_quantize_dequantize_funcs(
+        block_size=block_size,
+        scaler_block_size=scaler_block_size,
     )
-
-    scaled_first = dequantized_first * repeated.flatten()
-    scaled_second = dequantized_second * repeated.flatten()
-
-    scaled_first = jnp.expand_dims(scaled_first, -1).transpose(1, 0)
-    scaled_second = jnp.expand_dims(scaled_second, -1).transpose(1, 0)
-    return jnp.stack([scaled_first, scaled_second], axis=-1).reshape(org_shape)
+    return dequantize
 
 
 @dataclass
@@ -246,16 +213,19 @@ class ArrayNF4(core.ImplicitArray):
         """
 
         dtype = dtype if dtype is not None else self.dtype
-        dequantized_array = dequantize_nf4(
+        dequantized_array = get_dequantize_func(
+            block_size=self.block_size,
+            scaler_block_size=self.scaler_block_size,
+        )(
             quantized_data=self.quantized_data,
             quantized_scalers=self.quantized_scalers,
             quantization_factor=self.quantization_factor,
             scaler_mean=self.scaler_mean,
-            scaler_block_size=self.scaler_block_size,
-            block_size=self.block_size,
             org_dtype=dtype,
             org_shape=self.shape,
-        ).astype(self.dtype)
+        ).astype(
+            self.dtype
+        )
         if isinstance(self.sharding, NamedSharding):
             with self.sharding.mesh:
                 dequantized_array = with_sharding_constraint(
@@ -287,10 +257,11 @@ class ArrayNF4(core.ImplicitArray):
             quantized_scalers,
             quantization_factor,
             scaler_mean,
-        ) = quantize_to_nf4(
-            array=array,
+        ) = get_quantize_func(
             block_size=block_size,
             scaler_block_size=scaler_block_size,
+        )(
+            array=array
         )
         if isinstance(sharding, NamedSharding):
             names = [s for s in sharding.spec if s is not None]

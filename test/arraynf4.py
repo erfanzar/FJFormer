@@ -26,9 +26,9 @@ class Model(nn.Module):
     def setup(self) -> None:
         """Initializes the model layers."""
         self.embed_time = nn.Embed(512, 512)
-        self.fc = nn.Dense(512, use_bias=True, dtype=jnp.float32)
-        self.fc1 = nn.Dense(64, use_bias=True, dtype=jnp.float32)
-        self.out = nn.Dense(1, use_bias=True, dtype=jnp.float32)
+        self.fc = nn.Dense(512, use_bias=False, dtype=jnp.float32)
+        self.fc1 = nn.Dense(64, use_bias=False, dtype=jnp.float32)
+        self.out = nn.Dense(1, use_bias=False, dtype=jnp.float32)
 
     def __call__(self, x):
         """Performs a forward pass through the model."""
@@ -76,7 +76,7 @@ def main():
     x = jax.random.normal(rng.rng, (1, 1, 64))
     params = model.init(rng.rng, init_x)
     model_apply: Callable = jax.jit(implicit_compact(model.apply))
-    q_params = quantize_params(params)
+    q_params = quantize_params(params, 32)
     q_out = float(model_apply(q_params, x).reshape(-1)[0])
     out = float(model_apply(params, x).reshape(-1)[0])
     print(f"Original Model  Output: {out:.3e}")
