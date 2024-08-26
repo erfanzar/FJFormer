@@ -1,3 +1,7 @@
+"""
+__init__ module for functions
+"""
+
 from fjformer.functions._functions import (
     average_metrics as average_metrics,
     global_norm as global_norm,

@@ -20,24 +20,24 @@ import flax.struct
 
 
 class NoNumerics(numerics.QNumerics, flax.struct.PyTreeNode):
-    """No quantization, use a native type such as bf16."""
+	"""No quantization, use a native type such as bf16."""
 
-    # noise_fn has no effect in NoNumerics.
-    noise_fn: Optional[stochastic_rounding.NoiseFn] = None
-    dtype: Optional[Any] = None
+	# noise_fn has no effect in NoNumerics.
+	noise_fn: Optional[stochastic_rounding.NoiseFn] = None
+	dtype: Optional[Any] = None
 
-    # it in a special way right now. These functions are never called
-    def get_dtype(self):
-        return None
+	# it in a special way right now. These functions are never called
+	def get_dtype(self):
+		return None
 
-    def fwd(self, x, context):
-        pass
+	def fwd(self, x, context):
+		pass
 
-    def abs_val_mapped_to(self):
-        pass
+	def abs_val_mapped_to(self):
+		pass
 
-    def vjp_fwd(self, x, context):
-        pass
+	def vjp_fwd(self, x, context):
+		pass
 
-    def vjp_bwd(self, res, grad):
-        pass
+	def vjp_bwd(self, res, grad):
+		pass

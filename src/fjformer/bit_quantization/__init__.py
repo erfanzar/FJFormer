@@ -8,28 +8,28 @@
 # Accurate QTraining
 
 from fjformer.bit_quantization.q_dot_general import (
-    make_dot_general as make_dot_general,
-    make_fake_quant as make_fake_quant,
-    DotGeneralRes as DotGeneralRes
+	make_dot_general as make_dot_general,
+	make_fake_quant as make_fake_quant,
+	DotGeneralRes as DotGeneralRes,
 )
 from fjformer.bit_quantization.q_flax import (
-    QuantMode as QuantMode,
-    Freezer as Freezer,
-    QDotGeneral as QDotGeneral,
-    QEinsum as QEinsum,
-    config_v4 as config_v4
+	QuantMode as QuantMode,
+	Freezer as Freezer,
+	QDotGeneral as QDotGeneral,
+	QEinsum as QEinsum,
+	config_v4 as config_v4,
 )
 
 from fjformer.bit_quantization.config import fully_quantized
 
 __all__ = (
-    "make_dot_general",
-    "make_fake_quant",
-    "DotGeneralRes",
-    "QuantMode",
-    "Freezer",
-    "QDotGeneral",
-    "QEinsum",
-    "config_v4",
-    "fully_quantized",
+	"make_dot_general",
+	"make_fake_quant",
+	"DotGeneralRes",
+	"QuantMode",
+	"Freezer",
+	"QDotGeneral",
+	"QEinsum",
+	"config_v4",
+	"fully_quantized",
 )

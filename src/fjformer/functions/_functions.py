@@ -8,7 +8,8 @@ def global_norm(tree: chex.ArrayTree) -> chex.Array:
     """
     Computes the global norm of a PyTree of arrays.
 
-    The global norm is the square root of the sum of squares of all elements in the PyTree.
+    The global norm is the square root of the sum of squares of all elements in the
+    PyTree.
 
     Args:
         tree: The PyTree of arrays.

@@ -8,7 +8,7 @@ env.py
 experimental.py
 # C extensions
 *.so
-
+src/fjformer/pallas_operations/flash_attention.py
 # Distribution / packaging
 .Python
 build/
