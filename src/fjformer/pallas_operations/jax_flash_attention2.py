@@ -2,17 +2,16 @@
 # with a few bug fixes and adjustments.
 
 import functools
+import jax.sharding
 import math
 from typing import Optional
 
 import jax
 import jax.numpy as jnp
 import jax.random
-import jax.sharding
-from jax import lax
-
-from fjformer.sharding import with_sharding_constraint
 from fjformer.utils import GenerateRNG
+from fjformer.sharding import with_sharding_constraint
+from jax import lax
 
 rng = GenerateRNG()
 
@@ -172,7 +171,10 @@ def _fwd_flash_attn(
 		if isinstance(q.sharding, jax.sharding.NamedSharding):
 			with q.sharding.mesh:
 				o = with_sharding_constraint(o, q.sharding.spec)
-				lse = with_sharding_constraint(lse, q.sharding.spec[:3])
+				lse = with_sharding_constraint(
+					lse,
+					jax.sharding.PartitionSpec(*q.sharding.spec[:3]),
+				)
 		elif isinstance(q.sharding, jax.sharding.SingleDeviceSharding) and hasattr(
 			q.sharding, "_device"
 		):
