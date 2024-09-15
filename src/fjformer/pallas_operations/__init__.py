@@ -2,3 +2,4 @@ from fjformer.pallas_operations import efficient_attention as efficient_attentio
 from fjformer.pallas_operations import gpu as gpu
 from fjformer.pallas_operations import pallas_attention as pallas_attention
 from fjformer.pallas_operations import tpu as tpu
+from fjformer.pallas_operations.jax_flash_attention2 import flash_attention2 as flash_attention2
