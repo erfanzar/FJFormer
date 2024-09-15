@@ -4,8 +4,8 @@ Optimizers
 .. toctree::
    :maxdepth: 2
 
-   optimizers.adafactor
-   optimizers.adamw
    optimizers.rmsprop
-   optimizers.lion
+   optimizers.adamw
    optimizers.optimizer_utils
+   optimizers.lion
+   optimizers.adafactor

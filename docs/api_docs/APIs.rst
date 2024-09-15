@@ -9,6 +9,7 @@ FJFormer APIs 🔮
    Core
    Dtypes
    Functions
+   Jaxpruner
    Lora
    Monitor
    Optimizers

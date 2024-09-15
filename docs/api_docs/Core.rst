@@ -6,6 +6,6 @@ Core
 
    core.symbols
    core.types
-   core.utilities
-   core.implicit_array
    core.errors
+   core.implicit_array
+   core.utilities
