@@ -5,10 +5,10 @@ import functools
 from typing import Any
 
 import jax
-from jax import lax
-from jax.experimental import pallas as pl
 import jax.numpy as jnp
 import numpy as np
+from jax import lax
+from jax.experimental import pallas as pl
 
 DEFAULT_MASK_VALUE = -0.7 * float(np.finfo(np.dtype("float32")).max)
 
@@ -182,14 +182,14 @@ def mha(
 	)
 
 	in_specs = [
-		pl.BlockSpec(lambda _, j, k: (j, 0, k, 0), (None, seq_len, None, head_dim)),
-		pl.BlockSpec(lambda _, j, k: (j, 0, k, 0), (None, seq_len, None, head_dim)),
-		pl.BlockSpec(lambda _, j, k: (j, 0, k, 0), (None, seq_len, None, head_dim)),
+		pl.BlockSpec((None, seq_len, None, head_dim), lambda _, j, k: (j, 0, k, 0)),
+		pl.BlockSpec((None, seq_len, None, head_dim), lambda _, j, k: (j, 0, k, 0)),
+		pl.BlockSpec((None, seq_len, None, head_dim), lambda _, j, k: (j, 0, k, 0)),
 	]
 	in_specs.append(
 		None  # type: ignore[arg-type]
 		if segment_ids is None
-		else pl.BlockSpec(lambda _, j, k: (j, 0), (None, seq_len))
+		else pl.BlockSpec((None, seq_len), lambda _, j, k: (j, 0))
 	)
 	out_shape = jax.ShapeDtypeStruct(shape=q.shape, dtype=q.dtype)
 	return pl.pallas_call(
@@ -197,7 +197,7 @@ def mha(
 		grid=grid_,
 		in_specs=in_specs,
 		out_specs=pl.BlockSpec(
-			lambda _, j, k: (j, 0, k, 0), (None, seq_len, None, head_dim)
+			(None, seq_len, None, head_dim), lambda _, j, k: (j, 0, k, 0)
 		),
 		compiler_params=dict(triton=dict(num_warps=num_warps_, num_stages=num_stages)),
 		out_shape=out_shape,
@@ -256,23 +256,23 @@ def _mha_forward(
 		),
 	]
 	in_specs = [
-		pl.BlockSpec(lambda _, j, k: (j, 0, k, 0), (None, seq_len, None, head_dim)),
-		pl.BlockSpec(lambda _, j, k: (j, 0, k, 0), (None, seq_len, None, head_dim)),
-		pl.BlockSpec(lambda _, j, k: (j, 0, k, 0), (None, seq_len, None, head_dim)),
+		pl.BlockSpec((None, seq_len, None, head_dim), lambda _, j, k: (j, 0, k, 0)),
+		pl.BlockSpec((None, seq_len, None, head_dim), lambda _, j, k: (j, 0, k, 0)),
+		pl.BlockSpec((None, seq_len, None, head_dim), lambda _, j, k: (j, 0, k, 0)),
 	]
 	in_specs.append(
 		None  # type: ignore[arg-type]
 		if segment_ids is None
-		else pl.BlockSpec(lambda _, j, k: (j, 0), (None, seq_len))
+		else pl.BlockSpec((None, seq_len), lambda _, j, k: (j, 0))
 	)
 	out, l, m = pl.pallas_call(
 		kernel,
 		grid=grid_,
 		in_specs=in_specs,
 		out_specs=[
-			pl.BlockSpec(lambda _, j, k: (j, 0, k, 0), (None, seq_len, None, head_dim)),
-			pl.BlockSpec(lambda _, j, k: (j, k, 0), (None, None, seq_len)),
-			pl.BlockSpec(lambda _, j, k: (j, k, 0), (None, None, seq_len)),
+			pl.BlockSpec((None, seq_len, None, head_dim), lambda _, j, k: (j, 0, k, 0)),
+			pl.BlockSpec((None, None, seq_len), lambda _, j, k: (j, k, 0)),
+			pl.BlockSpec((None, None, seq_len), lambda _, j, k: (j, k, 0)),
 		],
 		compiler_params=dict(triton=dict(num_warps=num_warps_, num_stages=num_stages)),
 		out_shape=out_shape,
@@ -312,13 +312,13 @@ def _preprocess_backward(out, do, l, block_q: int, debug: bool, interpret: bool)
 		functools.partial(_preprocess_backward_kernel, block_q=block_q),
 		grid=(pl.cdiv(seq_len, block_q), batch_size, num_heads),
 		in_specs=[
-			pl.BlockSpec(lambda _, j, k: (j, 0, k, 0), (None, seq_len, None, head_dim)),
-			pl.BlockSpec(lambda _, j, k: (j, 0, k, 0), (None, seq_len, None, head_dim)),
-			pl.BlockSpec(lambda _, j, k: (j, k, 0), (None, None, seq_len)),
+			pl.BlockSpec((None, seq_len, None, head_dim), lambda _, j, k: (j, 0, k, 0)),
+			pl.BlockSpec((None, seq_len, None, head_dim), lambda _, j, k: (j, 0, k, 0)),
+			pl.BlockSpec((None, None, seq_len), lambda _, j, k: (j, k, 0)),
 		],
 		out_specs=[
-			pl.BlockSpec(lambda _, j, k: (j, 0, k, 0), (None, seq_len, None, head_dim)),
-			pl.BlockSpec(lambda _, j, k: (j, k, 0), (None, None, seq_len)),
+			pl.BlockSpec((None, seq_len, None, head_dim), lambda _, j, k: (j, 0, k, 0)),
+			pl.BlockSpec((None, None, seq_len), lambda _, j, k: (j, k, 0)),
 		],
 		compiler_params=dict(triton=dict(num_warps=4, num_stages=3)),
 		out_shape=out_shape,
@@ -472,21 +472,21 @@ def _mha_backward(
 		]
 
 		in_specs = [
-			pl.BlockSpec(lambda j, k: (j, 0, k, 0), (None, seq_len, None, head_dim)),
-			pl.BlockSpec(lambda j, k: (j, 0, k, 0), (None, seq_len, None, head_dim)),
-			pl.BlockSpec(lambda j, k: (j, 0, k, 0), (None, seq_len, None, head_dim)),
-			pl.BlockSpec(lambda j, k: (j, 0, k, 0), (None, seq_len, None, head_dim)),
-			pl.BlockSpec(lambda j, k: (j, 0, k, 0), (None, seq_len, None, head_dim)),
-			pl.BlockSpec(lambda j, k: (j, k, 0), (None, None, seq_len)),
-			pl.BlockSpec(lambda j, k: (j, k, 0), (None, None, seq_len)),
-			pl.BlockSpec(lambda j, k: (j, k, 0), (None, None, seq_len)),
-			pl.BlockSpec(lambda j, k: (j, 0, k, 0), (None, seq_len, None, head_dim)),
+			pl.BlockSpec((None, seq_len, None, head_dim), lambda j, k: (j, 0, k, 0)),
+			pl.BlockSpec((None, seq_len, None, head_dim), lambda j, k: (j, 0, k, 0)),
+			pl.BlockSpec((None, seq_len, None, head_dim), lambda j, k: (j, 0, k, 0)),
+			pl.BlockSpec((None, seq_len, None, head_dim), lambda j, k: (j, 0, k, 0)),
+			pl.BlockSpec((None, seq_len, None, head_dim), lambda j, k: (j, 0, k, 0)),
+			pl.BlockSpec((None, None, seq_len), lambda j, k: (j, k, 0)),
+			pl.BlockSpec((None, None, seq_len), lambda j, k: (j, k, 0)),
+			pl.BlockSpec((None, None, seq_len), lambda j, k: (j, k, 0)),
+			pl.BlockSpec((None, seq_len, None, head_dim), lambda j, k: (j, 0, k, 0)),
 		]
 		if segment_ids is None:
 			in_specs.insert(3, None)  # type: ignore[arg-type]
 			input_output_aliases = {8: 0}
 		else:
-			in_specs.insert(3, pl.BlockSpec(lambda j, k: (j, 0), (None, seq_len)))
+			in_specs.insert(3, pl.BlockSpec((None, seq_len), lambda j, k: (j, 0)))
 			input_output_aliases = {9: 0}
 		grid = (batch_size, num_heads)
 		num_warps = 8
@@ -503,9 +503,9 @@ def _mha_backward(
 			out_shape=out_shapes,
 			in_specs=in_specs,
 			out_specs=[
-				pl.BlockSpec(lambda j, k: (j, 0, k, 0), (None, seq_len, None, head_dim)),
-				pl.BlockSpec(lambda j, k: (j, 0, k, 0), (None, seq_len, None, head_dim)),
-				pl.BlockSpec(lambda j, k: (j, 0, k, 0), (None, seq_len, None, head_dim)),
+				pl.BlockSpec((None, seq_len, None, head_dim), lambda j, k: (j, 0, k, 0)),
+				pl.BlockSpec((None, seq_len, None, head_dim), lambda j, k: (j, 0, k, 0)),
+				pl.BlockSpec((None, seq_len, None, head_dim), lambda j, k: (j, 0, k, 0)),
 			],
 			name="mha_backward",
 			debug=debug,

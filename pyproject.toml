@@ -3,11 +3,11 @@ name = "fjformer"
 authors = [{ name = "Erfan Zare Chavoshi", email = "Erfanzare810@gmail.com" }]
 requires-python = ">=3.9"
 readme = "README.md"
-version = "0.0.78"
+version = "0.0.79"
 
 dependencies = [
-    "jax>=0.4.30",
-    "jaxlib>=0.4.30",
+    "jax>=0.4.31",
+    "jaxlib>=0.4.31",
     "optax~=0.2.2",
     "msgpack~=1.0.7",
     "ipython~=8.17.2",
@@ -62,6 +62,7 @@ unfixable = ["B"]
 "__init__.py" = ["E402"]
 "**/{tests,docs,tools}/*" = ["E402"]
 "test/*"=["E402"]
+"**/pallas_operations/*"=["E741","E731","B011"]
 
 [tool.ruff.format]
 # 5. Use single quotes in `ruff format`.

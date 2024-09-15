@@ -1,34 +1,38 @@
 import os
-from typing import Callable, Literal, Union, Optional, Tuple
+from functools import partial
+from typing import Callable, Literal, Optional, Tuple, Union
 
-import jax
 import flax
+import jax
 import msgpack
 import safetensors.flax
 import tqdm
-from flax.serialization import from_bytes, to_bytes, to_state_dict, from_state_dict
-from flax.traverse_util import flatten_dict, unflatten_dict, empty_node
-from jax import numpy as jnp
-
 from flax import struct
+from flax.serialization import from_bytes, from_state_dict, to_bytes, to_state_dict
+from flax.traverse_util import empty_node, flatten_dict, unflatten_dict
+from jax import numpy as jnp
+from fjformer.utils import get_logger
+
+logger = get_logger(__name__)
 
 
-def load_file(filename: Union[str, os.PathLike]) -> Tuple[dict, dict]:
-	"""
-	Load a checkpoint file from the given filename.
-
-	Args:
-	    filename: The path to the checkpoint file.
-
-	Returns:
-	    A tuple containing the state dictionary and metadata.
-	"""
-	result = {}
-	with safetensors.safe_open(filename, framework="flax") as f:
-		metadata = f.metadata()
-		for k in f.keys():
-			result[k] = f.get_tensor(k)
-	return result, metadata
+def process_tensor(key, shard_fns, mismatch_allowed, manager):
+	tensor = manager.get_tensor(key)
+	if shard_fns is not None:
+		try:
+			callable_func = shard_fns.get(key)
+			if callable_func is None:
+				if not mismatch_allowed:
+					raise KeyError(
+						f"Shard Function {key} is None and NoneType OBJ is not callable."
+					)
+				return key, tensor, 1
+			return key, callable_func(tensor), 0
+		except KeyError as k_err:
+			if mismatch_allowed:
+				return key, tensor, 1
+			raise KeyError(k_err) from None
+	return key, tensor, 0
 
 
 def is_flatten(pytree: Union[dict, struct.PyTreeNode]) -> bool:
@@ -136,55 +140,51 @@ class CheckpointManager(object):
 		Load a checkpoint from the given path.
 
 		Args:
-		    path: The path to the checkpoint file.
-		    target: The target PyTree to load the checkpoint into.
-		    shard_fns: A dictionary of functions to shard the state after loading.
-		    verbose: Whether to print verbose output.
-		    mismatch_allowed: Whether to allow mismatches between the state dictionary and shard functions.
+		                path: The path to the checkpoint file.
+		                target: The target PyTree to load the checkpoint into.
+		                shard_fns: A dictionary of functions to shard the state after loading.
+		                verbose: Whether to print verbose output.
+		                mismatch_allowed: Whether to allow mismatches between the state dictionary and shard functions.
 
 		Returns:
-		    A tuple containing the loaded state dictionary and metadata.
+		                A tuple containing the loaded state dictionary and metadata.
 		"""
-		shard_functions_mismatch = 0
-		state, metadata = load_file(path)
-		state = flax.traverse_util.unflatten_dict(state, sep=".")
-		state = flax.traverse_util.flatten_dict(state)
+		with safetensors.safe_open(path, framework="flax") as f:
+			metadata = f.metadata()
+			keys = list(f.keys())
 
-		if shard_fns is not None:
-			# Example:
-			# shard_fns = {"params": {"Dense_0": jax.pmap(lambda x: x[0])}}
+			if shard_fns is not None:
+				if not is_flatten(shard_fns):
+					shard_fns = flatten_dict(shard_fns, sep=".")
 
-			pbar_sharding = tqdm.tqdm(
-				list(state.keys()), desc="Sharding State", disable=not verbose
+			process_func = partial(
+				process_tensor,
+				shard_fns=shard_fns,
+				mismatch_allowed=mismatch_allowed,
+				manager=f,
 			)
-			if not is_flatten(shard_fns):
-				shard_fns = flatten_dict(shard_fns)
-			for key in list(state.keys()):
-				try:
-					callable_func = shard_fns[key]
-					if callable_func is None and not mismatch_allowed:
-						raise KeyError(
-							f"Shard Function {key} is None and NoneType OBJ is not callable."
-						)
+			results = [
+				process_func(key)
+				for key in tqdm.tqdm(
+					keys,
+					desc="Loading",
+					total=len(keys),
+				)
+			]
 
-					if callable_func is None:
-						shard_functions_mismatch += 1
-					else:
-						state[key] = callable_func(state[key])
-				except KeyError as k_err:
-					if mismatch_allowed:
-						shard_functions_mismatch += 1
-					else:
-						raise KeyError(k_err) from None
-				pbar_sharding.set_postfix(sharding_mismatch=shard_functions_mismatch)
-				pbar_sharding.update(1)
-		if target is not None:  # noqa
+		state = {key: tensor for key, tensor, _ in results}
+		shard_functions_mismatch = sum(mismatch for _, _, mismatch in results)
+
+		if verbose and shard_functions_mismatch != 0:
+			logger.info(f"Sharding mismatch: {shard_functions_mismatch}")
+
+		if target is not None:
 			flattened_target = flatten_dict(to_state_dict(target), keep_empty_nodes=True)
 			for key, value in flattened_target.items():
 				if key not in state and value == empty_node:
 					state[key] = value
 
-		state = unflatten_dict(state)
+		state = unflatten_dict(state, sep=".")
 		if target is None:
 			return state, metadata
 

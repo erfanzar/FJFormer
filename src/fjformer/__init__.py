@@ -27,4 +27,4 @@ from fjformer.utils import JaxRNG as JaxRNG
 from fjformer.utils import get_logger as get_logger
 
 
-__version__ = "0.0.78"
+__version__ = "0.0.79"
