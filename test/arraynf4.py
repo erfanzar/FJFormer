@@ -21,12 +21,29 @@ rng = GenerateRNG()
 class Model(nn.Module):
 	"""A simple linear model for demonstration."""
 
+	inx: int
+
 	def setup(self) -> None:
 		"""Initializes the model layers."""
-		self.embed_time = nn.Embed(512, 512)
-		self.fc = nn.Dense(512, use_bias=False, dtype=jnp.float32)
-		self.fc1 = nn.Dense(64, use_bias=False, dtype=jnp.float32)
-		self.out = nn.Dense(1, use_bias=False, dtype=jnp.float32)
+		self.embed_time = nn.Embed(512, self.inx)
+		self.fc = nn.Dense(
+			self.inx,
+			use_bias=False,
+			dtype=jnp.float32,
+			kernel_init=jax.nn.initializers.normal(0.02),
+		)
+		self.fc1 = nn.Dense(
+			self.inx // 2,
+			use_bias=False,
+			dtype=jnp.float32,
+			kernel_init=jax.nn.initializers.normal(0.02),
+		)
+		self.out = nn.Dense(
+			self.inx // 4,
+			use_bias=False,
+			dtype=jnp.float32,
+			kernel_init=jax.nn.initializers.normal(0.02),
+		)
 
 	def __call__(self, x):
 		"""Performs a forward pass through the model."""
@@ -37,11 +54,7 @@ class Model(nn.Module):
 		return self.out(x)
 
 
-def quantize_params(
-	params: dict,
-	block_size: Literal[32, 64, 128, 256, 512, 1024, 2048, 4096] = 64,
-	scaler_block_size: Optional[int] = None,
-) -> dict:
+def quantize_params(params: dict) -> dict:
 	"""Quantizes model parameters using ArrayNF4.
 
 	Returns:
@@ -50,13 +63,9 @@ def quantize_params(
 
 	def q(path, array: Any) -> ArrayNF4:
 		"""Quantizes a single parameter array."""
-		if array.ndim > 2 or array.size < block_size or path[-1].key == "embedding":
+		if array.ndim > 2 or array.size < 128 or path[-1].key == "embedding":
 			return array
-		return ArrayNF4.quantize(
-			array=array,
-			block_size=block_size,
-			scaler_block_size=scaler_block_size,
-		)
+		return ArrayNF4.quantize(array=array)
 
 	return jax.tree_util.tree_map_with_path(q, params)
 
@@ -69,17 +78,21 @@ def main():
 	- Performs inference using both the original and quantized models.
 	- Prints the output of both models for comparison.
 	"""
-	model = Model()
+	model = Model(inx=512)
 	init_x = jax.random.normal(rng.rng, (1, 1, 64))
 	x = jax.random.normal(rng.rng, (1, 1, 64))
 	params = model.init(rng.rng, init_x)
 	model_apply: Callable = jax.jit(implicit_compact(model.apply))
-	q_params = quantize_params(params, 32)
-	q_out = float(model_apply(q_params, x).reshape(-1)[0])
-	out = float(model_apply(params, x).reshape(-1)[0])
-	print(f"Original Model  Output: {out:.3e}")
-	print(f"Quantized Model Output: {q_out:.3e}")
-	print(f"Overall error: {(out-q_out):.5e}")
+	q_params = quantize_params(params)
+	q_out = model_apply(q_params, x)
+	q_out = model_apply(q_params, x)
+	q_out = model_apply(q_params, x)
+	with jax.profiler.trace("/tmp/somes"):
+		q_out = model_apply(q_params, x)
+		out = model_apply(params, x)
+	error = jnp.abs(q_out - out).max()
+	print(f"ERROR : {error}")
+	jax.profiler.save_device_memory_profile("mem.prof")
 
 
 if __name__ == "__main__":

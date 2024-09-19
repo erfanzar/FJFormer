@@ -2,12 +2,11 @@
 
 import math
 from dataclasses import dataclass
-from functools import lru_cache, partial
-from typing import Any, Optional, Sequence, Union
+from functools import partial
+from typing import Any, Optional, Sequence, Union, Tuple
 
 import chex
 import jax
-import torch
 from jax import Array, lax
 from jax import numpy as jnp
 from jax.core import Primitive
@@ -16,7 +15,8 @@ from jax.sharding import NamedSharding, SingleDeviceSharding
 import fjformer.core as core
 from fjformer.sharding import auto_shard_array, with_sharding_constraint
 
-torch.manual_seed(42)
+XB = 128
+SB = 32
 CHUNK_SIZE = 1024**2
 NF4 = jnp.array(  # I took this from QLoRA Paper.
     [
@@ -41,155 +41,84 @@ NF4 = jnp.array(  # I took this from QLoRA Paper.
 )
 
 
-def quantize_tensor_nearest(value: chex.Array, nf4: chex.Array) -> chex.Array:
-    value = jnp.expand_dims(value, -1)
-    diff = jnp.abs(value - nf4)
-    closest_nf4 = jnp.argmin(diff, axis=-1)
-    return closest_nf4
+@jax.jit
+def quantize(array: jax.Array):
+    def absmax(x, b):
+        numel = x.size
+        assert numel % b == 0
+        assert x.ndim == 1
+        nb = numel // b
+        return jnp.max(jnp.abs(x.reshape(nb, b)), axis=1)
 
+    xf = array.ravel()
+    assert (
+        xf.size % XB == 0
+    ), f"array with numel={xf.size} is not visible to {XB} blocksize"
 
-@partial(jax.jit, static_argnames=["block_size"])
-def get_block_absmax(array: chex.Array, block_size: int) -> chex.Array:
-    assert array.ndim == 1
-    assert (array.size % block_size) == 0
+    nXB = xf.size // XB
+    XBa = xf.reshape(nXB, XB)
+    scalers = absmax(xf, XB)
+    scaler_mean = jnp.mean(scalers)
+    scaler_1 = scalers - scaler_mean
 
-    n_blocks = array.size // block_size
-    blocks = array.reshape(n_blocks, block_size)
-    return jnp.max(jnp.abs(blocks), axis=1)
+    assert (
+        scaler_1.size % SB == 0
+    ), f"scaler with numel={scaler_1.size} is not visible to {SB} blocksize"
 
-
-def create_quantize_dequantize_funcs(block_size: int, scaler_block_size: int):
-    @jax.jit
-    def quantize_to_nf4(array: chex.Array):
-        assert array.ndim <= 2
-        assert array.size % block_size == 0
-        assert (array.size % scaler_block_size) == 0
-        n_blocks = array.size // block_size
-
-        array = array.ravel()
-
-        scalers_1 = get_block_absmax(array, block_size)
-        scaler_mean = jnp.mean(scalers_1)
-        scalers_1 = scalers_1 - scaler_mean
-        assert (
-            scalers_1.size % scaler_block_size == 0
-        ), f"given `scaler_block_size` won't match for array size {array.size}."
-        n_scaler_blocks = scalers_1.size // scaler_block_size
-        scaler_blocks = scalers_1.reshape(n_scaler_blocks, scaler_block_size)
-
-        scaler_absmax = get_block_absmax(scalers_1, scaler_block_size)
-        scaler_absmax = jnp.broadcast_to(
-            jnp.expand_dims(scaler_absmax, -1), (n_scaler_blocks, scaler_block_size)
+    nSB = scaler_1.size // SB
+    scaler_blocks = scaler_1.reshape(nSB, SB)
+    scaler_absmax = absmax(scaler_1, SB)
+    quant_factor = 256 / (2 * scaler_absmax)
+    quant_scale = (
+        jnp.clip(
+            jnp.round(scaler_blocks * quant_factor[..., None]),
+            min=-128,
+            max=127,
         )
-
-        quantization_factor = 256 / (2 * scaler_absmax)
-        quantized_scalers = scaler_blocks * quantization_factor
-        quantized_scalers = jnp.round(quantized_scalers)
-        quantized_scalers = (
-            jnp.clip(quantized_scalers, min=-128, max=127).flatten().astype(jnp.int8)
-        )
-
-        quantization_factor = quantization_factor[:, 0]
-        quantization_factor = jax.lax.stop_gradient(
-            quantization_factor.reshape(n_scaler_blocks)
-        )
-
-        flattened_tensor = array.ravel()
-        numel = array.size
-        assert numel % 2 == 0
-        blocks = flattened_tensor.reshape(n_blocks, block_size)
-
-        # Scale the blocks
-        scalers = get_block_absmax(array.ravel(), block_size)
-        scales = jnp.broadcast_to(jnp.expand_dims(scalers, -1), (n_blocks, block_size))
-        scaled_blocks = blocks / scales
-
-        quantized_blocks = jnp.empty(numel, dtype=jnp.uint8)
-        flattened = scaled_blocks.ravel()
-
-        for chunk_num in range(math.ceil(numel / CHUNK_SIZE)):
-            start = chunk_num * CHUNK_SIZE
-            end = min(start + CHUNK_SIZE, numel)
-            quantized_blocks = quantized_blocks.at[start:end].set(
-                quantize_tensor_nearest(
-                    flattened[start:end],
-                    NF4,
-                ).astype(jnp.uint8)
-            )
-
-        combined_blocks = quantized_blocks[::2] << 4 | quantized_blocks[1::2]
-
-        quantized_data = combined_blocks.astype(jnp.uint8)
-        return quantized_data, quantized_scalers, quantization_factor, scaler_mean
-
-    @partial(jax.jit, static_argnums=(4, 5))
-    def dequantize_nf4(
-        quantized_data: chex.Array,
-        quantized_scalers: chex.Array,
-        quantization_factor: chex.Array,
-        scaler_mean: chex.Array,
-        org_dtype: jnp.dtype,
-        org_shape: chex.Shape,
-    ):
-        first_elements = (quantized_data >> 4).astype("i4")
-        second_elements = (quantized_data & 0b1111).astype("i4")
-
-        # Dequantize every element
-        dequantized_first = NF4[first_elements]
-        dequantized_second = NF4[second_elements]
-
-        assert quantized_scalers.ndim == 1
-        assert (quantized_scalers.size % scaler_block_size) == 0
-        n_scaler_blocks = quantized_scalers.size // scaler_block_size
-        quantized_scalers = quantized_scalers.reshape(
-            n_scaler_blocks, scaler_block_size
-        )
-        scalers = (
-            quantized_scalers / jnp.expand_dims(quantization_factor, -1)
-        ).flatten().astype(org_dtype) + scaler_mean
-
-        repeated = jnp.broadcast_to(
-            jnp.expand_dims(scalers, -1),
-            (scalers.shape[0], block_size // 2),
-        )
-
-        scaled_first = dequantized_first * repeated.flatten()
-        scaled_second = dequantized_second * repeated.flatten()
-
-        scaled_first = jnp.expand_dims(scaled_first, -1).transpose(1, 0)
-        scaled_second = jnp.expand_dims(scaled_second, -1).transpose(1, 0)
-        return jnp.stack([scaled_first, scaled_second], axis=-1).reshape(org_shape)
-
-    return quantize_to_nf4, dequantize_nf4
-
-
-@lru_cache(maxsize=None)
-def get_quantize_func(block_size, scaler_block_size):
-
-    quantize, dequantize = create_quantize_dequantize_funcs(
-        block_size=block_size,
-        scaler_block_size=scaler_block_size,
+        .flatten()
+        .astype(jnp.int8)
     )
-    return quantize
+    scaled_blocks = XBa / scalers[..., None]
+    quant_block = jnp.empty(xf.size, dtype=jnp.uint8)
+    flattened = scaled_blocks.ravel()
+    for cidx in range(math.ceil(xf.size / 4096)):
+        sidx = cidx * 4096
+        eidx = min(sidx + 4096, xf.size)
+        quanted = jnp.argmin(
+            jnp.abs(flattened[..., None][sidx:eidx] - NF4),
+            axis=-1,
+        ).astype(jnp.uint8)
+
+        quant_block = quant_block.at[sidx:eidx].set(quanted)
+    quant_block = quant_block[::2] << 4 | quant_block[1::2]
+    return quant_block.astype(jnp.uint8), quant_scale, quant_factor, scaler_mean
 
 
-@lru_cache(maxsize=None)
-def get_dequantize_func(block_size, scaler_block_size):
-    quantize, dequantize = create_quantize_dequantize_funcs(
-        block_size=block_size,
-        scaler_block_size=scaler_block_size,
-    )
-    return dequantize
+@jax.jit
+def dequantize(
+    quant_block,
+    quant_scale,
+    quant_factor,
+    scaler_mean,
+):
+    first_element = quant_block >> 4
+    second_element = quant_block & 0b1111
+    deq_first = NF4[first_element]
+    deq_second = NF4[second_element]
+    nSB = quant_scale.size // SB
+    quant_scale = quant_scale.reshape(nSB, SB)
+    scalers = (quant_scale / quant_factor[..., None]) + scaler_mean
+    scaled_fir = (deq_first * scalers.ravel().repeat(XB // 2))[:, None].transpose(1, 0)
+    scaled_sec = (deq_second * scalers.ravel().repeat(XB // 2))[:, None].transpose(1, 0)
+    return jnp.stack([scaled_fir, scaled_sec], axis=-1)
 
 
 @dataclass
 class ArrayNF4(core.ImplicitArray):
-    quantized_data: core.ArrayValue
-    quantized_scalers: core.ArrayValue
-    quantization_factor: core.ArrayValue
+    quant_block: core.ArrayValue
+    quant_scale: core.ArrayValue
+    quant_factor: core.ArrayValue
     scaler_mean: core.ArrayValue
-    scaler_block_size: int = core.aux_field()
-    block_size: int = core.aux_field()
     sharding: Union[NamedSharding, SingleDeviceSharding] = core.aux_field()
 
     def materialize(self) -> Array:
@@ -213,18 +142,16 @@ class ArrayNF4(core.ImplicitArray):
         """
 
         dtype = dtype if dtype is not None else self.dtype
-        dequantized_array = get_dequantize_func(
-            block_size=self.block_size,
-            scaler_block_size=self.scaler_block_size,
-        )(
-            quantized_data=self.quantized_data,
-            quantized_scalers=self.quantized_scalers,
-            quantization_factor=self.quantization_factor,
-            scaler_mean=self.scaler_mean,
-            org_dtype=dtype,
-            org_shape=self.shape,
-        ).astype(
-            self.dtype
+
+        dequantized_array = (
+            dequantize(
+                quant_block=self.quant_block,
+                quant_scale=self.quant_scale,
+                quant_factor=self.quant_factor,
+                scaler_mean=self.scaler_mean,
+            )
+            .reshape(self.shape)
+            .astype(dtype or self.dtype)
         )
         if isinstance(self.sharding, NamedSharding):
             with self.sharding.mesh:
@@ -239,53 +166,37 @@ class ArrayNF4(core.ImplicitArray):
         return dequantized_array
 
     @classmethod
-    def quantize(
-        cls,
-        array: chex.Array,
-        block_size: int = 64,
-        scaler_block_size: Optional[int] = None,
-    ) -> "ArrayNF4":
+    def quantize(cls, array: chex.Array) -> "ArrayNF4":
         sharding = array.sharding
-        if scaler_block_size is None:
-            scaler_block_size = float(array.size / block_size)
-            assert (
-                scaler_block_size.is_integer()
-            ), f"can't chunk array which size {array.size} to {block_size} block sizes."
-            scaler_block_size = int(scaler_block_size)
+        print("Start")
         (
-            quantized_data,
-            quantized_scalers,
-            quantization_factor,
+            quant_block,
+            quant_scale,
+            quant_factor,
             scaler_mean,
-        ) = get_quantize_func(
-            block_size=block_size,
-            scaler_block_size=scaler_block_size,
-        )(
-            array=array
-        )
+        ) = quantize(array=array)
+        print("Done")
         if isinstance(sharding, NamedSharding):
             names = [s for s in sharding.spec if s is not None]
             with sharding.mesh:
-                quantized_data = auto_shard_array(quantized_data, names=names)
-                quantized_scalers = auto_shard_array(quantized_scalers, names=names)
-                quantization_factor = auto_shard_array(quantization_factor, names=names)
+                quant_block = auto_shard_array(quant_block, names=names)
+                quant_scale = auto_shard_array(quant_scale, names=names)
+                quant_factor = auto_shard_array(quant_factor, names=names)
                 scaler_mean = auto_shard_array(scaler_mean, names=names)
 
         elif isinstance(sharding, SingleDeviceSharding):
             # just simply put them on the same device as org array
-            quantized_data = jax.device_put(quantized_data, device=sharding)
-            quantized_scalers = jax.device_put(quantized_scalers, device=sharding)
-            quantization_factor = jax.device_put(scaler_mean, device=sharding)
+            quant_block = jax.device_put(quant_block, device=sharding)
+            quant_scale = jax.device_put(quant_scale, device=sharding)
+            quant_factor = jax.device_put(scaler_mean, device=sharding)
             scaler_mean = jax.device_put(scaler_mean, device=sharding)
         else:
             raise NotImplementedError(f"Unknown device sharding {sharding}")
         return cls(
-            quantized_data=quantized_data,
-            quantized_scalers=quantized_scalers,
-            quantization_factor=quantization_factor,
+            quant_block=quant_block,
+            quant_scale=quant_scale,
+            quant_factor=quant_factor,
             scaler_mean=scaler_mean,
-            scaler_block_size=scaler_block_size,
-            block_size=block_size,
             dtype=array.dtype,
             shape=array.shape,
             sharding=sharding,
@@ -295,14 +206,27 @@ class ArrayNF4(core.ImplicitArray):
 ArrayType = Union[Array, ArrayNF4]
 
 
+def safe_materialize(arr: ArrayType) -> Tuple[ArrayType, bool]:
+    """Safely materialize an array if it's ArrayNF4."""
+    if isinstance(arr, ArrayNF4):
+        return arr.materialize(), True
+    return arr, False
+
+
+def safe_delete(arr: ArrayType, materialized: bool) -> None:
+    """Safely delete an array if it was materialized."""
+    if materialized:
+        del arr
+
+
 @core.primitive_handler("dot_general")
 def handle_dot_general(
     primitive: Primitive,
     lhs: ArrayType,
     rhs: ArrayType,
-    *args,
-    **kwargs,
-):
+    *args: Any,
+    **kwargs: Any,
+) -> ArrayType:
     """
     Custom handler for JAX's dot_general operation.
 
@@ -310,23 +234,27 @@ def handle_dot_general(
 
     Args:
         primitive: The JAX primitive being handled.
-        lhs (ArrayType): Left-hand side array.
-        rhs (ArrayType): Right-hand side array.
+        lhs: Left-hand side array.
+        rhs: Right-hand side array.
         *args: Variable length argument list.
         **kwargs: Arbitrary keyword arguments.
 
     Returns:
         The result of lax.dot_general operation.
     """
-    if isinstance(lhs, ArrayNF4):
-        lhs = lhs.materialize()
-    if isinstance(rhs, ArrayNF4):
-        rhs = rhs.materialize()
-    return lax.dot_general(lhs=lhs, rhs=rhs, *args, **kwargs)
+    lhs, lhs_materialized = safe_materialize(lhs)
+    rhs, rhs_materialized = safe_materialize(rhs)
+
+    try:
+        res = lax.dot_general(lhs, rhs, *args, **kwargs)
+    finally:
+        safe_delete(lhs, lhs_materialized)
+        safe_delete(rhs, rhs_materialized)
+    return res
 
 
 @core.primitive_handler("add")
-def handle_add(primitive: Primitive, x: ArrayType, y: ArrayType):
+def handle_add(primitive: Primitive, x: ArrayType, y: ArrayType) -> ArrayType:
     """
     Custom handler for JAX's add operation.
 
@@ -334,27 +262,32 @@ def handle_add(primitive: Primitive, x: ArrayType, y: ArrayType):
 
     Args:
         primitive: The JAX primitive being handled.
-        x (ArrayType): First array to add.
-        y (ArrayType): Second array to add.
+        x: First array to add.
+        y: Second array to add.
 
     Returns:
         The result of lax.add operation.
     """
-    if isinstance(x, ArrayNF4):
-        x = x.materialize()
-    if isinstance(y, ArrayNF4):
-        y = y.materialize()
-    return lax.add(x, y)
+    x, x_materialized = safe_materialize(x)
+    y, y_materialized = safe_materialize(y)
+
+    try:
+        result = lax.add(x, y)
+    finally:
+        safe_delete(x, x_materialized)
+        safe_delete(y, y_materialized)
+
+    return result
 
 
 @core.primitive_handler("reduce")
 def handle_reduce(
-    primitive,
+    primitive: Primitive,
     operand: ArrayType,
     init_value: ArrayType,
-    *args,
-    **kwargs,
-):
+    *args: Any,
+    **kwargs: Any,
+) -> ArrayType:
     """
     Custom handler for JAX's reduce operation.
 
@@ -362,27 +295,28 @@ def handle_reduce(
 
     Args:
         primitive: The JAX primitive being handled.
-        operand (ArrayType): The array to be reduced.
-        init_value (ArrayType): The initial value for the reduction.
+        operand: The array to be reduced.
+        init_value: The initial value for the reduction.
         *args: Variable length argument list.
         **kwargs: Arbitrary keyword arguments.
 
     Returns:
         The result of lax.reduce operation.
     """
-    if isinstance(operand, ArrayNF4):
-        operand = operand.materialize()
-    if isinstance(init_value, ArrayNF4):
-        init_value = init_value.materialize()
-    return lax.reduce(operand, init_value, *args, **kwargs)
+    operand, operand_materialized = safe_materialize(operand)
+    init_value, init_value_materialized = safe_materialize(init_value)
+
+    try:
+        result = lax.reduce(operand, init_value, *args, **kwargs)
+    finally:
+        safe_delete(operand, operand_materialized)
+        safe_delete(init_value, init_value_materialized)
+
+    return result
 
 
 @core.primitive_handler("mul")
-def handle_mul(
-    primitive,
-    x: ArrayType,
-    y: ArrayType,
-):
+def handle_mul(primitive: Primitive, x: ArrayType, y: ArrayType) -> ArrayType:
     """
     Custom handler for JAX's mul operation.
 
@@ -390,26 +324,31 @@ def handle_mul(
 
     Args:
         primitive: The JAX primitive being handled.
-        x (ArrayType): First array to multiply.
-        y (ArrayType): Second array to multiply.
+        x: First array to multiply.
+        y: Second array to multiply.
 
     Returns:
         The result of lax.mul operation.
     """
-    if isinstance(x, ArrayNF4):
-        x = x.materialize()
-    if isinstance(y, ArrayNF4):
-        y = y.materialize()
-    return lax.mul(x, y)
+    x, x_materialized = safe_materialize(x)
+    y, y_materialized = safe_materialize(y)
+
+    try:
+        result = lax.mul(x, y)
+    finally:
+        safe_delete(x, x_materialized)
+        safe_delete(y, y_materialized)
+
+    return result
 
 
 @core.primitive_handler("transpose")
 def handle_transpose(
-    primitive,
+    primitive: Primitive,
     operand: ArrayType,
-    *args,
-    **kwargs,
-):
+    *args: Any,
+    **kwargs: Any,
+) -> ArrayType:
     """
     Custom handler for JAX's transpose operation.
 
@@ -418,29 +357,31 @@ def handle_transpose(
 
     Args:
         primitive: The JAX primitive being handled.
-        operand (ArrayType): The array to be transposed.
+        operand: The array to be transposed.
         *args: Variable length argument list.
         **kwargs: Arbitrary keyword arguments.
 
     Returns:
         The result of lax.transpose operation, potentially re-quantized.
     """
-    if isinstance(operand, ArrayNF4):
-        array = operand.materialize()
-    else:
-        array = operand
-    array = lax.transpose(array, *args, **kwargs)
-    return array
+    operand, operand_materialized = safe_materialize(operand)
+
+    try:
+        result = lax.transpose(operand, *args, **kwargs)
+    finally:
+        safe_delete(operand, operand_materialized)
+
+    return result
 
 
 @core.primitive_handler("conv_general_dilated")
 def handle_conv(
-    primitive,
+    primitive: Primitive,
     lhs: ArrayType,
     rhs: ArrayType,
-    *args,
-    **kwargs,
-):
+    *args: Any,
+    **kwargs: Any,
+) -> ArrayType:
     """
     Custom handler for JAX's conv_general_dilated operation.
 
@@ -448,29 +389,34 @@ def handle_conv(
 
     Args:
         primitive: The JAX primitive being handled.
-        lhs (ArrayType): Left-hand side array (input).
-        rhs (ArrayType): Right-hand side array (kernel).
+        lhs: Left-hand side array (input).
+        rhs: Right-hand side array (kernel).
         *args: Variable length argument list.
         **kwargs: Arbitrary keyword arguments.
 
     Returns:
-        The result of lax.conv operation.
+        The result of lax.conv_general_dilated operation.
     """
-    if isinstance(lhs, ArrayNF4):
-        lhs = lhs.materialize()
-    if isinstance(rhs, ArrayNF4):
-        rhs = rhs.materialize()
-    return lax.conv_general_dilated(lhs, rhs, *args, **kwargs)
+    lhs, lhs_materialized = safe_materialize(lhs)
+    rhs, rhs_materialized = safe_materialize(rhs)
+
+    try:
+        result = lax.conv_general_dilated(lhs, rhs, *args, **kwargs)
+    finally:
+        safe_delete(lhs, lhs_materialized)
+        safe_delete(rhs, rhs_materialized)
+
+    return result
 
 
 @core.primitive_handler("max")
 def handle_max(
-    primitive,
+    primitive: Primitive,
     x: ArrayType,
     y: ArrayType,
-    *args,
-    **kwargs,
-):
+    *args: Any,
+    **kwargs: Any,
+) -> ArrayType:
     """
     Custom handler for JAX's max operation.
 
@@ -478,28 +424,33 @@ def handle_max(
 
     Args:
         primitive: The JAX primitive being handled.
-        x (ArrayType): First array for max comparison.
-        y (ArrayType): Second array for max comparison.
+        x: First array for max comparison.
+        y: Second array for max comparison.
         *args: Variable length argument list.
         **kwargs: Arbitrary keyword arguments.
 
     Returns:
         The result of lax.max operation.
     """
-    if isinstance(x, ArrayNF4):
-        x = x.materialize()
-    if isinstance(y, ArrayNF4):
-        y = y.materialize()
-    return lax.max(x, y, *args, **kwargs)
+    x, x_materialized = safe_materialize(x)
+    y, y_materialized = safe_materialize(y)
+
+    try:
+        result = lax.max(x, y, *args, **kwargs)
+    finally:
+        safe_delete(x, x_materialized)
+        safe_delete(y, y_materialized)
+
+    return result
 
 
 @core.primitive_handler("exp")
 def handle_exp(
-    primitive,
+    primitive: Primitive,
     x: ArrayType,
-    *args,
-    **kwargs,
-):
+    *args: Any,
+    **kwargs: Any,
+) -> ArrayType:
     """
     Custom handler for JAX's exp operation.
 
@@ -507,16 +458,21 @@ def handle_exp(
 
     Args:
         primitive: The JAX primitive being handled.
-        x (ArrayType): The array to apply exponential to.
+        x: The array to apply exponential to.
         *args: Variable length argument list.
         **kwargs: Arbitrary keyword arguments.
 
     Returns:
         The result of lax.exp operation.
     """
-    if isinstance(x, ArrayNF4):
-        x = x.materialize()
-    return lax.exp(x, *args, **kwargs)
+    x, x_materialized = safe_materialize(x)
+
+    try:
+        result = lax.exp(x, *args, **kwargs)
+    finally:
+        safe_delete(x, x_materialized)
+
+    return result
 
 
 @core.primitive_handler("log")
@@ -532,26 +488,26 @@ def handle_log(
     regular arrays and ArrayNF4 quantized arrays.
 
     Args:
-        primitive (Primitive): The JAX primitive being handled.
-        x (ArrayType): The array to apply logarithm to.
+        primitive: The JAX primitive being handled.
+        x: The array to apply logarithm to.
         **kwargs: Additional keyword arguments for the log operation.
 
     Returns:
-        jnp.ndarray: The result of the natural logarithm operation.
+        The result of the natural logarithm operation.
 
     Raises:
-        ValueError: If the input contains non-positive values.
-
-    Note:
-        This operation always returns a full-precision array, even if the input
-        was an ArrayNF4, as the logarithm operation typically produces non-integer results.
+        RuntimeError: If the log operation fails.
     """
-    if isinstance(x, ArrayNF4):
-        x = x.materialize()
+    x, x_materialized = safe_materialize(x)
+
     try:
-        return lax.log(x, **kwargs)
+        result = lax.log(x, **kwargs)
     except Exception as e:
         raise RuntimeError(f"Log operation failed: {str(e)}") from e
+    finally:
+        safe_delete(x, x_materialized)
+
+    return result
 
 
 @core.primitive_handler("reshape")
@@ -559,7 +515,7 @@ def handle_reshape(
     primitive: Primitive,
     operand: ArrayType,
     **kwargs: Any,
-):
+) -> ArrayType:
     """
     Custom handler for JAX's reshape operation.
 
@@ -567,31 +523,27 @@ def handle_reshape(
     It materializes ArrayNF4 input before reshaping and re-quantizes the result if the input was ArrayNF4.
 
     Args:
-        primitive (Primitive): The JAX primitive being handled.
-        operand (ArrayType): The array to be reshaped.
-        new_sizes (Tuple[int, ...]): The desired new shape of the array.
-        dimensions (Tuple[int, ...], optional): The order in which dimensions should be permuted before reshaping.
+        primitive: The JAX primitive being handled.
+        operand: The array to be reshaped.
         **kwargs: Additional keyword arguments for the reshape operation.
 
     Returns:
-        ArrayType: The reshaped array, potentially re-quantized if the input was ArrayNF4.
+        The reshaped array, potentially re-quantized if the input was ArrayNF4.
 
     Raises:
         ValueError: If the new shape is not compatible with the original array's size.
     """
-    original_quantized = isinstance(operand, ArrayNF4)
-    if original_quantized:
-        array = operand.materialize()
-    else:
-        array = operand
+    operand, operand_materialized = safe_materialize(operand)
 
     try:
-        reshaped = lax.reshape(array, **kwargs)
+        reshaped = lax.reshape(operand, **kwargs)
     except ValueError as e:
         raise ValueError(
             f"Reshape operation failed: {str(e)}. "
             f"Ensure the new shape {kwargs} is compatible with the original array size."
         ) from e
+    finally:
+        safe_delete(operand, operand_materialized)
 
     return reshaped
 
@@ -600,9 +552,9 @@ def handle_reshape(
 def handle_concatenate(
     primitive: Primitive,
     operands: Sequence[ArrayType],
-    *args,
-    **kwargs,
-):
+    *args: Any,
+    **kwargs: Any,
+) -> ArrayType:
     """
     Custom handler for JAX's concatenate operation.
 
@@ -610,24 +562,35 @@ def handle_concatenate(
 
     Args:
         primitive: The JAX primitive being handled.
-        operands (Sequence[ArrayType]): Sequence of arrays to concatenate.
+        operands: Sequence of arrays to concatenate.
         *args: Variable length argument list.
         **kwargs: Arbitrary keyword arguments.
 
     Returns:
         The result of lax.concatenate operation.
     """
-    materialized_operands = [
-        op.materialize() if isinstance(op, ArrayNF4) else op for op in operands
-    ]
-    return lax.concatenate(materialized_operands, *args, **kwargs)
+    materialized_operands = []
+    materialized_flags = []
+
+    for op in operands:
+        mat_op, mat_flag = safe_materialize(op)
+        materialized_operands.append(mat_op)
+        materialized_flags.append(mat_flag)
+
+    try:
+        result = lax.concatenate(materialized_operands, *args, **kwargs)
+    finally:
+        for op, flag in zip(materialized_operands, materialized_flags):  # noqa
+            safe_delete(op, flag)
+
+    return result
 
 
 @core.primitive_handler("convert_element_type")
 def convert_element_type(
     primitive: Primitive,
     arg: ArrayNF4,
-    **params,
+    **params: Any,
 ) -> ArrayNF4:
     """Handle element type conversion for ArrayNF4."""
     result = jax.tree_util.tree_map(
@@ -640,6 +603,35 @@ def convert_element_type(
     )
     result.dtype = params["new_dtype"]
     return result
+
+
+def _out_shape_dtype(
+    primitive: Any,
+    *args: Any,
+    **kwargs: Any,
+) -> Tuple[Tuple[int, ...], Any]:
+    """
+    Determine the output shape and dtype for a given primitive operation.
+
+    This function uses JAX's shape inference capabilities to determine what
+    the shape and dtype of the output would be if the operation were performed
+    on concrete arrays.
+
+    Args:
+        primitive: JAX primitive to be evaluated.
+        *args: Positional arguments for the primitive.
+        **kwargs: Keyword arguments for the primitive.
+
+    Returns:
+        A tuple containing:
+            - The shape of the output as a tuple of integers.
+            - The dtype of the output.
+    """
+    out_aval = jax.eval_shape(
+        partial(core.default_handler, primitive, **kwargs),
+        *(jax.core.get_aval(x) for x in args),
+    )
+    return jax.tree_util.tree_map(lambda x: (x.shape, x.dtype), out_aval)
 
 
 @core.primitive_handler(
@@ -664,74 +656,48 @@ def unchanged_value_op(
     of a SymbolicConstant, but not its fundamental value.
 
     Args:
-        primitive (Any): The JAX primitive being handled.
-        sym (core.symbols.SymbolicConstant): The symbolic constant being operated on.
+        primitive: The JAX primitive being handled.
+        sym: The symbolic constant being operated on.
         **kwargs: Additional keyword arguments for the primitive operation.
 
     Returns:
-        core.symbols.SymbolicConstant: A new SymbolicConstant with potentially
-        updated shape and dtype, but the same value as the input.
+        A new SymbolicConstant with potentially updated shape and dtype, but the same value as the input.
     """
     out_shape, out_dtype = _out_shape_dtype(primitive, sym, **kwargs)
     return core.symbols.SymbolicConstant(sym.value, shape=out_shape, dtype=out_dtype)
 
 
-def _out_shape_dtype(
-    primitive: Any,
-    *args: Any,
-    **kwargs: Any,
-):
-    """
-    Determine the output shape and dtype for a given primitive operation.
-
-    This function uses JAX's shape inference capabilities to determine what
-    the shape and dtype of the output would be if the operation were performed
-    on concrete arrays.
-
-    Args:
-        primitive (Any): JAX primitive to be evaluated.
-        *args: Positional arguments for the primitive.
-        **kwargs: Keyword arguments for the primitive.
-
-    Returns:
-        Tuple[Tuple[int, ...], Any]: A tuple containing:
-            - The shape of the output as a tuple of integers.
-            - The dtype of the output.
-    """
-    out_aval = jax.eval_shape(
-        partial(core.default_handler, primitive, **kwargs),
-        *(jax.core.get_aval(x) for x in args),
-    )
-    return jax.tree_util.tree_map(lambda x: (x.shape, x.dtype), out_aval)
-
-
 @core.primitive_handler("broadcast_in_dim")
 def handle_broadcast_in_dim(
-    primitive,
-    operand: ArrayNF4,
-    *args,
-    **kwargs,
-) -> ArrayNF4:
+    primitive: Primitive,
+    operand: ArrayType,
+    *args: Any,
+    **kwargs: Any,
+) -> ArrayType:
     """Handle broadcast_in_dim for ArrayNF4."""
-    original_quantized = isinstance(operand, ArrayNF4)
-    array = operand
-    if original_quantized:
-        array = operand.materialize()
-    result = jax.lax.broadcast_in_dim(array, *args, **kwargs)
+    operand, operand_materialized = safe_materialize(operand)
+
+    try:
+        result = jax.lax.broadcast_in_dim(operand, *args, **kwargs)
+    finally:
+        safe_delete(operand, operand_materialized)
+
     return result
 
 
 @core.primitive_handler("gather")
 def handle_gather(
-    primitive,
-    operand: ArrayNF4,
-    *args,
-    **kwargs,
-) -> ArrayNF4:
+    primitive: Primitive,
+    operand: ArrayType,
+    *args: Any,
+    **kwargs: Any,
+) -> ArrayType:
     """Handle gather for ArrayNF4."""
-    original_quantized = isinstance(operand, ArrayNF4)
-    array = operand
-    if original_quantized:
-        array = operand.materialize()
-    result = jax.lax.gather(array, *args, **kwargs)
+    operand, operand_materialized = safe_materialize(operand)
+
+    try:
+        result = jax.lax.gather(operand, *args, **kwargs)
+    finally:
+        safe_delete(operand, operand_materialized)
+
     return result
