@@ -15,8 +15,8 @@ from jax.sharding import NamedSharding, SingleDeviceSharding
 import fjformer.core as core
 from fjformer.sharding import auto_shard_array, with_sharding_constraint
 
-XB = 128
-SB = 128
+XB = 2048
+SB = 1024
 CHUNK_SIZE = 1024**2
 NF4 = jnp.array(  # I took this from QLoRA Paper.
 	[
@@ -41,55 +41,44 @@ NF4 = jnp.array(  # I took this from QLoRA Paper.
 )
 
 
+def absmax(x, b):
+	numel = x.size
+	assert numel % b == 0
+	assert x.ndim == 1
+	nb = numel // b
+	return jnp.max(jnp.abs(x.reshape(nb, b)), axis=1)
+
+
 @jax.jit
 def quantize(array: jax.Array):
-	def absmax(x, b):
-		numel = x.size
-		assert numel % b == 0
-		assert x.ndim == 1
-		nb = numel // b
-		return jnp.max(jnp.abs(x.reshape(nb, b)), axis=1)
-
 	xf = array.ravel()
-	assert (
-		xf.size % XB == 0
-	), f"array with numel={xf.size} is not visible to {XB} blocksize"
-
-	nXB = xf.size // XB
-	XBa = xf.reshape(nXB, XB)
-	scalers = absmax(xf, XB)
+	x_block_u = XB if xf.size % XB == 0 else xf.size
+	nXB = xf.size // x_block_u
+	XBa = xf.reshape(nXB, x_block_u)
+	scalers = absmax(xf, x_block_u)
 	scaler_mean = jnp.mean(scalers)
 	scaler_1 = scalers - scaler_mean
 	sb_block_u = SB if scaler_1.size % SB == 0 else scaler_1.size
-	assert (
-		scaler_1.size % sb_block_u == 0
-	), f"scaler with numel={scaler_1.size} is not visible to {SB} blocksize"
-
 	nSB = scaler_1.size // sb_block_u
 	scaler_blocks = scaler_1.reshape(nSB, sb_block_u)
 	scaler_absmax = absmax(scaler_1, sb_block_u)
 	quant_factor = 256 / (2 * scaler_absmax)
 	quant_scale = (
-		jnp.clip(
-			jnp.round(scaler_blocks * quant_factor[..., None]),
-			min=-128,
-			max=127,
-		)
+		jnp.clip(jnp.round(scaler_blocks * quant_factor[..., None]), min=-128, max=127)
 		.flatten()
 		.astype(jnp.int8)
 	)
 	scaled_blocks = XBa / scalers[..., None]
 	quant_block = jnp.empty(xf.size, dtype=jnp.uint8)
 	flattened = scaled_blocks.ravel()
-	for cidx in range(math.ceil(xf.size / 4096)):
-		sidx = cidx * 4096
-		eidx = min(sidx + 4096, xf.size)
-		quanted = jnp.argmin(
-			jnp.abs(flattened[..., None][sidx:eidx] - NF4),
-			axis=-1,
-		).astype(jnp.uint8)
 
-		quant_block = quant_block.at[sidx:eidx].set(quanted)
+	def _quantize_chunk(chunk):
+		return jnp.argmin(jnp.abs(chunk - NF4), axis=-1).astype(jnp.uint8)
+
+	def _body(cidx, quant_block):
+		return quant_block.at[cidx].set(_quantize_chunk(flattened[cidx]))
+
+	quant_block = jax.lax.fori_loop(0, flattened.size, _body, quant_block)
 	quant_block = quant_block[::2] << 4 | quant_block[1::2]
 	return quant_block.astype(jnp.uint8), quant_scale, quant_factor, scaler_mean
 
@@ -105,13 +94,14 @@ def dequantize(
 	second_element = quant_block & 0b1111
 	deq_first = NF4[first_element]
 	deq_second = NF4[second_element]
-
 	sb_block_u = SB if quant_scale.size % SB == 0 else quant_scale.size
 	nSB = quant_scale.size // sb_block_u
 	quant_scale = quant_scale.reshape(nSB, sb_block_u)
-	scalers = (quant_scale / quant_factor[..., None]) + scaler_mean
-	scaled_fir = (deq_first * scalers.ravel().repeat(XB // 2))[:, None].transpose(1, 0)
-	scaled_sec = (deq_second * scalers.ravel().repeat(XB // 2))[:, None].transpose(1, 0)
+	scalers = ((quant_scale / quant_factor[..., None]) + scaler_mean).ravel()
+	scalers = scalers.repeat(deq_first.size // scalers.size)
+	deq_first.size // scalers.size
+	scaled_fir = (deq_first * scalers)[:, None].transpose(1, 0)
+	scaled_sec = (deq_second * scalers)[:, None].transpose(1, 0)
 	return jnp.stack([scaled_fir, scaled_sec], axis=-1)
 
 

@@ -39,7 +39,7 @@ class Model(nn.Module):
 			kernel_init=jax.nn.initializers.normal(0.02),
 		)
 		self.out = nn.Dense(
-			self.inx // 5,
+			self.inx // 4,
 			use_bias=False,
 			dtype=jnp.float32,
 			kernel_init=jax.nn.initializers.normal(0.02),
