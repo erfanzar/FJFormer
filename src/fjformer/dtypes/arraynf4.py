@@ -168,14 +168,12 @@ class ArrayNF4(core.ImplicitArray):
     @classmethod
     def quantize(cls, array: chex.Array) -> "ArrayNF4":
         sharding = array.sharding
-        print("Start")
         (
             quant_block,
             quant_scale,
             quant_factor,
             scaler_mean,
         ) = quantize(array=array)
-        print("Done")
         if isinstance(sharding, NamedSharding):
             names = [s for s in sharding.spec if s is not None]
             with sharding.mesh:
