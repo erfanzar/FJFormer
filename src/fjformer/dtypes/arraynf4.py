@@ -1,9 +1,8 @@
 # NF4 impl from QLoRA Paper
 
-import math
 from dataclasses import dataclass
 from functools import partial
-from typing import Any, Optional, Sequence, Union, Tuple
+from typing import Any, Optional, Sequence, Tuple, Union
 
 import chex
 import jax

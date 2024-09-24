@@ -4,12 +4,13 @@ authors = [{ name = "Erfan Zare Chavoshi", email = "Erfanzare810@gmail.com" }]
 requires-python = ">=3.9"
 readme = "README.md"
 
-version = "0.0.80"
+version = "0.0.81"
 
 
 dependencies = [
     "jax>=0.4.31",
     "jaxlib>=0.4.31",
+		"triton>=3.0",
     "optax~=0.2.2",
     "msgpack~=1.0.7",
     "ipython~=8.17.2",
@@ -62,6 +63,7 @@ unfixable = ["B"]
 # 4. Ignore `E402` (import violations) in all `__init__.py` files, and in selected subdirectories.
 [tool.ruff.lint.per-file-ignores]
 "__init__.py" = ["E402"]
+"env.py" = ["E402"]
 "**/{tests,docs,tools}/*" = ["E402"]
 "test/*"=["E402"]
 "**/pallas_operations/*"=["E741","E731","B011"]

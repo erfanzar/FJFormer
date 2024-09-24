@@ -4,6 +4,7 @@ from fjformer import lora as lora
 from fjformer import monitor as monitor
 from fjformer import optimizers as optimizers
 from fjformer import pallas_operations as pallas_operations
+from fjformer import jax_triton as jax_triton
 from fjformer.checkpoint import CheckpointManager as CheckpointManager
 from fjformer.sharding import auto_namedsharding as auto_namedsharding
 from fjformer.sharding import auto_partition_spec as auto_partition_spec
@@ -26,5 +27,4 @@ from fjformer.utils import GenerateRNG as GenerateRNG
 from fjformer.utils import JaxRNG as JaxRNG
 from fjformer.utils import get_logger as get_logger
 
-
-__version__ = "0.0.80"
+__version__ = "0.0.81"

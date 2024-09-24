@@ -1,5 +1,6 @@
 jax>=0.4.31
 jaxlib>=0.4.31
+triton>=3.0
 optax~=0.2.2
 msgpack~=1.0.7
 ipython~=8.17.2
