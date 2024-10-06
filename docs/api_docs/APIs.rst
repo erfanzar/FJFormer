@@ -9,11 +9,12 @@ FJFormer APIs 🔮
    Core
    Dtypes
    Functions
+   Jax Triton
    Jaxpruner
+   Kernels
    Lora
    Monitor
    Optimizers
-   Pallas Operations
    Sharding
    Utils
    
