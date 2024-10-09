@@ -634,7 +634,6 @@ def triton_kernel_call_lowering(
 				kernel_params,
 			)
 		)
-
 	if len(kernel_calls) > 1:
 		named_scalar_args = {fn.arg_names[i]: v for i, _, v in scalar_args}
 		input_output_aliases_with_sizes = tuple(
