@@ -10,55 +10,43 @@ from jax.core import Primitive
 
 import fjformer.core as core
 
-QK8_0 = 32
 
-
-@partial(jax.jit, static_argnames=["qk8_0"])
-def quantize_row_q8_0(x, qk8_0):
+@jax.jit
+def quantize_row_q8_0(x):
 	"""
 	Quantize a row of float32 values to 8-bit integers with blockwise scaling.
 	Args:
 	    x: input array of shape (k,)
-			qk8_0 (int): block size (default 32). Must be a static argument.
 	Returns:
 	    tuple of (scales, quantized_values)
-	    - scales: float16 array of shape (nb,) where nb = k/qk8_0
+	    - scales: float16 array of shape (nb,)
 	    - quantized_values: int8 array of shape (k,)
 	"""
-	k = x.shape[0]
-	nb = k // qk8_0
-	x_blocks = x.reshape(nb, qk8_0)
-	amax = jnp.max(jnp.abs(x_blocks), axis=1)
+	amax = jnp.max(jnp.abs(x), axis=0)
 	d = amax / 127.0
 	ids = jnp.where(d > 0, 1.0 / d, 0.0)
-	ids = ids.reshape(-1, 1)
-	x_scaled = x_blocks * ids
+	ids = jnp.expand_dims(ids, 0)
+	x_scaled = x * ids
 	quantized = jnp.round(x_scaled)
 	scales = d.astype(jnp.float16)
-	quantized = quantized.reshape(-1)
 	quantized = quantized.astype(jnp.int8)
 	return quantized, scales
 
 
-@partial(jax.jit, static_argnames=["qk8_0"])
-def dequantize_row_q8_0(quants, scales, qk8_0):
+@jax.jit
+def dequantize_row_q8_0(quants, scales):
 	"""
 	Dequantize 8-bit integers back to float32 values using blockwise scaling.
 
 	Args:
 	    quants: int8 array of shape (k,) containing quantized values
 	    scales: float16 array of shape (nb,) containing scaling factors
-			qk8_0 (int): block size (default 32). Must be a static argument.
 	Returns:
 	    float32 array of shape (k,) containing dequantized values
 	"""
-	k = quants.shape[0]
-	nb = k // qk8_0
 	scales = scales.astype(jnp.float32)
-	quants = quants.reshape(nb, qk8_0)
-	scales = scales.reshape(-1, 1)
 	dequantized = quants * scales
-	return dequantized.reshape(-1)
+	return dequantized
 
 
 @dataclass
@@ -75,7 +63,6 @@ class Array8Bit(core.ImplicitArray):
 	    scale (core.ArrayValue): Scaling factors for dequantization.
 	    shape (tuple): Shape of the quantized array.
 	    dtype (jnp.dtype): Original dtype of the array before quantization.
-			qk8_0 (int): block size (default 32). Must be a static argument.
 
 	Example:
 	    >>> import jax
@@ -101,7 +88,6 @@ class Array8Bit(core.ImplicitArray):
 
 	array_quantized: core.ArrayValue
 	scale: core.ArrayValue
-	qk8_0: int = core.aux_field()
 
 	def materialize(self) -> Array:
 		"""
@@ -115,7 +101,6 @@ class Array8Bit(core.ImplicitArray):
 			scale=self.scale,
 			float_dtype=self.dtype,
 			shape=self.shape,
-			qk8_0=self.qk8_0,
 		)
 
 	@classmethod
@@ -123,7 +108,6 @@ class Array8Bit(core.ImplicitArray):
 		cls,
 		array: Array,
 		dtype: Optional[jnp.dtype] = None,
-		qk8_0: int = 32,
 		*_,
 		**__,
 	) -> "Array8Bit":
@@ -133,20 +117,17 @@ class Array8Bit(core.ImplicitArray):
 		Args:
 		    array (Array): The input array to quantize.
 		    dtype (jnp.dtype, optional): The desired dtype for the output. If None, uses the input array's dtype.
-				qk8_0 (int): block size (default 32). Must be a static argument.
 
 		Returns:
 		    Array8Bit: The quantized array.
 		"""
-		qk8_0 = min(qk8_0, array.size)
-		quants, scales = quantize_row_q8_0(array.ravel(), qk8_0=qk8_0)
+		quants, scales = quantize_row_q8_0(array)
 
 		return cls(
 			array_quantized=quants,
 			scale=scales,
 			shape=array.shape,
 			dtype=dtype or array.dtype,
-			qk8_0=qk8_0,
 		)
 
 	@staticmethod
@@ -155,7 +136,6 @@ class Array8Bit(core.ImplicitArray):
 		scale: Array,
 		float_dtype: jnp.dtype,
 		shape: Sequence[int],
-		qk8_0: int,
 	) -> Array:
 		"""
 		Dequantize an 8-bit array back to its original representation.
@@ -165,15 +145,12 @@ class Array8Bit(core.ImplicitArray):
 		    scale (Array): The scaling factors used in quantization.
 		    float_dtype (jnp.dtype): The desired output dtype.
 				shape (Sequence[int]): org array shape
-				qk8_0 (int): block size (default 32). Must be a static argument.
 		Returns:
 		    Array: The dequantized array.
 		"""
 
 		array = (
-			dequantize_row_q8_0(array_quantized, scale, qk8_0=qk8_0)
-			.reshape(shape)
-			.astype(float_dtype)
+			dequantize_row_q8_0(array_quantized, scale).reshape(shape).astype(float_dtype)
 		)
 
 		return array
@@ -195,7 +172,6 @@ class Array8Bit(core.ImplicitArray):
 			scale_slice,
 			self.dtype,
 			self.shape,
-			self.qk8_0,
 		)
 
 	def __repr__(self) -> str:
