@@ -16,6 +16,7 @@
 
 from __future__ import annotations
 
+from collections.abc import Callable, Sequence
 import copy
 import dataclasses
 import functools
@@ -24,32 +25,34 @@ import os
 import pprint
 import tempfile
 import types
-import zlib
-from collections.abc import Callable, Sequence
 from typing import Any, Protocol, Union
+import zlib
 
-import jax
-import jax.core
-import jax.dlpack
-import jax.numpy as jnp
-import jaxlib
-import numpy as np
 from absl import logging
+import jax
+import jaxlib
 from jax import tree_util
-from jax._src import core, state, util
+from jax._src import core
+from jax._src import state
+from jax._src import util
 from jax._src.lib.mlir import ir
-from jax.interpreters import mlir, xla
+import jax.dlpack
+from jax.interpreters import mlir
+from jax.interpreters import xla
+import jax.numpy as jnp
+import numpy as np
+
 
 CAN_USE_TRITON = False
 try:
 	import triton
-	import triton._C.libtriton as _triton
-	import triton.backends.nvidia.compiler as cb
-	import triton.language as tl
-	from triton._C.libtriton import ir as tl_ir  # noqa
 	from triton.compiler import code_generator as code_gen
 	from triton.compiler import compiler as tc
+	import triton.language as tl
 	from triton.runtime import autotuner
+	import triton._C.libtriton as _triton
+	from triton._C.libtriton import ir as tl_ir
+	import triton.backends.nvidia.compiler as cb
 
 	CAN_USE_TRITON = True
 except ModuleNotFoundError:
@@ -70,7 +73,7 @@ except ImportError:
 		" version of jaxlib. Try installing a nightly wheel from:"
 		" https://storage.googleapis.com/jax-releases/jaxlib_nightly_cuda_releases.html"
 		" or https://storage.googleapis.com/jax-releases/jaxlib_nightly_cuda12_releases.html"
-	) from None
+	)
 
 os.environ["TRITON_CACHE_DIR"] = ""
 _JAX_TRITON_DUMP_DIR = os.environ.get("JAX_TRITON_DUMP_DIR")
@@ -188,8 +191,8 @@ class CompilationResult:
 
 def compile_ttir_inplace(
 	ttir,
-	backend: Union[cb.CUDABackend, hb.HIPBackend],  # type:ignore
-	options: Union[cb.CUDAOptions, hb.HIPOptions],  # type:ignore
+	backend: [cb.CUDABackend | hb.HIPBackend],
+	options: [cb.CUDAOptions | hb.HIPOptions],
 	compute_capability,
 	platform,
 ):
@@ -271,8 +274,8 @@ def compile_ttir_to_ptx_inplace(
 
 def compile_ttir_to_hsaco_inplace(
 	ttir,
-	hip_backend: hb.HIPBackend,  # type:ignore
-	hip_options: hb.HIPOptions,  # type:ignore
+	hip_backend: hb.HIPBackend,
+	hip_options: hb.HIPOptions,
 	compute_capability,
 ) -> CompilationResult:
 	if hip_options.debug:
@@ -338,7 +341,7 @@ def get_or_create_triton_kernel(
 	enable_fp_fusion,
 	metaparams,
 	dump: bool,
-) -> tuple[triton_kernel_call_lib.TritonKernel, Any]:  # type:ignore
+) -> tuple[triton_kernel_call_lib.TritonKernel, Any]:
 	if num_warps is None:
 		num_warps = 4
 	if num_stages is None:
@@ -515,16 +518,10 @@ def triton_kernel_call_lowering(
 	named_args = dict(unsafe_zip(fn.arg_names, args))
 
 	if isinstance(fn, autotuner.Autotuner):
-		if any(idx not in fn.key_idx for idx, _, _ in scalar_args):
-			logging.warning(
-				"Auto-tuning key does not include all scalar arguments. "
-				"We may perform redundant auto-tuning."
-			)
+		key_idxs = fn.key_idx
+		if any(idx not in key_idxs for idx, _, _ in scalar_args):
+			logging.warning("Auto-tuning key does not include all scalar arguments.")
 
-		# If any metaparams have been specified explicitly, we prune any configs
-		# that conflict. Note that this is more permissive than Triton's autotuner
-		# implementation, which will throw an error if any keys match.
-		# TODO(cjfj): Prune explicit `num_warps` / `num_stages`.
 		prev_early_config_prune_fn = fn.early_config_prune
 
 		def prune_configs(configs, named_args, **kwargs):
@@ -634,6 +631,7 @@ def triton_kernel_call_lowering(
 				kernel_params,
 			)
 		)
+
 	if len(kernel_calls) > 1:
 		named_scalar_args = {fn.arg_names[i]: v for i, _, v in scalar_args}
 		input_output_aliases_with_sizes = tuple(
@@ -707,6 +705,59 @@ def triton_call(
 	**metaparams: Any,
 ) -> Any:
 	"""Calls a Triton kernel with `jax.Array` arguments.
+
+	Example usage:
+
+	First we define a simple kernel that adds two vectors.
+
+	```python
+	import triton
+	import triton.language as tl
+
+
+	@triton.jit
+	def add_kernel(
+	  x_ptr,
+	  y_ptr,
+	  output_ptr,
+	  block_size: tl.constexpr,
+	):
+	  pid = tl.program_id(axis=0)
+	  block_start = pid * block_size
+	  offsets = block_start + tl.arange(0, block_size)
+	  mask = offsets < 8
+	  x = tl.load(x_ptr + offsets, mask=mask)
+	  y = tl.load(y_ptr + offsets, mask=mask)
+	  output = x + y
+	  tl.store(output_ptr + offsets, output, mask=mask)
+	```
+
+	Then we use `triton_call` to call it from JAX.
+
+	```python
+	import jax
+	import jax.numpy as jnp
+	import jax_triton as jt
+
+
+	def add(x: jnp.ndarray, y: jnp.ndarray) -> jnp.ndarray:
+	  out_shape = jax.ShapeDtypeStruct(shape=x.shape, dtype=x.dtype)
+	  block_size = 8
+	  return jt.triton_call(
+	    x,
+	    y,
+	    kernel=add_kernel,
+	    out_shape=out_shape,
+	    grid=(x.size // block_size,),
+	    block_size=block_size,
+	  )
+
+
+	x_val = jnp.arange(8)
+	y_val = jnp.arange(8, 16)
+	print(add(x_val, y_val))
+	print(jax.jit(add)(x_val, y_val))
+	```
 
 	Args:
 	  *args: Inputs for the Triton kernel.
