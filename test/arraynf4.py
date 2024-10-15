@@ -1,12 +1,12 @@
 import os
 import sys
-from typing import Any, Callable, Literal, Optional
+from typing import Any, Callable
 
 import jax
 import jax.random
 import jax.tree_util
 
-jax.config.update("jax_platform_name", "cpu")
+# jax.config.update("jax_platform_name", "cpu")
 
 sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), "../src"))
 from fjformer import GenerateRNG

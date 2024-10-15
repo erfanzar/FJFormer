@@ -25,7 +25,7 @@ import os
 import pprint
 import tempfile
 import types
-from typing import Any, Protocol, Union
+from typing import Any, List, Protocol, Union
 import zlib
 
 from absl import logging
@@ -191,8 +191,8 @@ class CompilationResult:
 
 def compile_ttir_inplace(
 	ttir,
-	backend: [cb.CUDABackend | hb.HIPBackend],
-	options: [cb.CUDAOptions | hb.HIPOptions],
+	backend: List[Union[cb.CUDABackend, hb.HIPBackend]],  # type:ignore
+	options: List[Union[cb.CUDAOptions, hb.HIPOptions]],  # type:ignore
 	compute_capability,
 	platform,
 ):
@@ -274,8 +274,8 @@ def compile_ttir_to_ptx_inplace(
 
 def compile_ttir_to_hsaco_inplace(
 	ttir,
-	hip_backend: hb.HIPBackend,
-	hip_options: hb.HIPOptions,
+	hip_backend: hb.HIPBackend,  # type:ignore
+	hip_options: hb.HIPOptions,  # type:ignore
 	compute_capability,
 ) -> CompilationResult:
 	if hip_options.debug:
@@ -341,7 +341,7 @@ def get_or_create_triton_kernel(
 	enable_fp_fusion,
 	metaparams,
 	dump: bool,
-) -> tuple[triton_kernel_call_lib.TritonKernel, Any]:
+) -> tuple[triton_kernel_call_lib.TritonKernel, Any]:  # type:ignore
 	if num_warps is None:
 		num_warps = 4
 	if num_stages is None:
@@ -518,10 +518,6 @@ def triton_kernel_call_lowering(
 	named_args = dict(unsafe_zip(fn.arg_names, args))
 
 	if isinstance(fn, autotuner.Autotuner):
-		key_idxs = fn.key_idx
-		if any(idx not in key_idxs for idx, _, _ in scalar_args):
-			logging.warning("Auto-tuning key does not include all scalar arguments.")
-
 		prev_early_config_prune_fn = fn.early_config_prune
 
 		def prune_configs(configs, named_args, **kwargs):

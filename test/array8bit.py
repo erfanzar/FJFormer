@@ -17,7 +17,7 @@ from fjformer.dtypes.array8bit import Array8Bit
 from flax import linen as nn
 from jax import numpy as jnp
 
-rng = GenerateRNG()
+rng = GenerateRNG(seed=84)
 
 
 class Model(nn.Module):
@@ -49,10 +49,7 @@ def quantize_params(params: dict) -> dict:
 	def q(path: str, array: Any) -> Array8Bit:
 		"""Quantizes a single parameter array."""
 		path = ".".join(p for p in path[0].key)
-		return Array8Bit.quantize(
-			array,
-			dtype=array.dtype,
-		)
+		return Array8Bit.quantize(array, dtype=array.dtype, platform="triton")
 
 	return flax.traverse_util.unflatten_dict(
 		jax.tree_util.tree_map_with_path(
