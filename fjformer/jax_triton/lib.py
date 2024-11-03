@@ -12,47 +12,46 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# Edited in EasyDeL For caching kernels which doesn't work in jax-triton version
 """Module for calling Triton kernels from JAX."""
 
 from __future__ import annotations
 
-from collections.abc import Callable, Sequence
 import copy
 import dataclasses
 import functools
+import hashlib
 import inspect
 import os
+import pickle
 import pprint
 import tempfile
 import types
-from typing import Any, List, Protocol, Union
 import zlib
+from collections.abc import Callable, Sequence
+from pathlib import Path
+from typing import Any, List, Protocol, Union
 
-from absl import logging
 import jax
-import jaxlib
-from jax import tree_util
-from jax._src import core
-from jax._src import state
-from jax._src import util
-from jax._src.lib.mlir import ir
 import jax.dlpack
-from jax.interpreters import mlir
-from jax.interpreters import xla
 import jax.numpy as jnp
+import jaxlib
 import numpy as np
-
+from jax import tree_util
+from jax._src import core, state, util
+from jax._src.lib import gpu_triton as triton_kernel_call_lib
+from jax._src.lib.mlir import ir
+from jax.interpreters import mlir, xla
 
 CAN_USE_TRITON = False
 try:
 	import triton
+	import triton._C.libtriton as _triton
+	import triton.backends.nvidia.compiler as cb
+	import triton.language as tl
 	from triton.compiler import code_generator as code_gen
 	from triton.compiler import compiler as tc
-	import triton.language as tl
 	from triton.runtime import autotuner
-	import triton._C.libtriton as _triton
-	from triton._C.libtriton import ir as tl_ir
-	import triton.backends.nvidia.compiler as cb
 
 	CAN_USE_TRITON = True
 except ModuleNotFoundError:
@@ -65,18 +64,25 @@ except ImportError:
 	pass
 
 
-try:
-	from jax._src.lib import gpu_triton as triton_kernel_call_lib
-except ImportError:
-	raise ValueError(
-		"Cannot import jaxlib triton library. You may need a newer"
-		" version of jaxlib. Try installing a nightly wheel from:"
-		" https://storage.googleapis.com/jax-releases/jaxlib_nightly_cuda_releases.html"
-		" or https://storage.googleapis.com/jax-releases/jaxlib_nightly_cuda12_releases.html"
-	)
+def get_cache_dir() -> Path:
+	home_dir = Path.home()
+	app_name = "triton-compiled-kernels"
+	if os.name == "nt":  # Windows
+		cache_dir = (
+			Path(os.getenv("LOCALAPPDATA", home_dir / "AppData" / "Local")) / app_name
+		)
+	elif os.name == "posix":  # Linux and macOS
+		if "darwin" in os.sys.platform:  # macOS
+			cache_dir = home_dir / "Library" / "Caches" / app_name
+		else:  # Linux
+			cache_dir = home_dir / ".cache" / app_name
+	else:
+		cache_dir = home_dir / ".cache" / app_name
+	cache_dir.mkdir(parents=True, exist_ok=True)
+	return cache_dir
 
-os.environ["TRITON_CACHE_DIR"] = ""
-_JAX_TRITON_DUMP_DIR = os.environ.get("JAX_TRITON_DUMP_DIR")
+
+_JAX_TRITON_DUMP_DIR = Path(os.environ.get("JAX_TRITON_DUMP_DIR", get_cache_dir()))
 map, unsafe_map = util.safe_map, map
 zip, unsafe_zip = util.safe_zip, zip
 
@@ -260,8 +266,8 @@ def compile_ttir_to_ptx_inplace(
 		print(ptx)
 	name = metadata["name"]
 	cluster_dims = metadata["cluster_dims"]
-	ttgir = str(ttgir) if _JAX_TRITON_DUMP_DIR else None
-	llir = str(llir) if _JAX_TRITON_DUMP_DIR else None
+	ttgir = str(ttgir)
+	llir = str(llir)
 	return CompilationResult(
 		binary=ptx,
 		name=name,
@@ -302,15 +308,9 @@ def compile_ttir_to_hsaco_inplace(
 	hsaco = hip_backend.make_hsaco(amdgcn, metadata, hip_options)
 
 	name = metadata["name"]
-	ttgir = str(ttgir) if _JAX_TRITON_DUMP_DIR else None
-	llir = str(llir) if _JAX_TRITON_DUMP_DIR else None
-	# cluster dims are NOT useful on hip backend.
-	# We just fill up with some value for API compatibility
+	ttgir = str(ttgir)
+	llir = str(llir)
 	cluster_dims = (0, 0, 0)
-	# Instead of passing hsaco which are "bytes", we first write
-	# to a file and then pass the "string" path. This is needed because
-	# nanobind doesn't automatically convert between bytes and string.
-	# https://github.com/wjakob/nanobind/discussions/137
 	fd, hsaco_path = tempfile.mkstemp()
 	with os.fdopen(fd, "wb") as f:
 		f.write(hsaco)
@@ -324,7 +324,7 @@ def compile_ttir_to_hsaco_inplace(
 	)
 
 
-_COMPILED_KERNEL_CACHE = {}  # TODO(cjfj): Convert to LRU cache?
+_COMPILED_KERNEL_CACHE = {}
 
 
 def get_or_create_triton_kernel(
@@ -346,9 +346,6 @@ def get_or_create_triton_kernel(
 		num_warps = 4
 	if num_stages is None:
 		num_stages = 3
-	# TODO(sharadmv): handle multiple devices, right now we assume device 0
-	# which is fine when we have multiple of the same GPU but this won't work in
-	# general.
 	device = 0
 	if compute_capability is None:
 		compute_capability = triton_kernel_call_lib.get_compute_capability(device)
@@ -356,11 +353,7 @@ def get_or_create_triton_kernel(
 		raise ValueError("num_ctas > 1 unsupported before Hopper.")
 
 	signature = {fn.arg_names[i]: v for i, v in enumerate(arg_dtypes)}
-	# TODO(sharadmv,zhangqiaorjc): handle differently aligned pointers
-	# We assume that all arrays are aligned to 16 bytes, and Triton may use this
-	# assumption, unless array args are include in the `do_not_specialize` list.
-	# We replace array arguments with mock Torch tensors, to allow us to use
-	# `JITFunction._get_config` to get the specialization_attr.
+
 	mock_torch_tensor = types.SimpleNamespace(data_ptr=lambda: 16)
 	args_for_specialization_attr = [mock_torch_tensor] * len(arg_dtypes)
 	for i, _, v in scalar_args:
@@ -371,7 +364,6 @@ def get_or_create_triton_kernel(
 	constants.update({k: None for _, k, v in scalar_args if v is None})
 	constants.update({fn.arg_names[i]: 1 for i in specialization_attr.equal_to_1})
 
-	# Cache key should contain any parameter that can affect the compiler output.
 	cache_key = (
 		fn,
 		tuple(signature.items()),
@@ -385,20 +377,20 @@ def get_or_create_triton_kernel(
 	)
 	kernel = _COMPILED_KERNEL_CACHE.get(cache_key)
 
-	if kernel is None:
-		opts = {
-			"num_warps": num_warps,
-			"num_stages": num_stages,
-			"num_ctas": num_ctas,
-			"optimize_epilogue": False,
-			"debug": dump,
-			"enable_fp_fusion": enable_fp_fusion,
-		}
+	kernel_hash = hashlib.sha256(str(cache_key).encode("utf-8")).hexdigest()
 
+	opts = {
+		"num_warps": num_warps,
+		"num_stages": num_stages,
+		"num_ctas": num_ctas,
+		"optimize_epilogue": False,
+		"debug": dump,
+		"enable_fp_fusion": enable_fp_fusion,
+	}
+	if kernel is None and not Path(_JAX_TRITON_DUMP_DIR / kernel_hash).exists():
 		backend = backend_init_func(device, compute_capability)
 		options = backend.parse_options(opts)
 
-		kernel_hash = abs(hash(cache_key))
 		if _JAX_TRITON_DUMP_DIR:
 			os.makedirs(f"{_JAX_TRITON_DUMP_DIR}/{kernel_hash}")
 			with open(f"{_JAX_TRITON_DUMP_DIR}/{kernel_hash}/config", "w") as f:
@@ -443,29 +435,18 @@ def get_or_create_triton_kernel(
 		ttir = str(module)
 
 		compilation_result = compile_ttir_inplace(
-			module, backend, options, compute_capability, platform
+			module,
+			backend,
+			options,
+			compute_capability,
+			platform,
 		)
-
+		(_JAX_TRITON_DUMP_DIR / kernel_hash).mkdir(parents=True, exist_ok=True)
+		pickle.dump(
+			(compilation_result, ttir),
+			open(_JAX_TRITON_DUMP_DIR / kernel_hash / "compilation_result", "wb"),
+		)
 		kernel_name = compilation_result.name
-		if _JAX_TRITON_DUMP_DIR:
-			with open(f"{_JAX_TRITON_DUMP_DIR}/{kernel_hash}/{kernel_name}.ttir", "w") as f:
-				f.write(ttir)
-			with open(f"{_JAX_TRITON_DUMP_DIR}/{kernel_hash}/{kernel_name}.ptx", "w") as f:
-				f.write(compilation_result.ptx)
-			with open(f"{_JAX_TRITON_DUMP_DIR}/{kernel_hash}/{kernel_name}.ttgir", "w") as f:
-				f.write(compilation_result.ttgir)
-			with open(f"{_JAX_TRITON_DUMP_DIR}/{kernel_hash}/{kernel_name}.llir", "w") as f:
-				f.write(compilation_result.llir)
-			with open(
-				f"{_JAX_TRITON_DUMP_DIR}/{kernel_hash}/{kernel_name}.compile_info",
-				"w",
-			) as f:
-				f.write(
-					f"{kernel_name}: shared_mem_bytes:"
-					f" {compilation_result.shared_mem_bytes}, cluster_dims:"
-					f" {compilation_result.cluster_dims}\n"
-				)
-
 		kernel = triton_kernel_call_lib.TritonKernel(
 			kernel_name,
 			num_warps,
@@ -477,6 +458,22 @@ def get_or_create_triton_kernel(
 		)
 
 		_COMPILED_KERNEL_CACHE[cache_key] = kernel
+	elif Path(_JAX_TRITON_DUMP_DIR / kernel_hash).exists():
+		compilation_result, ttir = pickle.load(
+			open(
+				_JAX_TRITON_DUMP_DIR / kernel_hash / "compilation_result",
+				"rb",
+			)
+		)
+		kernel = triton_kernel_call_lib.TritonKernel(
+			compilation_result.name,
+			num_warps,
+			compilation_result.shared_mem_bytes,
+			compilation_result.binary,
+			ttir,
+			compute_capability,
+			*compilation_result.cluster_dims,
+		)
 
 	return kernel, specialization_attr
 
@@ -691,7 +688,7 @@ def triton_call(
 	custom_call_target_name: str = "triton_kernel_call",
 	num_warps: int | None = None,
 	num_stages: int | None = None,
-	num_ctas: int = 1,  # TODO(giorgioa): Add support for dimensions tuple.
+	num_ctas: int = 1,
 	compute_capability: int | None = None,
 	enable_fp_fusion: bool = True,
 	input_output_aliases: dict[int, int] | None = None,
@@ -701,60 +698,6 @@ def triton_call(
 	**metaparams: Any,
 ) -> Any:
 	"""Calls a Triton kernel with `jax.Array` arguments.
-
-	Example usage:
-
-	First we define a simple kernel that adds two vectors.
-
-	```python
-	import triton
-	import triton.language as tl
-
-
-	@triton.jit
-	def add_kernel(
-	  x_ptr,
-	  y_ptr,
-	  output_ptr,
-	  block_size: tl.constexpr,
-	):
-	  pid = tl.program_id(axis=0)
-	  block_start = pid * block_size
-	  offsets = block_start + tl.arange(0, block_size)
-	  mask = offsets < 8
-	  x = tl.load(x_ptr + offsets, mask=mask)
-	  y = tl.load(y_ptr + offsets, mask=mask)
-	  output = x + y
-	  tl.store(output_ptr + offsets, output, mask=mask)
-	```
-
-	Then we use `triton_call` to call it from JAX.
-
-	```python
-	import jax
-	import jax.numpy as jnp
-	import jax_triton as jt
-
-
-	def add(x: jnp.ndarray, y: jnp.ndarray) -> jnp.ndarray:
-	  out_shape = jax.ShapeDtypeStruct(shape=x.shape, dtype=x.dtype)
-	  block_size = 8
-	  return jt.triton_call(
-	    x,
-	    y,
-	    kernel=add_kernel,
-	    out_shape=out_shape,
-	    grid=(x.size // block_size,),
-	    block_size=block_size,
-	  )
-
-
-	x_val = jnp.arange(8)
-	y_val = jnp.arange(8, 16)
-	print(add(x_val, y_val))
-	print(jax.jit(add)(x_val, y_val))
-	```
-
 	Args:
 	  *args: Inputs for the Triton kernel.
 	  kernel: A Triton kernel (e.g. a function decorated with `triton.jit`). All
@@ -792,7 +735,6 @@ def triton_call(
 		lambda a: jax.ShapeDtypeStruct(a.shape, a.dtype), out_shape
 	)
 	flat_args, _ = tree_util.tree_flatten(args)
-	# TODO(sharadmv): check in_tree is flat (no Pytrees allowed in triton_call)
 	flat_out_shapes, out_tree = tree_util.tree_flatten(out_shape)
 
 	array_args = []

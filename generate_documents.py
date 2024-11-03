@@ -61,7 +61,7 @@ def get_files(path: str):
 
 
 def run(
-	project_locations="src/fjformer/",
+	project_locations="fjformer/",
 	start_head="fjformer",
 ):
 	global cache

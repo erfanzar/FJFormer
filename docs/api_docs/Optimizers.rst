@@ -5,7 +5,7 @@ Optimizers
    :maxdepth: 2
 
    optimizers.adafactor
-   optimizers.optimizer_utils
-   optimizers.lion
-   optimizers.rmsprop
    optimizers.adamw
+   optimizers.rmsprop
+   optimizers.lion
+   optimizers.optimizer_utils

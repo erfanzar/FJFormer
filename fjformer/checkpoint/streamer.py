@@ -6,7 +6,7 @@ import flax
 import jax
 import msgpack
 import safetensors.flax
-import tqdm
+from tqdm.auto import tqdm
 from flax import struct
 from flax.serialization import from_bytes, from_state_dict, to_bytes, to_state_dict
 from flax.traverse_util import empty_node, flatten_dict, unflatten_dict
@@ -165,7 +165,7 @@ class CheckpointManager(object):
 			)
 			results = [
 				process_func(key)
-				for key in tqdm.tqdm(
+				for key in tqdm(
 					keys,
 					desc="Loading",
 					total=len(keys),
@@ -224,7 +224,7 @@ class CheckpointManager(object):
 			if not is_flatten(gather_fns):
 				gather_fns = flatten_dict(gather_fns)
 			state = flatten_dict(state)
-			pbar_gather = tqdm.tqdm(
+			pbar_gather = tqdm(
 				list(state.keys()), desc="Gathering State", disable=not verbose
 			)
 			for key in pbar_gather:
@@ -277,7 +277,7 @@ class CheckpointManager(object):
 		flatten_state = flatten_dict(state)
 		if gather_fns is not None:
 			gather_fns = flatten_dict(to_state_dict(gather_fns))
-		pbar = tqdm.tqdm(
+		pbar = tqdm(
 			flatten_state.items(),
 			disable=not verbose,
 			desc="Saving State to File",
@@ -401,7 +401,7 @@ class CheckpointManager(object):
 		shard_functions_mismatch = 0
 		with open(path, "rb") as fin:
 			unpacker = msgpack.Unpacker(fin, read_size=83886080, max_buffer_size=0)
-			pbar = tqdm.tqdm(
+			pbar = tqdm(
 				unpacker, disable=not verbose, desc="Loading Checkpoints From File"
 			)
 			for key, value in pbar:

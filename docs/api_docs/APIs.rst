@@ -4,7 +4,6 @@ FJFormer APIs 🔮
 .. toctree::
    :maxdepth: 2
    
-   Bit Quantization
    Checkpoint
    Core
    Dtypes

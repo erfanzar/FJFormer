@@ -10,8 +10,9 @@
 # distributed under the License is distributed on an "AS IS" BASIS,
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
-# limitations under the License.
-# synced with commit : https://github.com/jax-ml/jax-triton/commit/fa66b2de39627599a6551e073e9d8b8c95406159
+# limitations under the License. 
+
+# Edited in EasyDeL For caching kernels which doesn't work in jax-triton version
 """Library for JAX-Triton integrations."""
 
 __all__ = [
@@ -20,7 +21,6 @@ __all__ = [
 	"cdiv",
 	"next_power_of_2",
 	"strides_from_shape",
-	"__version__",
 	"__version_info__",
 ]
 
@@ -31,8 +31,6 @@ from jax.experimental.pallas import cdiv
 from jax.experimental.pallas import next_power_of_2
 from jax.experimental.pallas import strides_from_shape
 
-__version_info__ = (0, 2, 0)
-__version__ = ".".join(str(v) for v in __version_info__)
 try:
 	get_compute_capability = gpu_triton.get_compute_capability
 except AttributeError:
