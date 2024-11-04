@@ -83,6 +83,12 @@ def get_cache_dir() -> Path:
 
 
 _JAX_TRITON_DUMP_DIR = Path(os.environ.get("JAX_TRITON_DUMP_DIR", get_cache_dir()))
+_CACHE_TRITON_KERNELS = os.environ.get("CACHE_TRITON_KERNELS", "off") in [
+	"1",
+	"on",
+	"true",
+	"yes",
+]
 map, unsafe_map = util.safe_map, map
 zip, unsafe_zip = util.safe_zip, zip
 
@@ -391,7 +397,7 @@ def get_or_create_triton_kernel(
 		backend = backend_init_func(device, compute_capability)
 		options = backend.parse_options(opts)
 
-		if _JAX_TRITON_DUMP_DIR:
+		if _CACHE_TRITON_KERNELS:
 			os.makedirs(f"{_JAX_TRITON_DUMP_DIR}/{kernel_hash}")
 			with open(f"{_JAX_TRITON_DUMP_DIR}/{kernel_hash}/config", "w") as f:
 				pprint.pprint(cache_key, stream=f)
@@ -441,11 +447,12 @@ def get_or_create_triton_kernel(
 			compute_capability,
 			platform,
 		)
-		(_JAX_TRITON_DUMP_DIR / kernel_hash).mkdir(parents=True, exist_ok=True)
-		pickle.dump(
-			(compilation_result, ttir),
-			open(_JAX_TRITON_DUMP_DIR / kernel_hash / "compilation_result", "wb"),
-		)
+		if _CACHE_TRITON_KERNELS:
+			(_JAX_TRITON_DUMP_DIR / kernel_hash).mkdir(parents=True, exist_ok=True)
+			pickle.dump(
+				(compilation_result, ttir),
+				open(_JAX_TRITON_DUMP_DIR / kernel_hash / "compilation_result", "wb"),
+			)
 		kernel_name = compilation_result.name
 		kernel = triton_kernel_call_lib.TritonKernel(
 			kernel_name,
