@@ -10,7 +10,7 @@ import jax.tree_util
 # jax.config.update("jax_platform_name", "cpu")
 
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
-sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), "../src"))
+sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
 from fjformer import GenerateRNG
 from fjformer.core.implicit_array import implicit_compact
 from fjformer.dtypes.a8q import A8Q

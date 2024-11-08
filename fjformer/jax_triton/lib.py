@@ -83,7 +83,7 @@ def get_cache_dir() -> Path:
 
 
 _JAX_TRITON_DUMP_DIR = Path(os.environ.get("JAX_TRITON_DUMP_DIR", get_cache_dir()))
-_CACHE_TRITON_KERNELS = os.environ.get("CACHE_TRITON_KERNELS", "off") in [
+_CACHE_TRITON_KERNELS = os.environ.get("CACHE_TRITON_KERNELS", "true") in [
 	"1",
 	"on",
 	"true",

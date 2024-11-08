@@ -90,7 +90,7 @@ class JaxRNG:
 		else:
 			split_rngs = jrandom.split(self.rng, num=len(keys) + 1)
 			self.rng = split_rngs[0]
-			return {key: val for key, val in zip(keys, split_rngs[1:])}
+			return {key: val for key, val in zip(keys, split_rngs[1:])}  # noqa:B905
 
 
 # Global JaxRNG instance

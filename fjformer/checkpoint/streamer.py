@@ -6,18 +6,26 @@ import flax
 import jax
 import msgpack
 import safetensors.flax
-from tqdm.auto import tqdm
 from flax import struct
 from flax.serialization import from_bytes, from_state_dict, to_bytes, to_state_dict
 from flax.traverse_util import empty_node, flatten_dict, unflatten_dict
 from jax import numpy as jnp
+from tqdm.auto import tqdm
+
 from fjformer.utils import get_logger
 
 logger = get_logger(__name__)
 
 
-def process_tensor(key, shard_fns, mismatch_allowed, manager):
+def process_tensor(
+	key,
+	shard_fns,
+	mismatch_allowed,
+	manager,
+	callback: Optional[Callable[[jax.Array, str], jax.Array]] = None,
+):
 	tensor = manager.get_tensor(key)
+	istate = 0
 	if shard_fns is not None:
 		try:
 			callable_func = shard_fns.get(key)
@@ -26,13 +34,17 @@ def process_tensor(key, shard_fns, mismatch_allowed, manager):
 					raise KeyError(
 						f"Shard Function {key} is None and NoneType OBJ is not callable."
 					)
-				return key, tensor, 1
-			return key, callable_func(tensor), 0
+				istate = 1
+			tensor = callable_func(tensor)
 		except KeyError as k_err:
 			if mismatch_allowed:
-				return key, tensor, 1
-			raise KeyError(k_err) from None
-	return key, tensor, 0
+				istate = 1
+			else:
+				raise KeyError(k_err) from None
+
+	if callback is not None:
+		tensor = callback(tensor, key)
+	return key, tensor, istate
 
 
 def is_flatten(pytree: Union[dict, struct.PyTreeNode]) -> bool:
@@ -135,19 +147,19 @@ class CheckpointManager(object):
 		shard_fns: Optional[dict[Callable]] = None,
 		verbose: bool = False,
 		mismatch_allowed: bool = True,
+		callback: Optional[Callable[[jax.Array, str], jax.Array]] = None,
 	) -> Tuple[Union[struct.PyTreeNode, dict], dict]:
 		"""
 		Load a checkpoint from the given path.
 
 		Args:
-		                path: The path to the checkpoint file.
-		                target: The target PyTree to load the checkpoint into.
-		                shard_fns: A dictionary of functions to shard the state after loading.
-		                verbose: Whether to print verbose output.
-		                mismatch_allowed: Whether to allow mismatches between the state dictionary and shard functions.
-
+			path: The path to the checkpoint file.
+			target: The target PyTree to load the checkpoint into.
+			shard_fns: A dictionary of functions to shard the state after loading.
+			verbose: Whether to print verbose output.
+			mismatch_allowed: Whether to allow mismatches between the state dictionary and shard functions.
 		Returns:
-		                A tuple containing the loaded state dictionary and metadata.
+			A tuple containing the loaded state dictionary and metadata.
 		"""
 		with safetensors.safe_open(path, framework="flax") as f:
 			metadata = f.metadata()
@@ -162,6 +174,7 @@ class CheckpointManager(object):
 				shard_fns=shard_fns,
 				mismatch_allowed=mismatch_allowed,
 				manager=f,
+				callback=callback,
 			)
 			results = [
 				process_func(key)
@@ -377,20 +390,20 @@ class CheckpointManager(object):
 		remove_dict_prefix: Optional[Tuple[str, ...]] = None,
 		verbose: bool = False,
 		mismatch_allowed: bool = True,
+		callback: Optional[Callable[[jax.Array, str], jax.Array]] = None,
 	) -> Union[struct.PyTreeNode, dict]:
 		"""
 		Load a checkpoint from the given path.
 
 		Args:
-		    path: The path to the checkpoint file.
-		    target: The target PyTree to load the checkpoint into.
-		    shard_fns: A dictionary of functions to shard the state after loading.
-		    remove_dict_prefix: A tuple of strings representing the prefix to remove from the state dictionary keys.
-		    verbose: Whether to print verbose output.
-		    mismatch_allowed: Whether to allow mismatches between the state dictionary and shard functions.
-
+			path: The path to the checkpoint file.
+			target: The target PyTree to load the checkpoint into.
+			shard_fns: A dictionary of functions to shard the state after loading.
+			remove_dict_prefix: A tuple of strings representing the prefix to remove from the state dictionary keys.
+			verbose: Whether to print verbose output.
+			mismatch_allowed: Whether to allow mismatches between the state dictionary and shard functions.
 		Returns:
-		    The loaded state dictionary.
+			The loaded state dictionary.
 		"""
 		if shard_fns is not None:
 			shard_fns = flatten_dict(to_state_dict(shard_fns))
@@ -401,9 +414,7 @@ class CheckpointManager(object):
 		shard_functions_mismatch = 0
 		with open(path, "rb") as fin:
 			unpacker = msgpack.Unpacker(fin, read_size=83886080, max_buffer_size=0)
-			pbar = tqdm(
-				unpacker, disable=not verbose, desc="Loading Checkpoints From File"
-			)
+			pbar = tqdm(unpacker, disable=not verbose, desc="Loading Checkpoints From File")
 			for key, value in pbar:
 				key = tuple(key)
 				if remove_dict_prefix is not None:
@@ -415,7 +426,7 @@ class CheckpointManager(object):
 				tensor = from_bytes(None, value)
 				if shard_fns is not None:
 					try:
-						callable_func = shard_fns[key]
+						callable_func = shard_fns.get(key, None)
 						if callable_func is None and not mismatch_allowed:
 							raise KeyError(
 								f"Shard Function {key} is None and NoneType OBJ is not callable."
@@ -429,6 +440,7 @@ class CheckpointManager(object):
 						else:
 							raise KeyError(k_err) from None
 				flatten_state[key] = tensor
+				tensor = callback(tensor, key)
 				pbar.set_postfix(shard_functions_mismatch=shard_functions_mismatch)
 		if target is not None:
 			flattened_target = flatten_dict(to_state_dict(target), keep_empty_nodes=True)
