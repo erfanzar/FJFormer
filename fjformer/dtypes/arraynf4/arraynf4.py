@@ -212,13 +212,13 @@ class ArrayNF4(core.ImplicitArray):
 		)
 
 	@classmethod
-	def quantize(cls, array: chex.Array) -> "ArrayNF4":
+	def quantize(cls, array: chex.Array, bs=256) -> "ArrayNF4":
 		shape = array.shape
-		bs = 64
+
 		(packed, absmax) = quantize_array_nf4(array.reshape(-1), bs)
 		return cls(
-			packed=packed,
-			absmax=absmax,
+			packed=packed.astype(jnp.uint8),
+			absmax=absmax.astype(jnp.float32),
 			dtype=array.dtype,
 			shape=shape,
 			block_size=bs,
@@ -231,7 +231,8 @@ ArrayType = Union[Array, ArrayNF4]
 def safe_materialize(arr: ArrayType) -> Tuple[ArrayType, bool]:
 	"""Safely materialize an array if it's ArrayNF4."""
 	if isinstance(arr, ArrayNF4):
-		return arr.materialize(), True
+		arr = arr.materialize()
+		return arr, True
 	return arr, False
 
 
