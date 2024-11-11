@@ -1,4 +1,4 @@
-#fmt:off
+# fmt:off
 from fjformer import core as core
 from fjformer import jaxpruner as jaxpruner
 from fjformer import lora as lora
@@ -25,5 +25,5 @@ from fjformer.sharding import with_sharding_constraint as with_sharding_constrai
 from fjformer.utils import GenerateRNG as GenerateRNG
 from fjformer.utils import JaxRNG as JaxRNG
 from fjformer.utils import get_logger as get_logger
-#fmt:on
-__version__ = "0.0.86"
+# fmt:on
+__version__ = "0.0.87"

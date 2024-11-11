@@ -85,14 +85,9 @@ def main():
 	model_apply: Callable = jax.jit(implicit_compact(model.apply))
 	q_params = quantize_params(params)
 	q_out = model_apply(q_params, x)
-	q_out = model_apply(q_params, x)
-	q_out = model_apply(q_params, x)
-	with jax.profiler.trace("/tmp/somes"):
-		q_out = model_apply(q_params, x)
-		out = model_apply(params, x)
-	error = jnp.abs(q_out - out).max()
-	print(f"ERROR : {error}")
-	jax.profiler.save_device_memory_profile("mem.prof")
+	out = model_apply(params, x)
+
+	print(f"Max absolute error: {jnp.max(jnp.abs(out-q_out)):.5e}")
 
 
 if __name__ == "__main__":
