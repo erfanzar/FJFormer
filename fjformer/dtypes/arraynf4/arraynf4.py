@@ -202,7 +202,7 @@ class ArrayNF4(core.ImplicitArray):
 		"""
 
 		dtype = dtype if dtype is not None else self.dtype
-		return (
+		arr = (
 			dequantize_array_nf4(
 				self.packed.astype(jnp.uint8),
 				self.absmax,
@@ -211,6 +211,17 @@ class ArrayNF4(core.ImplicitArray):
 			.reshape(self.shape)
 			.astype(dtype)
 		)
+		sharding = getattr(self.packed, "sharding", None)
+		sharded = False
+		if sharding is not None:
+			if isinstance(sharding, jax.sharding.NamedSharding):
+				arr = auto_shard_array(arr, sharding.mesh)
+				sharded = True
+		if not sharded:
+			mesh = pxla.thread_resources.env.physical_mesh
+			if not mesh.empty:
+				arr = auto_shard_array(arr, mesh)
+		return arr
 
 	@classmethod
 	def quantize(cls, array: chex.Array, bs=256) -> "ArrayNF4":
