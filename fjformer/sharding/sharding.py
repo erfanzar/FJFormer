@@ -125,7 +125,95 @@ def auto_partition_spec(
 	reverse: bool = False,
 ) -> PartitionSpec:
 	"""
-	Create PartitionSpec to shard an array across a device mesh.
+	Create an optimized PartitionSpec to shard an array across a device mesh.
+
+	Args:
+	    x: The input array to be sharded.
+	    mesh: The device mesh to shard across. If None, uses the current thread's mesh.
+	    names: List of mesh axis names to use for sharding. If None, derives from mesh shape.
+	    min_sharding_size: Minimum size of array to shard. If None, uses mesh device count.
+	    reverse: If True, reverses dimension sorting order for sharding assignment.
+
+	Returns:
+	    PartitionSpec: Optimized sharding specification for the input array.
+
+	Raises:
+	    ValueError: If mesh is unavailable or invalid names are provided.
+	    TypeError: If input types are incorrect.
+	"""
+	# Validate input array
+	if not isinstance(x, (chex.Array, np.ndarray)):
+		raise TypeError(f"Expected array input, got {type(x)}")
+
+	# Get or validate mesh
+	if mesh is None:
+		mesh = pxla.thread_resources.env.physical_mesh
+		if mesh.empty:
+			raise ValueError(
+				"No mesh available. Provide a mesh or use within a mesh context."
+			)
+
+	# Calculate minimum sharding size
+	min_sharding_size = min_sharding_size or np.prod(mesh.devices.shape)
+
+	# Early return for small arrays
+	array_size = np.prod(x.shape)
+	if array_size < min_sharding_size:
+		return PartitionSpec()
+
+	# Prepare mesh names
+	if not names:
+		# Sort mesh axes by size in descending order
+		names = [mesh.axis_names[i] for i in np.argsort([-s for s in mesh.devices.shape])]
+
+	# Create mesh size lookup for efficient access
+	mesh_sizes = {
+		name: (
+			np.prod([mesh.shape[n] for n in name])
+			if isinstance(name, tuple)
+			else mesh.shape[name]
+		)
+		for name in names
+	}
+
+	# Sort dimensions by size
+	dim_indices = np.argsort([-dim if not reverse else dim for dim in x.shape])
+
+	# Initialize partition spec
+	partition_spec = [None] * len(x.shape)
+	remaining_names = set(names)
+
+	# Assign sharding
+	for dim_idx in dim_indices:
+		dim_size = x.shape[dim_idx]
+
+		# Find best matching mesh axis
+		best_name = None
+		for name in remaining_names:
+			mesh_size = mesh_sizes[name]
+			if dim_size % mesh_size == 0:
+				best_name = name
+				break
+
+		if best_name:
+			partition_spec[dim_idx] = best_name
+			remaining_names.remove(best_name)
+
+		if not remaining_names:
+			break
+
+	return PartitionSpec(*partition_spec)
+
+
+def vrn_auto_partition_spec(
+	x: chex.Array,
+	mesh: Optional[Mesh] = None,
+	names: Optional[List[Union[str, Tuple[str, ...]]]] = None,
+	min_sharding_size: Optional[int] = None,
+	reverse: bool = False,
+) -> PartitionSpec:
+	"""
+	Create an optimized PartitionSpec to shard an array across a device mesh.
 
 	Args:
 	    x: The input array to be sharded.
@@ -135,43 +223,65 @@ def auto_partition_spec(
 	    reverse: If True, reverses the sorting order of array dimensions.
 
 	Returns:
-	    A PartitionSpec describing how the array should be sharded.
+	    A PartitionSpec describing optimal array sharding.
 
 	Raises:
-	    ValueError: If no mesh is available or if names contain invalid types.
+	    ValueError: If mesh is unavailable or invalid names are provided.
+	    TypeError: If input types are incorrect.
 	"""
+	# Input validation
+	if not isinstance(x, (np.ndarray, chex.Array)):
+		raise TypeError(f"Expected array input, got {type(x)}")
+
+	# Get mesh
 	if mesh is None:
 		mesh = pxla.thread_resources.env.physical_mesh
 		if mesh.empty:
 			raise ValueError(
-				"`auto_partition_spec` needs to be used with a mesh. Pass a mesh as an argument "
-				"or use this function under a mesh context manager."
+				"No mesh available. Provide a mesh or use within a mesh context manager."
 			)
 
-	if min_sharding_size is None:
-		min_sharding_size = np.prod(mesh.devices.shape)
+	# Calculate minimum sharding size
+	min_sharding_size = min_sharding_size or int(np.prod(mesh.devices.shape))
 
-	if names is None or len(names) == 0:
-		names = [mesh.axis_names[i] for i in np.argsort([-s for s in mesh.devices.shape])]
-	names = list(names)
-	if np.prod(x.shape) < min_sharding_size:
+	# Early return for small arrays
+	array_size = np.prod(x.shape)
+	if array_size < min_sharding_size:
 		return PartitionSpec()
 
+	# Prepare mesh names
+	if not names:
+		# Sort mesh axes by size in descending order
+		names = [mesh.axis_names[i] for i in np.argsort([-s for s in mesh.devices.shape])]
+
+	# Pre-calculate mesh sizes for performance
+	mesh_sizes = {
+		name: (
+			np.prod([mesh.shape[n] for n in name])
+			if isinstance(name, tuple)
+			else mesh.shape[name]
+		)
+		for name in names
+	}
+
+	# Initialize partition spec
 	partition_spec = [None] * len(x.shape)
-	sort_order = np.argsort(x.shape if reverse else [-dim for dim in x.shape])
 
-	for i in sort_order:
-		for name in list(names):  # Create a copy to safely remove items during iteration
-			if isinstance(name, tuple):
-				size = np.prod([mesh.shape[nm] for nm in name])
-			elif isinstance(name, str):
-				size = mesh.shape[name]
-			else:
-				raise ValueError(f"Invalid name type: {type(name)}. Expected str or tuple.")
+	# Calculate dimension ordering
+	dim_order = np.argsort([-dim for dim in x.shape] if not reverse else x.shape)
 
-			if x.shape[i] % size == 0:
-				partition_spec[i] = name
-				names.remove(name)
+	# Assign sharding
+	remaining_names = names.copy()
+	for dim_idx in dim_order:
+		dim_size = x.shape[dim_idx]
+
+		# Find the best matching mesh axis
+		for name in remaining_names:
+			mesh_size = mesh_sizes[name]
+
+			if dim_size % mesh_size == 0:
+				partition_spec[dim_idx] = name
+				remaining_names.remove(name)
 				break
 
 	return PartitionSpec(*partition_spec)

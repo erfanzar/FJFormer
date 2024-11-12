@@ -162,7 +162,7 @@ def main():
 	)
 	uf_f = flatten_dict(pages)
 	st = []
-	for k, v in uf_f.items():
+	for k, _ in uf_f.items():
 		st.append(k.split("-")[1])
 	st = set(st)
 	apis_index = """FJFormer APIs 🔮

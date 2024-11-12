@@ -10,8 +10,9 @@ import jax
 from jax import Array, lax
 from jax import numpy as jnp
 from jax.core import Primitive
-
+from jax.interpreters import pxla
 import fjformer.core as core
+from fjformer.sharding import auto_shard_array
 
 BLOCK_SIZE = 1024
 
@@ -216,6 +217,19 @@ class ArrayNF4(core.ImplicitArray):
 		shape = array.shape
 
 		(packed, absmax) = quantize_array_nf4(array.reshape(-1), bs)
+		sharding = getattr(array, "sharding", None)
+		sharded = False
+		if sharding is not None:
+			if isinstance(sharding, jax.sharding.NamedSharding):
+				packed = auto_shard_array(packed, sharding.mesh)
+				absmax = auto_shard_array(absmax, sharding.mesh)
+				sharded = True
+		if not sharded:
+			mesh = pxla.thread_resources.env.physical_mesh
+			if not mesh.empty:
+				packed = auto_shard_array(packed, mesh)
+				absmax = auto_shard_array(absmax, mesh)
+
 		return cls(
 			packed=packed.astype(jnp.uint8),
 			absmax=absmax.astype(jnp.float32),
