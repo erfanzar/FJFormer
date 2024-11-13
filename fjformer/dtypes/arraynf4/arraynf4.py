@@ -67,7 +67,7 @@ def quantize_and_pack_nf4(x, block_size=64):
     """
     # Pad and reshape into blocks
     pad_size = (block_size - (x.size % block_size)) % block_size
-    padded_x = jnp.pad(x, (0, pad_size))
+    padded_x = jnp.pad(x.reshape(-1), (0, pad_size))
     blocks = padded_x.reshape(-1, block_size)
 
     # Compute absolute maximum for each block
@@ -155,7 +155,7 @@ class ArrayNF4(core.ImplicitArray):
     def quantize(cls, array: chex.Array, bs=256) -> "ArrayNF4":
         shape = array.shape
 
-        (packed, absmax) = quantize_and_pack_nf4(array.reshape(-1), bs)
+        (packed, absmax) = quantize_and_pack_nf4(array, bs)
 
         return cls(
             packed=packed.astype(jnp.uint8),
