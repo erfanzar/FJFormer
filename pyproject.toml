@@ -2,7 +2,7 @@
 name = "fjformer"
 authors = ["Erfan Zare Chavoshi <Erfanzare810@gmail.com>"]
 readme = "README.md"
-version = "0.0.90"
+version = "0.0.91"
 
 classifiers = [
 	"Development Status :: 3 - Alpha",
