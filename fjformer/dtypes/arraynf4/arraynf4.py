@@ -10,6 +10,7 @@ import jax
 from jax import Array, lax
 from jax import numpy as jnp
 from jax.core import Primitive
+import fjformer
 import fjformer.core as core
 
 BLOCK_SIZE = 1024
@@ -124,14 +125,14 @@ class ArrayNF4(core.ImplicitArray):
 	packed: core.ArrayValue
 	absmax: core.ArrayValue
 	block_size: int = core.aux_field()
-	shardings: Optional[jax.sharding.Sharding] = core.aux_field()
+	spec: Optional[jax.sharding.PartitionSpec] = core.aux_field()
 
 	def materialize(self) -> Array:
 		"""
 		Materialize the 4-bit array into a full-precision array.
 
 		Returns:
-		        Array: The dequantized array.
+			Array: The dequantized array.
 		"""
 		return self.dequantize()
 
@@ -140,10 +141,10 @@ class ArrayNF4(core.ImplicitArray):
 		Dequantize the 4-bit array into a full-precision array.
 
 		Args:
-		        dtype (Optional[jnp.dtype]): Desired dtype of the output array.
+			dtype (Optional[jnp.dtype]): Desired dtype of the output array.
 
 		Returns:
-		        Array: Dequantized array.
+			Array: Dequantized array.
 		"""
 
 		dtype = dtype if dtype is not None else self.dtype
@@ -156,8 +157,8 @@ class ArrayNF4(core.ImplicitArray):
 			.reshape(self.shape)
 			.astype(dtype)
 		)
-		if self.shardings is not None:
-			arr = jax.device_put(arr, self.shardings)
+		if self.spec is not None:
+			arr = fjformer.with_sharding_constraint(arr, self.spec)
 
 		return arr
 
@@ -166,14 +167,17 @@ class ArrayNF4(core.ImplicitArray):
 		shape = array.shape
 
 		(packed, absmax) = quantize_and_pack_nf4(array, bs)
-
+		sharding = getattr(array, "sharding", None)
+		spec = None
+		if isinstance(sharding, jax.sharding.NamedSharding):
+			spec = sharding.spec
 		return cls(
 			packed=packed.astype(jnp.uint8),
 			absmax=absmax.astype(jnp.float32),
 			dtype=array.dtype,
 			shape=shape,
 			block_size=bs,
-			shardings=getattr(array, "sharding", None),
+			spec=spec,
 		)
 
 
