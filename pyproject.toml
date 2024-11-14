@@ -25,8 +25,8 @@ documentation = "https://erfanzar.github.io/FJFormer"
 
 [tool.poetry.dependencies]
 python = "^3.10"
-jax = ">=0.4.35"
-jaxlib = ">=0.4.35"
+jax = ">=0.4.34"
+jaxlib = ">=0.4.34"
 triton = ">=3.0"
 optax = "~0.2.2"
 msgpack = "~1.0.7"
