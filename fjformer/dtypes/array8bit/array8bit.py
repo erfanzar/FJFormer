@@ -4,229 +4,15 @@ from functools import partial
 from typing import Any, Literal, Optional, Sequence, Union
 
 import jax
-import triton
 from jax import Array, lax
 from jax import numpy as jnp
 from jax.core import Primitive
-from triton import language as tl
 
 import fjformer.core as core
-from fjformer.jax_triton import strides_from_shape, triton_call, cdiv
-
-
-def get_gpu_plat():
-	target = jax.devices()[0].device_kind.lower()
-	if "nvidia" in target:
-		return "cuda"
-	elif "amd" in target:
-		return "rocm"
-	return None
-
-
-match get_gpu_plat():
-	case "cuda":
-
-		@triton.jit
-		def trround(x):
-			return tl.extra.cuda.libdevice.rint(x)
-	case _:
-
-		@triton.jit
-		def trround(x):
-			return tl.floor(x + 0.5)
-
-
-# @triton.autotune(
-# 	[
-# 		triton.Config({}, num_warps=16, num_stages=2),
-# 		triton.Config({}, num_warps=8, num_stages=2),
-# 		triton.Config({}, num_warps=4, num_stages=2),
-# 		triton.Config({}, num_warps=2, num_stages=2),
-# 		triton.Config({}, num_warps=1, num_stages=2),
-# 	],
-# 	key=["K"],
-# )
-@triton.jit
-def quantize_row_q8_triton(
-	A,
-	M,
-	K,
-	stride_am,
-	stride_ak,
-	stride_qm,
-	stride_qk,
-	stride_sm,
-	Q,
-	S,
-	MCache: tl.constexpr,
-	BLOCK_SIZE_M: tl.constexpr,
-	BLOCK_SIZE_K: tl.constexpr,
-):
-	pid_m = tl.program_id(axis=0)
-	A_Block_ptr = tl.make_block_ptr(
-		base=A,
-		shape=(M, K),
-		block_shape=(BLOCK_SIZE_M, BLOCK_SIZE_K),
-		offsets=(pid_m * BLOCK_SIZE_M, 0),
-		strides=(stride_am, stride_ak),
-		order=(0, 1),
-	)
-	Q_Block_ptr = tl.make_block_ptr(
-		base=Q,
-		shape=(M, K),
-		block_shape=(BLOCK_SIZE_M, BLOCK_SIZE_K),
-		offsets=(pid_m * BLOCK_SIZE_M, 0),
-		strides=(stride_qm, stride_qk),
-		order=(0, 1),
-	)
-	S_Block_ptr = tl.make_block_ptr(
-		base=S,
-		shape=(M,),
-		block_shape=(BLOCK_SIZE_M,),
-		offsets=(pid_m * BLOCK_SIZE_M,),
-		strides=(stride_sm,),
-		order=(0,),
-	)
-	a = tl.load(A_Block_ptr)
-	scales = tl.max(tl.abs(a), axis=1) / 127.0
-	doted = a * tl.where(scales > 0, 1 / scales, 0)[:, None]
-	quant = trround(doted).to(tl.int8)
-	tl.store(Q_Block_ptr, quant)
-	tl.store(S_Block_ptr, scales)
-
-
-# @triton.autotune(
-# 	[
-# 		triton.Config({}, num_warps=16, num_stages=2),
-# 		triton.Config({}, num_warps=8, num_stages=2),
-# 		triton.Config({}, num_warps=4, num_stages=2),
-# 		triton.Config({}, num_warps=2, num_stages=2),
-# 		triton.Config({}, num_warps=1, num_stages=2),
-# 	],
-# 	key=["K"],
-# )
-@triton.jit
-def dequantize_row_q8_triton(
-	Q,
-	S,
-	M,
-	K,
-	stride_am,
-	stride_ak,
-	stride_qm,
-	stride_qk,
-	stride_sm,
-	A,
-	MCache: tl.constexpr,
-	BLOCK_SIZE_M: tl.constexpr,
-	BLOCK_SIZE_K: tl.constexpr,
-):
-	pid_m = tl.program_id(axis=0)
-	pid_k = tl.program_id(axis=1)
-	A_Block_ptr = tl.make_block_ptr(
-		base=A,
-		shape=(M, K),
-		block_shape=(BLOCK_SIZE_M, BLOCK_SIZE_K),
-		offsets=(pid_m * BLOCK_SIZE_M, pid_k * BLOCK_SIZE_K),
-		strides=(stride_am, stride_ak),
-		order=(0, 1),
-	)
-	Q_Block_ptr = tl.make_block_ptr(
-		base=Q,
-		shape=(M, K),
-		block_shape=(BLOCK_SIZE_M, BLOCK_SIZE_K),
-		offsets=(pid_m * BLOCK_SIZE_M, pid_k * BLOCK_SIZE_K),
-		strides=(stride_qm, stride_qk),
-		order=(0, 1),
-	)
-	S_Block_ptr = tl.make_block_ptr(
-		base=S,
-		shape=(M,),
-		block_shape=(BLOCK_SIZE_M,),
-		offsets=(pid_m * BLOCK_SIZE_M,),
-		strides=(stride_sm,),
-		order=(0,),
-	)
-	quants = tl.load(Q_Block_ptr)
-	scale = tl.load(S_Block_ptr)
-	out = tl.zeros([BLOCK_SIZE_M, BLOCK_SIZE_K], tl.float32)
-	out += quants * scale[:, None]
-	tl.store(A_Block_ptr, out)
-
-
-def quantize_row_q8_triton_call(array):
-	assert array.ndim == 2
-	M, K = array.shape
-	BLOCK_SIZE_M = 128
-	BLOCK_SIZE_K = triton.next_power_of_2(K)
-
-	quants_shape = jax.ShapeDtypeStruct((M, K), jnp.int8)
-	scales_shape = jax.ShapeDtypeStruct((M,), jnp.float32)
-
-	stride_am, stride_ak = strides_from_shape(array.shape)
-	stride_qm, stride_qk = strides_from_shape(quants_shape.shape)
-	stride_sm = strides_from_shape(scales_shape.shape)
-
-	quants, scales = triton_call(
-		array,
-		M,
-		K,
-		stride_am,
-		stride_ak,
-		stride_qm,
-		stride_qk,
-		stride_sm,
-		kernel=quantize_row_q8_triton,
-		MCache=cdiv(M, 2048),
-		BLOCK_SIZE_M=BLOCK_SIZE_M,
-		BLOCK_SIZE_K=BLOCK_SIZE_K,
-		grid=(cdiv(M, BLOCK_SIZE_M), 1, 1),
-		out_shape=[quants_shape, scales_shape],
-		num_warps=8,
-		num_stages=2,
-	)
-
-	return quants, scales.reshape(M, 1).astype(jnp.float16)
-
-
-def dequantize_row_q8_triton_call(quants, scales):
-	assert quants.ndim == 2
-	M, K = quants.shape
-	scales = scales.reshape(-1)
-	BLOCK_SIZE_M = 128
-	BLOCK_SIZE_K = triton.next_power_of_2(K)
-
-	array_shape = jax.ShapeDtypeStruct((M, K), jnp.float32)
-
-	stride_am, stride_ak = strides_from_shape(array_shape.shape)
-	stride_qm, stride_qk = strides_from_shape(quants.shape)
-	stride_sm = strides_from_shape(scales.shape)
-
-	(array,) = triton_call(
-		quants,
-		scales,
-		M,
-		K,
-		stride_am,
-		stride_ak,
-		stride_qm,
-		stride_qk,
-		stride_sm,
-		kernel=dequantize_row_q8_triton,
-		MCache=cdiv(M, 2048),
-		BLOCK_SIZE_M=BLOCK_SIZE_M,
-		BLOCK_SIZE_K=BLOCK_SIZE_K,
-		grid=(cdiv(M, BLOCK_SIZE_M), 1, 1),
-		out_shape=[array_shape],
-		num_warps=8,
-		num_stages=2,
-	)
-
-	return array
 
 
 @jax.jit
-def _mu_quantize_row_q8_0(x):
+def _mu_quantize_row_q8_0(x: jax.Array):
 	"""
 	Quantize a row of float32 values to 8-bit integers with blockwise scaling.
 	Args:
@@ -236,13 +22,15 @@ def _mu_quantize_row_q8_0(x):
 	    - scales: float16 array of shape (nb,)
 	    - quantized_values: int8 array of shape (k,)
 	"""
-	amax = jnp.max(jnp.abs(x), axis=-1, keepdims=True)
-	d = amax / 127.0
-	ids = jnp.where(d > 0, 1.0 / d, 0.0)
-	x_scaled = x * ids
-	quantized = jnp.round(x_scaled)
-	quantized = quantized.astype(jnp.int8)
-	return quantized, d.astype(jnp.float16)
+	n_bit = 8
+	eps = 1e-5
+	max_int = 2 ** (n_bit - 1) - 1
+	min_int = -(2 ** (n_bit - 1))
+	max_val = jnp.amax(jnp.abs(x), axis=-1, keepdims=True)
+	max_val = jnp.clip(max_val, min=eps)
+	qscale = max_val / max_int
+	qweight = jnp.clip(jnp.round(x * (1.0 / qscale)), min_int, max_int).astype(jnp.int8)
+	return qweight, qscale
 
 
 @jax.jit
@@ -261,26 +49,14 @@ def _mu_dequantize_row_q8_0(quants, scales):
 	return dequantized
 
 
-@partial(jax.jit, static_argnames=["platform"])
-def quantize_row_q8_0(array, platform):
-	match platform:
-		case "triton":
-			return quantize_row_q8_triton_call(array)
-		case "jax":
-			return _mu_quantize_row_q8_0(array)
-		case _:
-			raise NotImplementedError(f"quantize_row_q8_0 not implemented for {platform}")
+@jax.jit
+def quantize_row_q8_0(array):
+	return _mu_quantize_row_q8_0(array)
 
 
-@partial(jax.jit, static_argnames=["platform"])
-def dequantize_row_q8_0(quants, scales, platform):
-	match platform:
-		case "triton":
-			return dequantize_row_q8_triton_call(quants, scales)
-		case "jax":
-			return _mu_dequantize_row_q8_0(quants, scales)
-		case _:
-			raise NotImplementedError(f"dequantize_row_q8_0 not implemented for {platform}")
+@jax.jit
+def dequantize_row_q8_0(quants, scales):
+	return _mu_dequantize_row_q8_0(quants, scales)
 
 
 @dataclass
@@ -363,11 +139,11 @@ class Array8Bit(core.ImplicitArray):
 		if platform is None:
 			platform = "jax" if jax.default_backend() != "gpu" else "triton"
 		org_shape = array.shape
-		q8 = min(q8, array.size)
-		if q8 % array.size != 0:
-			q8 = array.shape[-1]
-		array = array.reshape(-1, q8)
-		quants, scales = quantize_row_q8_0(array=array, platform=platform)
+		# q8 = min(q8, array.size)
+		# if q8 % array.size != 0:
+		# 	q8 = array.shape[-1]
+		# array = array.reshape(-1, q8)
+		quants, scales = quantize_row_q8_0(array=array)
 
 		return cls(
 			array_quantized=quants,
@@ -401,7 +177,6 @@ class Array8Bit(core.ImplicitArray):
 			dequantize_row_q8_0(
 				quants=array_quantized,
 				scales=scale,
-				platform=platform,
 			)
 			.reshape(shape)
 			.astype(float_dtype)
