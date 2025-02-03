@@ -4,4 +4,5 @@ Callib
 .. toctree::
    :maxdepth: 2
 
-   callib.triton_call
+   callib___init__
+   callib_triton_call

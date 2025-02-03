@@ -1,5 +1,5 @@
-partition package
-=================
+eformer.escale.partition.constraints
+====================================
 
 .. automodule:: eformer.escale.partition.constraints
     :members:

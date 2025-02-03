@@ -1,5 +1,5 @@
-partition package
-=================
+eformer.escale.partition.auto_spec
+==================================
 
 .. automodule:: eformer.escale.partition.auto_spec
     :members:

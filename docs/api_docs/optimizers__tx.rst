@@ -1,5 +1,5 @@
- package
-========
+eformer.optimizers._tx
+======================
 
 .. automodule:: eformer.optimizers._tx
     :members:

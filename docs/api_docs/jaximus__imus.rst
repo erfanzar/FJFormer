@@ -1,5 +1,5 @@
- package
-========
+eformer.jaximus._imus
+=====================
 
 .. automodule:: eformer.jaximus._imus
     :members:

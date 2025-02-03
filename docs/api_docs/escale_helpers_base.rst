@@ -1,5 +1,5 @@
-helpers package
-===============
+eformer.escale.helpers.base
+===========================
 
 .. automodule:: eformer.escale.helpers.base
     :members:

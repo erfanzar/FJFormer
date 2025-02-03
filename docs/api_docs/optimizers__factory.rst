@@ -1,5 +1,5 @@
- package
-========
+eformer.optimizers._factory
+===========================
 
 .. automodule:: eformer.optimizers._factory
     :members:
