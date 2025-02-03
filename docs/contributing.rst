@@ -1,6 +1,6 @@
-Contributing to FJFormer
+Contributing to eformer
 ==========
-Thank you for considering contributing to FJFormer! We welcome your input. To ensure a smooth collaboration, please review and adhere to the following guidelines.
+Thank you for considering contributing to eformer! We welcome your input. To ensure a smooth collaboration, please review and adhere to the following guidelines.
 
 
 How to Contribute

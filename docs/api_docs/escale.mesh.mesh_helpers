@@ -1,0 +1,7 @@
+mesh package
+============
+
+.. automodule:: eformer.escale.mesh.mesh_helpers
+    :members:
+    :undoc-members:
+    :show-inheritance:

@@ -1,0 +1,7 @@
+ package
+========
+
+.. automodule:: eformer.optimizers._config
+    :members:
+    :undoc-members:
+    :show-inheritance:

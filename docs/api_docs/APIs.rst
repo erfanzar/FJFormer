@@ -1,19 +1,12 @@
-FJFormer APIs 🔮
+eformer APIs 🔮
 ====
 
 .. toctree::
    :maxdepth: 2
    
-   Checkpoint
-   Core
-   Dtypes
-   Functions
-   Jax Triton
-   Jaxpruner
-   Kernels
-   Lora
-   Monitor
+   Callib
+   Escale
+   Jaximus
+   Ops
    Optimizers
-   Sharding
-   Utils
    
