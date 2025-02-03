@@ -36,7 +36,7 @@ Zare Chavoshi, Erfan. "eformer is a collection of functions and utilities that c
     :maxdepth: 1
     :caption: APIs
 
-    api_docs/APIs
+    api_docs/apis
 
 
 .. toctree::
