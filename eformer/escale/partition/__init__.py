@@ -29,7 +29,8 @@ from .constraints import (
 	analyze_sharding_strategy,
 	create_pattern_based_partition_spec,
 	extract_sharding_structure,
-	get_shardings_with_structure, 
+	get_shardings_with_structure,
+	PartitionAxis,
 )
 
 __all__ = (
@@ -47,5 +48,6 @@ __all__ = (
 	"analyze_sharding_strategy",
 	"create_pattern_based_partition_spec",
 	"extract_sharding_structure",
-	"get_shardings_with_structure", 
+	"get_shardings_with_structure",
+	"PartitionAxis",
 )

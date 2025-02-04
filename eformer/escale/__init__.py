@@ -12,30 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .mesh import (
-	MeshPartitionHelper,
-	create_mesh,
-	names_in_current_mesh,
-	parse_mesh_from_string,
-)
-from .partition import (
-	analyze_sharding_strategy,
-	auto_namedsharding,
-	auto_partition_spec,
-	auto_shard_array,
-	convert_sharding_strategy,
-	create_pattern_based_partition_spec,
-	get_names_from_partition_spec,
-	make_shard_and_gather_fns,
-	match_partition_rules,
-	optimize_sharding_for_memory,
-	validate_sharding_config,
-	vrn_auto_partition_spec,
-	with_sharding_constraint,
-	extract_sharding_structure,
-	get_shardings_with_structure,
-)
-
 from .helpers import (
 	AutoShardingRule,
 	CompositeShardingRule,
@@ -44,7 +20,30 @@ from .helpers import (
 	ShardingAnalyzer,
 	ShardingRule,
 )
-
+from .mesh import (
+	MeshPartitionHelper,
+	create_mesh,
+	names_in_current_mesh,
+	parse_mesh_from_string,
+)
+from .partition import (
+	PartitionAxis,
+	analyze_sharding_strategy,
+	auto_namedsharding,
+	auto_partition_spec,
+	auto_shard_array,
+	convert_sharding_strategy,
+	create_pattern_based_partition_spec,
+	extract_sharding_structure,
+	get_names_from_partition_spec,
+	get_shardings_with_structure,
+	make_shard_and_gather_fns,
+	match_partition_rules,
+	optimize_sharding_for_memory,
+	validate_sharding_config,
+	vrn_auto_partition_spec,
+	with_sharding_constraint,
+)
 
 __all__ = (
 	"AutoShardingRule",
@@ -64,6 +63,7 @@ __all__ = (
 	"with_sharding_constraint",
 	"extract_sharding_structure",
 	"get_shardings_with_structure",
+	"PartitionAxis",
 	"get_names_from_partition_spec",
 	"convert_sharding_strategy",
 	"validate_sharding_config",
