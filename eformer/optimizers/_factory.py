@@ -215,7 +215,6 @@ class OptimizerFactory:
 		    TypeError: If the configuration type is invalid.
 		"""
 		# Handle JAX-specific dtype conversions
-		cls._convert_dtypes(optimizer_config)
 		# Validate optimizer type
 		if optimizer_type not in cls._OPTIMIZER_REGISTRY:
 			raise ValueError(
@@ -223,10 +222,12 @@ class OptimizerFactory:
 				f"Available: {list(cls._OPTIMIZER_REGISTRY.keys())}"
 			)
 
-		# Get registered components
-		optimizer_config = kwargs.pop("optimizer_config", None)
 		if optimizer_config is None:
 			optimizer_config = cls._OPTIMIZER_REGISTRY[optimizer_type][1]()
+			for key in list(kwargs.keys()):
+				if key in inspect.signature(optimizer_config.__class__).parameters:
+					setattr(optimizer_config, key, kwargs.pop(key))
+		cls._convert_dtypes(optimizer_config)
 		optimizer_cls, config_cls = cls._OPTIMIZER_REGISTRY[optimizer_type]
 
 		# Validate configuration type
@@ -237,7 +238,7 @@ class OptimizerFactory:
 			)
 
 		# Validate additional parameters
-		cls._validate_kwargs(optimizer_config, kwargs)
+		# cls._validate_kwargs(optimizer_config, kwargs)
 
 		# Create scheduler
 		if scheduler_config.scheduler_type is None and scheduler_config.warmup_steps:

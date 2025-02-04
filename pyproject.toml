@@ -2,7 +2,7 @@
 name = "eformer"
 authors = ["Erfan Zare Chavoshi <Erfanzare810@gmail.com>"]
 readme = "README.md"
-version = "0.0.1"
+version = "0.0.2"
 
 classifiers = [
 	"Development Status :: 3 - Alpha",
@@ -14,7 +14,7 @@ classifiers = [
 	"Programming Language :: Python :: 3.11",
 	"Programming Language :: Python :: 3.12",
 ]
-description = "Embark on a journey of paralleled/unparalleled computational prowess with eformer in JAX"
+description = "(EasyDel Former) is a utility library designed to simplify and enhance the development in JAX"
 
 license = "Apache-2.0"
 keywords = ["JAX", "Deep Learning", "Machine Learning", "Flax", "XLA"]

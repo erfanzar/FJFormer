@@ -27,7 +27,8 @@ import jax._src
 import jax.core as core
 import jax.extend.linear_util as lu
 import jax.numpy as jnp
-import jax.tree_util as jtu
+import jax.tree_util as tu
+import numpy as np
 import plum
 from jax.custom_derivatives import SymbolicZero as SZ
 from typing_extensions import TypeGuard
@@ -36,6 +37,128 @@ from ._core import Partial, PyTree, field, module_update_wrapper
 from ._tree_util import combine, partition
 
 CT = tp.TypeVar("CT", bound=Callable)
+
+
+def is_array(element: tp.Any) -> bool:
+	return isinstance(element, (np.ndarray, np.generic, jax.Array))
+
+
+class _EmptyNodeCls:
+	_instance = None
+
+	def __new__(cls):
+		if cls._instance is None:
+			cls._instance = super().__new__(cls)
+		return cls._instance
+
+
+EmptyNode = _EmptyNodeCls()
+
+jax.tree_util.register_pytree_node(
+	_EmptyNodeCls,
+	lambda node: ((), None),
+	lambda _, __: EmptyNode,
+)
+
+
+def combine_leaf_predicate(base_fn, is_leaf):
+	@ft.wraps(base_fn)
+	def new_fn(*args, new_is_leaf=None):
+		if new_is_leaf is None:
+			combined_is_leaf = is_leaf
+		else:
+
+			def combined_is_leaf(arg):
+				return is_leaf(arg) or new_is_leaf(arg)
+
+		return base_fn(*args, is_leaf=combined_is_leaf)
+
+	return new_fn
+
+
+def leaf_predicate(x):
+	return isinstance(x, (Value, _EmptyNodeCls))
+
+
+tree_map_with_implicit = combine_leaf_predicate(jax.tree_map, leaf_predicate)
+tree_map_with_path_with_implicit = combine_leaf_predicate(
+	jax.tree_util.tree_map_with_path, leaf_predicate
+)
+tree_flatten_with_implicit = combine_leaf_predicate(
+	jax.tree_util.tree_flatten, leaf_predicate
+)
+tree_flatten_with_path_with_implicit = combine_leaf_predicate(
+	jax.tree_util.tree_flatten_with_path, leaf_predicate
+)
+tree_leaves_with_implicit = combine_leaf_predicate(
+	jax.tree_util.tree_leaves, leaf_predicate
+)
+tree_structure_with_implicit = combine_leaf_predicate(
+	jax.tree_util.tree_structure, leaf_predicate
+)
+
+
+def flatten_one_implicit_layer(tree):
+	def is_leaf_below_node(node, x):
+		return isinstance(x, Value) and x is not node
+
+	def replace_subtree_implicits(node):
+		return jax.tree_util.tree_map(
+			lambda _: 1,
+			node,
+			is_leaf=ft.partial(is_leaf_below_node, node),
+		)
+
+	prototype = tree_map_with_implicit(replace_subtree_implicits, tree)
+	struct = jax.tree_util.tree_structure(prototype)
+
+	leaves = tree_leaves_with_implicit(tree)
+	leaves = list(
+		it.chain.from_iterable(
+			(
+				jax.tree_util.tree_leaves(leaf, is_leaf=ft.partial(is_leaf_below_node, leaf))
+				if isinstance(leaf, Value)
+				else [leaf]
+			)
+			for leaf in leaves
+		)
+	)
+	return leaves, struct
+
+
+def implicit_depth(tree):
+	leaves = tree_leaves_with_implicit(tree)
+	depth = 0
+	while True:
+		next_leaves = []
+		any_implicit = False
+		for leaf in leaves:
+			if not isinstance(leaf, Value):
+				continue
+			any_implicit = True
+			next_leaves.extend(flatten_one_implicit_layer(leaf)[0])
+
+		if not any_implicit:
+			return depth
+
+		depth += 1
+		leaves = next_leaves
+
+
+def _map_leaves_with_implicit_path(f, leaves, is_leaf, path_prefix=()):
+	mapped_leaves = []
+	for idx, leaf in enumerate(leaves):
+		path = path_prefix + (idx,)
+		if not isinstance(leaf, Value) or is_leaf(path, leaf):
+			mapped_leaves.append(f(leaf))
+			continue
+
+		subtree, substruct = flatten_one_implicit_layer(leaf)
+		mapped_subtree = _map_leaves_with_implicit_path(
+			f, subtree, is_leaf=is_leaf, path_prefix=path
+		)
+		mapped_leaves.append(jax.tree_util.tree_unflatten(substruct, mapped_subtree))
+	return mapped_leaves
 
 
 _rules: dict[core.Primitive, plum.Function] = {}
@@ -47,9 +170,10 @@ def register(
 	precedence: int = 0,
 ) -> Callable[[CT], CT]:
 	if isinstance(primitive, str):
-		primitive = getattr(jax.lax, primitive + "_p", None)
-		if primitive is None:
-			raise ValueError(f"couldn't verify given string primitive {primitive}")
+		lac = getattr(jax.lax, f"{primitive}_p", None)
+		if lac is None:
+			raise ValueError(f"couldn't verify given string primitive {primitive}_p")
+		primitive = lac
 
 	def _register(rule: CT) -> CT:
 		try:
@@ -90,35 +214,24 @@ class _CustomTracer(core.Tracer):
 
 
 def _default_process(
-	primitive: core.Primitive, values: Sequence[tp.Union[chex.Array, "Value"]], params
+	primitive: core.Primitive,
+	values: Sequence[tp.Union[chex.Array, "Value"]],
+	params,
 ):
-	defaults = set()
+	arrays: list[chex.Array] = []
 	for x in values:
-		if isinstance(x, Value):
-			x_default = type(x).default
-			if x_default is Value.default:
-				pass
-			else:
-				defaults.add(x_default)
-		elif isinstance(x, jax.Array):
-			pass
+		if _is_value(x):
+			arrays.append(x.materialize())
+		elif is_array(x):
+			arrays.append(tp.cast(chex.Array, x))
 		else:
-			raise AssertionError()
-	if len(defaults) == 0:
-		default = Value.default
-	elif len(defaults) == 1:
-		[default] = defaults
-	else:
-		types = {type(x) for x in values}
-		raise TypeError(
-			f"Multiple array-ish types {types} are specifying default process rules."
-		)
-	with jax.ensure_compile_time_eval():
-		return default(primitive, values, params)  # pyright: ignore
+			arrays.append(x)
+	subfuns, bind_params = primitive.get_bind_params(params)
+	return primitive.bind(*subfuns, *arrays, **bind_params)
 
 
 def _wrap_if_array(x: tp.Union[chex.Array, "Value"]) -> "Value":
-	if isinstance(x, jax.Array):
+	if is_array(x):
 		return _DenseArrayValue(tp.cast(chex.Array, x))
 	else:
 		return tp.cast(Value, x)
@@ -151,30 +264,31 @@ class _Tracer(core.Trace[_CustomTracer]):
 				else:
 					out = method(*values, **params)
 		if primitive.multiple_results:
-			return [_CustomTracer(self, _wrap_if_array(x)) for x in out]  # pyright: ignore
+			out = [_CustomTracer(self, _wrap_if_array(x)) for x in out]
 		else:
-			return _CustomTracer(self, _wrap_if_array(out))  # pyright: ignore
+			out = _CustomTracer(self, _wrap_if_array(out))
+		return out
 
 	def process_custom_jvp_call(self, primitive, fun, jvp, tracers, *, symbolic_zeros):
 		in_values = [self.to_value(t) for t in tracers]
-		in_leaves, in_treedef = jtu.tree_flatten(in_values)
-		fun, out_treedef1 = _custom_jvp_fun_wrap(fun, self.tag, in_treedef)  # pyright: ignore
-		jvp, out_treedef2 = _custom_jvp_jvp_wrap(jvp, self.tag, in_treedef)  # pyright: ignore
+		in_leaves, in_treedef = tu.tree_flatten(in_values)
+		fun, out_treedef1 = _custom_jvp_fun_wrap(fun, self.tag, in_treedef)
+		jvp, out_treedef2 = _custom_jvp_jvp_wrap(jvp, self.tag, in_treedef)
 		out_leaves = primitive.bind_with_trace(
 			self.parent_trace,
 			(fun, jvp, *in_leaves),
 			dict(symbolic_zeros=symbolic_zeros),
 		)
 		_, out_treedef = lu.merge_linear_aux(out_treedef1, out_treedef2)
-		out_values = jtu.tree_unflatten(out_treedef, out_leaves)
+		out_values = tu.tree_unflatten(out_treedef, out_leaves)
 		return [_CustomTracer(self, x) for x in out_values]
 
 	# TODO: add other process_* rules
 
 
-@lu.transformation_with_aux  # pyright: ignore
+@lu.transformation_with_aux
 def _custom_jvp_fun_wrap(tag, in_treedef, *in_leaves):
-	in_values = jtu.tree_unflatten(in_treedef, in_leaves)
+	in_values = tu.tree_unflatten(in_treedef, in_leaves)
 	with core.take_current_trace() as parent_trace:
 		trace = _Tracer(parent_trace, tag)
 		in_tracers = [x if type(x) is SZ else _CustomTracer(trace, x) for x in in_values]
@@ -187,16 +301,16 @@ def _custom_jvp_fun_wrap(tag, in_treedef, *in_leaves):
 			out_values = [trace.to_value(t) for t in out_tracers]
 			del out_tracers
 		del trace, in_tracers
-	out_leaves, out_treedef = jtu.tree_flatten(out_values)
+	out_leaves, out_treedef = tu.tree_flatten(out_values)
 	yield out_leaves, out_treedef
 
 
-@lu.transformation_with_aux  # pyright: ignore
+@lu.transformation_with_aux
 def _custom_jvp_jvp_wrap(tag, in_treedef, *in_primals_and_tangents):
 	in_primals = in_primals_and_tangents[: len(in_primals_and_tangents) // 2]
 	in_tangents = in_primals_and_tangents[len(in_primals_and_tangents) // 2 :]
-	in_primal_values = jtu.tree_unflatten(in_treedef, in_primals)
-	in_tangent_values = jtu.tree_unflatten(in_treedef, in_tangents)
+	in_primal_values = tu.tree_unflatten(in_treedef, in_primals)
+	in_tangent_values = tu.tree_unflatten(in_treedef, in_tangents)
 	with core.take_current_trace() as parent_trace:
 		trace = _Tracer(parent_trace, tag)
 		in_tracers = [
@@ -222,8 +336,8 @@ def _custom_jvp_jvp_wrap(tag, in_treedef, *in_primals_and_tangents):
 				out_tangent_values2.append(tangent)
 			del out_tracers
 		del trace, in_tracers
-	out_primals, out_primal_treedef = jtu.tree_flatten(out_primal_values2)
-	out_tangents, out_tangent_treedef = jtu.tree_flatten(out_tangent_values2)
+	out_primals, out_primal_treedef = tu.tree_flatten(out_primal_values2)
+	out_tangents, out_tangent_treedef = tu.tree_flatten(out_tangent_values2)
 	if out_primal_treedef != out_tangent_treedef:
 		raise ValueError(
 			"Primals and tangents had the same class, but different flattened results."
@@ -239,7 +353,7 @@ def _wrap_tracer(trace: _Tracer, x):
 
 
 def _unwrap_tracer(trace, x):
-	if isinstance(x, jax.Array):
+	if is_array(x):
 		x = trace.full_raise(x)
 	if isinstance(x, _CustomTracer):
 		if isinstance(x.value, _DenseArrayValue):
@@ -268,7 +382,7 @@ class _Transform(PyTree, tp.Generic[CT]):
 		tag = core.TraceTag()
 		with core.take_current_trace() as parent_trace:
 			trace = _Tracer(parent_trace, tag)
-			dynamic = jtu.tree_map(
+			dynamic = tu.tree_map(
 				ft.partial(_wrap_tracer, trace),
 				dynamic,
 				is_leaf=_is_value,
@@ -276,7 +390,7 @@ class _Transform(PyTree, tp.Generic[CT]):
 			fn, args, kwargs = combine(dynamic, static)
 			with core.set_current_trace(trace):
 				out = fn(*args, **kwargs)
-			out = jtu.tree_map(ft.partial(_unwrap_tracer, trace), out)
+			out = tu.tree_map(ft.partial(_unwrap_tracer, trace), out)
 			return out
 
 	def __get__(self, instance: tp.Union[object, None], owner: tp.Any):
@@ -296,22 +410,27 @@ def implicit(
 
 
 class Value(PyTree):
-	@abc.abstractmethod
-	def aval(self) -> core.AbstractValue: ...
 	@staticmethod
 	def default(
-		primitive: core.Primitive, values: Sequence[tp.Union[chex.Array, "Value"]], params
+		primitive: core.Primitive,
+		values: Sequence[tp.Union[chex.Array, "Value"]],
+		params,
 	) -> tp.Union[chex.Array, "Value", Sequence[tp.Union[chex.Array, "Value"]]]:
 		arrays: list[chex.Array] = []
+
 		for x in values:
 			if _is_value(x):
 				arrays.append(x.materialize())
-			elif isinstance(x, jax.Array):
+			elif is_array(x):
 				arrays.append(tp.cast(chex.Array, x))
 			else:
-				raise AssertionError()
-		return primitive.bind(*arrays, **params)
+				arrays.append(x)
 
+		subfuns, bind_params = primitive.get_bind_params(params)
+		return primitive.bind(*subfuns, *arrays, **bind_params)
+
+	@abc.abstractmethod
+	def aval(self) -> core.AbstractValue: ...
 	@abc.abstractmethod
 	def materialize(self) -> tp.Any: ...
 
@@ -356,20 +475,20 @@ class _DenseArrayValue(ArrayValue):
 
 
 @register(jax._src.pjit.pjit_p)
-def _(*args: tp.Union[chex.Array, ArrayValue], jaxpr, inline, **kwargs):
+def _(*args: tp.Union[ArrayValue, Value], jaxpr, inline, **kwargs):
 	del kwargs
 	fun = implicit(core.jaxpr_as_fun(jaxpr))
 	if inline:
 		return fun(*args)
 	else:
-		leaves, treedef = jtu.tree_flatten(args)
-		flat_fun = lambda x: fun(*jtu.tree_unflatten(treedef, x))  # noqa
+		leaves, treedef = tu.tree_flatten(args)
+		flat_fun = lambda x: fun(*tu.tree_unflatten(treedef, x))  # noqa
 		return jax.jit(flat_fun)(leaves)
 
 
-@register(jax.lax.while_p)
+@register("while")
 def _(
-	*args: tp.Union[ArrayValue, chex.Array],
+	*args: tp.Any,
 	cond_nconsts: int,
 	cond_jaxpr,
 	body_nconsts: int,
@@ -379,54 +498,54 @@ def _(
 	body_consts = args[cond_nconsts : cond_nconsts + body_nconsts]
 	init_vals = args[cond_nconsts + body_nconsts :]
 
-	# compute jaxpr of quaxified body and condition function
-	quax_cond_fn = implicit(core.jaxpr_as_fun(cond_jaxpr))
-	quax_cond_jaxpr = jax.make_jaxpr(quax_cond_fn)(*cond_consts, *init_vals)
-	quax_body_fn = implicit(core.jaxpr_as_fun(body_jaxpr))
-	quax_body_jaxpr = jax.make_jaxpr(quax_body_fn)(*body_consts, *init_vals)
+	# compute jaxpr of ified body and condition function
+	_cond_fn = implicit(core.jaxpr_as_fun(cond_jaxpr))
+	_cond_jaxpr = jax.make_jaxpr(_cond_fn)(*cond_consts, *init_vals)
+	_body_fn = implicit(core.jaxpr_as_fun(body_jaxpr))
+	_body_jaxpr = jax.make_jaxpr(_body_fn)(*body_consts, *init_vals)
 
-	cond_leaves, _ = jtu.tree_flatten(cond_consts)
-	body_leaves, _ = jtu.tree_flatten(body_consts)
-	init_val_leaves, val_treedef = jtu.tree_flatten(init_vals)
+	cond_leaves, _ = tu.tree_flatten(cond_consts)
+	body_leaves, _ = tu.tree_flatten(body_consts)
+	init_val_leaves, val_treedef = tu.tree_flatten(init_vals)
 
 	out_val = jax.lax.while_p.bind(
 		*cond_leaves,
 		*body_leaves,
 		*init_val_leaves,
 		cond_nconsts=cond_nconsts,
-		cond_jaxpr=quax_cond_jaxpr,
+		cond_jaxpr=_cond_jaxpr,
 		body_nconsts=body_nconsts,
-		body_jaxpr=quax_body_jaxpr,
+		body_jaxpr=_body_jaxpr,
 	)
-	result = jtu.tree_unflatten(val_treedef, out_val)
+	result = tu.tree_unflatten(val_treedef, out_val)
 	return result
 
 
 _sentinel = object()
 
 
-@register(jax.lax.cond_p)
+@register("cond")
 def _(
 	index: chex.Array,
-	*args: tp.Union[ArrayValue, chex.Array],
+	*args: tp.Any,
 	branches: tuple,
 	linear=_sentinel,
 ):
-	flat_args, in_tree = jtu.tree_flatten(args)
+	flat_args, in_tree = tu.tree_flatten(args)
 
 	out_trees = []
-	quax_branches = []
+	_branches = []
 	for jaxpr in branches:
 
-		def flat_quax_call(flat_args):
-			args = jtu.tree_unflatten(in_tree, flat_args)
+		def flat__call(flat_args):
+			args = tu.tree_unflatten(in_tree, flat_args)
 			out = implicit(core.jaxpr_as_fun(jaxpr))(*args)  # noqa
-			flat_out, out_tree = jtu.tree_flatten(out)
+			flat_out, out_tree = tu.tree_flatten(out)
 			out_trees.append(out_tree)
 			return flat_out
 
-		quax_jaxpr = jax.make_jaxpr(flat_quax_call)(flat_args)
-		quax_branches.append(quax_jaxpr)
+		_jaxpr = jax.make_jaxpr(flat__call)(flat_args)
+		_branches.append(_jaxpr)
 
 	if tp.Any(tree_outs_i != out_trees[0] for tree_outs_i in out_trees[1:]):
 		raise TypeError("all branches output must have the same pytree.")
@@ -436,7 +555,7 @@ def _(
 	else:
 		maybe_linear = dict(linear=linear)
 	out_val = jax.lax.cond_p.bind(
-		index, *flat_args, branches=tuple(quax_branches), **maybe_linear
+		index, *flat_args, branches=tuple(_branches), **maybe_linear
 	)
-	result = jtu.tree_unflatten(out_trees[0], out_val)
+	result = tu.tree_unflatten(out_trees[0], out_val)
 	return result

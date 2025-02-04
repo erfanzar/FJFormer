@@ -4,9 +4,11 @@ eformer APIs 🔮
 .. toctree::
    :maxdepth: 2
    
-   callib
-   escale
-   jaximus
-   ops
-   optimizers
+   Callib
+   Escale
+   Init
+   Jaximus
+   Mpric
+   Ops
+   Optimizers
    
