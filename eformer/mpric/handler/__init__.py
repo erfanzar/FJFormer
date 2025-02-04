@@ -12,8 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-__version__ = "0.0.1"
+from .precision_handler import PrecisionHandler
 
-from . import callib, jaximus, ops, optimizers, mpric
-
-__all__ = ("callib", "jaximus", "ops", "optimizers", "mpric")
+__all__ = ("PrecisionHandler",)

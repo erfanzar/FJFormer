@@ -11,9 +11,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+from .precision_types import DTYPE_MAPPING, HAS_FLOAT8
 
-__version__ = "0.0.1"
-
-from . import callib, jaximus, ops, optimizers, mpric
-
-__all__ = ("callib", "jaximus", "ops", "optimizers", "mpric")
+__all__ = ("DTYPE_MAPPING", "HAS_FLOAT8")
