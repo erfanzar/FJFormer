@@ -24,6 +24,8 @@ from collections.abc import Callable, Sequence
 import chex
 import jax
 import jax._src
+import jax._src.lax
+import jax.core
 import jax.core as core
 import jax.extend.linear_util as lu
 import jax.numpy as jnp
@@ -59,6 +61,15 @@ jax.tree_util.register_pytree_node(
 	lambda node: ((), None),
 	lambda _, __: EmptyNode,
 )
+
+
+def unzip2(xys):
+	xs = []
+	ys = []
+	for x, y in xys:
+		xs.append(x)
+		ys.append(y)
+	return tuple(xs), tuple(ys)
 
 
 def combine_leaf_predicate(base_fn, is_leaf):
@@ -194,25 +205,6 @@ def register(
 	return _register
 
 
-class _CustomTracer(core.Tracer):
-	__slots__ = ("value",)
-
-	def __init__(self, trace: "_Tracer", value: "Value") -> None:
-		assert _is_value(value)
-		self._trace = trace
-		self.value = value
-
-	@property
-	def aval(self):
-		return self.value.aval()
-
-	def full_lower(self):
-		if isinstance(self.value, _DenseArrayValue):
-			return core.full_lower(self.value.array)
-		else:
-			return self
-
-
 def _default_process(
 	primitive: core.Primitive,
 	values: Sequence[tp.Union[chex.Array, "Value"]],
@@ -235,6 +227,25 @@ def _wrap_if_array(x: tp.Union[chex.Array, "Value"]) -> "Value":
 		return _DenseArrayValue(tp.cast(chex.Array, x))
 	else:
 		return tp.cast(Value, x)
+
+
+class _CustomTracer(core.Tracer):
+	__slots__ = ("value",)
+
+	def __init__(self, trace: "_Tracer", value: "Value") -> None:
+		assert _is_value(value)
+		self._trace = trace
+		self.value = value
+
+	@property
+	def aval(self):
+		return self.value.aval()
+
+	def full_lower(self):
+		if isinstance(self.value, _DenseArrayValue):
+			return core.full_lower(self.value.array)
+		else:
+			return self
 
 
 class _Tracer(core.Trace[_CustomTracer]):
@@ -283,7 +294,104 @@ class _Tracer(core.Trace[_CustomTracer]):
 		out_values = tu.tree_unflatten(out_treedef, out_leaves)
 		return [_CustomTracer(self, x) for x in out_values]
 
-	# TODO: add other process_* rules
+	def process_map(self, map_primitive, f, tracers, params):
+		in_values = [self.to_value(t) for t in tracers]
+		with core.set_current_trace(self.parent_trace):
+			out = _default_process(map_primitive, in_values, params)
+		if map_primitive.multiple_results:
+			return [_CustomTracer(self, _wrap_if_array(x)) for x in out]
+		else:
+			return _CustomTracer(self, _wrap_if_array(out))
+
+	def process_custom_transpose(self, prim, call, tracers, **params):
+		in_values = [self.to_value(t) for t in tracers]
+		with core.set_current_trace(self.parent_trace):
+			out = _default_process(prim, in_values, params)
+		if prim.multiple_results:
+			return [_CustomTracer(self, _wrap_if_array(x)) for x in out]
+		else:
+			return _CustomTracer(self, _wrap_if_array(out))
+
+	def process_call(self, call_primitive, f, tracers, params):
+		in_values = [self.to_value(t) for t in tracers]
+		with core.set_current_trace(self.parent_trace):
+			out = _default_process(call_primitive, in_values, params)
+		if call_primitive.multiple_results:
+			return [_CustomTracer(self, _wrap_if_array(x)) for x in out]
+		else:
+			return _CustomTracer(self, _wrap_if_array(out))
+
+	def process_custom_vjp_call(
+		self,
+		primitive,
+		fun,
+		fwd,
+		bwd,
+		tracers,
+		out_trees,
+		symbolic_zeros,
+	):
+		in_values = [self.to_value(t) for t in tracers]
+		in_leaves, in_treedef = tu.tree_flatten(in_values)
+		fwd_wrapped = _custom_vjp_fwd_wrap(fwd, self.tag, in_treedef)
+		bwd_wrapped = _custom_vjp_bwd_wrap(bwd, self.tag, in_treedef)
+		out_leaves = primitive.bind_with_trace(
+			self.parent_trace,
+			(fun, fwd_wrapped, bwd_wrapped, *in_leaves),
+			dict(out_trees=out_trees, symbolic_zeros=symbolic_zeros),
+		)
+		if primitive.multiple_results:
+			return [_CustomTracer(self, _wrap_if_array(x)) for x in out_leaves]
+		else:
+			return _CustomTracer(self, _wrap_if_array(out_leaves))
+
+
+def _custom_vjp_fwd_wrap(fwd, tag, in_treedef):
+	def wrapped(*args):
+		inputs = args[-len(in_treedef.children()) :]
+		inputs = tu.tree_unflatten(in_treedef, inputs)
+		out = fwd(*inputs)
+		if not isinstance(out, tuple):
+			out = (out,)
+		out_flat, _ = tu.tree_flatten(out)
+		return out_flat
+
+	return wrapped
+
+
+def _custom_vjp_bwd_wrap(bwd, tag, in_treedef):
+	def wrapped(*args):
+		out = bwd(*args)
+		if not isinstance(out, tuple):
+			out = (out,)
+		out_flat, _ = tu.tree_flatten(out)
+		return out_flat
+
+	return wrapped
+
+
+def _custom_vjp_fwd_wrap(fwd, tag, in_treedef):
+	def wrapped(*args):
+		inputs = tu.tree_unflatten(in_treedef, args)
+		out = fwd(*inputs)
+		if not isinstance(out, tuple):
+			out = (out,)
+		out_flat, out_tree = tu.tree_flatten(out)
+		return out_flat, out_tree
+
+	return wrapped, None
+
+
+def _custom_vjp_bwd_wrap(bwd, tag, in_treedef):
+	def wrapped(*args):
+		res_and_cts = tu.tree_unflatten(in_treedef, args)
+		out = bwd(*res_and_cts)
+		if not isinstance(out, tuple):
+			out = (out,)
+		out_flat, out_tree = tu.tree_flatten(out)
+		return out_flat, out_tree
+
+	return wrapped, None
 
 
 @lu.transformation_with_aux
