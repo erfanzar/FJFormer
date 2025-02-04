@@ -11,8 +11,19 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+import warnings
+
+
 try:
 	from .gpu_flash_attention import triton_flash_attention2_gpu
 except Exception:
-	triton_flash_attention2_gpu = None
+
+	def triton_flash_attention2_gpu(*_, **__):
+		return warnings.warn(
+			"please install triton and it dependencies "
+			"inorder to use `triton_flash_attention2_gpu`",
+			stacklevel=3,
+		)
+
+
 __all__ = ("triton_flash_attention2_gpu",)
