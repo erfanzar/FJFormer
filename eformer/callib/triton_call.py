@@ -30,12 +30,11 @@ import types
 import zlib
 from collections.abc import Callable, Sequence
 from pathlib import Path
-from typing import Any, List, Protocol, Union
+from typing import TYPE_CHECKING, Any, List, Protocol, Union
 
 import jax
 import jax.dlpack
 import jax.numpy as jnp
-import jaxlib
 import numpy as np
 from jax import tree_util
 from jax._src import core, state, util
@@ -62,6 +61,11 @@ try:
 except ImportError:
 	hb = None
 	pass
+
+if TYPE_CHECKING:
+	from triton import JITFunction
+else:
+	JITFunction = Any
 
 
 def get_cache_dir() -> Path:
@@ -358,7 +362,7 @@ _COMPILED_KERNEL_CACHE = {}
 def get_or_create_triton_kernel(
 	backend_init_func,
 	platform,
-	fn,
+	fn: JITFunction,
 	arg_dtypes,
 	scalar_args,
 	device,
@@ -381,21 +385,22 @@ def get_or_create_triton_kernel(
 		raise ValueError("num_ctas > 1 unsupported before Hopper.")
 
 	signature = {fn.arg_names[i]: v for i, v in enumerate(arg_dtypes)}
-
 	mock_torch_tensor = types.SimpleNamespace(data_ptr=lambda: 16)
 	args_for_specialization_attr = [mock_torch_tensor] * len(arg_dtypes)
+	backend = backend_init_func(device, compute_capability)
 	for i, _, v in scalar_args:
 		args_for_specialization_attr[i] = v
-	specialization_attr = fn._get_config(*args_for_specialization_attr)  # pylint: disable=protected-access
 
-	constants = {k: v for k, v in metaparams.items()}
+	specialization_attr = backend.get_attrs_descriptor(
+		fn.params[: len(args_for_specialization_attr)], args_for_specialization_attr
+	)  # pylint: disable=protected-access
+	constants = dict(metaparams)
 	constants.update({k: None for _, k, v in scalar_args if v is None})
 	constants.update({fn.arg_names[i]: 1 for i in specialization_attr.equal_to_1})
-
 	cache_key = (
 		fn,
 		tuple(signature.items()),
-		tuple(vars(specialization_attr).values()),
+		tuple(specialization_attr.get_fn_attrs()),
 		tuple(constants.items()),
 		num_warps,
 		num_stages,
@@ -403,27 +408,26 @@ def get_or_create_triton_kernel(
 		compute_capability,
 		enable_fp_fusion,
 	)
-	kernel = _COMPILED_KERNEL_CACHE.get(cache_key)
 
+	kernel = _COMPILED_KERNEL_CACHE.get(cache_key)
+	if kernel is not None:
+		return kernel, specialization_attr
 	kernel_hash = hashlib.sha256(str(cache_key).encode("utf-8")).hexdigest()
 
-	opts = {
-		"num_warps": num_warps,
-		"num_stages": num_stages,
-		"num_ctas": num_ctas,
-		"optimize_epilogue": False,
-		"debug": dump,
-		"enable_fp_fusion": enable_fp_fusion,
-	}
-	if kernel is None and not Path(_JAX_TRITON_DUMP_DIR / kernel_hash).exists():
-		backend = backend_init_func(device, compute_capability)
-		options = backend.parse_options(opts)
-
+	if not Path(_JAX_TRITON_DUMP_DIR / kernel_hash).exists():
 		if _CACHE_TRITON_KERNELS:
 			os.makedirs(f"{_JAX_TRITON_DUMP_DIR}/{kernel_hash}")
 			with open(f"{_JAX_TRITON_DUMP_DIR}/{kernel_hash}/config", "w") as f:
 				pprint.pprint(cache_key, stream=f)
-				pprint.pprint(options, stream=f)
+		opts = {
+			"num_warps": num_warps,
+			"num_stages": num_stages,
+			"num_ctas": num_ctas,
+			"optimize_epilogue": False,
+			"debug": dump,
+			"enable_fp_fusion": enable_fp_fusion,
+		}
+		options = backend.parse_options(opts)
 
 		context = _triton.ir.context()
 		_triton.ir.load_dialects(context)
@@ -467,14 +471,15 @@ def get_or_create_triton_kernel(
 			compute_capability,
 			platform,
 		)
+		kernel_name = compilation_result.name
 		if _CACHE_TRITON_KERNELS:
 			(_JAX_TRITON_DUMP_DIR / kernel_hash).mkdir(parents=True, exist_ok=True)
 			with open(
 				_JAX_TRITON_DUMP_DIR / kernel_hash / "compilation_result",
 				"wb",
 			) as buffer:
-				pickle.dump((compilation_result, ttir), buffer)
-		kernel_name = compilation_result.name
+				pickle.dump((compilation_result, ttir, kernel_name), buffer)
+
 		kernel = triton_kernel_call_lib.TritonKernel(
 			kernel_name,
 			num_warps,
@@ -487,14 +492,14 @@ def get_or_create_triton_kernel(
 
 		_COMPILED_KERNEL_CACHE[cache_key] = kernel
 	elif Path(_JAX_TRITON_DUMP_DIR / kernel_hash).exists():
-		compilation_result, ttir = pickle.load(
+		compilation_result, ttir, kernel_name = pickle.load(
 			open(
 				_JAX_TRITON_DUMP_DIR / kernel_hash / "compilation_result",
 				"rb",
 			)
 		)
 		kernel = triton_kernel_call_lib.TritonKernel(
-			compilation_result.name,
+			kernel_name,
 			num_warps,
 			compilation_result.shared_mem_bytes,
 			compilation_result.binary,
@@ -528,11 +533,6 @@ def triton_kernel_call_lowering(
 	device,
 	**metaparams,
 ):
-	if jaxlib.version.__version_info__ < (0, 3, 22) and input_output_aliases:
-		raise NotImplementedError(
-			"`input_output_aliases` only supported on `jaxlib>=0.3.22"
-		)
-
 	kernel_call_name = name
 	args = list(ctx.avals_in)
 	arg_dtypes = list(map(get_triton_type, ctx.avals_in))
@@ -639,7 +639,7 @@ def triton_kernel_call_lowering(
 				kernel_params.append(
 					triton_kernel_call_lib.create_array_parameter(
 						zeroed_params_with_sizes.get(i, 0),
-						16 if (i in specialization_attr.divisible_by_16) else 0,
+						16 if (i in specialization_attr.divisibility_16) else 0,
 					)
 				)
 			elif i not in specialization_attr.equal_to_1:
@@ -673,11 +673,8 @@ def triton_kernel_call_lowering(
 		ir.RankedTensorType.get(shape.shape, mlir.dtype_to_ir_type(shape.dtype))
 		for shape in out_shapes
 	]
-	if jaxlib.version.__version_info__ >= (0, 4, 15):
-		call_proto = kernel_call.to_proto(kernel_call_name, serialized_metadata)
-	else:
-		call_proto = kernel_call.to_proto(serialized_metadata)
-	return jaxlib.hlo_helpers.custom_call(
+	call_proto = kernel_call.to_proto(kernel_call_name, serialized_metadata)
+	return mlir.custom_call(
 		call_target_name=custom_call_target_name,
 		result_types=out_types,
 		operands=array_args,
@@ -754,7 +751,7 @@ def triton_call(
 	  debug: Prints out intermediate IRs if True for debugging purposes.
 	  serialized_metadata: Arbitrary metadata that will be added into the
 	    serialized kernel call.
-		device (int): device id in current process to compile triton kernel on
+	  device (int): device id in current process to compile triton kernel on
 	  **metaparams: Additional keyword arguments that will be provided to a `grid`
 	    (if it is a function) and to the Triton kernel as `constexpr` arguments.
 
@@ -768,7 +765,6 @@ def triton_call(
 	)
 	flat_args, _ = tree_util.tree_flatten(args)
 	flat_out_shapes, out_tree = tree_util.tree_flatten(out_shape)
-
 	array_args = []
 	scalar_args = []
 	for i, arg in enumerate(flat_args):
@@ -778,10 +774,8 @@ def triton_call(
 			scalar_args.append((i, get_triton_type(arg), float(arg)))
 		else:
 			array_args.append(arg)
-
 	if input_output_aliases is None:
 		input_output_aliases = {}
-
 	out_flat = triton_kernel_call_p.bind(
 		*array_args,
 		fn=kernel,
