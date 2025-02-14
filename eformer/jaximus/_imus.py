@@ -571,6 +571,9 @@ class ArrayValue(Value):
 	def size(self):
 		return self.aval().size
 
+	def astype(self, *args, **kwargs):
+		return self
+
 
 class _DenseArrayValue(ArrayValue):
 	array: chex.Array
