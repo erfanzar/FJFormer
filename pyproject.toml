@@ -2,7 +2,7 @@
 name = "eformer"
 authors = ["Erfan Zare Chavoshi <Erfanzare810@gmail.com>"]
 readme = "README.md"
-version = "0.0.5"
+version = "0.0.6"
 
 classifiers = [
 	"Development Status :: 3 - Alpha",
