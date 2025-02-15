@@ -17,7 +17,14 @@
 
 from . import _tree_util as tree_util
 from ._core import PyTree, dataclass, field
-from ._imus import ImplicitArray, OrginArray, implicit, use_implicit, aux_field
+from ._imus import (
+	ImplicitArray,
+	OrginArray,
+	implicit,
+	use_implicit,
+	aux_field,
+	register,
+)
 
 __all__ = (
 	"PyTree",
@@ -29,4 +36,5 @@ __all__ = (
 	"OrginArray",
 	"implicit",
 	"use_implicit",
+	"register",
 )

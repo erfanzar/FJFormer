@@ -496,32 +496,33 @@ class _CustomTrace(core.Trace[_CustomTracer]):
 		)
 		if implicit_idx is not None:
 			implicit_name = values[implicit_idx].__class__.__name__
+			try:
+				rule = _rules[primitive]
+			except KeyError:
+				with core.set_current_trace(self.parent_trace):
+					if WARN_ON_MATTER:
+						warnings.warn(
+							f"No Custom Primitive been found for {primitive} (materializing {implicit_name})",
+							stacklevel=1,
+						)
+					out = _default_process(primitive, values, params)
+			else:
+				with core.set_current_trace(self.parent_trace):
+					try:
+						method, _ = rule.resolve_method(values)
+					except plum.NotFoundLookupError:
+						if WARN_ON_MATTER:
+							warnings.warn(
+								f"No Custom Primitive could match for {primitive} (materializing {implicit_name})",
+								stacklevel=1,
+							)
+						out = _default_process(primitive, values, params)
+					else:
+						out = method(*values, **params)
 		else:
 			subfuns, bind_params = primitive.get_bind_params(params)
-			result = primitive.bind(*subfuns, *values, **bind_params)
-			return result
-		try:
-			rule = _rules[primitive]
-		except KeyError:
-			with core.set_current_trace(self.parent_trace):
-				if WARN_ON_MATTER:
-					warnings.warn(
-						f"No Custom Primitive been found for {primitive} (materializing {implicit_name})",
-						stacklevel=1,
-					)
-				out = _default_process(primitive, values, params)
-		else:
-			with core.set_current_trace(self.parent_trace):
-				try:
-					method, _ = rule.resolve_method(values)
-				except plum.NotFoundLookupError:
-					warnings.warn(
-						f"No Custom Primitive could match for {primitive} (materializing {implicit_name})",
-						stacklevel=1,
-					)
-					out = _default_process(primitive, values, params)
-				else:
-					out = method(*values, **params)
+			out = primitive.bind(*subfuns, *values, **bind_params)
+
 		if primitive.multiple_results:
 			out = [_CustomTracer(self, x) for x in out]
 		else:
