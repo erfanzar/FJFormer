@@ -15,8 +15,18 @@
 # Portions of this code are derived from the Equinox library
 # (https://github.com/patrick-kidger/equinox)
 
-from ._core import PyTree, dataclass, field
 from . import _tree_util as tree_util
-from ._imus import ArrayValue, implicit
+from ._core import PyTree, dataclass, field
+from ._imus import ImplicitArray, OrginArray, implicit, use_implicit, aux_field
 
-__all__ = ("PyTree", "dataclass", "field", "tree_util", "ArrayValue", "implicit")
+__all__ = (
+	"PyTree",
+	"dataclass",
+	"field",
+	"aux_field",
+	"tree_util",
+	"ImplicitArray",
+	"OrginArray",
+	"implicit",
+	"use_implicit",
+)

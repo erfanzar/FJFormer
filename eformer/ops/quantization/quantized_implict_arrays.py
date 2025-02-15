@@ -55,8 +55,10 @@ Usage Example:
     ```
 """
 
-from eformer.jaximus import ArrayValue
-from eformer.jaximus._core import field
+from dataclasses import dataclass
+
+from numpy import dtype
+from eformer.jaximus import ImplicitArray, aux_field
 from .quantization_functions import (
 	dequantize_nf4,
 	quantize_and_pack_nf4,
@@ -69,7 +71,8 @@ from jax import numpy as jnp
 Array = jax.Array
 
 
-class Array8B(ArrayValue):
+@dataclass
+class Array8B(ImplicitArray):
 	"""
 	8-bit Quantization Class
 
@@ -88,14 +91,21 @@ class Array8B(ArrayValue):
 	scale: Array
 	weight: Array
 
-	def __init__(self, array: Array):
+	@classmethod
+	def quantize(cls, array: Array):
 		"""
 		Initializes the `Array8B` object by quantizing the input array.
 
 		Args:
 		    array (jax.Array): The input array to be quantized.
 		"""
-		self.weight, self.scale = quantize_row_q8_0(array)
+		weight, scale = quantize_row_q8_0(array)
+		return cls(
+			weight=weight,
+			scale=scale,
+			shape=array.shape,
+			dtype=array.dtype,
+		)
 
 	def materialize(self):
 		"""
@@ -104,10 +114,18 @@ class Array8B(ArrayValue):
 		Returns:
 		    jax.Array: The dequantized array.
 		"""
-		return dequantize_row_q8_0(self.weight, self.scale)
+		return (
+			dequantize_row_q8_0(
+				self.weight,
+				self.scale,
+			)
+			.reshape(self.shape)
+			.astype(self.dtype)
+		)
 
 
-class ArrayNF4(ArrayValue):
+@dataclass
+class ArrayNF4(ImplicitArray):
 	"""
 	4-bit NormalFloat Quantization Class
 
@@ -118,8 +136,6 @@ class ArrayNF4(ArrayValue):
 	Attributes:
 	    packed (jax.Array): The packed 4-bit integer array.
 	    absmax (jax.Array): The absolute maximum values for each block.
-	    _ashape (tuple): The shape of the original array (static).
-	    _adtype (jnp.dtype): The data type of the original array (static).
 	    block_size (int): The size of each quantization block (static).
 
 	Methods:
@@ -129,11 +145,10 @@ class ArrayNF4(ArrayValue):
 
 	packed: Array
 	absmax: Array
-	_ashape: tuple = field(static=True)
-	_adtype: jnp.dtype = field(static=True)
-	block_size: int = field(static=True)
+	block_size: int = aux_field()
 
-	def __init__(self, array: Array, block_size: int = 64):
+	@classmethod
+	def quantize(cls, array: Array, block_size: int = 64):
 		"""
 		Initializes the `ArrayNF4` object by quantizing the input array.
 
@@ -141,10 +156,15 @@ class ArrayNF4(ArrayValue):
 		    array (jax.Array): The input array to be quantized.
 		    block_size (int): The size of each quantization block. Defaults to 64.
 		"""
-		self.block_size = min(block_size, array.size)
-		self._ashape = array.shape
-		self._adtype = array.dtype
-		self.packed, self.absmax = quantize_and_pack_nf4(array, block_size)
+		block_size = min(block_size, array.size)
+		packed, absmax = quantize_and_pack_nf4(array, block_size)
+		return cls(
+			packed=packed,
+			absmax=absmax,
+			block_size=block_size,
+			shape=array.shape,
+			dtype=array.dtype,
+		)
 
 	def materialize(self):
 		"""
@@ -159,6 +179,6 @@ class ArrayNF4(ArrayValue):
 				self.absmax,
 				self.block_size,
 			)
-			.reshape(self._ashape)
-			.astype(self._adtype)
+			.reshape(self.shape)
+			.astype(self.dtype)
 		)
