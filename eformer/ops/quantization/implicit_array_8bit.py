@@ -124,6 +124,34 @@ class Array8B(ImplicitArray):
 ArrayType = Union[Array, Array8B]
 
 
+@register("lt")
+def _(x: ArrayType, y: ArrayType, **kwargs): 
+	if isinstance(x, Array8B):
+		x = x.materialize()
+	if isinstance(y, Array8B):
+		y = y.materialize()
+	return jax.lax.lt(x, y, **kwargs) 
+
+
+@register("convert_element_type")
+def _(operand: ArrayType, new_dtype: Any) -> ArrayType:
+	if isinstance(operand, Array8B):
+		operand.dtype = new_dtype
+		return operand
+	else:
+		return jax.lax.convert_element_type(operand=operand, new_dtype=new_dtype)
+
+
+@register("convert_element_type")
+def _(operand: ArrayType, **kwargs) -> ArrayType:
+	new_dtype = kwargs.get("new_dtype", jnp.bfloat16)
+	if isinstance(operand, Array8B):
+		operand.dtype = new_dtype
+		return operand
+	else:
+		return jax.lax.convert_element_type(operand=operand, new_dtype=new_dtype)
+
+
 @register("integer_pow")
 def _(x: Any, y: Any) -> Any:
 	if isinstance(x, Array8B):

@@ -11,7 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
+from __future__ import annotations
 import abc
 import dataclasses
 import functools as ft
@@ -41,6 +41,15 @@ from typing_extensions import TypeGuard
 
 WARN_ON_MATTER = os.environ.get("WARN_ON_MATTER", "true") in ["true", "yes", "1", "on"]
 CT = tp.TypeVar("CT", bound=Callable)
+StaticScalar = tp.Union[
+	np.bool_,
+	np.number,
+	bool,
+	int,
+	float,
+	complex,
+]
+ArrayLike = tp.Union[jax.Array, np.ndarray, StaticScalar]
 
 
 class OrginArray(ABC): ...  # noqa
@@ -88,7 +97,7 @@ class _AvalDescriptor:
 			return None
 		result = getattr(obj, self._name, None)
 		if result is None:
-			raise UninitializedAval(kind=self._name[1:])
+			raise UninitializedAval()
 		return result
 
 	def __set__(self, obj, value):
@@ -102,18 +111,6 @@ def _def_leaf(x):
 	return isinstance(x, ImplicitArray)
 
 
-def _wrap_with_trace(x, trace):
-	if isinstance(x, ImplicitArray):
-		return _CustomTracer(trace=trace, value=x)
-	return x
-
-
-def _unwrap_tracer(x):
-	if isinstance(x, _CustomTracer):
-		return x.value
-	return x
-
-
 def use_implicit(fn):
 	def implicit_f(*args, **kwargs):
 		leaves, struct = tu.tree_flatten(
@@ -125,17 +122,14 @@ def use_implicit(fn):
 		with core.take_current_trace() as ctrace:
 			trace = _CustomTrace(parent_trace=ctrace, tag=tag)
 			leaves = tu.tree_map(
-				ft.partial(
-					_wrap_with_trace,
-					trace=trace,
-				),
+				ft.partial(_wrap_tracer, trace=trace),
 				leaves,
 				is_leaf=_def_leaf,
 			)
 			func, args, kwargs = tu.tree_unflatten(struct, leaves)
 			with core.set_current_trace(trace):
 				outs = func(*args, **kwargs)
-			outs = tu.tree_map(_unwrap_tracer, outs)
+			outs = tu.tree_map(ft.partial(_unwrap_tracer, trace=trace), outs)
 		return outs
 
 	return implicit_f
@@ -222,7 +216,7 @@ class ImplicitArray(_ArrayBase):
 
 		if aval is not None:
 			if dtype is None:
-				self.dtype = aval.dtype
+				self.dtype = aval.shape
 			elif dtype != aval.dtype:
 				warnings.warn(
 					f"ImplicitArray dtype {dtype} does not match materialization dtype {aval.dtype}",
@@ -248,8 +242,7 @@ class ImplicitArray(_ArrayBase):
 		return materialize_handler(primitive, *args, params=params)
 
 	@abc.abstractmethod
-	def materialize(self):
-		pass
+	def materialize(self): ...
 
 	def tree_flatten_with_keys(self):
 		children = []
@@ -278,6 +271,10 @@ class ImplicitArray(_ArrayBase):
 			setattr(obj, name, value)
 
 		return obj
+
+	def astype(self, new_dtype):
+		self.dtype = new_dtype
+		return self
 
 	def __init_subclass__(cls, commute_ops=True, warn_on_materialize=True, **kwargs):
 		super().__init_subclass__(**kwargs)
@@ -457,6 +454,22 @@ def _default_process(
 	return primitive.bind(*subfuns, *arrays, **bind_params)
 
 
+def _wrap_tracer(x, trace: _CustomTrace):
+	if _is_value(x):
+		return _CustomTracer(trace, x)
+	else:
+		return x
+
+
+def _unwrap_tracer(x, trace):
+	if is_array(x):
+		x = trace.full_raise(x)
+	if isinstance(x, _CustomTracer):
+		return x.value
+	else:
+		return x
+
+
 class _CustomTracer(core.Tracer):
 	__slots__ = ("value",)
 
@@ -472,7 +485,7 @@ class _CustomTracer(core.Tracer):
 		if isinstance(self.value, ImplicitArray):
 			return self
 		else:
-			return self.value
+			return core.full_lower(self.value)
 
 
 class _CustomTrace(core.Trace[_CustomTracer]):
@@ -491,35 +504,40 @@ class _CustomTrace(core.Trace[_CustomTracer]):
 		implicit_idx = next(
 			(i for i, v in enumerate(values) if isinstance(v, ImplicitArray)), None
 		)
+		implicit_name = None
 		if implicit_idx is not None:
 			implicit_name = values[implicit_idx].__class__.__name__
-			try:
-				rule = _rules[primitive]
-			except KeyError:
-				with core.set_current_trace(self.parent_trace):
-					if WARN_ON_MATTER:
+		try:
+			rule = _rules[primitive]
+		except KeyError:
+			with core.set_current_trace(self.parent_trace):
+				if WARN_ON_MATTER and implicit_name is not None:
+					warnings.warn(
+						f"No Custom Primitive been found for {primitive} (materializing {implicit_name})",
+						stacklevel=1,
+					)
+				out = _default_process(primitive, values, params)
+		else:
+			include_prim = False
+			with core.set_current_trace(self.parent_trace):
+				try:
+					try:
+						method, _ = rule.resolve_method(values)
+					except (plum.NotFoundLookupError, plum.AmbiguousLookupError):
+						inhint = (primitive,) + tuple(values)
+						include_prim = True
+						method, _ = rule.resolve_method(inhint)
+				except (plum.NotFoundLookupError, plum.AmbiguousLookupError):
+					if WARN_ON_MATTER and implicit_name is not None:
 						warnings.warn(
-							f"No Custom Primitive been found for {primitive} (materializing {implicit_name})",
+							f"No Custom Primitive could match for {primitive} (materializing {implicit_name})",
 							stacklevel=1,
 						)
 					out = _default_process(primitive, values, params)
-			else:
-				with core.set_current_trace(self.parent_trace):
-					try:
-						method, _ = rule.resolve_method(values)
-					except plum.NotFoundLookupError:
-						if WARN_ON_MATTER:
-							warnings.warn(
-								f"No Custom Primitive could match for {primitive} (materializing {implicit_name})",
-								stacklevel=1,
-							)
-						out = _default_process(primitive, values, params)
-					else:
-						out = method(*values, **params)
-		else:
-			subfuns, bind_params = primitive.get_bind_params(params)
-			out = primitive.bind(*subfuns, *values, **bind_params)
-
+				else:
+					if include_prim:
+						values = (primitive,) + tuple(values)
+					out = method(*values, **params)
 		if primitive.multiple_results:
 			out = [_CustomTracer(self, x) for x in out]
 		else:
@@ -704,7 +722,12 @@ def _is_value(x) -> TypeGuard[ImplicitArray]:
 
 
 @register(jax._src.pjit.pjit_p)
-def _(*args: tp.Any, jaxpr, inline, **kwargs):
+def _(
+	*args: ImplicitArray | ArrayLike,
+	jaxpr,
+	inline,
+	**kwargs,
+):
 	del kwargs
 	fun = use_implicit(core.jaxpr_as_fun(jaxpr))
 	if inline:
@@ -713,40 +736,6 @@ def _(*args: tp.Any, jaxpr, inline, **kwargs):
 		leaves, treedef = tu.tree_flatten(args)
 		flat_fun = lambda x: fun(*tu.tree_unflatten(treedef, x))  # noqa
 		return jax.jit(flat_fun)(leaves)
-
-
-@register("while")
-def _(
-	*args: tp.Any,
-	cond_nconsts: int,
-	cond_jaxpr,
-	body_nconsts: int,
-	body_jaxpr,
-):
-	cond_consts = args[:cond_nconsts]
-	body_consts = args[cond_nconsts : cond_nconsts + body_nconsts]
-	init_vals = args[cond_nconsts + body_nconsts :]
-
-	_cond_fn = use_implicit(core.jaxpr_as_fun(cond_jaxpr))
-	_cond_jaxpr = jax.make_jaxpr(_cond_fn)(*cond_consts, *init_vals)
-	_body_fn = use_implicit(core.jaxpr_as_fun(body_jaxpr))
-	_body_jaxpr = jax.make_jaxpr(_body_fn)(*body_consts, *init_vals)
-
-	cond_leaves, _ = tu.tree_flatten(cond_consts)
-	body_leaves, _ = tu.tree_flatten(body_consts)
-	init_val_leaves, val_treedef = tu.tree_flatten(init_vals)
-
-	out_val = jax.lax.while_p.bind(
-		*cond_leaves,
-		*body_leaves,
-		*init_val_leaves,
-		cond_nconsts=cond_nconsts,
-		cond_jaxpr=_cond_jaxpr,
-		body_nconsts=body_nconsts,
-		body_jaxpr=_body_jaxpr,
-	)
-	result = tu.tree_unflatten(val_treedef, out_val)
-	return result
 
 
 _sentinel = object()

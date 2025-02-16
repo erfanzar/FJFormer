@@ -92,6 +92,67 @@ class ArrayNF4(ImplicitArray):
 ArrayType = Union[Array, ArrayNF4]
 
 
+@register("convert_element_type")
+def _(operand: ArrayType, new_dtype: Any) -> ArrayType:
+	if isinstance(operand, ArrayNF4):
+		operand.dtype = new_dtype
+		return operand
+	else:
+		return jax.lax.convert_element_type(operand=operand, new_dtype=new_dtype)
+
+
+@register("lt")
+def _(x: ArrayType, y: ArrayType, **kwargs):
+	if isinstance(x, ArrayNF4):
+		x = x.materialize()
+	if isinstance(y, ArrayNF4):
+		y = y.materialize()
+	return jax.lax.lt(x, y, **kwargs)
+
+
+@register("convert_element_type")
+def _(operand: ArrayType, **kwargs) -> ArrayType:
+	new_dtype = kwargs.get("new_dtype", jnp.bfloat16)
+	if isinstance(operand, ArrayNF4):
+		operand.dtype = new_dtype
+		return operand
+	else:
+		return jax.lax.convert_element_type(operand=operand, new_dtype=new_dtype)
+
+
+@register("integer_pow")
+def _(x: Any, y: Any) -> Any:
+	if isinstance(x, ArrayNF4):
+		x = x.materialize()
+	if isinstance(y, ArrayNF4):
+		y = y.materialize()
+	return lax.pow(x, y)
+
+
+@register("integer_pow")
+def _(x: Any, **kwargs) -> Any:
+	y = kwargs.get("y", 2)
+	if isinstance(x, ArrayNF4):
+		x = x.materialize()
+	return lax.pow(x, y)
+
+
+@register("div")
+def _(x: Any, y: Any) -> Any:
+	if isinstance(x, ArrayNF4):
+		x = x.materialize()
+	if isinstance(y, ArrayNF4):
+		y = y.materialize()
+	return lax.div(x, y)
+
+
+@register("sqrt")
+def _(x: Any) -> Any:
+	if isinstance(x, ArrayNF4):
+		x = x.materialize()
+	return lax.sqrt(x)
+
+
 def safe_materialize(arr: ArrayType) -> Tuple[ArrayType, bool]:
 	"""Safely materialize an array if it's ArrayNF4."""
 	if isinstance(arr, ArrayNF4):

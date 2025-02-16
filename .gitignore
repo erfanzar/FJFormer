@@ -5,6 +5,7 @@ __pycache__/
 .vscode
 # Hidden Local Files
 env.py
+exp.py
 experimental.py
 # C extensions
 *.so
