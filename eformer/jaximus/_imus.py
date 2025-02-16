@@ -140,7 +140,12 @@ implicit = use_implicit
 
 def materialize_nested(implicit_arr, full=False):
 	while isinstance(implicit_arr, ImplicitArray):
-		implicit_arr = implicit_arr.materialize()
+		try:
+			implicit_arr = implicit_arr.materialize()
+		except Exception:
+			aval = implicit_arr.aval
+			implicit_arr = jnp.ones(aval.shape, aval.dtype)
+			break
 		if not full:
 			break
 	return implicit_arr
@@ -187,7 +192,6 @@ class ImplicitArray(_ArrayBase):
 			aval = _get_materialization_aval(self)
 		except UninitializedAval:
 			aval = None
-
 		shape = None
 		try:
 			shape = self.shape
@@ -739,6 +743,42 @@ def _(
 
 
 _sentinel = object()
+
+
+@register(jax.lax.while_p)
+def _(
+	*args: tp.Union[ImplicitArray, ArrayLike],
+	cond_nconsts: int,
+	cond_jaxpr,
+	body_nconsts: int,
+	body_jaxpr,
+):
+	cond_consts = args[:cond_nconsts]
+	body_consts = args[cond_nconsts : cond_nconsts + body_nconsts]
+	init_vals = args[cond_nconsts + body_nconsts :]
+
+	quax_cond_fn = implicit(core.jaxpr_as_fun(cond_jaxpr))
+	quax_cond_jaxpr = jax.make_jaxpr(quax_cond_fn)(*cond_consts, *init_vals)
+	quax_body_fn = implicit(core.jaxpr_as_fun(body_jaxpr))
+	quax_body_jaxpr = jax.make_jaxpr(quax_body_fn)(*body_consts, *init_vals)
+
+	cond_leaves, _ = tu.tree_flatten(cond_consts)
+	body_leaves, _ = tu.tree_flatten(body_consts)
+	init_val_leaves, val_treedef = tu.tree_flatten(init_vals)
+	try:
+		out_val = jax.lax.while_p.bind(
+			*cond_leaves,
+			*body_leaves,
+			*init_val_leaves,
+			cond_nconsts=cond_nconsts,
+			cond_jaxpr=quax_cond_jaxpr,
+			body_nconsts=body_nconsts,
+			body_jaxpr=quax_body_jaxpr,
+		)
+	except Exception as e:
+		raise RuntimeError("You should customize while prim for your usecase") from e
+	result = tu.tree_unflatten(val_treedef, out_val)
+	return result
 
 
 @register("cond")
